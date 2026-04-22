@@ -2,7 +2,7 @@
 
 Shared Claude Code skills for UX researchers at Instacart. Built for the Research AI Enablement OKR (H1 2026).
 
-Each skill is grounded in methodology from the most trusted voices in UX research — Nielsen Norman Group, Nikki Anderson, Erika Hall, Steve Portigal, Indi Young, Braun & Clarke, and UX research teams at Meta, Google, Amazon, and Microsoft.
+Each skill is grounded in methodology from the most trusted voices in UX research — leading UX researchers in the industry and research teams at major big tech companies.
 
 ## Skills
 
@@ -32,4 +32,30 @@ Found a better methodology? Want to add a new skill? Open a PR. Each skill lives
 
 ## Credits
 
-Built by Jedida Milton and Uyhun for the Research team. Methodology grounded in the published work of Jakob Nielsen, Don Norman, Kara Pernice, Nikki Anderson, Erika Hall, Indi Young, Steve Portigal, Tomer Sharon, Virginia Braun, Victoria Clarke, and the UX research teams at Meta, Google, Amazon, and Microsoft.
+Built by **[Jedida Milton](https://instacart.enterprise.slack.com/messages/U099PKHAM9D)** for the Research team.
+
+Methodology grounded in the published work of the following researchers and organizations. Click any name to go directly to their work:
+
+### Individual researchers & authors
+
+- [Erika Hall](https://mule.design/) — co-founder, Mule Design; author of *Just Enough Research*
+- [Indi Young](https://indiyoung.com/) — author of *Listening Deeply* and *Mental Models*
+- [Steve Portigal](https://www.portigal.com/) — author of *Interviewing Users* and *Doorbells, Danger, and Dead Batteries*
+- [Tomer Sharon](https://www.tomersharon.com/) — author of *Validating Product Ideas*
+- [Nikki Anderson](https://userresearchacademy.com/) — founder, User Research Academy
+- [Virginia Braun & Victoria Clarke](https://www.thematicanalysis.net/) — authors of *Thematic Analysis: A Reflexive Approach*
+
+### Research publications & blogs
+
+- [Nielsen Norman Group (nngroup.com)](https://www.nngroup.com/articles/)
+- [dscout People Nerds](https://dscout.com/people-nerds)
+- [UserTesting Blog](https://www.usertesting.com/blog)
+- [Maze Research Blog](https://maze.co/blog/)
+- [User Research Academy (Nikki Anderson)](https://userresearchacademy.com/)
+
+### Big tech research teams
+
+- [Meta Research](https://research.facebook.com/)
+- [Google Design](https://design.google/)
+- [Microsoft Research](https://www.microsoft.com/en-us/research/)
+- [Amazon Science](https://www.amazon.science/)
