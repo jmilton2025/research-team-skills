@@ -138,115 +138,194 @@ Options:
 
 Apply the researcher's approved parameters and style. For the default template, follow the OUTPUT TEMPLATE below. Branch the Core section by study type (see 2a).
 
-### OUTPUT TEMPLATE (default Instacart style)
+### OUTPUT TEMPLATE (default Instacart style — TABLES = QUESTIONS ONLY)
+
+> **Core principle (codified 2026-05-04 from Diet Personalization mod guide):** When the moderator is sitting in front of a participant, their eye should land on a table that contains **only the words to read or ask aloud**. Probes, watch-fors, tagging guidance, "don'ts," and methodology rationale all live in **prose around the tables**, not inside cells. Total length target: **~5 pages**, not 13.
 
 ```
 *UX Research | Moderation Guide | [Quarter Year]*
 
 # [Study Title — derived from research goal]
 
+**[Phase or sub-title if applicable, e.g. "Phase 1: Diagnostic Deep Dive (Contextual Inquiry IDIs)"]**
+
 Last updated: [Month Year]
 
-- **Responsible:** [Researcher name] (UX Researcher)
+- **Responsible:** [Name] (Role)
+- **Accountable:** [Name] (Role)
 - **Consulted:** [Names with roles]
 - **Informed:** [Names with roles]
 
 | Parameter | Detail |
 |-----------|--------|
 | **Study Type** | [final] |
-| **Moderation** | [Moderated / Unmoderated] |
-| **Duration** | [final] |
-| **Participants** | [final] |
-| **Research Goal** | [final] |
+| **Duration** | [X] minutes — [warm/core/probe/close split, e.g. "10 / 35 / 10 / 5"] |
+| **Format** | [Moderated remote / In-person / Unmoderated], [tools] |
+| **Participants** | [profile + screening criterion] |
+| **Goal** | [1-sentence research goal — what we're learning, separated by · for multiple objectives] |
 
 ---
 
-## Study Overview
+## Pre-Session Checklist
 
-| Label | Detail |
-|-------|--------|
-| **Objective** | [1-2 sentence research objective] |
-| **Key Questions** | 1. [Q1]<br><br>2. [Q2]<br><br>3. [Q3] |
-| **Success Metrics** | [What "good data" looks like] |
-| **Sessions** | [5-8 usability / 8-12 IDI / 4-6 focus groups] |
+[Bullet list with ☐ checkboxes — NOT a table. Each item: "category — what to verify"]
 
-## Session Logistics
+- ☐ Participant validated — [screening criterion confirmed]
+- ☐ Device — [participant on their own device, app loaded, etc.]
+- ☐ [Stimuli / artifacts loaded]
+- ☐ Recording armed · consent script ready · observers cameras-off
 
-| Label | Detail |
-|-------|--------|
-| **Duration** | [final] |
-| **Format** | [Moderated Remote / In-Person / Unmoderated] |
-| **Tools** | [UserZoom / Dovetail / Zoom / Figma prototype] |
-| **Recording** | Audio + video + screen share (with consent) |
-| **Observers** | Max 2-3 silent observers; structured note template |
+---
 
-## Consent + Recording Script (~60 seconds — READ VERBATIM)
+## Consent + Recording Script — READ VERBATIM (~60 sec)
 
-| Label | Detail |
-|-------|--------|
-| **Script** | "Hi [participant], thanks so much for joining me today. I'm [moderator], a researcher at Instacart.<br><br>Before we dive in, a few quick things:<br><br>• **Purpose.** We're here to learn from your experience — there are no right or wrong answers. I didn't design what we're looking at, so you won't hurt my feelings. I'm learning about the [product/concept], not evaluating you.<br><br>• **Recording.** With your permission, I'd like to record audio, video, and screen. The recording stays internal at Instacart and is used only for research. Is that okay?<br><br>• **Confidentiality.** Your name won't appear in any report. Anything you share is confidential.<br><br>• **Breaks.** This will take about [duration]. You can skip any question or end the session anytime.<br><br>• **Questions before we start?"** |
-| **Moderator Note** | Wait for a verbal "yes" on recording before starting the recorder. If they say no, offer notes-only and continue. Pause 30-60 seconds of small talk after consent to settle rapport (NN/g: insufficient rapport-building is the #1 facilitation mistake). |
+[2-col table. Col 1 = short cue label. Col 2 = exact words to read aloud — no annotations, no moderator notes inside the table.]
 
-## Warm-Up (~[X] minutes)
+| Cue | Read aloud |
+|-----|------------|
+| **Open** | "Hi [name], thanks for joining. I'm [moderator], a researcher at Instacart." |
+| **Purpose** | "I'm here to learn from your experience — no right or wrong answers, nothing being judged. I didn't design any of this, so you can't hurt my feelings." |
+| **What we'll do** | "[Concrete description of what's about to happen.]" |
+| **Recording** | "With your permission, I'd like to record audio, video, and screen. It stays internal at Instacart. **Is that okay?**" |
+| **Confidentiality** | "Your name and any identifying details will be removed before anything is shared internally." |
+| **Control** | "About [X] minutes. You can skip any question or end at any time — and you'll still get the incentive." |
+| **Open floor** | "Any questions before we start?" |
 
-| Label | Detail |
-|-------|--------|
-| **Question 1** | "[Warm-up — easy, open, non-leading — e.g., 'Tell me a little about yourself and what a typical week looks like.']"<br><br>**Purpose:** Build rapport, calibrate vocabulary |
-| **Question 2** | "[Context — baseline behavior in domain]"<br><br>**Purpose:** Understand starting context without priming |
-| **Question 3** | "[Bridge — pivots toward core topic]"<br><br>**Purpose:** Transition to main discussion |
-| **Moderator Note** | Warm-up is rapport, not data. Aim for 80% participant talk time (NN/g). Listen actively, nod, follow naturally. Avoid the word "interview" — call it a "chat." |
+> Wait for explicit verbal **"yes"** before pressing record. Take 30–60 seconds of small talk after consent before Q1.
 
-## Core [Discussion / Tasks] (~[X] minutes)
+---
 
-[For each topic/task, generate a subsection with a 2-column table.]
+## Phase 1 — Warm-Up & [Domain] Identity (~[X] min)
 
-### [N.1] [Topic / Task Name]
+[PROSE OUTSIDE TABLE — 1-sentence goal, then probe list, then "Don't" warnings.]
 
-| Label | Detail |
-|-------|--------|
-| **Setup** | [Scenario or stimulus to read — describe the goal, not the UI. Say "find a way to…" not "click the button to…"] |
-| **Questions** | **Q1:** "[Broad open-ended question — funnel top]"<br><br>• Probe (Echo): "[Participant's last phrase]?"<br><br>• Probe (Tell-me-more): "Tell me more about that."<br><br>**Q2:** "[Specific-example / critical incident — 'Tell me about the last time you…']"<br><br>• Probe (Silence): Count to 5-10 before filling the gap<br><br>• Probe (Laddering): "Why was that important to you?"<br><br>**Q3:** "[Contrast / comparison]"<br><br>• Probe (Hypothetical — use sparingly): "If [prior experience] had gone differently, what would you have done?" |
-| **Watch For** | • [Behavior or reaction to note]<br><br>• [Confusion, hesitation, workarounds]<br><br>• [Emotional signals — frustration, delight, surprise] |
-| **Moderator Note** | Funnel: broad → specific (NN/g Rosala). Avoid leading clarifiers like "Was it because X?" — use neutral "Tell me why you chose that" (NN/g 6 Mistakes). If participant says "typically" or "usually," redirect: "Can you tell me about a specific recent time?" (Critical Incident Technique). |
+**Goal:** [1-sentence statement of what this phase is for.]
 
-[REPEAT subsection for each topic/task]
+**Probes to use:** Echo · Tell-me-more · Silence (count to 7) · Laddering ("Why is that important to you?") · Critical Incident ("Tell me about the last time…") · Specificity ("What does '[word]' mean for *you*?")
 
-### [IF Usability Test] Think-Aloud Protocol — Insert After Consent
+**Don't:** [Things the moderator should avoid — e.g. priming the studied label, mentioning the product by name first, leading framings.]
 
-| Label | Detail |
-|-------|--------|
-| **Intro Script** | "As you use [the product], please think out loud — say whatever comes to mind. What you're looking for, what you expect, what surprises or confuses you. There's no right way to do this; just narrate your thinking. If you go quiet for a bit, I may gently remind you to keep talking — that's normal."<br><br>**Demo tip:** "Here's an example: if you're shopping for pasta and see the product grid, you might say 'I'm looking for shapes, I'd expect filters on the left…'" |
-| **Prompts when silent** | After 10 seconds of silence: "What are you thinking right now?" or "What are you looking for?" Never "Do you see X?" (leading). |
-| **Boomerang** | If participant asks "Should I click this?" — return: "What would you normally do?" (NN/g *Talking to Users*). |
-| **Moderator Note** | Silence is a tool. Count to 10 before interrupting (NN/g Fessenden). If they stop talking mid-task, prompt; do not explain the UI. |
+| # | Ask |
+|---|-----|
+| **Q1** | "[Open warm-up question — broad, easy, non-priming.]" |
+| **Q2** | "[Identity / vocabulary question.]" |
+| **Q3** | "[Rules vs. goals question.]" |
+| **Q4** | "[Context / surrounding-people question.]" |
 
-### [IF Say-Do Gap risk is Medium/High] Say-Do Gap Module — Insert into relevant Core topics
+---
 
-| Label | Detail |
-|-------|--------|
-| **Replace typical-behavior questions with specific-incident prompts** | Instead of "How often do you cook at home?" ask "Tell me about the last time you cooked dinner at home." (NN/g Critical Incident Technique) |
-| **Ground stated preferences in artifacts** | "Can you walk me through your last grocery order on your phone right now?" or "Show me the last time you [behavior]." |
-| **Diary / photo prompts (if feasible)** | "Can you send me a photo of your fridge / pantry / cart before our next session?" |
-| **Probe the gap directly** | When stated vs. shown diverges: "Earlier you mentioned X — I'm curious how that connected to [what I just saw]?" (Portigal — neutral framing, no accusation) |
-| **Moderator Note** | Attitudinal interviews measure *stated* beliefs, not behavior. Combine with observation where possible (NN/g). Never ask participants to predict future behavior — "people are bad at predicting their future behavior" (NN/g 6 Mistakes). |
+## Phase 2 — [Core Method, e.g. Contextual Inquiry / Tasks / Concept Test] (~[X] min) — CORE
 
-## Wrap-Up and Debrief (~[X] minutes)
+[PROSE OUTSIDE TABLE — explain what this phase IS, list the categories the moderator silently tags, give the framing rule.]
 
-| Label | Detail |
-|-------|--------|
-| **Script** | **[READ LOOSELY]**<br><br>"We're coming to the end of our session. A few closing questions:<br><br>1. Overall, how would you describe your experience with [what we discussed/tested] today?<br><br>2. Was there anything that surprised you, or that you expected to be different?<br><br>3. If you could change one thing, what would it be?<br><br>4. Is there anything else you'd like to share that I didn't ask about?<br><br>Thank you so much — your feedback will directly shape how we improve [product/experience]. [Incentive + next steps.]" |
-| **Moderator Note** | Write your top 3 impressions IMMEDIATELY after the session (<5 min) — memory decays fast:<br><br>1. [Impression tied to study goal]<br><br>2. [Impression tied to study goal]<br><br>3. [Impression tied to study goal] |
+This is the spine of the study. [1-2 sentences explaining the method and what to silently capture.]
+
+[If applicable, list the silent-tagging categories as ☐ bullets with one-line descriptions.]
+- ☐ **CATEGORY 1** — [definition]
+- ☐ **CATEGORY 2** — [definition]
+- ☐ **CATEGORY 3** — [definition]
+
+### 2.1 [Sub-phase name] (~[X] min)
+
+[Optional 1-line "don't" or "watch for" prose.]
+
+| # | Ask |
+|---|-----|
+| **Setup** | "[The setup line you say aloud — describe the goal, not the UI.]" |
+| **If hesitant** | "[Reassurance line if they push back.]" |
+
+### 2.2 [Sub-phase name] (~[X] min)
+
+[Prose: which probes apply, what the sub-question structure tests.]
+
+| # | Ask |
+|---|-----|
+| **Q5** | "[Open question for this sub-phase.]" |
+| **Q6a** | "[Probe sub-question.]" |
+| **Q6b** | "[Probe sub-question.]" |
+| **Q6c** | "[Probe sub-question.]" |
+
+[Repeat 2.X subsections as needed. Each one: 1-2 lines of prose ABOVE the table, table BELOW with question rows only.]
+
+### 2.5 [Final sub-phase, often a Say-Do or reconciliation step]
+
+[Prose: framing rule — "never accuse, never imply contradiction is wrong" / "watch for whether they reframe identity vs. behavior" — these stay OUT of the table.]
+
+| # | Ask |
+|---|-----|
+| **Q12** | "[The reconciliation question, including any [recall their phrasing] placeholders.]" |
+| **Q12 follow-up** | "[Optional follow-up question.]" |
+
+---
+
+## Phase 3 — [Optional stimulus / language test phase] (~[X] min)
+
+[Prose: setup, time-management call ("if Phase 2 ran long, cut from 5 to 3"), what to capture verbatim.]
+
+| # | Ask |
+|---|-----|
+| **Setup** | "[Stimulus introduction.]" |
+| **Q13** | "[First-impression question.]" |
+| **Q14** | "[Trust / friction question.]" |
+| **Q15** | "[Reframe / rewrite question.]" |
+
+---
+
+## Phase 4 — Wrap-Up (~5 min)
+
+| # | Ask |
+|---|-----|
+| **Q16** | "[Surprise / reflection question.]" |
+| **Q17** | "[One-thing-to-change question.]" |
+| **Q18** | "[Open floor.]" |
+| **Close** | "Thank you so much — [study-specific gratitude]. [Confirm incentive + next steps.]" |
+
+---
+
+## Post-Session Debrief
+
+[Numbered list, NOT a table. Within 5 min of session end, capture three things while memory is fresh.]
+
+1. **[Primary classification field]:** ☐ [Option A] · ☐ [Option B] · ☐ [Option C] · ☐ Mixed
+2. **[Secondary judgment field]:** ☐ [Option A] · ☐ [Option B] · ☐ Ambiguous — plus one-line rationale
+3. **Most diagnostic verbatim quote:** one sentence, exact words from the participant
 ```
 
-**IMPORTANT:** The guide MUST end at Wrap-Up. Do NOT add Probing Techniques Bank, Observer Notes Template, or Do's/Don'ts inside the guide. Those live in `references/mod-guide-methodology.md` for the moderator to consult separately.
+**IMPORTANT:**
+- The guide MUST end at Post-Session Debrief. Do NOT add Master Probe Bank, Bias Mitigation Checklist, or Self-Critique Audit inside the guide. Those live in `references/mod-guide-methodology.md` for the moderator to consult separately.
+- **Tables contain ONLY questions / read-aloud lines.** Probes, watch-fors, tagging guidance, "don'ts," and methodology rationale ALWAYS live in prose above or below the table — never inside cells.
 
 ---
 
-### FORMATTING RULES
+### FORMATTING RULES (visual + structural)
 
-- H2 and H3 headings get 36pt space above — clear visual breaks between sections after tables.
-- Use `<br><br>` (double line break) between items in table cells — between Q1/Q2/Q3, between probes, between bullets — so each paragraph gets 6pt spaceBelow + 120% lineSpacing via the styling script.
-- ALL content sections use 2-column tables (narrow Label ~20% | wide Detail ~80%).
+#### Structural
+- **Tables = questions only.** Col 1 = short label (`Q1`, `Q2`, `Setup`, `Open`, `Cue`). Col 2 = the exact words the moderator reads or asks aloud.
+- **Probes, watch-fors, "don'ts," tagging guidance, methodology rationale → prose ABOVE the table.** One sentence per concept where possible.
+- **Use `>` blockquotes** for one-line moderator reminders that follow a table (e.g. "Wait for explicit verbal 'yes' before pressing record.").
+- **No `<br><br>` line breaks inside table cells.** Each cell holds one short scannable line. If a question has multiple parts, split into separate rows (`Q12`, `Q12 follow-up`) or sub-questions (`Q6a`, `Q6b`, …).
+- **Pre-Session Checklist and Post-Session Debrief are bullets/numbered lists, NOT tables** (they aren't questions).
+- **Total target length: ~5 pages.** If the guide exceeds 7 pages, cut moderator-note paragraphs and redundant explanation.
+
+#### Visual (applied by the styling pipeline below)
+- **Body / table cells:** DM Sans 10pt
+- **Headings (H1/H2/H3):** DM Serif Display, 20pt / 16pt / 16pt, dark green `#2D4A3E`
+- **Breadcrumb (subtitle line):** DM Sans 10pt, dark green `#2D4A3E`
+- **Title:** dark green `#2D4A3E`, bold
+- **Last updated:** muted gray `#666666`, 10pt
+- **Table header row:** white text on dark green `#2D4A3E` background, bold
+- **Col 1 (label column):** **bold** throughout
+- **Alternating body rows:** light gray `#F6F7FA` background
+- **Column widths:** col 1 = 115pt (~1.6 in, narrow) · col 2 = 350pt (~4.9 in, wide for reading)
+
+#### Styling pipeline (run in order after md2doc upload)
+
+1. `md2doc upload-gdoc.py [file] --folder-id [project folder]` → creates the doc
+2. `~/Documents/Claude/Productivity/Google-Docs/style-gdoc-full.py [doc-id]` → applies Jedi's Template colors, table header bg, cell padding, paragraph spacing
+3. `~/.claude/skills/mod-guide/scripts/font_and_widths.py [doc-id]` → DM Sans 10pt body, DM Serif Display headers, narrow/wide column widths
+4. `~/.claude/skills/mod-guide/scripts/rebold_col1.py [doc-id]` → bold col 1 + header row + inline labels (compensates for un-bold side-effect of weightedFontFamily updates)
+
+All scripts use `uv run --python 3.12 --with google-api-python-client --with google-auth --with google-auth-oauthlib --with google-auth-httplib2 --with requests --with python-dotenv --with markdown --with pillow python [script]`.
 
 ---
 
@@ -257,11 +336,12 @@ Last updated: [Month Year]
 3. **Funnel technique.** Within each topic: broad → specific → closed. Broad first avoids priming (NN/g).
 4. **Specific incidents over typical behavior.** "Tell me about the last time you…" beats "How often do you…" — closes the say-do gap (NN/g Critical Incident Technique).
 5. **No hypotheticals except as projective tools.** "If this could change anything…" is fine at the end; "Would you use this?" is not (NN/g).
-6. **No compound questions.** One question at a time (NN/g).
-7. **[Moderator Note] callouts.** Embed practical facilitation tips — these are the human-skill reminders that make the guide useful in-session.
-8. **Time-aware.** Allocate per study type (2a). Core gets 70-80% of total.
+6. **No compound questions inside a single Ask cell.** If a question has 2-3 follow-ups that always go together (e.g. "What is it asking? What does '[word]' mean? How would you say this in your own words?"), they may share a cell. Otherwise split into Q + Q-follow-up rows.
+7. **Probes named in PROSE above the table, not in-line in cells.** Use a single `Probes to use:` line per phase.
+8. **Time-aware.** Allocate per study type (Step 2a). Core gets 70-80% of total.
 9. **Participant-appropriate language.** Match vocabulary to the participant profile.
-10. **Name the probe type in-line** (Echo, Silence, Laddering, etc.) so the moderator builds muscle memory. See `references/mod-guide-methodology.md` for the full taxonomy.
+10. **Watch-fors and "don'ts" go in prose**, not in [Watch For] or [Moderator Note] table rows. Keep them above the question table they apply to.
+11. **Capture-verbatim flags** (e.g. "Capture Q11 verbatim — feeds the survey wording") go in prose above the relevant table, not as a separate row.
 
 ---
 
