@@ -92,45 +92,31 @@ Use **AskUserQuestion** to let the researcher confirm or adjust. Ask in batches 
 
 ---
 
-## Step 3.5 — Style Reference (REQUIRED before generating)
+## Step 3.5 — Output Styling (REQUIRED before final upload)
 
-After parameters are approved, ask for a style reference. Use **AskUserQuestion**:
+After the moderation guide content is generated and uploaded as a Google Doc, ask which style to apply. Use **AskUserQuestion**:
 
-**Question — Output Style**
+**Question — Output Styling**
 
-> "One last thing before I generate your guide — I want to make sure the output matches your preferred style and format."
+> "How should the final Google Doc be styled?"
 
 Options:
-- **"I'll share a reference doc"** — "I have a previous moderation guide or template I'd like you to match."
-- **"Use the default Instacart template" (Recommended)** — "Standard 2-column layout with section bars, RACI header, structured tables."
-- **"Just give me a clean outline"** — "Simple headers and bullets, no tables or heavy formatting."
+- **"Default — Jedida's mod-guide style" (Recommended)** — Apply the canonical mod-guide template (DM Serif Display headings, DM Sans body, dark-green table headers, dark-green bold label columns). See `references/canonical-template-spec.md`. Source: `https://docs.google.com/document/d/18Q9V4th9BwwNtlLXSncmMpiN591XTV1RzCUAyxym7wI/edit`
+- **"Upload my own reference doc"** — Paste a Google Doc URL of a previous moderation guide or template you'd like the styling matched to. The skill will extract that doc's styling and apply it.
 
-**If the researcher shares a reference doc:**
+**If Default:**
+Run `scripts/apply_canonical_template.py <DOC_ID>`.
 
-1. **Accept any format:** Google Doc URL, pasted text, uploaded file, or screenshot.
-2. **If Google Doc URL:** Read via `google-docs:fetch-google-doc`, Glean, or `read-gdoc.py`.
-3. **Analyze style patterns:**
-   - Document structure (headers, tables, bullets, numbered lists, blockquotes)
-   - Header hierarchy (H1/H2/H3 — section bars? numbered?)
-   - Content layout (2-column tables, multi-column, bullets, prose)
-   - Question format (numbered list, table rows, bold Q + indented probes)
-   - Moderator notes (inline italics, callouts, blockquotes, labeled rows)
-   - Level of detail (full verbatim scripts vs. concise bullets)
-   - Tone (formal/academic, conversational, mixed)
-4. **Confirm read-back:**
-
+**If Custom Reference:**
+1. Accept the URL.
+2. Run `scripts/apply_custom_template.py <TARGET_DOC_ID> <REF_DOC_ID>`.
+3. Confirm read-back of what was extracted from the custom ref before applying:
    > "Here's what I picked up from your reference doc:
-   > - **Structure:** [e.g., Numbered sections with bullet sub-points]
-   > - **Questions:** [e.g., Bold numbered questions with indented probe bullets]
-   > - **Notes:** [e.g., Italic callout paragraphs between sections]
-   > - **Tone:** [e.g., Conversational, direct]
-   > - **Detail level:** [e.g., Full verbatim scripts for intro/close, concise bullets for probes]
+   > - **Headings:** [font] [sizes] [color]
+   > - **Body:** [font] [size] [color]
+   > - **Tables:** [col widths] [header bg + text color] [borders] [padding]
    >
-   > Does that capture your style? Anything you'd like me to adjust?"
-5. **Generate matching their style** — content quality (questions, probes, notes) stays the same; only format adapts.
-
-**If default template:** Use the OUTPUT TEMPLATE below.
-**If clean outline:** Simple markdown — H2 headers, bullet lists, numbered questions, blockquote moderator notes. No tables.
+   > Apply these to your mod guide?"
 
 ---
 
@@ -320,10 +306,11 @@ This is the spine of the study. [1-2 sentences explaining the method and what to
 
 #### Styling pipeline (run in order after md2doc upload)
 
-1. `md2doc upload-gdoc.py [file] --folder-id [project folder]` → creates the doc
-2. `~/Documents/Claude/Productivity/Google-Docs/style-gdoc-full.py [doc-id]` → applies Jedi's Template colors, table header bg, cell padding, paragraph spacing
-3. `~/.claude/skills/mod-guide/scripts/font_and_widths.py [doc-id]` → DM Sans 10pt body, DM Serif Display headers, narrow/wide column widths
-4. `~/.claude/skills/mod-guide/scripts/rebold_col1.py [doc-id]` → bold col 1 + header row + inline labels (compensates for un-bold side-effect of weightedFontFamily updates)
+1. `md2doc upload-gdoc.py [file] --folder-id [project folder]` → creates the doc and applies the HTML import (style-gdoc-full pass for base structure)
+2. **Default — Jedida's mod-guide style:** `~/.claude/skills/mod-guide/scripts/apply_canonical_template.py [doc-id]` → applies the locked canonical spec (page setup, DM Sans body / DM Serif Display headings, dark-green table headers, dark-green bold label cols, 0.5pt #C7C7C7 borders, 8pt cell padding, BULLET_DISC_CIRCLE_SQUARE, clears SUBSCRIPT runs, H2 non-bold + 36pt above / 12pt below). See `references/canonical-template-spec.md`.
+3. **Custom — user-supplied reference doc:** `~/.claude/skills/mod-guide/scripts/apply_custom_template.py [target-doc-id] [ref-doc-id]` → extracts the ref doc's spec at runtime and applies the same phases.
+
+> The legacy 3-pass pipeline (`style-gdoc-full` → `font_and_widths.py` → `rebold_col1.py`) is **superseded** by the consolidated single-script approach above. The old scripts are still present in `scripts/` for backward compatibility but should not be used by new flows.
 
 All scripts use `uv run --python 3.12 --with google-api-python-client --with google-auth --with google-auth-oauthlib --with google-auth-httplib2 --with requests --with python-dotenv --with markdown --with pillow python [script]`.
 
@@ -451,10 +438,10 @@ After generating the guide, ask:
 
 If yes:
 1. Upload via `gws-docs` (or md2doc `upload-gdoc.py`).
-2. **Fix subscript formatting (MANDATORY)** — md2doc's `<br>` handling can produce SUBSCRIPT-styled text. After upload, scan via Google Docs API for `baselineOffset == 'SUBSCRIPT'` ranges and reset to `'NONE'` BEFORE styling.
-3. **Default template style:** Apply `style-gdoc-full.py` — handles table colors, cell padding, font sizes (11pt body, bold col 1), column widths (proportional, col 1 auto-fit), breadcrumb, RACI chips, dash-to-disc bullets, paragraph spacing (6pt spaceBelow + 120% lineSpacing), and 36pt section spacing above H2/H3.
-4. **Custom reference style:** Upload as-is.
-5. File into the appropriate Google Drive project folder (Project 1 / Project 2 / Project 3) if applicable. Share the link.
+2. Trigger **Step 3.5 — Output Styling** (above) to ask which style to apply.
+3. **Default — Jedida's mod-guide style:** Run `scripts/apply_canonical_template.py [doc-id]`. This single script clears SUBSCRIPT runs, sets page size + margins, applies all run-level typography (headings, body, breadcrumb, "Last updated"), styles all 2-col tables (col widths 96/715.5pt, dark-green header with white bold, dark-green bold label col, #161416 content col, 0.5pt #C7C7C7 borders, 8pt padding all sides), sets H2 non-bold with 36pt above / 12pt below, sets NORMAL_TEXT 4pt spaceBelow + 115% lineSpacing, and applies BULLET_DISC_CIRCLE_SQUARE.
+4. **Custom — user-supplied reference doc:** Run `scripts/apply_custom_template.py [target-doc-id] [ref-doc-id]`. Same phases as the default, but values are sourced from the user's reference doc instead of the locked spec.
+5. File into the appropriate Google Drive project folder (Project 1 / Project 2 / Project 3 / Project 4) if applicable. Share the link.
 
 ---
 
@@ -464,7 +451,9 @@ If yes:
 - **google-docs:fetch-google-doc** / **Glean** (`mcp__glean_default__read_document`) — read PRDs, briefs, or style reference docs from Google Drive.
 - **Read** tool or **download-gdoc.py** / **read-gdoc.py** — fallback readers for Google Docs.
 - **gws-docs** or **md2doc** (`upload-gdoc.py`) — upload the final guide to Google Docs.
-- **style-gdoc-full.py** — apply Instacart design system (default template only).
+- **scripts/apply_canonical_template.py** — apply Jedida's locked mod-guide template (default option).
+- **scripts/apply_custom_template.py** — extract styling from a user-supplied reference doc and apply it to the target.
+- **references/canonical-template-spec.md** — human-readable canonical spec (documentation; mirrors the values in `apply_canonical_template.py`).
 - **references/mod-guide-methodology.md** — load on demand when the researcher asks about a specific probe, bias, or study-type nuance.
 
 ---
