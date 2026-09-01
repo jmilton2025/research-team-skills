@@ -16,6 +16,10 @@ Each skill is grounded in methodology from the most trusted voices in UX researc
 | `/usertesting-script` | UserTesting Script | Writes the question-level script handed to the UserTesting programmer — 4-way platform tagging, action ladders, choice-order rules, warm closing card |
 | `/usertesting-html` | UserTesting HTML | Builds the visual stimuli HTML — dual-phone / two-cart / single-row card patterns, design tokens, image labels, subtotal audit, image-quality QA |
 | `/usertesting-orchestrator` | UserTesting Orchestrator | Coordinates the full plan → script → HTML pipeline end-to-end, owns shared-context handoffs, runs the 3-layer triangulation audit |
+| `/diy-triage` | DIY Triage | Entry gate for a raw research ask — routes it to the DIY track, the researcher-led track, or both in parallel, and flags when a DIY study should escalate mid-stream |
+| `/screener` | Screener | Standalone participant screener for a self-serve unmoderated study — no researcher needed to interpret it afterward |
+| `/unmod-script` | Unmoderated Test Script | Plain-language task list and instructions for an unmoderated usability test, written for a participant working alone |
+| `/diy-packet` | DIY Research Packet | Condensed, self-serve research packet bundling screener + script + launch instructions — the lightweight counterpart to `/research-plan` |
 
 All skills follow the same pattern:
 
@@ -25,6 +29,15 @@ All skills follow the same pattern:
 4. Ask about style (reference doc, Instacart default template, or clean outline)
 5. Generate the deliverable
 6. Offer to upload to Google Docs
+
+## DIY Research Pipeline (OKR #5)
+
+A self-serve pipeline for designers, PMs, content leads, and fulfillment partners who need a research read without necessarily needing a researcher to run it. `/diy-triage` is the entry point; it routes into one of two tracks, or both:
+
+- **DIY track** (self-serve, no researcher needed): `/screener` → `/unmod-script` → `/diy-packet`
+- **Researcher-led track** (deeper, needs a UX researcher): `/rpp` → `/mod-guide` → `/synth`
+
+`/rpp` and `/synth` aren't new skills — they're this pipeline's names for the existing `/research-plan` and `/report` skills, which already produce the depth a researcher-led study needs. `/mod-guide` is the same skill either way. The only genuinely new skills are the four DIY-track-specific ones plus the triage gate, listed in the table above. The deliberate split: `/rpp` (`/research-plan`) stays deep and technical; `/diy-packet` is the intentionally smaller, plain-language equivalent for someone running their own study.
 
 ## Install
 

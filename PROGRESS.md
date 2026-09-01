@@ -1,14 +1,37 @@
 # P4 (sub-stream) Progress — Research Team Skills
 
 **Parent project:** P4 — Research OKR / AI Enablement
-**Last updated:** 2026-06-08
-**Current state:** Core skills shipped — /mod-guide (7-phase pipeline + H.E.A.R.T.), jedi-doc-styling-1 (Research Plan template, 226/226 verifier pass), jedi-doc-styling-2 (GlossGenius). **research-plan skill now restructured to the canonical ResOps RPP template** (Option B: ResOps order + names, richer Jun-2 content folded in) with a section-by-section interactive pop-up walk (first pop-up = Existing Insights). Not yet committed to GitHub. Infrastructure: GitHub repo + Drive folder + local skill chain validated end-to-end.
+**Last updated:** 2026-09-01 15:21 PDT
+**Current state:** **DIY research pipeline (OKR #5) shipped** — 4 new skills built (`diy-triage`, `screener`, `unmod-script`, `diy-packet`) + `/rpp`/`/synth` wired as aliases for the existing `research-plan`/`report` skills, `/mod-guide` shared across both tracks. Repo now has 12 skills total. Core skills shipped — /mod-guide (7-phase pipeline + H.E.A.R.T.), jedi-doc-styling-1 (Research Plan template, 226/226 verifier pass), jedi-doc-styling-2 (GlossGenius). **research-plan skill now restructured to the canonical ResOps RPP template** (Option B: ResOps order + names, richer Jun-2 content folded in) with a section-by-section interactive pop-up walk (first pop-up = Existing Insights). Infrastructure: GitHub repo (public) + Drive folder + local skill chain validated end-to-end.
 
 > Daily entries for this sub-stream may also appear in `~/Documents/Claude/Project-4-Research-OKR-AI-Enablement/PROGRESS.md` under a "Research Team Skills" sub-heading. This file is the dedicated log.
 
 ---
 
 <!-- New daily entries are prepended ABOVE this line. Do not delete this marker. -->
+
+## 📅 2026-09-01 (Tue) — DIY research pipeline (OKR #5): 4 new skills built + shipped to GitHub
+
+### What changed
+Built out the self-serve "DIY research" pipeline scoped with Kinnera, Megan, and Ndidi (OKR #5), grounded in 4 real case studies gathered from the team (3 consumer-side from Kinnera, 1 fulfillment-side from Ndidi). Ran 4 parallel build agents, each grounded in the real doc most relevant to its skill:
+
+- **`diy-triage`** (new) — entry gate. Routes a raw ask (PRD/brief/loose question) to the DIY track, the researcher-led track, or both in parallel; explicitly covers the escalation case (start DIY, promote to researcher-led once scope grows) and the parallel-round case. `references/routing-rubric.md` holds the decision table.
+- **`screener`** (new) — standalone participant screener for the DIY track, structurally grounded in a real Screener tab (structure only — no real questions/business content carried over, verified by grep). `references/screener-question-bank.md` has 13 generic reusable question-pattern categories.
+- **`unmod-script`** (new) — plain-language unmoderated task list, grounded in a real unmod test script + an unmod guide (structure only). `references/unmod-writing-rules.md` contrasts moderated instinct vs. unmoderated requirement.
+- **`diy-packet`** (new) — the condensed, self-serve counterpart to `/research-plan`, grounded in a real DIY Resource Packet (structure only). Explicit "How this differs from `/research-plan`" section makes the depth split concrete. `references/packet-checklist.md` covers self-serve-readiness.
+- **`/rpp` and `/synth`** — no new skills built; these are the pipeline's names for the existing `/research-plan` and `/report` skills (already the right depth for the researcher-led track). `/mod-guide` is shared unchanged across both tracks.
+
+**Confidentiality check:** repo confirmed PUBLIC on GitHub (open re-verification item from Jun 12 still unresolved — separate from this work). All 4 new skills were built to extract only structural/methodological patterns from the real source docs — grep across all new files for the real project names and requester names came back clean.
+
+README updated: 4 new rows in the skills table + a new "DIY Research Pipeline (OKR #5)" section documenting the two-track architecture and the `/rpp`↔`research-plan` / `/synth`↔`report` aliasing.
+
+### Open / next
+- Committing + pushing to GitHub next.
+- Not yet mock-run against the 4 real case studies (per the established `mock-runs/` pattern) — built directly to `skills/` given the timeline; worth a validation pass before wider rollout.
+- Two items intentionally deferred, not blocking: whether `/diy-triage` should have a formal "both tracks" structured output (currently a described option, not a hard state machine), and whether the "Progress deck" artifact from Ndidi's example warrants its own skill.
+- Standing Jun-12 confidentiality re-verification action on this repo is still open — unrelated to today's build but worth closing given more content just shipped to it.
+
+---
 
 ## 📅 2026-06-08 (Mon) — research-plan skill restructured to canonical ResOps RPP ("Option B")
 
