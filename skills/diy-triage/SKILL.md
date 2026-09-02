@@ -66,7 +66,7 @@ From the material, extract (don't invent — if something isn't in the source, a
 
 ## Step 2 — Ask the triage questions
 
-Run these through `AskUserQuestion`, batched (up to 4 per call, so this fits in three batches). Each question exists because it's a documented decision factor — see `references/routing-rubric.md` for the full rubric these map to.
+Run these through `AskUserQuestion`, batched (up to 4 per call, so this fits in two batches — Q1–Q4, then Q5–Q6). Each question exists because it's a documented decision factor — see `references/routing-rubric.md` for the full rubric these map to.
 
 **Q1 — Who owns this decision?**
 - A designer, PM, or content lead working solo (**leans DIY**)

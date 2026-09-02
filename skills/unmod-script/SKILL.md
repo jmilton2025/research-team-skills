@@ -88,7 +88,7 @@ Generate the participant-facing document using the OUTPUT TEMPLATE below. Apply 
 ### The shape every unmoderated script follows
 
 1. **Welcome & context-setting** — states plainly that the participant isn't being tested, that there are no right or wrong answers, that they should think out loud / narrate as they go, that confusion is useful signal worth saying out loud, and how long the session will take.
-2. **Warm-up / behavioral baseline** — a small number of general questions about the participant's existing habits in the relevant domain, asked *before* any scenario framing so answers aren't primed by what they're about to see.
+2. **Warm-up / behavioral baseline** — a small number of general questions about the participant's existing habits in the relevant domain, asked *before* any scenario framing so answers aren't primed by what they're about to see. Coming before the scenario isn't enough on its own: a warm-up question's own *content* can still prime the exact concept a later task is trying to measure unprompted (e.g., asking about "running low / out of stock" experiences right before a first-glance task that measures whether a screen communicates that same concept). Check every warm-up question against the study's actual comprehension/first-impression target, not just against the scenario transition — if a warm-up question names the concept the task is trying to measure cold, rewrite it to a more general framing or move it to after that specific task.
 3. **Scenario transition** — a short, realistic narrative that sets up why the participant is about to do what they're about to do, without revealing what the study is trying to find out.
 4. **Launch instruction** — an explicit, unambiguous instruction to open the stimulus (link, prototype, image set), with nothing assumed about how they'll find it.
 5. **First-impression capture** — before any interaction, ask what they notice, what stands out, what surprises them. This is the one moment that disappears the instant a participant starts clicking, so it has to be captured deliberately.
@@ -286,6 +286,7 @@ Before returning the draft, check it against `references/unmod-writing-rules.md`
 - [ ] First-impression capture exists if any new screen or concept is shown.
 - [ ] Every fixed-choice comprehension question has genuinely plausible wrong answers, not throwaway ones.
 - [ ] Warm-up questions come before scenario framing, not after.
+- [ ] No warm-up question names the specific concept a later task is measuring unprompted (order alone doesn't prevent content-priming — check each warm-up question's wording against every task's comprehension target, not just against the scenario transition).
 - [ ] No compound (multi-part) instructions in a single step.
 - [ ] Welcome message's time estimate matches the sum of task times.
 - [ ] Nothing in the scenario framing tips off the "expected" or "correct" reaction.
