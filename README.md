@@ -17,9 +17,10 @@ Each skill is grounded in methodology from the most trusted voices in UX researc
 | `/usertesting-html` | UserTesting HTML | Builds the visual stimuli HTML — dual-phone / two-cart / single-row card patterns, design tokens, image labels, subtotal audit, image-quality QA |
 | `/usertesting-orchestrator` | UserTesting Orchestrator | Coordinates the full plan → script → HTML pipeline end-to-end, owns shared-context handoffs, runs the 3-layer triangulation audit |
 | `/diy-triage` | DIY Triage | Entry gate for a raw research ask — routes it to the DIY track, the researcher-led track, or both in parallel, and flags when a DIY study should escalate mid-stream |
+| `/diy-research-plan` | DIY Research Plan | Short, plain-language planning doc for the self-serve requester — a fraction of a full RPP's length; feeds `/screener` and `/unmod-script` |
 | `/screener` | Screener | Standalone participant screener for a self-serve unmoderated study — no researcher needed to interpret it afterward |
 | `/unmod-script` | Unmoderated Test Script | Plain-language task list and instructions for an unmoderated usability test, written for a participant working alone |
-| `/diy-packet` | DIY Research Packet | Condensed, self-serve research packet bundling screener + script + launch instructions — the lightweight counterpart to `/research-plan` |
+| `/diy-packet` | DIY Research Packet | Final assembly/handoff step — bundles the `/diy-research-plan` + `/screener` + `/unmod-script` outputs into one shareable kit |
 
 All skills follow the same pattern:
 
@@ -34,10 +35,12 @@ All skills follow the same pattern:
 
 A self-serve pipeline for designers, PMs, content leads, and fulfillment partners who need a research read without necessarily needing a researcher to run it. `/diy-triage` is the entry point; it routes into one of two tracks, or both:
 
-- **DIY track** (self-serve, no researcher needed): `/screener` → `/unmod-script` → `/diy-packet`
+- **DIY track** (self-serve, no researcher needed): `/diy-research-plan` → `/screener` → `/unmod-script` → `/diy-packet`
 - **Researcher-led track** (deeper, needs a UX researcher): `/rpp` → `/mod-guide` → `/synth`
 
-`/rpp` and `/synth` aren't new skills — they're this pipeline's names for the existing `/research-plan` and `/report` skills, which already produce the depth a researcher-led study needs. `/mod-guide` is the same skill either way. The only genuinely new skills are the four DIY-track-specific ones plus the triage gate, listed in the table above. The deliberate split: `/rpp` (`/research-plan`) stays deep and technical; `/diy-packet` is the intentionally smaller, plain-language equivalent for someone running their own study.
+`/rpp` and `/synth` aren't new skills — they're this pipeline's names for the existing `/research-plan` and `/report` skills, which already produce the depth a researcher-led study needs. `/mod-guide` is the same skill either way. The genuinely new skills are the five DIY-track-specific ones (the triage gate plus the four-step DIY track), listed in the table above. The deliberate split: `/rpp` (`/research-plan`) stays deep, technical, and strategic — built for PMs and researchers running a "lockdown"-grade study; `/diy-research-plan` is the intentionally smaller, plain-language equivalent for designers and content designers running their own study, with `/diy-packet` as the final step that assembles the plan, screener, and script into one handoff kit rather than re-deriving any of them.
+
+Both DIY-track case studies that grounded this pipeline are reflected across all five skills, not just one: a designer-led unmoderated project that went straight from a PRD to a bundled packet (no separate plan doc), and a fulfillment-side project that wrote a standalone unmoderated research plan first. `/diy-research-plan` documents both patterns — including a "when you might skip this and go straight to `/diy-packet`" section for the small/low-stakes case.
 
 ## Install
 

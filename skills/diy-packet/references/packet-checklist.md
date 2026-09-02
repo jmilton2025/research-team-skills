@@ -8,6 +8,7 @@ Read the packet as if you have never run a study before and no one is sitting ne
 
 ## Checklist
 
+- [ ] **Content traces back to an upstream output, not a fresh guess.** The learning goal, audience, and questions should match what's in the `/diy-research-plan`, `/screener`, and `/unmod-script` outputs for this study — this packet assembles those, it doesn't invent them. If a section was hand-authored inline because no upstream output existed yet, that should be stated plainly, not disguised as if it came from a plan.
 - [ ] **No unexplained jargon.** Every research term that appears (screener, unmoderated, fit gate, wrap-up) is either defined inline the first time it's used, or replaced with plain language entirely. A requester should never need to look up a word to understand their own packet.
 - [ ] **Every fill-in field has a guidance sentence right next to it.** Not above it, not in a separate legend — next to it, so there's no ambiguity about what's wanted when the requester sits down to fill it in.
 - [ ] **The fit gate comes first and is impossible to skip past.** A requester who doesn't belong in the DIY track should find that out in the first section, not discover it halfway through building a test that was never going to answer their question.
@@ -18,6 +19,7 @@ Read the packet as if you have never run a study before and no one is sitting ne
 - [ ] **The findings section is a summary table, not a research report.** If it's grown Finding/Insight/Recommendation rungs, evidence-density rules, or a priority-emoji system, it has quietly become a `/report` output and should route there instead.
 - [ ] **Length stays around a quarter of a full Research Project Plan.** If the document is creeping toward RPP length, some section is doing more than a DIY packet should — cut it back or admit the request has outgrown DIY scope.
 - [ ] **It's one document.** Everything the requester needs to actually run the test lives in this one packet, or is a single clear pointer away (`/screener`, `/unmod-script`). No suite of five linked docs to assemble themselves.
+- [ ] **Multi-item or comparison studies list every stimulus, not just one link.** If the study reacts to more than one item or compares two versions, Section 4a names each one with its link/asset and any variant-specific notes — a requester shouldn't have to guess which asset goes with which question. Two-version comparisons also note the alternating order so one version doesn't get an unfair "seen first" advantage.
 - [ ] **A person with zero research background could hand this to someone else and have them run it identically.** This is the real bar — not "would a researcher approve of this," but "would two different non-researchers produce the same study from the same packet."
 
 ## Common failure signs (fix these before calling it done)

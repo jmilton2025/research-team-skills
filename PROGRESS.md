@@ -1,14 +1,35 @@
 # P4 (sub-stream) Progress — Research Team Skills
 
 **Parent project:** P4 — Research OKR / AI Enablement
-**Last updated:** 2026-09-01 15:21 PDT
-**Current state:** **DIY research pipeline (OKR #5) shipped** — 4 new skills built (`diy-triage`, `screener`, `unmod-script`, `diy-packet`) + `/rpp`/`/synth` wired as aliases for the existing `research-plan`/`report` skills, `/mod-guide` shared across both tracks. Repo now has 12 skills total. Core skills shipped — /mod-guide (7-phase pipeline + H.E.A.R.T.), jedi-doc-styling-1 (Research Plan template, 226/226 verifier pass), jedi-doc-styling-2 (GlossGenius). **research-plan skill now restructured to the canonical ResOps RPP template** (Option B: ResOps order + names, richer Jun-2 content folded in) with a section-by-section interactive pop-up walk (first pop-up = Existing Insights). Infrastructure: GitHub repo (public) + Drive folder + local skill chain validated end-to-end.
+**Last updated:** 2026-09-02 08:40 PDT
+**Current state:** **DIY research pipeline (OKR #5) now 5 skills** — `diy-triage` → `diy-research-plan` (new, grounded in Ndidi's real Unmoderated Research Plan) → `screener` → `unmod-script` → `diy-packet` (re-grounded with the same example, repositioned as the final assembly/handoff step). `/rpp`/`/synth` still aliases for `research-plan`/`report`, `/mod-guide` shared across both tracks. Repo now has 13 skills total. Not yet committed to GitHub as of this line. Core skills shipped — /mod-guide (7-phase pipeline + H.E.A.R.T.), jedi-doc-styling-1 (Research Plan template, 226/226 verifier pass), jedi-doc-styling-2 (GlossGenius). **research-plan skill now restructured to the canonical ResOps RPP template** (Option B: ResOps order + names, richer Jun-2 content folded in) with a section-by-section interactive pop-up walk (first pop-up = Existing Insights). Infrastructure: GitHub repo (public) + Drive folder + local skill chain validated end-to-end.
 
 > Daily entries for this sub-stream may also appear in `~/Documents/Claude/Project-4-Research-OKR-AI-Enablement/PROGRESS.md` under a "Research Team Skills" sub-heading. This file is the dedicated log.
 
 ---
 
 <!-- New daily entries are prepended ABOVE this line. Do not delete this marker. -->
+
+## 📅 2026-09-02 (Wed) — 5th DIY skill added: `diy-research-plan`, `diy-packet` re-grounded
+
+### What changed
+Jedida flagged that yesterday's `diy-packet` build only used Kinnera's real example (a packet, no separate plan doc) — not Ndidi's (a standalone "Unmoderated Research Plan" doc). She also named the DIY track explicitly as 5 steps: triage, **a research plan**, screener, unmoderated script, and a DIY packet — one more step than what shipped yesterday. Ran 3 parallel agents:
+
+- **`diy-research-plan`** (new) — the missing 5th step, sitting between `/diy-triage` and `/screener`. A ~half-page, six-section planning doc grounded structurally in Ndidi's real Unmoderated Research Plan (objective, who's tested, method-fit confirm, task shape, timeline, escalation triggers). Also cross-referenced Kinnera's packet example to write a "when you might skip this and go straight to `/diy-packet`" section for small/low-stakes asks — the two real examples actually used different structures (Ndidi wrote a separate plan; Kinnera skipped straight to a packet), and the new skill documents both patterns rather than picking one. `references/plan-vs-rpp-comparison.md` maps every RPP section to what it collapses into or gets cut, with a rationale per cut.
+- **`diy-packet`** (re-grounded + repositioned) — pulled in Ndidi's example as a second structural source (added a comparison/reaction-format branch and a stimuli/materials table with counterbalancing, neither present before). Repositioned as the pipeline's final assembly/handoff step — it now bundles `/diy-research-plan` + `/screener` + `/unmod-script` outputs rather than re-deriving the plan itself, with a new "Assemble, don't re-derive" content rule and a differentiation table vs. `/diy-research-plan` (in addition to the existing one vs. `/research-plan`).
+- **`diy-triage`** (routing updated only) — chain references updated from `/screener → /unmod-script → /diy-packet` to `/diy-research-plan → /screener → /unmod-script → /diy-packet` in both `SKILL.md` and `references/routing-rubric.md`. Triage decision logic itself untouched.
+
+**Confidentiality check:** grep across all 5 DIY-track skill folders for real project/requester names — clean.
+
+README updated: new `diy-research-plan` row, `diy-packet`'s description updated to "final assembly step", DIY track chain corrected to 5 steps, and a new paragraph noting both real case studies (packet-only vs. plan-then-packet) are reflected across the pipeline rather than just one.
+
+### Open / next
+- Committing + pushing this to GitHub next.
+- Still not mock-run against the real case studies before shipping (carried from yesterday).
+- Still open: whether `/diy-triage`'s "both tracks" output needs a harder state machine; whether the "Progress deck" artifact from Ndidi's example warrants its own skill; the standing Jun-12 confidentiality re-verification on this now-larger public repo.
+- `screener` is still grounded only in a researcher-led example (Home Feed Redesign's Screener tab) — neither Kinnera's nor Ndidi's DIY-track docs had an explicit standalone screener to pull from. Flagged, not fixed — no DIY-side screener example exists to re-ground it with.
+
+---
 
 ## 📅 2026-09-01 (Tue) — DIY research pipeline (OKR #5): 4 new skills built + shipped to GitHub
 

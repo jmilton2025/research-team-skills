@@ -35,7 +35,7 @@ Trigger phrases:
 
 | Track | What it produces | Downstream skills |
 |---|---|---|
-| **DIY** — self-serve, no researcher required | An unmoderated read the requester runs and interprets themselves | `/screener` → `/unmod-script` → `/diy-packet` |
+| **DIY** — self-serve, no researcher required | An unmoderated read the requester runs and interprets themselves | `/diy-research-plan` → `/screener` → `/unmod-script` → `/diy-packet` |
 | **Researcher-led** — needs a UX researcher | A moderated study with a researcher driving design, fieldwork, and synthesis | `/rpp` (the team's research-plan skill) → `/mod-guide` → `/synth` (the team's report skill) |
 | **Both, in parallel** — one brief, two reads | A fast tactical DIY read *and* a deeper moderated study, run side by side, each documented as its own round | Both chains above, run concurrently, cross-referenced in the final deliverable |
 
@@ -104,7 +104,7 @@ Do not pad this with a restatement of everything already discussed. The requeste
 
 Route both, in parallel, when the brief genuinely contains two different questions that need two different instruments — not when someone just wants extra reassurance. The tell is Q4 or Q5 coming back split: a fast completion/preference check *and* a "why do people behave this way" question living in the same ask. When this happens:
 
-1. Route the count-and-confirm half through DIY (`/screener` → `/unmod-script` → `/diy-packet`).
+1. Route the count-and-confirm half through DIY (`/diy-research-plan` → `/screener` → `/unmod-script` → `/diy-packet`).
 2. Route the why half through the researcher-led chain (`/rpp` → `/mod-guide` → `/synth`).
 3. Document each as its own round (own timeline, own deliverable) rather than trying to force one combined study plan — they answer different questions and usually run on different clocks.
 4. Note in both deliverables that a parallel read exists on the other track, so neither one is read as the whole picture.
@@ -137,7 +137,7 @@ Keep the full triage output to what's below — this is a routing call, not a re
 **Why:** [1 sentence]
 
 **Next step(s):**
-- [Specific next command — e.g. "/screener" or "/rpp"]
+- [Specific next command — e.g. "/diy-research-plan" or "/rpp"]
 - [If "both": both chains, named separately]
 
 **Escalation watch:** [1-3 concrete triggers that would change this call]
@@ -151,7 +151,7 @@ Keep the full triage output to what's below — this is a routing call, not a re
 4. **"Both" is a real answer, not a fallback for indecision.** Only route both when Q4 or Q5 genuinely split — not as a way to avoid picking.
 5. **Escalation watch is mandatory, not just for edge cases.** Every DIY and every "both" call gets one. Researcher-led calls can skip it only when there's no plausible scope-down (rare).
 6. **Never fabricate a decision-owner or a deadline.** If Q1 or Q3 wasn't answered clearly, ask again rather than defaulting.
-7. **Stay a router.** This skill hands off to `/screener`, `/unmod-script`, `/diy-packet`, `/rpp`, `/mod-guide`, and `/synth` — it does not draft any of their content itself.
+7. **Stay a router.** This skill hands off to `/diy-research-plan`, `/screener`, `/unmod-script`, `/diy-packet`, `/rpp`, `/mod-guide`, and `/synth` — it does not draft any of their content itself.
 
 ## Tool usage
 

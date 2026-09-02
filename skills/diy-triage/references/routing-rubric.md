@@ -44,6 +44,6 @@ When routing both:
 
 | Track | Chain |
 |---|---|
-| DIY | `/screener` → `/unmod-script` → `/diy-packet` |
+| DIY | `/diy-research-plan` → `/screener` → `/unmod-script` → `/diy-packet` |
 | Researcher-led | `/rpp` (research-plan) → `/mod-guide` → `/synth` (report) |
 | Both | Both chains above, run concurrently as separate rounds |
