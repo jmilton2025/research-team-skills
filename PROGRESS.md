@@ -1,14 +1,29 @@
 # P4 (sub-stream) Progress — Research Team Skills
 
 **Parent project:** P4 — Research OKR / AI Enablement
-**Last updated:** 2026-09-02 09:57 PDT
-**Current state:** **DIY research pipeline (OKR #5) mock-tested + fixed** — a 5-agent test pass (one demo request run through all 5 skills sequentially) found ~30 real gaps, headlined by one platform-wide blocker (`AskUserQuestion` unavailable, no fallback in any skill) and 10 majors including two dead commands (`/rpp`, `/synth`). All ~30 fixes applied across all 5 skill files + 2 references files + one new shared conventions doc (`references/interactive-input-conventions.md`). `diy-triage` → `diy-research-plan` → `screener` → `unmod-script` → `diy-packet`, `/rpp`/`/synth` replaced with the real `/research-plan`/`/report` command names throughout. Repo now has 13 skills total. Core skills shipped — /mod-guide (7-phase pipeline + H.E.A.R.T.), jedi-doc-styling-1 (Research Plan template, 226/226 verifier pass), jedi-doc-styling-2 (GlossGenius). **research-plan skill now restructured to the canonical ResOps RPP template** (Option B: ResOps order + names, richer Jun-2 content folded in) with a section-by-section interactive pop-up walk (first pop-up = Existing Insights). Infrastructure: GitHub repo (public) + Drive folder + local skill chain validated end-to-end.
+**Last updated:** 2026-09-02 10:31 PDT
+**Current state:** **DIY research pipeline (OKR #5) re-tested after fixes — all 8 stages now "pass."** A second mock-run (different demo, deliberately routed to BOTH tracks) confirmed the fixes hold: both rollout blockers (the `AskUserQuestion` fallback, the dead `/rpp`/`/synth` commands) held under harder conditions, and the researcher-led chain (`research-plan`→`mod-guide`→`report`) ran end-to-end for the first time ever with zero dead commands. 7 of the original 30 fixes weren't exercised by this scenario's shape (unconfirmed, not broken). New findings surfaced: a recurring undocumented "BLOCKED status" pattern (4 skills independently improvised the same thing) and a near-miss in `unmod-script` where a fix only held because of manual re-derivation against a mislabeled upstream shape. Full report: `mock-runs/DIY-PIPELINE-RETEST-REPORT-2026-09-02.md`. Prior state: **DIY research pipeline (OKR #5) mock-tested + fixed** — a 5-agent test pass (one demo request run through all 5 skills sequentially) found ~30 real gaps, headlined by one platform-wide blocker (`AskUserQuestion` unavailable, no fallback in any skill) and 10 majors including two dead commands (`/rpp`, `/synth`). All ~30 fixes applied across all 5 skill files + 2 references files + one new shared conventions doc (`references/interactive-input-conventions.md`). `diy-triage` → `diy-research-plan` → `screener` → `unmod-script` → `diy-packet`, `/rpp`/`/synth` replaced with the real `/research-plan`/`/report` command names throughout. Repo now has 13 skills total. Core skills shipped — /mod-guide (7-phase pipeline + H.E.A.R.T.), jedi-doc-styling-1 (Research Plan template, 226/226 verifier pass), jedi-doc-styling-2 (GlossGenius). **research-plan skill now restructured to the canonical ResOps RPP template** (Option B: ResOps order + names, richer Jun-2 content folded in) with a section-by-section interactive pop-up walk (first pop-up = Existing Insights). Infrastructure: GitHub repo (public) + Drive folder + local skill chain validated end-to-end.
 
 > Daily entries for this sub-stream may also appear in `~/Documents/Claude/Project-4-Research-OKR-AI-Enablement/PROGRESS.md` under a "Research Team Skills" sub-heading. This file is the dedicated log.
 
 ---
 
 <!-- New daily entries are prepended ABOVE this line. Do not delete this marker. -->
+
+## 📅 2026-09-02 (Wed, even later) — Re-test: do the fixes actually hold?
+
+### What changed
+Ran a second mock-run — deliberately a different, harder demo (a PM's cart-abandonment ask, framed to route to BOTH tracks at once) — specifically to check whether the fixes from the earlier test pass hold up outside the exact scenario they were written against. 9 agents: triage, then the DIY chain and researcher-led chain in parallel, each agent verifying its assigned fix(es) against the real output file rather than trusting its own claim, then one synthesis agent cross-checking everything.
+
+**Result: all 8 stages passed** (vs. all "partial" the first time). Both rollout blockers held under harder conditions — the `AskUserQuestion` fallback, and `/rpp`/`/synth` finally resolving to the real `/research-plan`/`/report` on the very first researcher-led call the pipeline has ever gotten. `research-plan` → `mod-guide` → `report` ran fully end-to-end for the first time, with the `/report` step validated using clearly-labeled simulated findings (no real fieldwork exists in a mock test).
+
+**Caveats, not failures:** 7 of the original 30 fixes (M3, M4, N6, N10, N15, X1, X2) weren't exercised by this scenario's shape — unconfirmed, not broken. Two new patterns surfaced: (1) 4 of the DIY skills each independently improvised the same undocumented "BLOCKED status" line when a hard gate fired — worth centralizing like the shared `AskUserQuestion` fix; (2) a real near-miss in `unmod-script` — its M7 fix (picking the right comparison shape) only held because the agent manually re-derived the shape from the actual research question rather than trusting the upstream plan/screener, which had both mislabeled it identically. Full report: `mock-runs/DIY-PIPELINE-RETEST-REPORT-2026-09-02.md`.
+
+### Open / next
+- Not yet decided whether to fix these new findings — asked Jedida.
+- The 7 unexercised fixes still need a scenario that actually hits them.
+
+---
 
 ## 📅 2026-09-02 (Wed, later) — Full mock-run test + fix pass on the DIY pipeline
 
