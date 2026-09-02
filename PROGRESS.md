@@ -1,14 +1,36 @@
 # P4 (sub-stream) Progress — Research Team Skills
 
 **Parent project:** P4 — Research OKR / AI Enablement
-**Last updated:** 2026-09-02 08:40 PDT
-**Current state:** **DIY research pipeline (OKR #5) now 5 skills** — `diy-triage` → `diy-research-plan` (new, grounded in Ndidi's real Unmoderated Research Plan) → `screener` → `unmod-script` → `diy-packet` (re-grounded with the same example, repositioned as the final assembly/handoff step). `/rpp`/`/synth` still aliases for `research-plan`/`report`, `/mod-guide` shared across both tracks. Repo now has 13 skills total. Not yet committed to GitHub as of this line. Core skills shipped — /mod-guide (7-phase pipeline + H.E.A.R.T.), jedi-doc-styling-1 (Research Plan template, 226/226 verifier pass), jedi-doc-styling-2 (GlossGenius). **research-plan skill now restructured to the canonical ResOps RPP template** (Option B: ResOps order + names, richer Jun-2 content folded in) with a section-by-section interactive pop-up walk (first pop-up = Existing Insights). Infrastructure: GitHub repo (public) + Drive folder + local skill chain validated end-to-end.
+**Last updated:** 2026-09-02 09:57 PDT
+**Current state:** **DIY research pipeline (OKR #5) mock-tested + fixed** — a 5-agent test pass (one demo request run through all 5 skills sequentially) found ~30 real gaps, headlined by one platform-wide blocker (`AskUserQuestion` unavailable, no fallback in any skill) and 10 majors including two dead commands (`/rpp`, `/synth`). All ~30 fixes applied across all 5 skill files + 2 references files + one new shared conventions doc (`references/interactive-input-conventions.md`). `diy-triage` → `diy-research-plan` → `screener` → `unmod-script` → `diy-packet`, `/rpp`/`/synth` replaced with the real `/research-plan`/`/report` command names throughout. Repo now has 13 skills total. Core skills shipped — /mod-guide (7-phase pipeline + H.E.A.R.T.), jedi-doc-styling-1 (Research Plan template, 226/226 verifier pass), jedi-doc-styling-2 (GlossGenius). **research-plan skill now restructured to the canonical ResOps RPP template** (Option B: ResOps order + names, richer Jun-2 content folded in) with a section-by-section interactive pop-up walk (first pop-up = Existing Insights). Infrastructure: GitHub repo (public) + Drive folder + local skill chain validated end-to-end.
 
 > Daily entries for this sub-stream may also appear in `~/Documents/Claude/Project-4-Research-OKR-AI-Enablement/PROGRESS.md` under a "Research Team Skills" sub-heading. This file is the dedicated log.
 
 ---
 
 <!-- New daily entries are prepended ABOVE this line. Do not delete this marker. -->
+
+## 📅 2026-09-02 (Wed, later) — Full mock-run test + fix pass on the DIY pipeline
+
+### What changed
+Jedida asked for a real end-to-end test: 5 agents each ran one DIY-pipeline skill, in order, against the same fictional demo request (a content designer, Priya, wants a fast unmoderated read comparing 3 copy variants on a substitution-notification card). Each agent actually followed its skill's real instructions — simulating the interactive Q&A, producing the real deliverable, writing it to `Project-4-Research-OKR-AI-Enablement/mock-runs/<skill>/demo-content-designer-2026-09-02.md` — while also acting as a critical QA reviewer of the skill's own text. A 6th agent verified every finding against the actual output files and wrote a consolidated report.
+
+**Result:** the pipeline worked end-to-end (all 5 stages ran, each consumed its upstream artifact, `/diy-packet` genuinely assembled rather than re-derived), but every stage self-rated "partial." ~30 real, verified gaps were found — see `mock-runs/DIY-PIPELINE-TEST-REPORT-2026-09-02.md` for the full ranked list. Headline finding: **`AskUserQuestion` is unavailable in this runtime and every one of the 5 skills assumes it exists with no documented fallback** — a platform-wide issue, not a per-skill one.
+
+Jedida asked to fix everything in the report. Ran 5 parallel agents (one per skill file) applying all ~30 fixes:
+- Created `references/interactive-input-conventions.md` (repo-root, shared) — the `AskUserQuestion` fallback, written once and referenced by all 5 skills instead of duplicated.
+- `diy-triage`: replaced dead `/rpp`/`/synth` references with the real `/research-plan`/`/report` command names throughout `SKILL.md` + `routing-rubric.md`; added a 6th triage question (prior research on this surface) to match the rubric's own 6-factor table; added a format→tool table for non-Google-Doc inputs.
+- `diy-research-plan`: added a hard stimulus-link gate at intake (so a missing link surfaces early, not at final packaging); added a carve-out for multi-part questions triage already validated; added the missing research-partner gather question; added relative-timing guidance.
+- `screener`: added the exact scope-note sentence (coordinated with `unmod-script`) resolving the recruiting-pool vs. variant-assignment boundary; added a bias-risk exclusion question; added a worked double-barreled-question example; fixed the unresolvable bracket-vs-no-brackets conflict; stated a default 6-month recency window.
+- `unmod-script`: added the matching scope-note sentence; split the single 2-item comparison template into two named sub-shapes (relative preference vs. N-way independent comprehension); added a required Randomization/order field; fixed the multi-stimulus First Impression gap.
+- `diy-packet`: resolved the internal "assemble, don't re-derive" vs. "add a comprehension check" self-contradiction; added a "why it matters" field, a merge rule for escalation triggers, and a Step 0 trust-vs-reopen clarification.
+- Caught one bug from the fix pass itself: `diy-triage`'s new pointer to the shared conventions doc used the wrong relative path (missing `../../`) — fixed by hand after review.
+
+### Open / next
+- Committing + pushing to GitHub next.
+- Not re-tested against a second demo after the fixes — the original test was against a single fictional scenario; a second mock-run (ideally a different request shape, e.g. one that actually needs the researcher-led track) would validate the fixes rather than just trust them.
+
+---
 
 ## 📅 2026-09-02 (Wed) — 5th DIY skill added: `diy-research-plan`, `diy-packet` re-grounded
 
@@ -24,7 +46,7 @@ Jedida flagged that yesterday's `diy-packet` build only used Kinnera's real exam
 README updated: new `diy-research-plan` row, `diy-packet`'s description updated to "final assembly step", DIY track chain corrected to 5 steps, and a new paragraph noting both real case studies (packet-only vs. plan-then-packet) are reflected across the pipeline rather than just one.
 
 ### Open / next
-- Committing + pushing this to GitHub next.
+- ✅ Committed (`48f5de8`) and pushed to GitHub — blocked briefly on a locked macOS Keychain hanging `git push`/`gh auth`; resolved once the keychain was unlocked, no code changes needed. See `ERRORS.md`.
 - Still not mock-run against the real case studies before shipping (carried from yesterday).
 - Still open: whether `/diy-triage`'s "both tracks" output needs a harder state machine; whether the "Progress deck" artifact from Ndidi's example warrants its own skill; the standing Jun-12 confidentiality re-verification on this now-larger public repo.
 - `screener` is still grounded only in a researcher-led example (Home Feed Redesign's Screener tab) — neither Kinnera's nor Ndidi's DIY-track docs had an explicit standalone screener to pull from. Flagged, not fixed — no DIY-side screener example exists to re-ground it with.

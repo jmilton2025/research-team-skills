@@ -45,15 +45,18 @@ Collapsing the two is the most common screener failure: a "nice to have" demogra
 
 ## Step 1 — Gather study basics
 
-Because this skill is built for a requester working alone, keep intake to a **single short batch** — this is not the multi-round interrogation a full research plan deserves. Use `AskUserQuestion` once, up to 4–5 questions:
+Because this skill is built for a requester working alone, keep intake to a **single short batch** — this is not the multi-round interrogation a full research plan deserves. Use `AskUserQuestion` once, up to 6 questions:
 
 1. **What's being studied, in plain terms?** (e.g., "a checkout flow," "a new onboarding screen" — accept a one-line description, don't demand a brief)
 2. **Who needs to qualify?** (the core behavior or role a valid respondent must have — e.g., "has bought X in the last 3 months," "manages the household's Y")
 3. **Platform / device the study runs on** (mobile web, native app, desktop, specific OS — determines whether a device-check question is needed)
 4. **Target sample size + any known quota splits** (e.g., "N=40, roughly half new-to-category / half experienced")
-5. **Anything already known that should disqualify someone** (competitors, employees, existing beta testers, recent participants in a similar study — accept "not sure, use your default list")
 
-If the requester pastes a brief, kickoff note, or Slack thread instead of answering live, extract these five answers from it and read them back for confirmation rather than re-asking from scratch.
+   Scope note: this question defines the recruiting pool only -- which participants qualify and how many of each type to recruit. Assigning which variant(s) each recruited participant actually sees, sees first, or sees in what order is /unmod-script's territory, not this skill's.
+5. **Anything already known that should disqualify someone** (competitors, employees, existing beta testers, recent participants in a similar study — accept "not sure, use your default list")
+6. **Is there anyone who, because of insider knowledge of how this works, would see through the test and skew results?** (e.g. someone who already knows the mechanism being tested — a bias-risk check, distinct from the default exclusion list in question 5)
+
+If the requester pastes a brief, kickoff note, or Slack thread instead of answering live, extract these six answers from it and read them back for confirmation rather than re-asking from scratch.
 
 ---
 
@@ -147,19 +150,19 @@ Owner: [Name/team] · Platform: [where this will be fielded] · Target N: [total
    Which of the following do you use? Select all that apply. **[RANDOMIZE]**
    a. [Platform/device A] · b. [Platform/device B] · c. None of these **[EXCLUSIVE]**
 
-7. Which of the following best describes your household? (quota only, not disqualifying)
+7. Which of the following best describes your household? (quota only, not disqualifying) (include only if relevant to this study)
    [Standard household/composition options] · Prefer not to answer
 
-8. Which of the following [adjacent products/services], if any, have you used in the past [X months]? Select all that apply. **[DO NOT RANDOMIZE if list order aids brand recognition]**
+8. Which of the following [adjacent products/services], if any, have you used in the past [X months]? Select all that apply. **[DO NOT RANDOMIZE if list order aids brand recognition]** (include only if relevant to this study)
    [Option list] · None of these **[EXCLUSIVE]**
 
-9. In the past [X months], have you used [product] for any of the following? Select all that apply. **[RANDOMIZE]**
+9. In the past [X months], have you used [product] for any of the following? Select all that apply. **[RANDOMIZE]** (include only if relevant to this study)
    [Occasion/use-case options] · None of these — **SCREEN OUT** (only if a specific occasion is required)
 
-10. Which of the following played a role in your decision to [core behavior]? Select all that apply. (non-disqualifying)
+10. Which of the following played a role in your decision to [core behavior]? Select all that apply. (non-disqualifying) (include only if relevant to this study)
     [Motivation/decision-factor options]
 
-11. [Attribute/preference segmentation relevant to this study — e.g., accessibility needs, category preferences]. Select all that apply. (non-disqualifying, feeds personalization)
+11. [Attribute/preference segmentation relevant to this study — e.g., accessibility needs, category preferences]. Select all that apply. (non-disqualifying, feeds personalization) (include only if relevant to this study)
     [Option list] · None of the above
 
 12. How important is [attribute from Q11] to your experience with [product]?
@@ -174,7 +177,7 @@ Owner: [Name/team] · Platform: [where this will be fielded] · Target N: [total
 "Thank you for your interest — based on your answers, you don't qualify for this particular study. We appreciate your time."
 
 ## Qualify message
-"Thanks! Based on your answers, you qualify for this study. [Next steps — scheduling link, study access link, etc.]"
+"Thanks! Based on your answers, you qualify for this study. Link will be added once the test is built."
 ```
 
 ---
@@ -193,6 +196,7 @@ Owner: [Name/team] · Platform: [where this will be fielded] · Target N: [total
 10. **Minimize PII.** Collect only what's needed to qualify or quota (H.E.A.R.T. "Responsible"). No unnecessary names, contact details, or sensitive attributes beyond what the study genuinely requires.
 11. **Every quota bucket gets a target N.** "Aim for a mix" alone isn't a quota — pair qualitative guidance with an actual number wherever the requester gave one, or a sensible default with a flag to confirm.
 12. **Device/platform checks only when relevant.** Don't ask about devices the study doesn't touch.
+13. **Default recency window.** When a question needs a "[X months]" recency window and the requester hasn't specified one, default to a 6-month recency window unless the requester specifies otherwise.
 
 ---
 
@@ -241,7 +245,7 @@ Close with a short status note: what qualifies, what disqualifies, the quota str
 
 ## Tool Usage
 
-- **AskUserQuestion** — Step 1 (single intake batch) and Step 2 (one approval question). Not used again after Step 2 — the deliverable should not require further back-and-forth to finish.
+- **AskUserQuestion** — Step 1 (single intake batch) and Step 2 (one approval question). Not used again after Step 2 — the deliverable should not require further back-and-forth to finish. See `../../references/interactive-input-conventions.md` for the fallback if `AskUserQuestion` is unavailable.
 - **Read** — read pasted briefs, Slack threads, or kickoff notes to extract Step 1's answers instead of re-asking.
 - **`google-docs:fetch-google-doc`** / **Glean `read_document`** — only if the requester points to an existing brief or prior screener as a starting reference.
 - The generated markdown is the primary, final deliverable — a self-serve screener has no researcher downstream to polish it further.

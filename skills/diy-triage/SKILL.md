@@ -36,7 +36,7 @@ Trigger phrases:
 | Track | What it produces | Downstream skills |
 |---|---|---|
 | **DIY** — self-serve, no researcher required | An unmoderated read the requester runs and interprets themselves | `/diy-research-plan` → `/screener` → `/unmod-script` → `/diy-packet` |
-| **Researcher-led** — needs a UX researcher | A moderated study with a researcher driving design, fieldwork, and synthesis | `/rpp` (the team's research-plan skill) → `/mod-guide` → `/synth` (the team's report skill) |
+| **Researcher-led** — needs a UX researcher | A moderated study with a researcher driving design, fieldwork, and synthesis | `/research-plan` (this pipeline's researcher-led planning step) → `/mod-guide` → `/report` (this pipeline's researcher-led synthesis step) |
 | **Both, in parallel** — one brief, two reads | A fast tactical DIY read *and* a deeper moderated study, run side by side, each documented as its own round | Both chains above, run concurrently, cross-referenced in the final deliverable |
 
 "Both" is not a hedge — it's the right call whenever a single brief contains a count-and-confirm question *and* a watch-and-interpret question that neither track alone can answer. See Step 3.
@@ -47,7 +47,16 @@ Ask the requester to paste whatever they have:
 
 > "Paste what you've got — a PRD, a product brief, a Slack thread, kickoff notes, or just describe the ask in your own words. I'll pull out what matters for routing and ask a few quick questions."
 
-Accept any format. If it's a Google Doc link, read it via Glean (`mcp__735858e3-df5d-4167-8a6d-f4047ed77a06__read_document`) or `google-docs:fetch-google-doc`.
+Accept any format. Use the format-to-tool mapping below to pull in linked material:
+
+| Format | Tool |
+|---|---|
+| Google Doc link | Glean `read_document` (e.g. `mcp__735858e3-df5d-4167-8a6d-f4047ed77a06__read_document`) |
+| Figma link | Figma MCP tools |
+| Slack thread | Slack MCP tools |
+| Screenshot / image | Read directly |
+
+(`google-docs:fetch-google-doc` is not an available fallback in this environment — don't rely on it.)
 
 From the material, extract (don't invent — if something isn't in the source, ask rather than guess):
 - **The decision this research is meant to inform** (what happens differently depending on the answer)
@@ -57,7 +66,7 @@ From the material, extract (don't invent — if something isn't in the source, a
 
 ## Step 2 — Ask the triage questions
 
-Run these through `AskUserQuestion`, batched (up to 4 per call, so this fits in one or two batches). Each question exists because it's a documented decision factor — see `references/routing-rubric.md` for the full rubric these map to.
+Run these through `AskUserQuestion`, batched (up to 4 per call, so this fits in three batches). Each question exists because it's a documented decision factor — see `references/routing-rubric.md` for the full rubric these map to.
 
 **Q1 — Who owns this decision?**
 - A designer, PM, or content lead working solo (**leans DIY**)
@@ -83,9 +92,14 @@ Run these through `AskUserQuestion`, batched (up to 4 per call, so this fits in 
 - Leadership, a cross-functional partner, or the requester themselves wants a researcher's interpretation and sign-off (**leans researcher-led**)
 - Both — a fast tactical answer now, and a researcher's deeper read for the bigger call (**leans both**)
 
+**Q6 — Is there prior research or existing signal on this surface?**
+- Well-trodden ground — this has been tested before, or there's a clear pattern for what "success" looks like (**leans DIY**)
+- Net-new territory, or a past unmoderated read here already came back ambiguous (**leans researcher-led**)
+- Some grounding exists for the tactical piece, but the bigger question is genuinely new (**leans both**)
+
 ## Step 3 — Make the call
 
-Weigh the five answers against `references/routing-rubric.md`. In general:
+Weigh the six answers against `references/routing-rubric.md`. In general:
 
 - **All or most answers lean DIY** → route DIY.
 - **All or most answers lean researcher-led** → route researcher-led.
@@ -98,14 +112,14 @@ State the call in one line, then the reason, then the next command:
 > **Why:** [one sentence tying back to the 1-2 answers that decided it]
 > **Next:** [the specific next skill/command to run]
 
-Do not pad this with a restatement of everything already discussed. The requester just answered five questions — they know the inputs.
+Do not pad this with a restatement of everything already discussed. The requester just answered six questions — they know the inputs.
 
 ### When "both" is the right call
 
 Route both, in parallel, when the brief genuinely contains two different questions that need two different instruments — not when someone just wants extra reassurance. The tell is Q4 or Q5 coming back split: a fast completion/preference check *and* a "why do people behave this way" question living in the same ask. When this happens:
 
 1. Route the count-and-confirm half through DIY (`/diy-research-plan` → `/screener` → `/unmod-script` → `/diy-packet`).
-2. Route the why half through the researcher-led chain (`/rpp` → `/mod-guide` → `/synth`).
+2. Route the why half through the researcher-led chain (`/research-plan` → `/mod-guide` → `/report`).
 3. Document each as its own round (own timeline, own deliverable) rather than trying to force one combined study plan — they answer different questions and usually run on different clocks.
 4. Note in both deliverables that a parallel read exists on the other track, so neither one is read as the whole picture.
 
@@ -137,7 +151,7 @@ Keep the full triage output to what's below — this is a routing call, not a re
 **Why:** [1 sentence]
 
 **Next step(s):**
-- [Specific next command — e.g. "/diy-research-plan" or "/rpp"]
+- [Specific next command — e.g. "/diy-research-plan" or "/research-plan"]
 - [If "both": both chains, named separately]
 
 **Escalation watch:** [1-3 concrete triggers that would change this call]
@@ -147,17 +161,17 @@ Keep the full triage output to what's below — this is a routing call, not a re
 
 1. **Extract, don't invent.** Every fact used in triage (timeline, requester role, reversibility) comes from what was pasted or answered — never assumed from the brief's tone or the researcher's guess.
 2. **One-line reason, every time.** The recommendation is only as useful as the reason attached to it. "DIY" with no reason is not a triage call — it's a coin flip.
-3. **Name the next command, not just the track.** "Researcher-led" isn't actionable on its own; "researcher-led — start with `/rpp`" is.
+3. **Name the next command, not just the track.** "Researcher-led" isn't actionable on its own; "researcher-led — start with `/research-plan`" is.
 4. **"Both" is a real answer, not a fallback for indecision.** Only route both when Q4 or Q5 genuinely split — not as a way to avoid picking.
 5. **Escalation watch is mandatory, not just for edge cases.** Every DIY and every "both" call gets one. Researcher-led calls can skip it only when there's no plausible scope-down (rare).
 6. **Never fabricate a decision-owner or a deadline.** If Q1 or Q3 wasn't answered clearly, ask again rather than defaulting.
-7. **Stay a router.** This skill hands off to `/diy-research-plan`, `/screener`, `/unmod-script`, `/diy-packet`, `/rpp`, `/mod-guide`, and `/synth` — it does not draft any of their content itself.
+7. **Stay a router.** This skill hands off to `/diy-research-plan`, `/screener`, `/unmod-script`, `/diy-packet`, `/research-plan`, `/mod-guide`, and `/report` — it does not draft any of their content itself.
 
 ## Tool usage
 
-- **AskUserQuestion** — Step 2's triage questions
-- **Glean `read_document`** or **`google-docs:fetch-google-doc`** — read a linked PRD or brief
-- **Read** — pasted content or local files
+- **AskUserQuestion** — Step 2's triage questions. See `../../references/interactive-input-conventions.md` for the fallback if `AskUserQuestion` is unavailable.
+- **Glean `read_document`, Figma MCP, or Slack MCP** — read a linked PRD, brief, Figma file, or Slack thread (see Step 1's format-to-tool table; `google-docs:fetch-google-doc` is not an available fallback here)
+- **Read** — pasted content, screenshots/images, or local files
 - **references/routing-rubric.md** — the full decision rubric behind Step 2 and Step 3; consult it whenever an answer set doesn't cleanly resolve
 
 ## Sources

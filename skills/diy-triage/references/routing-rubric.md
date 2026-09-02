@@ -1,6 +1,6 @@
 # DIY Triage — Routing Rubric
 
-The full decision rubric behind `/diy-triage`. Consult this whenever the five triage questions in `SKILL.md` Step 2 don't cleanly resolve to one track — the table below shows how each factor pulls, and the sections after it cover the escalation and parallel-track cases in more depth.
+The full decision rubric behind `/diy-triage`. Consult this whenever the six triage questions in `SKILL.md` Step 2 don't cleanly resolve to one track — the table below shows how each factor pulls, and the sections after it cover the escalation and parallel-track cases in more depth.
 
 ## Core decision factors
 
@@ -45,5 +45,5 @@ When routing both:
 | Track | Chain |
 |---|---|
 | DIY | `/diy-research-plan` → `/screener` → `/unmod-script` → `/diy-packet` |
-| Researcher-led | `/rpp` (research-plan) → `/mod-guide` → `/synth` (report) |
+| Researcher-led | `/research-plan` → `/mod-guide` → `/report` |
 | Both | Both chains above, run concurrently as separate rounds |

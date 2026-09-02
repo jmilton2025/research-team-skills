@@ -86,6 +86,8 @@ This skill assembles; it doesn't re-decide. Before drafting, check what's alread
 | Test questions | `/unmod-script` | Run that first, or hand-author from the plan's learning goal if no dedicated script exists yet |
 | Fit for DIY at all | `/diy-triage` | If nobody's confirmed this belongs in DIY (vs. researcher-led), stop and route there — this skill assumes that call was already made |
 
+Where the plan cites `/diy-triage`'s conclusion, trust that citation — unless the plan itself shows no independent Step-0 re-validation, in which case re-open the `/diy-triage` output file directly rather than taking the citation on faith.
+
 If the plan genuinely doesn't exist and there's no time to run `/diy-research-plan` separately, it's fine to gather the same minimum inputs inline (what's being tested, the single learning goal, the design link, who to test with, timeline) — but say plainly that this packet is doing double duty as plan-and-packet, so the requester knows the plan wasn't reviewed on its own.
 
 ### Step 1 — Gather the Pieces to Bundle
@@ -153,6 +155,7 @@ If you checked all four — you're good to go. If not, stop here and talk to [Re
 |---|---|---|
 | **Feature / area** | The specific part of the product this is about | [ ] |
 | **Learning goal** | The ONE most important question — if you can't say it in one sentence, it's too many questions for one DIY test | [ ] |
+| **Why it matters** | What decision this unblocks, or what happens if we don't answer it | [ ] |
 | **Starting scenario** | The one-line story that puts someone in the right frame of mind before they start (e.g., "Imagine you're shopping for a weeknight dinner") | [ ] |
 | **Design / prototype link** | The single link people will test — or "see Section 4a" if there's more than one | [ ] |
 
@@ -182,7 +185,7 @@ If you checked all four — you're good to go. If not, stop here and talk to [Re
 
 *(Repeat the Task block for each screen or step — most DIY packets need 2-4, rarely more.)*
 
-**If this is a comparison test (two versions, or several items reacted to the same way) instead of a step-by-step flow:** replace the Task block above with one repeated question set applied to each item — same questions, once per item, e.g. "Which version gives you a clearer sense of what would happen? / What would you do here? / Why?" List each item once, reusing the identical question wording for all of them, and add a comprehension-check question (a multiple-choice "which of these best matches what you think this means" with an "I'm not sure" option) wherever the test is checking whether specific wording is understood, not just which version people prefer.
+**If this is a comparison test (two versions, or several items reacted to the same way) instead of a step-by-step flow:** replace the Task block above with one repeated question set applied to each item — same questions, once per item, e.g. "Which version gives you a clearer sense of what would happen? / What would you do here? / Why?" List each item once, reusing the identical question wording for all of them, and add a comprehension-check question (a multiple-choice "which of these best matches what you think this means" with an "I'm not sure" option) wherever the test is checking whether specific wording is understood, not just which version people prefer. This suggestion applies only when drafting a script inline (i.e. when `/unmod-script` was skipped and this skill is writing test questions from scratch) — when assembling an existing `/unmod-script` output, Rule 1 always wins, and no question gets added that isn't already in the upstream script.
 
 **Wrap-up (always include these — they catch anything the task-specific questions miss):**
 1. [Optional: 1-3 questions comparing or summarizing the whole experience]
@@ -197,7 +200,7 @@ If you checked all four — you're good to go. If not, stop here and talk to [Re
 |---|---|---|
 | [ ] | [ ] | [ ] |
 
-**If this is a two-version comparison:** note which version each participant sees first, and alternate it across participants (e.g. half see version A first, half see version B first) so no single version has an unfair "seen first" advantage.
+**Order matters:** for 2 items, alternate which one participants see first across the sample (e.g. half see version A first, half see version B first); for 3+ items, randomize the order per participant — so no single item gets an unfair "seen first" advantage.
 
 ## 5. How to Run It
 
@@ -240,7 +243,7 @@ Stop and message [Research partner] if:
 4. **Tasks describe goals, not UI.** "Find a way to add this to your list" — not "tap the plus icon." Same rule `/mod-guide` uses for moderated studies; it matters even more here because there's no moderator to notice a participant got stuck on wording rather than the design.
 5. **No leading or hypothetical questions.** Apply Portigal's and Sharon's bias-elimination rules to every question in the packet — the requester can't be expected to catch this themselves, so this skill catches it for them before it ships.
 6. **The wrap-up safety-net questions are non-negotiable.** Always include a "what was confusing/unexpected" and a "what would you change" question, even if the requester didn't ask for them. They catch problems the task-specific questions miss, and cost nothing to include.
-7. **Escalation triggers are explicit, not implied.** Section 7 must name concrete signals ("people are confused by the test itself"), not a vague "reach out if needed." A non-researcher won't know what "needed" means without examples.
+7. **Escalation triggers are explicit, not implied.** Section 7 must name concrete signals ("people are confused by the test itself"), not a vague "reach out if needed." A non-researcher won't know what "needed" means without examples. Merge the template's generic triggers with any study-specific ones already produced by `/diy-research-plan`'s Section 6 — never drop a specific trigger to keep only generic ones.
 8. **Findings section stays a findings summary, not a report.** Resist the pull to expand Section 6 into the full Finding → Insight → Recommendation ladder from `/report`. If the study's results need that level of rigor, that's a sign it should route to a researcher-authored `/report` instead.
 9. **Length discipline.** Target roughly a quarter of a full Research Project Plan. If a section is growing past a few lines per field, cut it back or flag that this request has outgrown DIY scope.
 10. **Plain language throughout.** No unexplained acronyms, no research jargon left standing without a plain-English gloss. If a term must appear (e.g., "screener"), define it in the same sentence the first time it's used.
@@ -253,7 +256,7 @@ Before calling the packet done, run it against `references/packet-checklist.md` 
 
 ## Tool usage
 
-- **AskUserQuestion** — confirm which upstream pieces already exist and the proposed packet structure (Steps 0 and 2)
+- **AskUserQuestion** — confirm which upstream pieces already exist and the proposed packet structure (Steps 0 and 2). See `../../references/interactive-input-conventions.md` (the repo-root `references/` folder — adjust the relative path correctly from this skill's location) for the fallback if AskUserQuestion is unavailable.
 - **Read** — read pasted content, PRDs, or local files the requester shares
 - **Glean** (`mcp__glean_default__search` / `read_document`) — check whether this question is already answered before building anything new, if that check wasn't already done upstream in `/diy-research-plan`
 - **`/diy-research-plan`** — produces the plan this packet's Sections 1-2 summarize; if it doesn't exist yet, that's the signal to run it first rather than drafting plan-level content (learning goal, audience, method) directly inside the packet

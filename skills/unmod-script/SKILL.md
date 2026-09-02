@@ -47,8 +47,11 @@ Extract, or ask directly if missing:
 3. **Participant profile** — who's taking this (often already defined by `/screener`)
 4. **Session length budget** — total minutes available
 5. **Stimuli** — what the participant will actually see (link, prototype, static images) and how many distinct scenarios/items
+6. **Platform** — which self-serve tool will this run on (UserTesting, Maze, other)?
 
 Do not invent study details. If something's missing and can't be inferred, ask — don't guess at a research question or a participant profile.
+
+Scope note: variant assignment, order, and counterbalancing across items a participant sees are this skill's territory -- not /screener's. /screener only defines who qualifies and the recruiting-pool quotas; it does not assign which variant(s) a given participant sees or in what order.
 
 ## Step 2 — Propose the Task Structure
 
@@ -64,7 +67,9 @@ Two study shapes call for slightly different table content:
 - **Sequential task flow** (participant moves through a product end to end) — one row per task, ordered as the participant will experience them.
 - **Concept / side-by-side comparison** (participant reacts to paired stimuli, item by item) — one row per item or item category, not per interaction step; note which comparison each row is testing.
 
-**Typical task count:** 5–8 sequential tasks, or 4–6 item/category blocks for a comparison test. Fewer than 4 rarely justifies a full unmoderated build; more than 8-10 tasks risks fatigue with nobody there to notice a participant disengaging partway through.
+**Typical task count:** 5–8 sequential tasks, or 4–6 item/category blocks for a comparison test. Fewer than 4 tasks/items, when more could reasonably be tested, rarely justifies a full build; more than 8-10 tasks risks fatigue with nobody there to notice a participant disengaging partway through.
+
+**Randomization / order:** For any study where a participant sees 2 or more items/tasks in sequence, specify how order will be randomized or counterbalanced across participants — or that order is intentionally fixed, and why — before drafting the full script. Order effects (fatigue, memory bleed from one item coloring the next) are a real risk in a within-subject design, with nobody there to notice a participant tiring or drifting partway through.
 
 Present the table and ask:
 
@@ -105,6 +110,7 @@ Unmoderated scripts rarely define hard pass/fail criteria the way a usability te
 **Study:** [one line — what this covers]
 **Platform:** [UserTesting / Maze / other self-serve tool]
 **Estimated length:** [X] minutes
+**Randomization / order:** [how task/item order is randomized or counterbalanced across participants, or "Fixed order — no randomization" if intentionally fixed]
 
 ---
 
@@ -153,6 +159,8 @@ Before clicking on anything, just look at what's in front of you.
 - What do you notice right away?
 - Is there anything that surprises you?
 
+*[For multi-stimulus studies, repeat this First Impression prompt inside each item block below, not just once here.]*
+
 ---
 
 ### Task 1 — [Name]
@@ -185,7 +193,13 @@ Before clicking on anything, just look at what's in front of you.
 Thank you so much for your time and honest perspective today. Your feedback directly shapes what real customers experience — we're genuinely grateful you took part.
 ```
 
-### Comparison / side-by-side variant (swap in for Task blocks)
+### Comparison / multi-variant blocks (swap in for Task blocks)
+
+These two shapes answer genuinely different research questions — pick based on the Key Research Question in the Step 2 table, not just on how many items there are.
+
+#### (a) Relative preference (2-way pick-a-favorite)
+
+Use when the research question is "which do you like better" and there are exactly 2 items being compared head-to-head.
 
 ```
 ### [Item / Category Name] — [archetype or grouping label, if used]
@@ -213,11 +227,39 @@ How confident are you that [specific outcome]?
 - Not at all confident · Slightly confident · Moderately confident · Very confident · Extremely confident
 ```
 
+#### (b) Independent per-item comprehension (N-way absolute check)
+
+Use when the research question is "do you understand/react to each one on its own" — independent comprehension, not relative preference — for 3 or more items (or 2, if no direct comparison is wanted). Each item gets its own self-contained task: show that item alone, ask about it alone, then move to the next. Repeat the full block once per item — never show two items side by side, and never use comparison language ("clearer than," "the other version," "compared to") inside it.
+
+```
+### [Item Name] — [archetype or grouping label, if used]
+
+**Anchor:** You should now be viewing [Item Name].
+
+[One line orienting the participant to this item alone — no reference to any other item or version.]
+
+What does this [item / message / screen] tell you, in your own words? [open-ended comprehension question]
+
+How would you react if you saw this in real use?
+- [Option A — reaction/behavioral-intent choice specific to this item, not relative to any other]
+- [Option B]
+- [Option C]
+- I'm not sure
+
+Why did you choose that answer? [open-ended]
+
+*[Only where trust/reassurance is the specific research question:]*
+How confident are you that [specific outcome]?
+- Not at all confident · Slightly confident · Moderately confident · Very confident · Extremely confident
+```
+
+[Repeat once per item.]
+
 ---
 
 ## CONTENT GENERATION RULES
 
-1. **Every task opens with an anchor.** No moderator is present to notice a participant is lost — the script has to do that job. See `references/unmod-writing-rules.md`.
+1. **Every task or block opens with an anchor or scenario-setting statement.** No moderator is present to notice a participant is lost — the script has to do that job. See `references/unmod-writing-rules.md`.
 2. **No interface jargon.** Describe goals ("find a way to…"), not UI elements ("tap the blue button").
 3. **One instruction per step.** No compound instructions — nobody is there to help a participant untangle a two-part ask.
 4. **No leading or loaded questions.** Neutral framing throughout — the scenario transition never hints at what the "right" reaction is.
@@ -246,6 +288,7 @@ Before returning the draft, check it against `references/unmod-writing-rules.md`
 
 ## Tool usage
 
+- **AskUserQuestion** — for the approval checkpoints in Steps 1–3 (gathering missing inputs, confirming task structure). See `../../references/interactive-input-conventions.md` (the repo-root `references/` folder) for the fallback if AskUserQuestion is unavailable.
 - **google-docs:fetch-google-doc** / Glean `read_document` — read a linked research plan, PRD, or `/screener` output
 - **Read** — read pasted content or local files
 - The generated markdown is the primary deliverable — polished enough to hand directly to a stakeholder or paste into the self-serve platform's builder

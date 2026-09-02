@@ -77,7 +77,11 @@ The few extra minutes this step costs are cheap insurance against building the w
 
 ### Step 0 — Confirm this step is worth running
 
-Before drafting, apply the "when to skip" test above. If the ask is genuinely a one-task, one-question, easy-screen study, say so and route straight to `/diy-packet` instead of drafting a plan nobody needed. Otherwise, continue.
+Before drafting, apply the "when to skip" test above. If the ask is genuinely a one-task, one-question, easy-screen study, confirm before routing away rather than deciding unilaterally:
+
+> "This looks like a one-task, easy-screen ask — I'd skip the standalone plan and go straight to `/diy-packet`. Sound right, or is there something here worth a quick plan first?"
+
+Once confirmed, route to `/diy-packet` instead of drafting a plan nobody needed. Otherwise, continue.
 
 ### Step 1 — Gather Inputs
 
@@ -91,6 +95,8 @@ Minimum inputs before drafting:
 3. **Who should test it** — rough, behavior-first audience description
 4. **Whether this has been checked already** — search existing research (Glean / the team's research-insights channel) before treating this as net-new
 5. **Rough timeline** — when results are needed
+6. **The actual stimulus link/asset** — not just confirmation that a stimulus exists. This is a hard gate: if the requester hasn't provided a working link or file yet, don't draft the plan as if it's fine — mark it **"BLOCKED: waiting on stimulus link from requester"** and hold off treating the plan as ready to hand to `/screener` and `/unmod-script` until it's in hand
+7. **Who the research partner is** — the person to loop in if this needs a second look (goes in the doc header and Section 6)
 
 ### Step 2 — Propose the Plan Structure
 
@@ -154,7 +160,11 @@ Apply the content rules below and produce the OUTPUT TEMPLATE. If it's running p
 2. [Task 2]
 3. [Task 3, if needed — most DIY studies need 2-4, rarely more]
 
+- If more than one variant/stimulus exists, note how it should be distributed across sessions and flag it for `/unmod-script` to resolve (assignment, order, and counterbalancing are `/unmod-script`'s territory, not this skill's)
+
 ## 5. Rough Timeline
+
+*(If the requester only gave relative timing — "this week," "next sprint" — keep it relative in the table below; don't invent a calendar date.)*
 
 | Milestone | Target date |
 |---|---|
@@ -174,7 +184,7 @@ Stop and message [Research partner] if:
 
 ## CONTENT GENERATION RULES
 
-1. **One learning goal, stated once.** If the input carries more than one core question, trim to DIY scope before drafting (Hall) rather than letting the plan quietly carry all of them.
+1. **One learning goal, stated once.** If the input carries more than one core question, trim to DIY scope before drafting (Hall) rather than letting the plan quietly carry all of them. **Carve-out:** if `/diy-triage`'s output already explicitly validated multiple sub-questions as in-scope for this one DIY study, don't drop any of them to get to "one" — unify them into a single umbrella learning-goal sentence instead.
 2. **Guidance sits next to every fill-in field**, in plain language — never assume the requester knows research vocabulary. Same rule `/diy-packet` uses, applied one step earlier.
 3. **Section 3 is a fast confirm, not a defense.** No alternatives compared, no citations, no sample-size rationale — that rigor belongs to `/research-plan`. This plan only re-checks that the `/diy-triage` fit call still holds now that more detail exists.
 4. **Tasks in Section 4 describe goals, not UI**, even in one-line shorthand — "find a way to reorder the list," not "tap the sort icon." Bias-elimination (Portigal, Sharon) applies from the first rough draft, not just the final script.
@@ -189,7 +199,7 @@ Stop and message [Research partner] if:
 
 ## Tool usage
 
-- **AskUserQuestion** — confirm the "worth running" check (Step 0) and the proposed structure (Step 2)
+- **AskUserQuestion** — confirm the "worth running" check (Step 0) and the proposed structure (Step 2). See `../../references/interactive-input-conventions.md` for the fallback if `AskUserQuestion` is unavailable.
 - **Read** — read pasted content, `/diy-triage` output, or local files the requester shares
 - **Glean** (`mcp__glean_default__search` / `read_document`) — check whether this question is already answered before drafting Section 1's "did we check first?" row
 - **`/diy-triage`** — the upstream input; if it hasn't run yet, route there first
