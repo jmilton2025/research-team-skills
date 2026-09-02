@@ -74,6 +74,8 @@ Before drafting the full screener, present a short recommendation table and get 
 
 Do not skip this confirmation just because the answers seem obvious — a wrong quota assumption is expensive to fix after the screener is already live in a recruiting tool.
 
+If the requester pushes back on just one row (e.g. approves everything but wants to change the device/platform call), re-propose only that row rather than restarting the whole confirmation step.
+
 ---
 
 ## Step 3 — Draft the screener
@@ -184,7 +186,7 @@ Owner: [Name/team] · Platform: [where this will be fielded] · Target N: [total
 
 ## CONTENT GENERATION RULES
 
-1. **One disqualifying condition per question.** Never bury a screen-out inside a multi-part or double-barreled question — if it needs its own SCREEN OUT tag, it needs its own answer option.
+1. **One disqualifying condition per question.** Never bury a screen-out inside a multi-part or double-barreled question — if it needs its own SCREEN OUT tag, it needs its own answer option. Exception: a single question may join multiple triggers with "or" (e.g. "works as a shopper OR has seen the draft copy") when every trigger it names leads to the *same* treatment — same screen-out, same quota flag. Split into separate questions only when the triggers would need different treatment (e.g. one is a hard screen-out and another is only a quota flag).
 2. **Every screen-out option is visually tagged**, every time, with no exceptions — the whole point is that a recruiting-tool setup or a fast skim can't miss it.
 3. **Neutral wording on every option.** Never phrase an option so the "correct" (qualifying) answer is obvious — Portigal's core screener-gaming warning: professional respondents learn to spot and select the answer that gets them in.
 4. **Disqualifiers first, segmentation last** (Step 3b) unless the requester explicitly prefers a warm-up-first order for respondent experience.
@@ -216,6 +218,8 @@ Owner: [Name/team] · Platform: [where this will be fielded] · Target N: [total
 | **Escalation flag** | See below — if anything trips this, say so before delivering rather than silently drafting around it. |
 
 **Escalation out of the DIY track:** if the study topic touches a vulnerable population, minors, health, finances, or anything else where a wrong qualifying call has real consequences, flag it plainly: *"This touches [X] — that's usually outside what a self-serve screener should carry alone. Want me to draft it anyway, or would you rather loop in a researcher first?"* Draft it only if the requester confirms.
+
+**Blocked/incomplete screener:** if the requester hasn't confirmed, or another hard gate leaves the screener unable to ship as-is, mark it per `../../references/output-status-and-labeling-conventions.md` (§1) rather than an ad hoc prose note.
 
 ---
 

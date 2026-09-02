@@ -95,7 +95,7 @@ Minimum inputs before drafting:
 3. **Who should test it** — rough, behavior-first audience description
 4. **Whether this has been checked already** — search existing research (Glean / the team's research-insights channel) before treating this as net-new
 5. **Rough timeline** — when results are needed
-6. **The actual stimulus link/asset** — not just confirmation that a stimulus exists. This is a hard gate: if the requester hasn't provided a working link or file yet, don't draft the plan as if it's fine — mark it **"BLOCKED: waiting on stimulus link from requester"** and hold off treating the plan as ready to hand to `/screener` and `/unmod-script` until it's in hand
+6. **The actual stimulus link/asset** — not just confirmation that a stimulus exists. This is a hard gate: if the requester hasn't provided a working link or file yet, don't draft the plan as if it's fine — use the blocked-status convention in `../../references/output-status-and-labeling-conventions.md` (§1): add **`Status: BLOCKED — waiting on stimulus link from requester`** directly under the doc header, and hold off treating the plan as ready to hand to `/screener` and `/unmod-script` until it's in hand
 7. **Who the research partner is** — the person to loop in if this needs a second look (goes in the doc header and Section 6)
 
 ### Step 2 — Propose the Plan Structure

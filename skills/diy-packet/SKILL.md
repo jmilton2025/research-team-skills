@@ -145,7 +145,9 @@ Quick check before you build anything — self-serve unmoderated testing works w
 - ☐ One round of feedback is enough — you don't need to follow up based on what someone says
 - ☐ You checked existing research first and this genuinely hasn't been answered
 
-If you checked all four — you're good to go. If not, stop here and talk to [Research partner] before building the test.
+Mark each ☑ (true) or ☐ (not true). If an item's truth depends on something outside your control — e.g., a stimulus asset you're still waiting on — mark it **⏳ pending** instead of forcing a clean check or fail, and note what it's waiting on.
+
+If you checked all four — you're good to go. If any are ☐, stop here and talk to [Research partner] before building the test. If any are ⏳ pending, hold off building until they clear, and mark the packet per the shared convention in [`../../references/output-status-and-labeling-conventions.md`](../../references/output-status-and-labeling-conventions.md) §1 — add `Status: BLOCKED — <reason>` directly under the document header.
 
 ## 2. What You're Testing
 
@@ -242,7 +244,7 @@ Stop and message [Research partner] if:
 3. **One learning goal, not several.** If the requester lists more than one core question, that's the signal to trim to DIY scope (Hall) — push back before drafting rather than building a bloated packet.
 4. **Tasks describe goals, not UI.** "Find a way to add this to your list" — not "tap the plus icon." Same rule `/mod-guide` uses for moderated studies; it matters even more here because there's no moderator to notice a participant got stuck on wording rather than the design.
 5. **No leading or hypothetical questions.** Apply Portigal's and Sharon's bias-elimination rules to every question in the packet — the requester can't be expected to catch this themselves, so this skill catches it for them before it ships.
-6. **The wrap-up safety-net questions are non-negotiable.** Always include a "what was confusing/unexpected" and a "what would you change" question, even if the requester didn't ask for them. They catch problems the task-specific questions miss, and cost nothing to include.
+6. **The wrap-up safety-net questions are non-negotiable.** Always include a "what was confusing/unexpected" and a "what would you change" question, even if the requester didn't ask for them. They catch problems the task-specific questions miss, and cost nothing to include. If the upstream `/unmod-script` output already has its own wrap-up questions covering the same ground — even worded differently — map the template's fixed questions to the script's semantically-equivalent ones rather than duplicating both; don't append the template's exact wording on top of ground the script already covers.
 7. **Escalation triggers are explicit, not implied.** Section 7 must name concrete signals ("people are confused by the test itself"), not a vague "reach out if needed." A non-researcher won't know what "needed" means without examples. Merge the template's generic triggers with any study-specific ones already produced by `/diy-research-plan`'s Section 6 — never drop a specific trigger to keep only generic ones.
 8. **Findings section stays a findings summary, not a report.** Resist the pull to expand Section 6 into the full Finding → Insight → Recommendation ladder from `/report`. If the study's results need that level of rigor, that's a sign it should route to a researcher-authored `/report` instead.
 9. **Length discipline.** Target roughly a quarter of a full Research Project Plan. If a section is growing past a few lines per field, cut it back or flag that this request has outgrown DIY scope.

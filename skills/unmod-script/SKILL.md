@@ -51,6 +51,8 @@ Extract, or ask directly if missing:
 
 Do not invent study details. If something's missing and can't be inferred, ask — don't guess at a research question or a participant profile.
 
+If a hard gate blocks the script from being launch-ready (e.g., no stimulus link yet), don't invent an ad hoc status line — use the shared `Status: BLOCKED — <reason>` convention in `../../references/output-status-and-labeling-conventions.md` (§1).
+
 Scope note: variant assignment, order, and counterbalancing across items a participant sees are this skill's territory -- not /screener's. /screener only defines who qualifies and the recruiting-pool quotas; it does not assign which variant(s) a given participant sees or in what order.
 
 ## Step 2 — Propose the Task Structure
@@ -69,7 +71,7 @@ Two study shapes call for slightly different table content:
 
 **Typical task count:** 5–8 sequential tasks, or 4–6 item/category blocks for a comparison test. Fewer than 4 tasks/items, when more could reasonably be tested, rarely justifies a full build; more than 8-10 tasks risks fatigue with nobody there to notice a participant disengaging partway through.
 
-**Randomization / order:** For any study where a participant sees 2 or more items/tasks in sequence, specify how order will be randomized or counterbalanced across participants — or that order is intentionally fixed, and why — before drafting the full script. Order effects (fatigue, memory bleed from one item coloring the next) are a real risk in a within-subject design, with nobody there to notice a participant tiring or drifting partway through.
+**Randomization / order:** For any study where a participant sees 2 or more items/tasks in sequence, specify how order will be randomized or counterbalanced across participants — or that order is intentionally fixed, and why — before drafting the full script. Order effects (fatigue, memory bleed from one item coloring the next) are a real risk in a within-subject design, with nobody there to notice a participant tiring or drifting partway through. This extends the same neutrality principle used in the comparison template below: however positions are labeled (e.g. "Version A" / "Version B"), the label must track ORDER (first-shown / second-shown), never fixed item IDENTITY (e.g. never permanently "Version A = current version") — otherwise the counterbalancing this field exists to enable gets silently undone by identity-based labels.
 
 Present the table and ask:
 
@@ -196,6 +198,8 @@ Thank you so much for your time and honest perspective today. Your feedback dire
 ### Comparison / multi-variant blocks (swap in for Task blocks)
 
 These two shapes answer genuinely different research questions — pick based on the Key Research Question in the Step 2 table, not just on how many items there are.
+
+**Required step — do not skip:** Do not trust an upstream-asserted comparison shape at face value, even if multiple upstream documents (plan, screener) state it identically — always re-derive the shape yourself from the actual Key Research Question text before drafting. Two documents repeating the same label is not independent confirmation; they likely both inherited it from the same source.
 
 #### (a) Relative preference (2-way pick-a-favorite)
 
