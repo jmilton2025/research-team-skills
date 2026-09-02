@@ -124,6 +124,8 @@ Unmoderated scripts rarely define hard pass/fail criteria the way a usability te
 | Task 2 — [name] | [goal] | [question] |
 [...]
 
+*[Count check: 5–8 rows (sequential) / 4–6 (comparison) is typical — see Step 2's heuristic. Fewer is fine if genuinely warranted; don't pad just to hit a number.]*
+
 ---
 
 ## Full Script

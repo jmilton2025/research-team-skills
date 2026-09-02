@@ -22,6 +22,7 @@ The single question that decides whether someone can speak to the study topic at
 - **Decision-maker framing:** "Which of the following best describes your role in [decision domain]?" — only the bolded, genuinely-qualifying option(s) pass; every plausible-sounding but insufficient variant is tagged `[SCREEN OUT]`. Pattern: *"I always/mostly [do the core behavior]"* qualifies; *"I sometimes"* or *"I never"* screens out.
 - **Ownership/usage gate:** "Do you currently [own / use / have an active account for] [product category]?" No → `[SCREEN OUT]`.
 - **Task-capability gate:** "Have you personally [performed the core task] in the last [X months]?" No → `[SCREEN OUT]` if the study requires firsthand recent experience.
+- *Cross-reference: this resolves the split-vs-combine call in `../SKILL.md` → Content Rule 1 ("one disqualifying condition per question").*
 - **Worked example — splitting a compound criterion (SKILL.md Content Rule 1: never double-barreled):** a criterion like "orders online AND has had a substitution in the last 6 months" is two separate qualifying tests, not one question. Don't write it as a single double-barreled question ("Do you order online and have you had a substitution?") — split it into two separate `[SCREEN OUT]` gates instead:
   - Q: "Do you currently order [category] online?" No → `[SCREEN OUT]`.
   - Q: "In the past 6 months, have you had an order substitution (an item swapped for a different one)?" No → `[SCREEN OUT]` (only if recent substitution experience is a hard requirement for the study).

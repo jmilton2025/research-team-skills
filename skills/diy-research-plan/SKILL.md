@@ -133,7 +133,7 @@ Apply the content rules below and produce the OUTPUT TEMPLATE. If it's running p
 
 | Field | What to fill in | Your input |
 |---|---|---|
-| **The one thing we need to know** | If you can't say it in one sentence, it's too many questions for one DIY study — pick the most important one and park the rest | [ ] |
+| **The one thing we need to know** | If you can't say it in one sentence, it's too many questions for one DIY study — pick the most important one and park the rest (unless `/diy-triage` already validated multiple sub-questions as in-scope for this one DIY study — see Rule 1's carve-out below — in which case unify them into one sentence instead of picking just one) | [ ] |
 | **Why it matters** | What decision this unblocks, or what happens if we don't answer it | [ ] |
 | **Did we check first?** | Search existing research (Glean / research-insights) before treating this as unanswered — note what you found, even if it's "nothing" | [ ] |
 

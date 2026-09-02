@@ -88,7 +88,13 @@ This skill assembles; it doesn't re-decide. Before drafting, check what's alread
 
 Where the plan cites `/diy-triage`'s conclusion, trust that citation — unless the plan itself shows no independent Step-0 re-validation, in which case re-open the `/diy-triage` output file directly rather than taking the citation on faith.
 
-If the plan genuinely doesn't exist and there's no time to run `/diy-research-plan` separately, it's fine to gather the same minimum inputs inline (what's being tested, the single learning goal, the design link, who to test with, timeline) — but say plainly that this packet is doing double duty as plan-and-packet, so the requester knows the plan wasn't reviewed on its own.
+A plan can be missing its full Sections 1-6 for three different reasons, and they're not the same situation:
+
+1. **It never ran** — nobody has scoped this yet, and there's no `/diy-research-plan` output to point to.
+2. **It ran out of time** — someone started sketching the plan but couldn't finish it before this packet needed to happen.
+3. **It ran and deliberately concluded no standalone doc was needed** — a confirmed `/diy-research-plan` Step-0 skip decision (see that skill's "when you might skip this and go straight to `/diy-packet`" checkpoint), where the plan step *did* run and the scoping call was made and confirmed — it's just folded into this packet rather than living in its own file. This is distinct from "never ran."
+
+For cases 1 and 2, it's fine to gather the same minimum inputs inline (what's being tested, the single learning goal, the design link, who to test with, timeline) — but say plainly that this packet is doing double duty as plan-and-packet, so the requester knows the plan wasn't reviewed on its own. For case 3, skip that caveat — the plan step already ran and the skip was confirmed, so treat the requester's answers as the plan's output, not as a shortcut being taken now.
 
 ### Step 1 — Gather the Pieces to Bundle
 
@@ -206,6 +212,8 @@ If you checked all four — you're good to go. If any are ☐, stop here and tal
 
 ## 5. How to Run It
 
+- **Timeline:** [when this needs to launch and when results are needed by — from the plan]
+
 1. Build your audience using the criteria from Section 3.
 2. Load the test questions from Section 4 into your unmoderated testing tool, in order — and if Section 4a lists multiple items or versions, load all of them and set up the alternating order noted there.
 3. Preview the test yourself end-to-end before sending it out.
@@ -241,11 +249,11 @@ Stop and message [Research partner] if:
 
 1. **Assemble, don't re-derive.** Sections 1-4 summarize content that should already exist in the `/diy-research-plan`, `/screener`, and `/unmod-script` outputs — pull from them rather than re-deciding the fit, learning goal, audience, or questions from scratch. If one of those upstream outputs genuinely doesn't exist yet, that's a signal to run that skill first; only hand-author its content inline as a last resort, and say plainly when you've done so.
 2. **Guidance lives next to every input field.** Every fill-in-the-blank row gets a plain-language sentence explaining what's wanted — never assume the requester knows research vocabulary. This is the single biggest difference from `/research-plan`'s content rules: there, the researcher is expected to know what "sample size" means. Here, they aren't, so the packet teaches it inline or avoids the term entirely.
-3. **One learning goal, not several.** If the requester lists more than one core question, that's the signal to trim to DIY scope (Hall) — push back before drafting rather than building a bloated packet.
+3. **One learning goal, not several.** If the requester lists more than one core question, that's the signal to trim to DIY scope (Hall) — push back before drafting rather than building a bloated packet. **Exception:** this rule governs fresh, multi-question input arriving directly from the requester. It does not apply to a learning goal that arrives already unified from an upstream skill's output — e.g. `/diy-research-plan`'s own Rule 1 carve-out, which unifies validated sub-questions into one umbrella sentence. A compound-looking sentence in that case is already-assembled content, not fresh multi-question input: Rule 1 (assemble, don't re-derive) governs instead, so pull it in as-is rather than re-trimming it.
 4. **Tasks describe goals, not UI.** "Find a way to add this to your list" — not "tap the plus icon." Same rule `/mod-guide` uses for moderated studies; it matters even more here because there's no moderator to notice a participant got stuck on wording rather than the design.
 5. **No leading or hypothetical questions.** Apply Portigal's and Sharon's bias-elimination rules to every question in the packet — the requester can't be expected to catch this themselves, so this skill catches it for them before it ships.
 6. **The wrap-up safety-net questions are non-negotiable.** Always include a "what was confusing/unexpected" and a "what would you change" question, even if the requester didn't ask for them. They catch problems the task-specific questions miss, and cost nothing to include. If the upstream `/unmod-script` output already has its own wrap-up questions covering the same ground — even worded differently — map the template's fixed questions to the script's semantically-equivalent ones rather than duplicating both; don't append the template's exact wording on top of ground the script already covers.
-7. **Escalation triggers are explicit, not implied.** Section 7 must name concrete signals ("people are confused by the test itself"), not a vague "reach out if needed." A non-researcher won't know what "needed" means without examples. Merge the template's generic triggers with any study-specific ones already produced by `/diy-research-plan`'s Section 6 — never drop a specific trigger to keep only generic ones.
+7. **Escalation triggers are explicit, not implied.** Section 7 must name concrete signals ("people are confused by the test itself"), not a vague "reach out if needed." A non-researcher won't know what "needed" means without examples. Merge the template's generic triggers with any study-specific ones already produced by `/diy-research-plan`'s Section 6 — never drop a specific trigger to keep only generic ones. If Section 6 doesn't exist because this is the skip-routed case (Step 0's case 3 — no `/diy-research-plan` document was drafted, so there's no Section 6 to merge from), fall back to `/diy-triage`'s own escalation-watch language (its Step 4 output) as the closest analog, rather than leaving only the generic template triggers.
 8. **Findings section stays a findings summary, not a report.** Resist the pull to expand Section 6 into the full Finding → Insight → Recommendation ladder from `/report`. If the study's results need that level of rigor, that's a sign it should route to a researcher-authored `/report` instead.
 9. **Length discipline.** Target roughly a quarter of a full Research Project Plan. If a section is growing past a few lines per field, cut it back or flag that this request has outgrown DIY scope.
 10. **Plain language throughout.** No unexplained acronyms, no research jargon left standing without a plain-English gloss. If a term must appear (e.g., "screener"), define it in the same sentence the first time it's used.
