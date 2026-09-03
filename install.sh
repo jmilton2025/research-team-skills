@@ -6,7 +6,7 @@ SKILLS_DIR="$HOME/.claude/skills"
 
 mkdir -p "$SKILLS_DIR"
 
-for skill in research-plan mod-guide analysis report; do
+for skill in research-plan mod-guide analysis report usertesting-plan usertesting-script usertesting-html usertesting-orchestrator; do
   src="$REPO_DIR/skills/$skill"
   dst="$SKILLS_DIR/$skill"
 

@@ -188,7 +188,7 @@ If the "Other" field comes back with a Google Doc URL, treat it as: format = Cus
 
 Apply the researcher's approved parameters and style. For the default template, follow the OUTPUT TEMPLATE below. Branch the Core section by study type (see 2a).
 
-**Test/demo/mock-run output:** add the shared `⚠️ TEST ARTIFACT` header line — see `../../references/output-status-and-labeling-conventions.md` (§2).
+**Test/demo/mock-run output:** add the shared `⚠️ TEST ARTIFACT` header line — see `../../references/output-status-and-labeling-conventions.md`.
 
 ### OUTPUT TEMPLATE (default Instacart style — TABLES = QUESTIONS ONLY)
 

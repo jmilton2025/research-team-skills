@@ -262,7 +262,7 @@ Options:
 
 Generate the complete plan based on approved parameters and chosen style. For the default template, follow the OUTPUT TEMPLATE below exactly. Adapt section depth and content to the study type (IDI vs. survey vs. diary).
 
-**Test/demo labeling:** If this invocation is a mock-run, demo, or otherwise built on invented/simulated study inputs rather than a real study, label it per `../../references/output-status-and-labeling-conventions.md` (§2) before presenting the draft — a research plan found without context could otherwise be mistaken for a real deliverable.
+**Test/demo labeling:** If this invocation is a mock-run, demo, or otherwise built on invented/simulated study inputs rather than a real study, label it per `../../references/output-status-and-labeling-conventions.md` before presenting the draft — a research plan found without context could otherwise be mistaken for a real deliverable.
 
 ---
 

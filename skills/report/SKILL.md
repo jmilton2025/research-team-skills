@@ -197,7 +197,7 @@ Options:
 
 Produce the report using the approved structure and style. Apply the content rules in the next section. Default to the Instacart design system unless the researcher chose otherwise.
 
-**Test/demo labeling:** If this invocation is a mock-run, demo, or otherwise uses invented/simulated findings rather than real study data, label it per `../../references/output-status-and-labeling-conventions.md` (§2) before presenting the draft — this is a real report skill, and a fabricated-findings output found without context could otherwise be mistaken for a real deliverable.
+**Test/demo labeling:** If this invocation is a mock-run, demo, or otherwise uses invented/simulated findings rather than real study data, label it per `../../references/output-status-and-labeling-conventions.md` before presenting the draft — this is a real report skill, and a fabricated-findings output found without context could otherwise be mistaken for a real deliverable.
 
 ---
 
