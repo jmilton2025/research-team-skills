@@ -148,7 +148,7 @@ Owner: [Name/team] · Platform: [where this will be fielded] · Target N: [total
 5. In the past [X months], how often have you [core behavior]?
    a. [frequency band] · b. [frequency band] · c. Never — **SCREEN OUT** (if recency is a hard requirement)
 
-6. [Device/platform check — only if the study is device-specific]
+6. [Device/platform check — only if the study is device-specific. Two different questions get confused for each other: "what devices do you normally use" is a multi-select **habits inventory** (quota, below); "which device will you use for THIS session" is a hard **single-select gate** when the stimulus requires one specific device (e.g., a mobile-only prototype) — see `references/screener-question-bank.md` §4 for both patterns.]
    Which of the following do you use? Select all that apply. **[RANDOMIZE]**
    a. [Platform/device A] · b. [Platform/device B] · c. None of these **[EXCLUSIVE]**
 

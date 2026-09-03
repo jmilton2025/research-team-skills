@@ -95,8 +95,8 @@ Minimum inputs before drafting:
 3. **Who should test it** — rough, behavior-first audience description
 4. **Whether this has been checked already** — search existing research (Glean / the team's research-insights channel) before treating this as net-new
 5. **Rough timeline** — when results are needed
-6. **The actual stimulus link/asset** — not just confirmation that a stimulus exists. This is a hard gate: if the requester hasn't provided a working link or file yet, don't draft the plan as if it's fine — use the blocked-status convention in `../../references/output-status-and-labeling-conventions.md` (§1): add **`Status: BLOCKED — waiting on stimulus link from requester`** directly under the doc header, and hold off treating the plan as ready to hand to `/screener` and `/unmod-script` until it's in hand
-7. **Who the research partner is** — the person to loop in if this needs a second look (goes in the doc header and Section 6)
+6. **The actual stimulus link/asset** — not just confirmation that a stimulus exists. This is a hard gate, and which status it gets depends on *why* it's unconfirmed: if the requester hasn't produced a working link or file at all, that's on them — use the blocked-status convention in `../../references/output-status-and-labeling-conventions.md` (§1): add **`Status: BLOCKED — waiting on stimulus link from requester`** directly under the doc header, and hold off treating the plan as ready to hand to `/screener` and `/unmod-script` until it's in hand. If the stimulus is real and ready but this session's tooling simply can't fetch or verify it (e.g. a Figma link that exists but can't be pulled) — that's a tool limitation, not the requester's fault — use **`Status: PENDING — <what's unverified and why>`** instead (same reference, §1) and proceed rather than holding the plan back
+7. **Who the research partner is** — the person to loop in if this needs a second look (goes in the doc header and Section 6). If the requester says no researcher is involved at all, don't leave this blank or invent a name — default to naming the research team generally (or whoever owns this pipeline) and say so explicitly in the doc
 
 ### Step 2 — Propose the Plan Structure
 
@@ -112,6 +112,8 @@ Show the six sections this plan will contain and confirm before generating:
 >
 > Sound right?"
 
+**Reading "sound right?" answers.** Not every confirmation here is genuine sign-off — a requester who's new to this, or just wants it off their plate, may answer with pure deferral ("whatever you think is right," "you're the expert," a fast "yeah, sure") rather than actually weighing the proposal. When that's what's happening, say so explicitly in the doc (see `/diy-triage`'s "Requester confidence note" field, if the upstream input carries one) and default to the more conservative, more thorough option at that checkpoint rather than the leanest one — a requester who's deferring needs more active guidance from here, not a formality-only checkpoint. This applies to Step 0's skip-or-continue confirm above as much as it does here.
+
 ### Step 3 — Generate the Plan
 
 Apply the content rules below and produce the OUTPUT TEMPLATE. If it's running past roughly half a page, that's a sign either the study has outgrown DIY scope (loop back to `/diy-triage`) or that content belonging in `/screener` / `/unmod-script` has crept in here — trim it back rather than let the doc grow.
@@ -124,7 +126,7 @@ Apply the content rules below and produce the OUTPUT TEMPLATE. If it's running p
 # DIY Research Plan: [Study name — plain language, e.g. "New sort option — does it make sense at a glance?"]
 
 **Owner (running this):** [Requester name]
-**Research partner (loop in if stuck):** [Researcher name]
+**Research partner (loop in if stuck):** [Researcher name — if the requester says no one specific is assigned, name the research team generally instead of leaving this blank]
 **Date:** [Month Year]
 
 ---
@@ -146,7 +148,7 @@ Apply the content rules below and produce the OUTPUT TEMPLATE. If it's running p
 
 ## 3. Why Unmoderated Is the Right Call Here
 
-*(A fast confirm, not a defense — the fit call itself was already made in `/diy-triage`. If any box stops being true once you dig in, stop and say so rather than writing the plan anyway.)*
+*("Unmoderated" just means the participant does the test on their own, with no researcher watching live to guide them or answer questions — as opposed to a moderated session, where someone is. This is a fast confirm, not a defense — the fit call itself was already made in `/diy-triage`. If any box stops being true once you dig in, stop and say so rather than writing the plan anyway.)*
 
 - ☐ This is a single-round, task-based question — not a "why do they do this" question
 - ☐ There's a prototype or live surface ready to show people
@@ -160,7 +162,8 @@ Apply the content rules below and produce the OUTPUT TEMPLATE. If it's running p
 2. [Task 2]
 3. [Task 3, if needed — most DIY studies need 2-4, rarely more]
 
-- If more than one variant/stimulus exists, note how it should be distributed across sessions and flag it for `/unmod-script` to resolve (assignment, order, and counterbalancing are `/unmod-script`'s territory, not this skill's)
+- If the task count was already deliberately scoped upstream (by the requester or by `/diy-triage`), don't second-guess it against the "2-4" guideline above — carry it forward as-is
+- If more than one variant/stimulus exists, note how it should be distributed across sessions and flag it for `/unmod-script` to resolve — deciding which participant sees which variant, in what order, and how to keep that balanced across the group (sometimes called assignment, order, and counterbalancing) is `/unmod-script`'s territory, not this skill's
 
 ## 5. Rough Timeline
 

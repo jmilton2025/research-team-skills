@@ -52,11 +52,13 @@ Accept any format. Use the format-to-tool mapping below to pull in linked materi
 | Format | Tool |
 |---|---|
 | Google Doc link | Glean `read_document` (e.g. `mcp__735858e3-df5d-4167-8a6d-f4047ed77a06__read_document`) |
-| Figma link | Figma MCP tools |
+| Figma link | Figma MCP tools — **unreliable in this environment; see fallback below** |
 | Slack thread | Slack MCP tools |
 | Screenshot / image | Read directly |
 
 (`google-docs:fetch-google-doc` is not an available fallback in this environment — don't rely on it.)
+
+**Figma-link fallback.** Figma MCP fetches fail often here: a Desktop Dev Mode MCP can only read a file already open in a local desktop app, and a remote/API Figma MCP requires the file to already be shared with the researcher's account — and can still fail on an immediate retry right after the requester confirms they've shared it. So if a Figma-link fetch fails: retry the fetch itself after the requester confirms sharing — their confirmation alone is not proof the fetch will now succeed. If it still fails, fall back to asking the requester to describe or screenshot the relevant screens directly instead. Content gathered this way is unverified — when it flows into a downstream deliverable, that deliverable should carry the `Status: PENDING` convention per `../../references/output-status-and-labeling-conventions.md`.
 
 From the material, extract (don't invent — if something isn't in the source, ask rather than guess):
 - **The decision this research is meant to inform** (what happens differently depending on the answer)
@@ -81,6 +83,7 @@ Run these through `AskUserQuestion`, batched (up to 4 per call, so this fits in 
 **Q3 — What's the timeline pressure?**
 - Need a read this week or next (**leans DIY** — unmoderated turns around faster)
 - Weeks of runway, decision isn't urgent (**leans researcher-led**, room to recruit and moderate)
+- Somewhere in between / not sure how much runway there actually is
 
 **Q4 — What kind of question is this, underneath?**
 - "Can people find it / complete it / understand it / pick A over B" — a **can-they-do-it** question (**leans DIY**)
@@ -149,12 +152,15 @@ Keep the full triage output to what's below — this is a routing call, not a re
 
 **Recommendation:** [DIY / Researcher-led / Both]
 **Why:** [1 sentence]
+**Scope note (fill in only when more than one sub-question/facet is validated as in-scope for a single DIY study):** [state the count explicitly — e.g. "Validated as ONE study covering 2 sub-questions: (a) ... (b) ..." — omit for a single-question ask]
 
 **Next step(s):**
 - [Specific next command — e.g. "/diy-research-plan" or "/research-plan"]
 - [If "both": both chains, named separately]
 
 **Escalation watch:** [1-3 concrete triggers that would change this call]
+
+**Requester confidence note (optional — fill in only if the requester deferred/trusted judgment throughout rather than substantively engaging with the triage questions):** [e.g. "first-time requester, deferred on most decisions; downstream skills should confirm rather than assume agreement" — leave blank/omit for a requester who engaged normally]
 ```
 
 ## Content rules

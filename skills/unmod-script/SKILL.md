@@ -46,7 +46,7 @@ Extract, or ask directly if missing:
 2. **Research questions** — what the study needs to learn (pull from a linked research plan if one exists)
 3. **Participant profile** — who's taking this (often already defined by `/screener`)
 4. **Session length budget** — total minutes available
-5. **Stimuli** — what the participant will actually see (link, prototype, static images) and how many distinct scenarios/items
+5. **Stimuli** — what the participant will actually see (link, prototype, static images) and how many distinct scenarios/items. Ask explicitly which case this is: a link/prototype/stimulus the participant needs to open, or a live, already-shipped feature the participant already has on their own device/account, with no link at all. The Launch instruction differs by which one it is (see OUTPUT TEMPLATE's Launch section) — confirm before drafting.
 6. **Platform** — which self-serve tool will this run on (UserTesting, Maze, other)?
 
 Do not invent study details. If something's missing and can't be inferred, ask — don't guess at a research question or a participant profile.
@@ -69,9 +69,11 @@ Two study shapes call for slightly different table content:
 - **Sequential task flow** (participant moves through a product end to end) — one row per task, ordered as the participant will experience them.
 - **Concept / side-by-side comparison** (participant reacts to paired stimuli, item by item) — one row per item or item category, not per interaction step; note which comparison each row is testing.
 
-**Typical task count:** 5–8 sequential tasks, or 4–6 item/category blocks for a comparison test. Fewer than 4 tasks/items, when more could reasonably be tested, rarely justifies a full build; more than 8-10 tasks risks fatigue with nobody there to notice a participant disengaging partway through.
+**Typical task count:** 5–8 sequential tasks, or 4–6 item/category blocks for a comparison test. Fewer than 4 tasks/items, when more could reasonably be tested, rarely justifies a full build; more than 8-10 tasks risks fatigue with nobody there to notice a participant disengaging partway through. This is a default for scoping from scratch — if the item/task count was already deliberately scoped upstream (by the research plan or by `/screener`/triage), don't second-guess it against this heuristic.
 
 **Randomization / order:** For any study where a participant sees 2 or more items/tasks in sequence, specify how order will be randomized or counterbalanced across participants — or that order is intentionally fixed, and why — before drafting the full script. Order effects (fatigue, memory bleed from one item coloring the next) are a real risk in a within-subject design, with nobody there to notice a participant tiring or drifting partway through. This extends the same neutrality principle used in the comparison template below: however positions are labeled (e.g. "Version A" / "Version B"), the label must track ORDER (first-shown / second-shown), never fixed item IDENTITY (e.g. never permanently "Version A = current version") — otherwise the counterbalancing this field exists to enable gets silently undone by identity-based labels.
+
+**Sanity-check the time budget.** Once the task structure above is drafted, estimate a realistic per-task time (including warm-up, first impression, synthesis, and wrap-up) and compare it against the session-length budget gathered in Step 1. If the two don't line up — most often because the budget was estimated before the actual task list existed — flag the mismatch explicitly to the researcher rather than silently keeping the original number or quietly trimming the task list to fit it.
 
 Present the table and ask:
 
@@ -152,7 +154,11 @@ A few quick things before we start:
 
 ### Launch
 
+*[If there's a link, prototype, or stimulus to open:]*
 Please click the following link to begin: **[LINK]**
+
+*[If this is a live, already-shipped feature with no link — the participant already has it on their own device/account:]*
+Please open [app/account name] on your own [device] and go to [specific screen or location]. There's no link for this one — you already have it.
 
 Take a moment to look around before doing anything. We'll guide you from there.
 
@@ -200,6 +206,8 @@ Thank you so much for your time and honest perspective today. Your feedback dire
 ### Comparison / multi-variant blocks (swap in for Task blocks)
 
 These two shapes answer genuinely different research questions — pick based on the Key Research Question in the Step 2 table, not just on how many items there are.
+
+**A third option: combine both.** A validated study can legitimately need both shapes together — monadic exposure to each item first (template (b), one item at a time, no comparison language), then an explicit head-to-head block (template (a)) once every item has been seen independently. This hybrid isn't a fallback; it's the correct shape whenever the research question calls for both an independent per-item reaction and a relative preference. Don't force everything into a single template if the underlying research questions genuinely need both.
 
 **Required step — do not skip:** Do not trust an upstream-asserted comparison shape at face value, even if multiple upstream documents (plan, screener) state it identically — always re-derive the shape yourself from the actual Key Research Question text before drafting. Two documents repeating the same label is not independent confirmation; they likely both inherited it from the same source.
 
@@ -292,6 +300,8 @@ Before returning the draft, check it against `references/unmod-writing-rules.md`
 - [ ] No compound (multi-part) instructions in a single step.
 - [ ] Welcome message's time estimate matches the sum of task times.
 - [ ] Nothing in the scenario framing tips off the "expected" or "correct" reaction.
+- [ ] Every anchor and fallback line quotes the literal on-screen copy, not a paraphrase, wherever it references a specific label, button, or screen title — there's no live researcher present to correct a mismatch.
+- [ ] This script's stated parameters (sample size, recency windows, or similar) match what the upstream research plan and `/screener` output stated — if they don't, flag the conflict explicitly rather than silently using whichever number is closest at hand.
 
 ## Tool usage
 

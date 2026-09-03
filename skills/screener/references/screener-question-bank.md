@@ -14,6 +14,7 @@ Put these first — see `SKILL.md` Step 3b for why.
 - **Standard exclusion — employee/competitor/market research:** "Do you or anyone in your household currently work for [Company], a direct competitor, or a market research or user-research firm?" Yes → `[SCREEN OUT]`.
 - **Standard exclusion — recent similar-study participation:** "Have you participated in a research study about [topic/category] in the last [3–6 months]?" Yes → `[SCREEN OUT]` (waive only if the study specifically wants repeat participants).
 - **Consent / willingness gate:** "This study requires [screen-sharing / recording / completing tasks on your own device]. Are you willing and able to do this?" No → `[SCREEN OUT]`.
+- **Own-account consent gate (distinct from the device-capability gate above):** "This study requires completing the task on your own real, logged-in [product/service] account — not a demo, test account, or provided mockup/prototype. This may include screen-recording your own session, which could capture personal account details (e.g., order history, saved addresses, payment info on file). Are you willing and able to do this?" No → `[SCREEN OUT]`. This is a materially bigger ask than the general consent gate above — give it its own question rather than folding it into a generic recording/device consent line.
 
 ## 2. Role / core-behavior gates (qualify)
 
@@ -27,6 +28,10 @@ The single question that decides whether someone can speak to the study topic at
   - Q: "Do you currently order [category] online?" No → `[SCREEN OUT]`.
   - Q: "In the past 6 months, have you had an order substitution (an item swapped for a different one)?" No → `[SCREEN OUT]` (only if recent substitution experience is a hard requirement for the study).
 
+- **Persistent-state gate ("must currently have X," distinct from recency-of-behavior in §3):** "Do you currently have [the qualifying state/item] on your account right now?" No → `[SCREEN OUT]`. This is a different test than "has done X within N months" (§3) — it gates on a state that has to be true *right now*, not just something that happened recently. Concrete failure mode this prevents: recruiting someone whose qualifying state has since lapsed — e.g., they had the item/status at some point in the last few months but no longer do — which would pass a recency-of-behavior gate but leaves them unable to actually complete a task that depends on that state existing today.
+
+- **Performed vs. received the outcome (shared-account / shared-household products):** "Did you personally [place the order / start the request / set this up], or did someone else in your household do it while you only saw the result (e.g., the delivery arriving)?" Only the option for personally performing the behavior qualifies; "someone else did it, I just saw/received the outcome" → `[SCREEN OUT]`. Concrete failure mode this prevents: on shared-account or shared-household products, someone can truthfully say "yes" to having experienced an outcome without ever having performed the behavior or seen the flow themselves — recruiting them means no real baseline familiarity with the thing being tested.
+
 ## 3. Recency / frequency-of-use qualifiers (qualify + quota)
 
 Often does double duty: a "never" answer disqualifies, while the remaining bands define a quota split (e.g., light vs. heavy user).
@@ -36,10 +41,10 @@ Often does double duty: a "never" answer disqualifies, while the remaining bands
 
 ## 4. Device / platform checks (qualify, only when study-specific)
 
-Only include when the study evaluates a specific interface or OS.
+Only include when the study evaluates a specific interface or OS. Two different questions get confused for each other — keep them separate:
 
-- "Which of the following do you currently use to [core behavior]? Select all that apply. `[RANDOMIZE]`" — options: [Platform/device A], [Platform/device B], [Platform/device C], None of these `[EXCLUSIVE]` `[SCREEN OUT]` if the study can't run without one of the listed platforms.
-- "What type of device would you use to complete this study?" — desktop / laptop / tablet / mobile — screen out any device type the study's prototype or tooling can't support.
+- **Device habits inventory (multi-select, quota):** "Which of the following do you currently use to [core behavior]? Select all that apply. `[RANDOMIZE]`" — options: [Platform/device A], [Platform/device B], [Platform/device C], None of these `[EXCLUSIVE]` `[SCREEN OUT]` if the study can't run without one of the listed platforms. Use this when any of several devices would work for the study — it's asking about general habits, not gating on one specific device.
+- **Session-specific device gate (single-select, hard qualify):** "Which device will you use to complete this specific study?" — desktop / laptop / tablet / mobile (single-select). Screen out any answer other than the one device the stimulus requires (e.g., a mobile-frame prototype that only renders correctly on phone). Use this instead of the inventory above whenever the *stimulus* — not just general usage — dictates the device.
 
 ## 5. Standard demographic quotas (quota only)
 
