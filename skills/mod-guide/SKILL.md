@@ -53,19 +53,22 @@ Rationale: time splits follow NN/g's qualitative usability testing study guide a
 
 ### 2b. Present recommendations
 
-```
-Based on your inputs, here's what I recommend:
+**Render as a real Markdown table — NEVER inside a triple-backtick code fence.** The researcher needs to scan this in proper table formatting, not in monospaced code. Show it directly in the chat as:
 
-| Parameter | Recommendation | Why |
-|-----------|---------------|-----|
-| Study Type | [IDI / Usability / Concept / Diary / Focus] | [1-line rationale from inputs] |
-| Moderated vs Unmoderated | Moderated | [rationale — depth, probing, observation] |
-| Duration | [30/45/60/90 min] | [based on scope + study type] |
-| Participant Profile | [e.g., "Instacart shoppers 25-45, 2+ orders/week"] | [derived from target users] |
-| Key Topics / Tasks | • Topic 1  • Topic 2  • Topic 3 | [mapped to objectives] |
-| Research Goal | [1-2 sentences] | — |
-| Say-Do Gap Risk | [Low / Medium / High] | [see Step 2c] |
-```
+> Based on your inputs, here's what I recommend:
+>
+> | Parameter | Recommendation | Why |
+> |-----------|---------------|-----|
+> | Study Type | [IDI / Usability / Concept / Diary / Focus] | [1-line rationale from inputs] |
+> | Moderated vs Unmoderated | Moderated | [rationale — depth, probing, observation] |
+> | Duration | [30/45/60/90 min] | [based on scope + study type] |
+> | Number of Participants | [N=8 / 12 / 24] | [based on objectives + saturation] |
+> | Participant Profile | [e.g., "Instacart shoppers 25-45, 2+ orders/week"] | [derived from target users] |
+> | Key Topics / Tasks | • Topic 1 · Topic 2 · Topic 3 | [mapped to objectives] |
+> | Research Goal | [1-2 sentences] | — |
+> | Say-Do Gap Risk | [Low / Medium / High] | [see Step 2c] |
+
+(Use the example above as a template — strip the leading `>` characters and write the table directly. The point is: no triple backticks, no code block. A real table.)
 
 ### 2c. Say-Do Gap Risk Check
 
@@ -75,48 +78,104 @@ Source: NN/g "Why User Interviews Fail" — *"Interviews do not produce reliable
 
 ---
 
-## Step 3 — Researcher Reviews
+## Step 3 — Researcher Approval (ASK ALL KEY PARAMETERS BEFORE DRAFTING)
 
-Use **AskUserQuestion** to let the researcher confirm or adjust. Ask in batches of up to 4 questions. Mark Claude's recommendation "(Recommended)".
+### 🚫 ZERO MID-FLOW QUESTIONS RULE (read this first — it's the most important rule in this skill)
 
-**Batch 1:**
-1. **Study Type** — Claude's pick first, plus 2-3 alternatives.
-2. **Moderation Style** — Moderated / Unmoderated.
-3. **Duration** — 30 / 45 / 60 / 90 min.
-4. **Participant Profile** — Claude's profile first, plus alternatives and Other.
+**Once Step 3 ends, `AskUserQuestion` is FORBIDDEN until the deliverable is shared.** That means:
 
-**Batch 2 (if needed):**
-5. **Topics / Tasks** — Accept extracted list, or edit.
-6. **Say-Do Gap Module** — Include / Skip / Let Claude decide.
-7. **Anything else?** — "Looks good, let's pick a style" / "Add more context" / "Change something".
+- Steps 4 (Generate), 4.5 (Self-Critique), and 5 (Upload + Style) **must run with zero further user prompts**. No "should I…?", no "want me to…?", no read-back confirmations, no clarifying questions.
+- If you discover a missing piece of information mid-flow, **resolve it with a sensible default** based on the inputs and Step 3 answers — don't ask. If the default turns out wrong, the researcher will say so after seeing the deliverable; that's faster than re-prompting.
+- Before calling `AskUserQuestion` at any point, ask yourself: *"Has Step 3 already closed?"* If yes → DO NOT CALL IT. Pick a default and proceed.
+- Re-asking mid-flow is the failure mode this skill is explicitly designed to prevent. The whole point of Step 3 is to consolidate every decision *upfront*.
+
+**The researcher gets exactly two interaction moments with this skill:** (1) Step 1 — paste inputs, and (2) Step 3 — answer the popup batches. After Step 3 closes, the next thing they see is the finished, uploaded, styled Google Doc.
 
 ---
 
-## Step 3.5 — Output Styling (REQUIRED before final upload)
+**Hard rule:** Ask the researcher about **every key moderation-guide parameter** through `AskUserQuestion` *before* generating the guide in Step 4 — even the ones that look "obvious" from the inputs. The point is to give the researcher a chance to **confirm or override** every meaningful design choice in one place. They should walk away from Step 3 feeling like they directed the guide, not received it.
 
-After the moderation guide content is generated and uploaded as a Google Doc, ask which style to apply. Use **AskUserQuestion**:
+**Three guarantees the researcher gets in every popup:**
+1. **A Recommended option** — Claude's pick (extracted from the inputs or chosen by best practice) appears first, marked `(Recommended)`.
+2. **2–3 alternatives** — real, plausible alternatives so the choice is meaningful, not rubber-stamped.
+3. **An editable "Other" field** — `AskUserQuestion` always offers an "Other" free-text input; the researcher can type any custom value (e.g. a custom duration like "75 min", a custom participant count like "N=18", a custom profile).
 
-**Question — Output Styling**
+**The very last question asked — across all batches — must always be the format/styling question.** The only exception: **demo/sample/test runs**, where the format question is skipped entirely and styling auto-resolves to Jedida Reporting (see "Demo-run auto-trigger" below).
+
+### Mandatory question set (ask ALL of these — even if extracted from inputs)
+
+| # | Question | Recommended (Claude's pick) | Alternatives |
+|---|----------|------------------------------|--------------|
+| 1 | **Phase/scope** — which phase or sub-study to build (only if multi-phase plan) | The earliest unbuilt phase | Other phases · Both phases |
+| 2 | **Study type** | Best fit from inputs (IDI / Usability / Concept / Diary / Focus) | The two next-best alternatives |
+| 3 | **Moderation style** | Moderated remote / Moderated in-person / Unmoderated | The two not picked |
+| 4 | **Duration** | Extracted minutes or 60 min default | 30 / 45 / 60 / 90 (drop the recommended one from this list) |
+| 5 | **Number of participants** | Extracted N or method-appropriate default (IDI N≈12, cog N≈12, usability N≈5–8) | Smaller / larger options |
+| 6 | **Participant profile** | Extracted screen criterion | Looser / tighter alternatives |
+| 7 | **Key topics / tasks** | The 3–5 extracted topics, accept-as-is | "Edit the list" · "Add another topic" |
+| 8 | **Say-Do Gap module** | Include / Skip / Let Claude decide — Recommended depends on Step 2c risk flag | The other two |
+| 9 | **Stimuli handling** (usability/concept only) | Screen-share / static PDF / live prototype | The two not picked |
+| **LAST** | **Format / output styling** | See options below | See options below |
+
+**Only two parameter rows may be skipped — and only under these exact conditions:**
+- **Row 1 (Phase/scope)** — skip only when the inputs describe a single-phase study with no sub-studies.
+- **Row 9 (Stimuli handling)** — skip only when the study is an IDI, diary check-in, or focus group (i.e. no UI/concept stimulus involved).
+
+(The **LAST row — Format / styling** — is also skipped on demo/sample/test runs, which auto-resolve to Jedida Reporting. See "Demo-run auto-trigger" below. On real runs it is always asked.)
+
+**Every other row must be asked**, even if the answer seems obvious from the inputs. The researcher confirming an extracted value is the whole point. Never skip a row just because you think you know the answer.
+
+### Batching rules
+
+`AskUserQuestion` accepts 1–4 questions per call. Group the questions you've identified into the fewest batches possible, **format always in the final batch as the final question**:
+
+- **3 questions or fewer (incl. format)** → 1 batch, format is the last item.
+- **4 questions (incl. format)** → 1 batch, format is q4.
+- **5–7 questions (incl. format)** → 2 batches: design first (up to 4), then a follow-up batch ending in format.
+- **8–9 questions (incl. format)** → 3 batches: 4 + 4 + 1 (format alone in batch 3).
+
+Never split format across batches. Never put format anywhere but the very last position of the very last batch.
+
+### How to phrase each question
+
+For every question, structure the popup like this:
+
+- **Question text** — short, plain English, ends with a "?". Example: "How long should the session be?"
+- **Header chip** — ≤ 12 chars (`Duration`, `Participants`, `Study type`).
+- **Option 1** — `(Recommended)` label suffix, with the Claude-picked value plus a brief description of *why* it was picked.
+- **Options 2–3** — real alternatives with descriptions explaining the tradeoff.
+- **Option 4 (sometimes)** — a fourth alternative if useful, but keep it tight.
+- "Other" is auto-added — never include it manually. The researcher uses it to type custom values.
+
+### 🎬 Demo-run auto-trigger (skip the format question entirely)
+
+**If this is a demo / sample / test run, do NOT ask the format/styling question at all.** Auto-resolve `format = Jedida Reporting (navy/blue)` and proceed. The researcher never sees the styling popup or its "Other" field on a demo run.
+
+**A run counts as a demo when** the invocation contains a clear demo/sample/test signal — e.g. "demo", "sample run", "test this skill", "show me how this works", "just demoing", "dry run", or an equivalent phrase indicating it's a walkthrough rather than a real study deliverable. (This is the same signal class as `feedback_sample_runs.md`, which also means: do NOT save the output to project folders, the tracker, or Drive.)
+
+**Effect on Step 3 batching:** drop the format row entirely. The format question is normally the very last question across all batches — on a demo run it simply isn't asked, so the last *real* parameter question becomes the final question. All other parameter rows are still asked as normal (the demo still exercises the full questioning flow — only styling is auto-resolved). Hold `format = Jedida Reporting` for Step 5 exactly as if the researcher had picked option 1.
+
+**Real (non-demo) runs:** ask the format question normally, per below.
+
+### The mandatory format question (always the last one asked — UNLESS this is a demo run, see above)
 
 > "How should the final Google Doc be styled?"
 
-Options:
-- **"Default — Jedida's mod-guide style" (Recommended)** — Apply the canonical mod-guide template (DM Serif Display headings, DM Sans body, dark-green table headers, dark-green bold label columns). See `references/canonical-template-spec.md`. Source: `https://docs.google.com/document/d/18Q9V4th9BwwNtlLXSncmMpiN591XTV1RzCUAyxym7wI/edit`
-- **"Upload my own reference doc"** — Paste a Google Doc URL of a previous moderation guide or template you'd like the styling matched to. The skill will extract that doc's styling and apply it.
+Four explicit options + auto "Other" for custom reference URL:
 
-**If Default:**
-Run `scripts/apply_canonical_template.py <DOC_ID>`.
+- **"Default — Jedida Reporting (navy/blue)" (Recommended)** — Canonical Jedida Reporting palette (navy NAV H1 nav bars, LBLUE label columns, alternating WHITE/LGRAY rows, DGRAY borders, Calibri typography). Promoted to default for mod guides on 2026-05-20. Styler: `~/.claude/skills/jedida-reporting/scripts/apply_jedida_reporting.py`.
+- **"Jedida's mod-guide style (forest green)"** — Original mod-guide template (DM Serif Display headings, DM Sans body, dark-green table headers, dark-green bold label columns). See `references/canonical-template-spec.md`. Source: `https://docs.google.com/document/d/18Q9V4th9BwwNtlLXSncmMpiN591XTV1RzCUAyxym7wI/edit`
+- **"Plain Google Docs (no custom style)"** — Skip the styling pass; default Google Docs formatting only.
+- **"Match a custom reference doc — paste URL in 'Other' field below"** — The researcher uses the auto-Other free-text field to paste the Google Doc URL they want the styling matched to. The URL arrives inline with this answer — **never ask for it in a separate batch.**
 
-**If Custom Reference:**
-1. Accept the URL.
-2. Run `scripts/apply_custom_template.py <TARGET_DOC_ID> <REF_DOC_ID>`.
-3. Confirm read-back of what was extracted from the custom ref before applying:
-   > "Here's what I picked up from your reference doc:
-   > - **Headings:** [font] [sizes] [color]
-   > - **Body:** [font] [size] [color]
-   > - **Tables:** [col widths] [header bg + text color] [borders] [padding]
-   >
-   > Apply these to your mod guide?"
+If the "Other" field comes back with a Google Doc URL, treat it as: format = Custom Reference, ref_doc_id = parsed-from-URL.
+
+### Holding the format answer for Step 5
+
+- **Default (Jedida Reporting navy/blue)** → run `uv run --python 3.12 --with google-api-python-client --with google-auth --with google-auth-oauthlib --with google-auth-httplib2 --with requests --with python-dotenv python ~/.claude/skills/jedida-reporting/scripts/apply_jedida_reporting.py <DOC_ID>` after upload.
+- **Forest-green mod-guide style** → run `scripts/apply_canonical_template.py <DOC_ID>` after upload.
+- **Custom Reference (URL came back via "Other")** → run `scripts/apply_custom_template.py <TARGET_DOC_ID> <REF_DOC_ID>` after upload. **Apply silently — do NOT do a read-back confirmation, do NOT ask "apply these to your mod guide?"** If the styling looks wrong on the final doc, the researcher will say so post-delivery; that's a one-off correction, not a reason to break the no-mid-flow-questions rule.
+- **Plain** → upload only; skip the styling script.
 
 ---
 
@@ -294,21 +353,26 @@ This is the spine of the study. [1-2 sentences explaining the method and what to
 - **Total target length: ~5 pages.** If the guide exceeds 7 pages, cut moderator-note paragraphs and redundant explanation.
 
 #### Visual (applied by the styling pipeline below)
-- **Body / table cells:** DM Sans 10pt
-- **Headings (H1/H2/H3):** DM Serif Display, 20pt / 16pt / 16pt, dark green `#2D4A3E`
-- **Breadcrumb (subtitle line):** DM Sans 10pt, dark green `#2D4A3E`
-- **Title:** dark green `#2D4A3E`, bold
-- **Last updated:** muted gray `#666666`, 10pt
-- **Table header row:** white text on dark green `#2D4A3E` background, bold
-- **Col 1 (label column):** **bold** throughout
-- **Alternating body rows:** light gray `#F6F7FA` background
-- **Column widths:** col 1 = 115pt (~1.6 in, narrow) · col 2 = 350pt (~4.9 in, wide for reading)
+
+**Default — Jedida Reporting (navy/blue, promoted 2026-05-20):**
+- **Body / table cells:** Calibri 10pt (`#000000`)
+- **Headings (H1/H2/H3):** Calibri bold, navy `#1F4E79`; H1 paragraphs get a full-width NAV background (navy fill + WHITE bold text) as a nav bar
+- **Title:** navy `#1F4E79`, bold, large
+- **Table header row:** WHITE text on navy `#1F4E79` background, bold
+- **Label column (col 1, 2-col tables):** LBLUE `#D6E4F0` fill, bold navy text, snug width (~130pt fixed per `feedback_two_col_table_label_snug.md`)
+- **Alternating body rows:** WHITE / LGRAY `#F5F5F5`
+- **Borders:** DGRAY `#D0D0D0`
+- **Page margins:** 45pt (~0.625")
+
+**Fallback — Forest-green mod-guide style** (only if the researcher explicitly picks it in Step 3):
+- DM Sans 10pt body · DM Serif Display 20/16/16pt headings in dark green `#2D4A3E` · dark-green table headers · dark-green bold label columns · col widths 115/350pt · light gray `#F6F7FA` alternating rows.
 
 #### Styling pipeline (run in order after md2doc upload)
 
 1. `md2doc upload-gdoc.py [file] --folder-id [project folder]` → creates the doc and applies the HTML import (style-gdoc-full pass for base structure)
-2. **Default — Jedida's mod-guide style:** `~/.claude/skills/mod-guide/scripts/apply_canonical_template.py [doc-id]` → applies the locked canonical spec (page setup, DM Sans body / DM Serif Display headings, dark-green table headers, dark-green bold label cols, 0.5pt #C7C7C7 borders, 8pt cell padding, BULLET_DISC_CIRCLE_SQUARE, clears SUBSCRIPT runs, H2 non-bold + 36pt above / 12pt below). See `references/canonical-template-spec.md`.
-3. **Custom — user-supplied reference doc:** `~/.claude/skills/mod-guide/scripts/apply_custom_template.py [target-doc-id] [ref-doc-id]` → extracts the ref doc's spec at runtime and applies the same phases.
+2. **Default — Jedida Reporting (navy/blue):** `~/.claude/skills/jedida-reporting/scripts/apply_jedida_reporting.py [doc-id]` → runs 4 passes (sanitize → document margins → named styles → H1 nav bars → tables with snug label column). Promoted to default 2026-05-20.
+3. **Fallback — Forest-green mod-guide style:** `~/.claude/skills/mod-guide/scripts/apply_canonical_template.py [doc-id]` → applies the locked canonical spec (page setup, DM Sans body / DM Serif Display headings, dark-green table headers, dark-green bold label cols, 0.5pt #C7C7C7 borders, 8pt cell padding, BULLET_DISC_CIRCLE_SQUARE, clears SUBSCRIPT runs, H2 non-bold + 36pt above / 12pt below). See `references/canonical-template-spec.md`.
+4. **Custom — user-supplied reference doc:** `~/.claude/skills/mod-guide/scripts/apply_custom_template.py [target-doc-id] [ref-doc-id]` → extracts the ref doc's spec at runtime and applies the same phases.
 
 > The legacy 3-pass pipeline (`style-gdoc-full` → `font_and_widths.py` → `rebold_col1.py`) is **superseded** by the consolidated single-script approach above. The old scripts are still present in `scripts/` for backward compatibility but should not be used by new flows.
 
@@ -430,18 +494,21 @@ Applies especially when the guide includes structured rating questions or quant-
 
 ---
 
-## Step 5 — Offer Google Docs Upload
+## Step 5 — Upload + Style + Share (NO QUESTIONS — execute silently)
 
-After generating the guide, ask:
+🚫 **Step 5 must run with zero `AskUserQuestion` calls.** The upload-yes/no question is gone. The styling-choice question is gone. The read-back confirmation is gone. The Step 3 answers contain everything needed; if a fact is missing, pick a sensible default and proceed.
 
-> "Your moderation guide is ready! Would you like me to upload it to Google Docs?"
+Status update is fine (a one-line "Uploading… Applying [style]…" message is welcome). What's not fine: any question, any prompt, any "want me to…?" Treat Step 5 like a deterministic script.
 
-If yes:
-1. Upload via `gws-docs` (or md2doc `upload-gdoc.py`).
-2. Trigger **Step 3.5 — Output Styling** (above) to ask which style to apply.
-3. **Default — Jedida's mod-guide style:** Run `scripts/apply_canonical_template.py [doc-id]`. This single script clears SUBSCRIPT runs, sets page size + margins, applies all run-level typography (headings, body, breadcrumb, "Last updated"), styles all 2-col tables (col widths 96/715.5pt, dark-green header with white bold, dark-green bold label col, #161416 content col, 0.5pt #C7C7C7 borders, 8pt padding all sides), sets H2 non-bold with 36pt above / 12pt below, sets NORMAL_TEXT 4pt spaceBelow + 115% lineSpacing, and applies BULLET_DISC_CIRCLE_SQUARE.
-4. **Custom — user-supplied reference doc:** Run `scripts/apply_custom_template.py [target-doc-id] [ref-doc-id]`. Same phases as the default, but values are sourced from the user's reference doc instead of the locked spec.
-5. File into the appropriate Google Drive project folder (Project 1 / Project 2 / Project 3 / Project 4) if applicable. Share the link.
+Execution:
+1. Upload via `gws-docs` (or md2doc `upload-gdoc.py`) to a sensible Drive location. If the input was a Google Doc, default to its parent folder; otherwise default to the matching project folder per CLAUDE.md (Project 1 / 2 / 3 / 4 / Research). **Do not ask which folder** — pick one and go.
+2. Apply the styling chosen in Step 3:
+   - **Default — Jedida Reporting (navy/blue):** Run `uv run --python 3.12 --with google-api-python-client --with google-auth --with google-auth-oauthlib --with google-auth-httplib2 --with requests --with python-dotenv python ~/.claude/skills/jedida-reporting/scripts/apply_jedida_reporting.py [doc-id]`. Applies the Jedida Reporting palette (navy NAV H1 nav bars, LBLUE label columns, alternating WHITE/LGRAY rows, DGRAY borders, Calibri throughout) via 4 passes: sanitize → document margins → named-style typography → H1 nav bars → table styling with snug label column. Promoted to default 2026-05-20.
+   - **Fallback — Forest-green mod-guide style:** Run `scripts/apply_canonical_template.py [doc-id]`. This single script clears SUBSCRIPT runs, sets page size + margins, applies all run-level typography (headings, body, breadcrumb, "Last updated"), styles all 2-col tables (col widths 96/715.5pt, dark-green header with white bold, dark-green bold label col, #161416 content col, 0.5pt #C7C7C7 borders, 8pt padding all sides), sets H2 non-bold with 36pt above / 12pt below, sets NORMAL_TEXT 4pt spaceBelow + 115% lineSpacing, and applies BULLET_DISC_CIRCLE_SQUARE.
+   - **Custom — user-supplied reference doc:** Run `scripts/apply_custom_template.py [target-doc-id] [ref-doc-id]`. Apply silently — no read-back, no confirmation prompt.
+   - **Plain Google Docs:** Skip the styling script entirely.
+3. Share the final Google Doc link in chat with a short summary of what's in the guide.
+4. **Only after the link is shared** is the skill allowed to respond to follow-up questions or correction requests from the researcher.
 
 ---
 
@@ -451,9 +518,10 @@ If yes:
 - **google-docs:fetch-google-doc** / **Glean** (`mcp__glean_default__read_document`) — read PRDs, briefs, or style reference docs from Google Drive.
 - **Read** tool or **download-gdoc.py** / **read-gdoc.py** — fallback readers for Google Docs.
 - **gws-docs** or **md2doc** (`upload-gdoc.py`) — upload the final guide to Google Docs.
-- **scripts/apply_canonical_template.py** — apply Jedida's locked mod-guide template (default option).
+- **`~/.claude/skills/jedida-reporting/scripts/apply_jedida_reporting.py`** — **DEFAULT styler (promoted 2026-05-20).** Applies the Jedida Reporting navy/blue palette via 4 passes (sanitize → margins → named-style typography → H1 nav bars → tables with snug label column).
+- **scripts/apply_canonical_template.py** — fallback forest-green mod-guide template (only when researcher explicitly picks it).
 - **scripts/apply_custom_template.py** — extract styling from a user-supplied reference doc and apply it to the target.
-- **references/canonical-template-spec.md** — human-readable canonical spec (documentation; mirrors the values in `apply_canonical_template.py`).
+- **references/canonical-template-spec.md** — human-readable spec for the forest-green fallback (mirrors the values in `apply_canonical_template.py`).
 - **references/mod-guide-methodology.md** — load on demand when the researcher asks about a specific probe, bias, or study-type nuance.
 
 ---
