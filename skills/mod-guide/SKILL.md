@@ -119,11 +119,16 @@ Source: NN/g "Why User Interviews Fail" — *"Interviews do not produce reliable
 
 **Only two parameter rows may be skipped — and only under these exact conditions:**
 - **Row 1 (Phase/scope)** — skip only when the inputs describe a single-phase study with no sub-studies.
+- **Terminology note (Row 1):** "Phase" here means a study *sub-phase* — e.g. a diagnostic wave followed by a validation wave within this one study — not the RPP's "Phase 1–5" process-stage grid (Plan/Recruit/Fieldwork/Synthesis/Readout) in the Research Timeline header. Same word, different meaning — don't conflate the two.
 - **Row 9 (Stimuli handling)** — skip only when the study is an IDI, diary check-in, or focus group (i.e. no UI/concept stimulus involved).
 
 (The **LAST row — Format / styling** — is also skipped on demo/sample/test runs, which auto-resolve to Jedida Reporting. See "Demo-run auto-trigger" below. On real runs it is always asked.)
 
 **Every other row must be asked**, even if the answer seems obvious from the inputs. The researcher confirming an extracted value is the whole point. Never skip a row just because you think you know the answer.
+
+### Multi-cohort studies (comparison-cohort branching)
+
+When the research plan specifies more than one cohort (e.g. an "abandoner" cohort vs. a "non-abandoner" comparison cohort — the same contrastive-design pattern the upstream `/research-plan` skill supports), don't leave per-cohort wording to be improvised inline. Label any question-set row above, and any Ask-table row in Step 4, that needs divergent phrasing per cohort with an explicit `(Cohort A) / (Cohort B)` suffix (or however many cohorts exist) — e.g. "Q5 (Cohort A)" / "Q5 (Cohort B)".
 
 ### Batching rules
 
@@ -182,6 +187,8 @@ If the "Other" field comes back with a Google Doc URL, treat it as: format = Cus
 ## Step 4 — Generate the Moderation Guide
 
 Apply the researcher's approved parameters and style. For the default template, follow the OUTPUT TEMPLATE below. Branch the Core section by study type (see 2a).
+
+**Test/demo/mock-run output:** add the shared `⚠️ TEST ARTIFACT` header line — see `../../references/output-status-and-labeling-conventions.md` (§2).
 
 ### OUTPUT TEMPLATE (default Instacart style — TABLES = QUESTIONS ONLY)
 
@@ -351,6 +358,7 @@ This is the spine of the study. [1-2 sentences explaining the method and what to
 - **No `<br><br>` line breaks inside table cells.** Each cell holds one short scannable line. If a question has multiple parts, split into separate rows (`Q12`, `Q12 follow-up`) or sub-questions (`Q6a`, `Q6b`, …).
 - **Pre-Session Checklist and Post-Session Debrief are bullets/numbered lists, NOT tables** (they aren't questions).
 - **Total target length: ~5 pages.** If the guide exceeds 7 pages, cut moderator-note paragraphs and redundant explanation.
+- **Comparison-cohort studies:** label any Ask-table row needing per-cohort variants with the `(Cohort A) / (Cohort B)` convention (see "Multi-cohort studies" in Step 3) rather than improvising inline labels.
 
 #### Visual (applied by the styling pipeline below)
 
