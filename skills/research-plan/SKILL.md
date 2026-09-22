@@ -12,7 +12,7 @@ Generates a complete, polished UX research plan tailored to the researcher's stu
 | Step | What happens | Gate before advancing |
 |---|---|---|
 | **1** | Gather study inputs (PRD, brief, Slack thread, kickoff notes) | Input received in any format |
-| **1.5** | Discover existing context & insights (research-insights agent → Glean → project folder) | Researcher confirms or corrects the context summary |
+| **1.5** | Discover existing context & insights (research-insights agent → Glean → project folder) → walk researcher through 3 sequential pop-ups: Background, Existing Insights, Hypotheses — one category at a time, multi-select | All three categories locked by researcher |
 | **1.6** | Collect logistics gaps (decision, name, topic, timeline, sample, stakeholders) via AskUserQuestion | All required logistics confirmed |
 | **2** | Analyze inputs → propose methodology skeleton as a table with rationale | Researcher approves or overrides the method recommendation |
 | **3** | Section-by-section walk — 13 sections in RPP order, one pop-up each | All 13 sections ✓ approved (or researcher invokes override) |
@@ -112,27 +112,39 @@ Proactively search for prior context and insights — do NOT wait to be asked, a
 
 **If discovery turns up an adjacent project currently being scoped or run (not a completed finding)** — a same-cycle effort on an overlapping question — call it out distinctly from Existing Insights rather than folding it in as if it were settled prior research. State it plainly ("[Project] is scoping/running an adjacent question this cycle — coordinate to avoid duplicate work") with a link, and place it in Product Context or Project Details → Dependencies (whichever fits), not as a numbered Existing Insight (those are for what's already known, not what's in flight).
 
-Then **show, don't interrogate.** Present back as a confirm-or-correct, NOT a 15-question quiz (Prakriti: *"It can say, here's the context. Does this look right? Yes. So move to right."*):
+**Announce before running.** Before querying any source, say in chat:
 
-> "Here's what I found before drafting — does this look right?
->
-> **Background & context** *(verbatim from sources, with links)*
-> - "[verbatim sentence pulled from PRD / doc]" — [Source name](URL)
-> - "[verbatim sentence]" — [Source name](URL)
->
-> **Existing insights — what we already know** *(top 5, each with a source)*
-> 1. [Insight stated plainly] — [Source](URL)
-> 2. …
->
-> **Proposed hypotheses** *(derived from the above, to pressure-test)*
-> - H1 — [belief]
-> - H2 — [belief]
->
-> Correct anything that's off, or tell me what I'm missing."
+> "Pulling background, existing insights, and hypotheses from your PRD and research-insights — I'll walk you through each category one at a time so you can pick and choose what goes into the plan."
 
-**Verbatim rule (Amalia):** background and prior-research items are quoted **verbatim with a source link**, not silently synthesized into Claude's own words. Synthesis is fine *in addition*, but the researcher must be able to see the source text without leaving the plan — otherwise she has to go re-verify it and it saves no time. See content rule #27.
+Then run all discovery silently (steps 1–4 above). Once complete, walk the researcher through the results **one category at a time**, each as its own `AskUserQuestion` pop-up with `multiSelect: true`. Lock each category before advancing to the next. *(Added 2026-09-22, per live testing feedback — mirrors the one-at-a-time pattern Step 1.6 and Step 3 already use.)*
 
-Only after context + existing insights are confirmed do you move to logistics.
+**Pop-up 1 — Background & Context**
+
+Show each background item as a selectable checkbox option — verbatim text + source link. Tell the researcher they can deselect any item to drop it, or use the "Other" field to add something. Use `multiSelect: true`. Once confirmed, lock the approved background set before showing Pop-up 2.
+
+Example question text: *"Background & context — select what to keep. Deselect to drop. We'll go one category at a time."*
+
+- Each option = one verbatim background item with its source in parentheses
+- `multiSelect: true` so the researcher toggles which ones to keep
+- The automatic "Other" field lets them type an addition or correction
+
+**Pop-up 2 — Existing Insights**
+
+Same pattern: each insight as a selectable option (numbered, verbatim, with source link). Once confirmed, lock the approved insights set before showing Pop-up 3.
+
+Example question text: *"Existing insights — select the ones to carry forward. Deselect any to drop."*
+
+**Pop-up 3 — Hypotheses**
+
+Same pattern: each proposed hypothesis as a selectable option. Once confirmed, lock the approved hypotheses.
+
+Example question text: *"Proposed hypotheses — select the ones that ring true. Deselect any to drop, or add one via 'Other'."*
+
+**After all three pop-ups are confirmed**, the locked sets (background + insights + hypotheses) are the approved context. Only then move to Step 1.6.
+
+**Verbatim rule (Amalia):** every item shown in the pop-ups is quoted **verbatim with a source link** — not synthesized or paraphrased. A brief synthesis caption below the options is fine, but the source text must appear as-is so the researcher does not have to re-verify it. See content rule #27.
+
+**Pagination rule:** `AskUserQuestion` supports at most 4 options per call. When a category has more than 3 items, show 3 items as options 1–3 and use option 4 as "→ Next batch ([N] more items)." Keep paginating until all items are shown, then show a final confirmation pop-up ("Keep these [N] items from this category?") before locking and moving on.
 
 ### Step 1.6: Logistics + Decision Audit
 
