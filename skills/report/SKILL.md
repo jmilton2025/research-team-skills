@@ -1,6 +1,6 @@
 ---
 name: report
-description: Use when a UX researcher has completed analysis and needs to produce a research report with executive summary, methodology, findings, insights, and recommendations for stakeholders. Triggers on "write research report", "readout", "share findings", or "/report".
+description: Use when a UX researcher (or a PM/designer relaying a researcher's completed analysis) needs to produce a research report with executive summary, methodology, findings, insights, and recommendations for stakeholders. Triggers on "write research report", "readout", "share findings", "turn my notes into a report", or "/report" — also fits "make this report-ready," "put together a readout," or a self-initiated pitch for a follow-up study.
 ---
 
 # Research Report Generator
@@ -33,6 +33,10 @@ Trigger phrases:
 - "draft my readout"
 - "share my findings with [stakeholders]"
 - "turn my notes into a report"
+- "can you make this report-ready" / "make this exec-ready" (common PM-handoff phrasing)
+- "help me put together a readout" / "help me make the case for [a follow-up study]"
+
+The requester driving this conversation is not always the researcher who ran the study (a PM or designer relaying finished analysis is common). See the authorship note at the start of Step 1 — the skill still runs, but who is "Responsible" needs to be confirmed explicitly, not assumed.
 
 ## Core discipline: Finding → Insight → Recommendation
 
@@ -64,6 +68,12 @@ Every report opens with a BLUF: three sentences answering what we learned, what 
 
 Ask the researcher for the raw material. Accept any format: Google Doc URL, pasted notes, Slack paste, bullet list, voice-memo transcript. Use AskUserQuestion in batches of up to 4.
 
+**If AskUserQuestion isn't available in this session** (e.g., a non-interactive or subagent context), ask the same questions conversationally instead: post them as one clearly numbered list per batch (still ≤4 at a time) and wait for the reply. This fallback applies at every AskUserQuestion call site in this skill (Steps 1, 2, 3, 3.5) — it isn't repeated at each one.
+
+**Before asking anything, check what's already been given.** If the requester's initial message already answers a question (study name, audience, method, findings, quotes, draft recs), don't re-ask it — only batch questions for what's genuinely missing. A dense one-message brain-dump is the common case; walking through all 8 questions anyway wastes the requester's time.
+
+**Authorship check:** If the person driving this conversation is not the researcher who ran the study (a PM or designer relaying someone else's finished analysis is a normal, supported case), confirm the named researcher for the "Responsible" field rather than defaulting to whoever is typing. Note in the delivery message (Step 4.5) that the named researcher should review and sign off before this ships as final — "Responsible" should never imply a review that didn't happen.
+
 **Batch 1 — Study basics:**
 
 **Q1 — Study name/title** (short, e.g., "Private-label PDP brand recall")
@@ -75,11 +85,14 @@ Ask the researcher for the raw material. Accept any format: Google Doc URL, past
 - **Research team / mixed internal** — methodology-heavy, reproducibility, caveats
 - **Other** — researcher specifies
 
+*Mixed audience (e.g., a joint PM + Eng planning review deciding between concepts):* choose Product/PM as the base variant and fold in the Engineering variant's "Edge Cases Observed" subsection before Recommendations — don't force a pick between the two.
+
 **Q3 — Study method & sample size** (e.g., "8 moderated usability sessions, Instacart weekly shoppers")
 
 **Q4 — Source material**
 - Let the researcher paste raw analysis notes, affinity clusters, themes, quotes, or link a Google Doc
-- If Google Doc URL: read via Glean (mcp__735858e3-df5d-4167-8a6d-f4047ed77a06__read_document) or `google-docs:fetch-google-doc` skill
+- If Google Doc URL: read via Glean (`mcp__glean__read_document`) or the `google-docs:fetch-google-doc` skill
+- If both read paths fail or aren't available in this session, don't block — ask the researcher to paste the relevant content directly instead
 
 **Batch 2 — Content (after Batch 1):**
 
@@ -90,6 +103,8 @@ Ask the researcher for the raw material. Accept any format: Google Doc URL, past
 **Q7 — Draft recommendations** (if the researcher has any) — these will be prioritized and owned in Step 4
 
 **Q8 — Open questions / follow-ups** (what the study did not answer)
+
+**Don't fabricate what wasn't asked for.** The templates in Step 4 have fields these 8 questions don't explicitly prompt for — a named owner per recommendation, the OKR/PRD name for Business Framing, fielded start/end dates, links for Discussion Guide/Coded Data. If the researcher's answers don't cover one, either ask a brief follow-up or mark it explicitly as unresolved (e.g., "[Owner not provided — flag for researcher]") rather than inventing a plausible-sounding value.
 
 ### Step 2: Propose Report Structure
 
@@ -111,7 +126,7 @@ Executive and Product-PM readouts often start life as slide decks or end up need
 | Scenario | Convert to | Why |
 |----------|-----------|-----|
 | Researcher has a slide deck, audience now wants a durable doc | **Reference Guide format** (this skill's default) | Slides are ephemeral; a reference guide becomes a source-of-truth for future PMs, ENG, and onboarding new researchers. Distill, don't recap slide-by-slide. |
-| Researcher has this markdown report, audience is a live exec review | **Slide deck** (export via `gws-slides` after generation) | Execs in live meetings scan visuals, not paragraphs. Keep BLUF as slide 1, one finding per slide, rec table as appendix. |
+| Researcher has this markdown report, audience is a live exec review | **Slide deck** (same `gws` CLI pattern as Step 5's Google Docs upload, targeting the Slides API instead of Docs — no dedicated slide-export script exists in this skill yet, so verify the exact subcommand before relying on it) | Execs in live meetings scan visuals, not paragraphs. Keep BLUF as slide 1, one finding per slide, rec table as appendix. |
 | Mixed audience (live exec review + durable doc for PM team) | **Generate both** | The report is the canonical artifact; the deck is a derivative. Never let the deck become the source of truth — it loses nuance and evidence trail. |
 
 When converting slide content → reference doc, apply the Playbook rules: (1) distill, don't summarize slide-by-slide; (2) extract frameworks prominently; (3) clarify Finding vs. Insight; (4) standardize messy workshop examples into clean "Example A / B" format; (5) authoritative tone, no conversational filler.
@@ -178,7 +193,7 @@ Options:
 
 **If the researcher shares a reference doc:**
 
-1. Read it (Glean `read_document`, `google-docs:fetch-google-doc`, or Read tool for pasted text)
+1. Read it (Glean `mcp__glean__read_document`, `google-docs:fetch-google-doc`, or Read tool for pasted text; if both doc-reader paths fail, ask the researcher to paste the style reference text directly)
 2. Extract style patterns: header hierarchy, table use, bullet style, evidence formatting (inline quotes vs. callouts), tone (formal/conversational), level of detail
 3. Confirm read-back:
    > "Here's the style I picked up:
@@ -294,13 +309,15 @@ Last updated: [Month Year]
 
 For each P0 or P1 recommendation, generate a one-line business-impact framing. Pull from the stakeholder's revenue, retention, CX, or ops-efficiency language — not research jargon. This converts the rec from a "nice-to-have" into a "mandatory, risk-mitigating investment" (Loosbrock, 2025).
 
+**Which format to use:** the 2-column Label/Detail block below is for a single P0 rec you're spotlighting (or as a fallback when you only have one). The moment there are 2+ P0/P1 recs — the normal case for a Product/PM report — use the 4-column "Example table pattern" instead, one row per rec, so business framing doesn't get lost after the first recommendation.
+
 | Label | Detail |
 |-------|--------|
 | **What unlocks** | [If we ship this, we unlock: quantified impact — e.g., "+X% basket completion," "−Y% cart-abandon," "$Z annualized retention impact," "N fewer CS tickets/week"] |
 | **Cost of delay** | [What happens if we don't ship this next quarter — competitor catches up, metric degrades, rework gets more expensive] |
 | **Strategic alignment** | [Which company OKR / team goal this ladders to — cite by name, not just theme] |
 
-**Example table pattern (drop in after the Recommendations table for P0s):**
+**Table pattern for 2+ P0/P1 recs (drop in after the Recommendations table):**
 
 | Recommendation | Business Unlock | Cost of Delay | OKR Alignment |
 |----------------|-----------------|---------------|---------------|
@@ -309,7 +326,7 @@ For each P0 or P1 recommendation, generate a one-line business-impact framing. P
 **Rules:**
 - Never fabricate a dollar figure. If you don't have one, say "estimated impact TBD — pairs with DS for sizing."
 - Frame as **investment vs. cost of inaction**, not just "we should do X."
-- Cite the OKR or PRD by name. Vague alignment ("supports retention") is weaker than specific alignment ("supports the Q3 'new-user activation +15%' OKR").
+- Cite the OKR or PRD by name. Vague alignment ("supports retention") is weaker than specific alignment ("supports the Q3 'new-user activation +15%' OKR"). **If there genuinely isn't a standing OKR or PRD yet** (self-initiated or exploratory research is the common case), don't invent one — say so directly: "No standing OKR currently covers this — this report's ask is to open that conversation for planning," mirroring the dollar-figure fallback above.
 
 ## Next Steps & Open Questions
 
@@ -357,6 +374,8 @@ Last updated: [Month Year]
 
 **[Single clear decision needed. Bold. One line.]**
 
+*Decision owner: [Name, Role] · Why now: [one-line business unlock or cost of delay — this is the Exec variant's Business Framing, condensed to one line instead of a table]*
+
 ## Evidence (one hero each)
 
 > "[The single strongest verbatim quote]"
@@ -376,7 +395,7 @@ Last updated: [Month Year]
 
 # [Failure mode or behavior-led title]
 
-[RACI block as above]
+[RACI block — Responsible + Consulted + Informed, same 3-row shape as the Product/PM variant above, not the 2-row Exec version]
 
 ## Bottom Line
 
@@ -423,7 +442,7 @@ Last updated: [Month Year]
 7. **Tense discipline** — Findings: past. Insights: present. Recommendations: imperative.
 8. **Priority emojis lead** — 🔴 P0 / 🟡 P1 / 🟢 P2. Consistent across all tables and the exec summary.
 9. **Owned recommendations** — Every rec has a named human owner. "Someone should…" is not a recommendation; it's an open question. Move it.
-10. **Rec count ≤ insight count** — If recs outnumber insights, cut. Speculation flag.
+10. **Rec count ≤ insight count** — If recs outnumber insights, cut. Speculation flag. This is a check against recs invented with no grounding insight, not a strict cap: one insight legitimately spawning two differently-prioritized recs is fine, and a meta-level "fund a follow-up study" recommendation doesn't need its own 1:1 insight partner — it's the ask the whole report is building toward.
 11. **Caveat once** — Sample size and limitations are acknowledged in Methodology, not re-apologized for in every finding.
 12. **Cut methodology from exec variant** — One paragraph at the bottom. Execs do not need to know about the think-aloud protocol.
 13. **Imperative recommendations** — "Move the badge," not "consider moving the badge."
@@ -451,7 +470,7 @@ Last updated: [Month Year]
 
 ## Step 4.5: Self-Critique Checklist (AIxUXR Playbook — Report Critic)
 
-Before presenting the draft to the researcher or offering upload, run the report through the Report Critic framework from the AIxUXR Playbook (Avramenko & Minderler, 2025). This is a structured self-review — the AI's equivalent of a peer review pass. Do this *silently* and surface only the items that fail or need researcher attention.
+Before presenting the draft to the researcher or offering upload, run the report through the Report Critic framework from the AIxUXR Playbook (Loosbrock & Venkatraman, 2025). This is a structured self-review — the AI's equivalent of a peer review pass. Do this *silently* and surface only the items that fail or need researcher attention.
 
 Adopt three personas in sequence (Staff/Sr Sparring Partner → Product Manager → Senior Leadership) and check the report against each dimension.
 
@@ -460,12 +479,13 @@ Adopt three personas in sequence (Staff/Sr Sparring Partner → Product Manager 
 | Dimension | Pass criteria |
 |-----------|---------------|
 | **BLUF presence** | First 3 sentences answer what / so what / now what. No methodology leads. A reader who stops after paragraph 1 can still decide. |
-| **Finding → Insight → Recommendation ladder** | Each rung is distinct. No finding labeled as an insight. No recommendation without a traceable insight parent. Tense discipline intact (past / present / imperative). |
+| **Finding → Insight → Recommendation ladder** | Each rung is distinct. No finding labeled as an insight. No recommendation without a traceable insight parent — in the Exec variant, which has no standalone Insights section, the insight can be folded into the Bottom Line or Finding language instead, but the "so what" still has to be present somewhere, not skipped. Tense discipline intact (past / present / imperative). |
 | **Evidence depth** | Every finding carries ≥1 verbatim quote OR a quantitative observation with denominator. Strong patterns have 3 quotes (Portigal's rule). No sanitized grammar. |
 | **Participant attribution** | P-coding (P01, P02…) used throughout. One demographic tag per quote. No names. No PII. |
 | **Actionability of recommendations** | Every rec has a named human owner, priority emoji, effort estimate, impact estimate, and cites its parent insight. "We should consider…" does not appear. |
 | **Audience-fit** | The variant matches the primary audience from Q2. Exec variant ≤ 2 pages. Engineering variant leads with failure modes, not user quotes. Research-team variant carries full methodology. |
-| **Business framing (for Exec & Product-PM)** | P0/P1 recs have a Business Framing row: what it unlocks, cost of delay, OKR alignment. No fabricated dollar figures. |
+| **Business framing (for Exec & Product-PM)** | P0/P1 recs have business framing — what it unlocks, cost of delay, OKR alignment. For Exec, this is the one-line "Why now" under The Ask; for Product-PM, it's the full Business Framing block/table. No fabricated dollar figures, and no invented OKR name when none exists yet. |
+| **Researcher authorship** | The named "Responsible" researcher has actually reviewed this, or — if someone else supplied the input on their behalf — the delivery message says so and flags it for that researcher's sign-off before it ships as final. |
 | **Visual hierarchy** | 2-column tables as default content layout. Emoji priorities lead. Section bars for H2s. No dense paragraphs (>3 lines → convert to bullets or a table). |
 | **Executive scannability** | A skimmer reading only headers, bolded phrases, and the first cell of each table gets the argument. Bolded keywords guide the scan. |
 | **Rec-to-insight ratio** | Recommendations ≤ insights. If recs outnumber insights, cut — that is speculation. |
@@ -485,7 +505,7 @@ Borrowed from the AIxUXR Playbook's Prompts 1b, 2, and 3 (Loosbrock, 2025). Run 
 | **Product Manager (skeptical)** | Actionability, connection to roadmap, KPI relevance | "What in this report will change what my team ships next sprint?" |
 | **Senior Leadership / Director** | Strategic alignment, resource justification, opportunity cost | "Which OKR does this ladder to? What's the cost of *not* acting?" |
 
-If any checklist item fails or any persona question can't be answered from the report as written, flag it in the delivery message to the researcher: *"Before you ship this, note: [failing item]. Want me to strengthen it?"*
+If any checklist item fails or any persona question can't be answered from the report as written, flag it in the delivery message to the researcher. For a single failure: *"Before you ship this, note: [failing item]. Want me to strengthen it?"* When 2+ items fail at once (routine when working from thin or incomplete inputs), don't compress them into one line — list each as its own bullet so the researcher sees the real scope of what's unresolved: *"Before you ship this, a few things to know: (1) [failing item], (2) [failing item], (3) [failing item]. Want me to strengthen these?"*
 
 ---
 
@@ -496,11 +516,19 @@ After generating the report, ask:
 > "Your research report is ready. Would you like me to upload it to Google Docs with the Instacart design system applied?"
 
 If yes:
-1. Use `gws-docs` or `gws-docs-write` to create the doc
-2. Organize into the appropriate Google Drive project folder (Project 1 / 2 / 3 per the researcher's study)
-3. **Fix subscript formatting (MANDATORY)** — `<br>` handling in the upload pipeline creates SUBSCRIPT runs that shrink text. After upload, scan the doc via Docs API for `baselineOffset == 'SUBSCRIPT'` and reset to `'NONE'`. Do this BEFORE styling.
-4. Apply `style-gdoc-full.py` to get Instacart styling: dark-green section bars, RACI chips, 2-col table widths, 6pt spaceBelow + 120% lineSpacing in table cells, 36pt above H2/H3, emoji preserved.
-5. Share the Google Doc link with the researcher.
+1. Create the doc via the `gws` CLI (full path `~/.config/gohan/bin/gws` if it isn't on $PATH):
+   ```bash
+   cd <directory containing the report .md>
+   gws drive files create \
+     --upload <report.md> \
+     --upload-content-type 'text/markdown' \
+     --json '{"name":"<Report Title>","parents":["<project folder ID>"],"mimeType":"application/vnd.google-apps.document"}'
+   ```
+   This both creates the doc and files it in the right Drive folder in one call (`parents` takes the folder ID directly) — capture the returned `DOCUMENT_ID`. Pick the folder ID from CLAUDE.md's project routing table (P1–P10 + Recipe-Licensing, matched to the study's subject matter, not the newest project) rather than assuming Project 1/2/3.
+   If `gws` isn't available or the call fails, don't stall — tell the researcher the doc-upload path is currently unavailable and hand off the polished markdown as the deliverable instead.
+2. **Fix subscript formatting (MANDATORY)** — `<br>` handling in the upload pipeline creates SUBSCRIPT runs that shrink text. After upload, scan the doc via Docs API for `baselineOffset == 'SUBSCRIPT'` and reset to `'NONE'`. Do this BEFORE styling.
+3. Apply `~/Documents/Claude/Productivity/Google-Docs/style-gdoc-full.py <DOCUMENT_ID>` to get Instacart styling: dark-green section bars, RACI chips, 2-col table widths, 6pt spaceBelow + 120% lineSpacing in table cells, 36pt above H2/H3, emoji preserved.
+4. Share the Google Doc link with the researcher.
 
 If no, leave the markdown as the final deliverable.
 
@@ -508,13 +536,12 @@ If no, leave the markdown as the final deliverable.
 
 ## Tool usage
 
-- **AskUserQuestion** — gather inputs, propose structure, confirm style (Steps 1, 2, 3, 3.5)
-- **mcp__735858e3-df5d-4167-8a6d-f4047ed77a06__read_document (Glean)** — read any Google Doc the researcher references (PRD, prior reports, analysis docs)
-- **google-docs:fetch-google-doc** — alternative Google Doc reader
+- **AskUserQuestion** — gather inputs, propose structure, confirm style (Steps 1, 2, 3, 3.5). If unavailable in this session, use the conversational fallback noted at the top of Step 1.
+- **`mcp__glean__read_document` (Glean)** — read any Google Doc the researcher references (PRD, prior reports, analysis docs)
+- **google-docs:fetch-google-doc** — alternative Google Doc reader, if that skill is installed in this session (not guaranteed everywhere); if neither this nor Glean is available, fall back to asking the researcher to paste the content directly
 - **Read** — read pasted content or local files
-- **gws-docs / gws-docs-write** — create the Google Doc (Step 5)
-- **gws-drive** — move the doc into the correct Project folder
-- **style-gdoc-full.py** — apply the Instacart design system to the uploaded doc
+- **`gws` CLI** (`gws drive files create --upload ...`, full path `~/.config/gohan/bin/gws` if not on $PATH) — create the Google Doc and file it into the right Drive folder in one call (Step 5)
+- **`~/Documents/Claude/Productivity/Google-Docs/style-gdoc-full.py`** — apply the Instacart design system to the uploaded doc
 - The generated markdown is the primary output — it must be polished enough to ship as-is before upload
 
 ---
@@ -524,6 +551,8 @@ If no, leave the markdown as the final deliverable.
 `jedida-reporting` is Jedida's personal failure-analysis and pipeline-metrics reporting skill, scoped to her specific HITL/golden-dataset projects with canonical metrics, palette, and Slack formatting rules. It is Jedida-only.
 
 `/report` is the team-facing, audience-aware research report generator for the whole Instacart Research team. It enforces the NNG/Sharon/Portigal methodology canon and the finding→insight→recommendation discipline. It does not carry Jedida-specific metrics, links, or Slack rules. Use `/report` for any stakeholder readout; use `jedida-reporting` only for Jedida's HITL pipeline deliverables.
+
+**Status note:** `jedida-reporting` is not present in the active skills directory as of this writing — only in an older backup snapshot. If invoking it comes back as unavailable, don't guess at reconstructing it: use `/report`'s Product/PM variant and layer Jedida's HITL-specific metrics/format on top manually, or flag to Jedida that the skill may need reinstalling.
 
 ---
 

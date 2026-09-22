@@ -122,9 +122,11 @@ Every recommendation is a row in a table with these columns:
 
 | Priority | Recommendation | Owner | Insight Source | Effort | Impact |
 |----------|---------------|-------|----------------|--------|--------|
-| 🔴 P0 | Move brand badge above product title on PDP | PDP squad (Meith) | Insight #1: Brand invisible during scan | S | H |
-| 🟡 P1 | Add "shop this brand" CTA on PDP | Merchandising (Trace) | Insight #2: Brand loyalty underused | M | M |
-| 🟢 P2 | Explore brand-first sort on search | Search squad | Insight #3 | L | M |
+| 🔴 P0 | Move brand badge above product title on PDP | PDP squad ([Name]) | Insight #1: Brand invisible during scan | S | H |
+| 🟡 P1 | Add "shop this brand" CTA on PDP | Merchandising ([Name]) | Insight #2: Brand loyalty underused | M | M |
+| 🟢 P2 | Explore brand-first sort on search | Search squad ([Name]) | Insight #3 | L | M |
+
+Use a real named owner from the current study team when generating a live report — never carry over a name from this reference doc's own example, and never leave a team name standing in for a person (per Rule: "Owner is a named human, not a team").
 
 **Rules:**
 - **Priority emoji leads.** 🔴 P0 (ship this quarter) / 🟡 P1 (next quarter) / 🟢 P2 (backlog).
@@ -176,7 +178,7 @@ Options for making qualitative findings scannable:
 - **Present tense for insights.** "Shoppers rely on the image as the brand signal."
 - **Imperative for recommendations.** "Move the badge."
 - **Never apologize for the method** in the findings section. Caveat once in methodology.
-- **Numbers with denominator.** "7 of 10" not "70%" when n is small. NNG: never report percentages for n<20 qualitative samples.
+- **Numbers with denominator.** "7 of 10" not "70%" when n is small. Common qualitative-research guidance (NNG-aligned, exact threshold not independently verified — treat "n<20" as a reasonable working rule, not a citable NNG statistic): avoid percentages for small qualitative samples, use denominators instead.
 
 ---
 
