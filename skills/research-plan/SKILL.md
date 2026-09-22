@@ -664,13 +664,17 @@ The styling scripts use the `gws` CLI (`/Users/jedidamilton/.config/gohan/bin/gw
 
 The plan this skill produces is **step 1 of two**: a strong first draft. Before it's shared with stakeholders, it goes through `multi-agent-check` (**step 2**) — the parallel-lens critique gate Jedida already owns. Always make this sequence explicit; never present the draft as final.
 
-After upload + styling, tell the researcher:
+**Check availability before offering the handoff** *(added 2026-09-22, per the 2026-07-14 workshop)*. `multi-agent-check` is not guaranteed to be installed in every researcher's environment — at the July 14 workshop, Sneha ran this skill without it installed, and the gap only surfaced mid-flow, as a surprise, right when the handoff was offered. Before saying anything about Step 6, check the live skill list for `multi-agent-check`:
+- **If it's there:** proceed as below.
+- **If it's not:** don't offer the `/multi-agent-check` line at all. Tell the researcher plainly — e.g. "Heads up: the multi-agent critique step (`multi-agent-check`) isn't installed in this environment, so I can't run that pass here. I'll hand you the draft as-is; you can pressure-test it yourself, or install the skill first if you want that gate." — then go straight to sharing the draft.
+
+After upload + styling, once `multi-agent-check` is confirmed available, tell the researcher:
 
 > "This is a solid draft. The next step is to pressure-test it through the multi-agent check before sharing — want me to run `/multi-agent-check` on it now?"
 
 If yes, invoke the **`multi-agent-check`** skill on the generated plan (the Google Doc or the local markdown). Per its hardcoded pre-flight protocol, it will ask 1-2 clarifying questions and show its plan before dispatching the 6 review lenses (Factual Verifier, Quantitative Rigor, Overreach Detector, Prakriti's strategic lens, ML/DS Partner accuracy, Voice & Clarity). Let it run its own flow — do not pre-empt its questions.
 
-The full pipeline the team agreed on: **draft (this skill) → `/multi-agent-check` → apply fixes → share.** For analysis-stage work the chain is longer (5-pass analysis → dashboard → multi-agent-check) but for a research *plan*, draft → multi-agent-check → share is the gate.
+The full pipeline the team agreed on: **draft (this skill) → `/multi-agent-check` → apply fixes → share.** For analysis-stage work the chain is longer (5-pass analysis → dashboard → multi-agent-check) but for a research *plan*, draft → multi-agent-check → share is the gate — falling back to **draft → share** only when `multi-agent-check` isn't installed in the current environment.
 
 ## Tool usage
 
