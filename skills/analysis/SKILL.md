@@ -1,6 +1,6 @@
 ---
 name: analysis
-description: Use when a UX researcher has interview transcripts, session recordings, or open-ended survey responses and needs to synthesize findings via thematic analysis, tagging, or general affinity-based synthesis. Triggers on "analyze interviews", "thematic analysis", "tag transcripts", "synthesize research", or "/analysis".
+description: Use when a UX researcher has interview transcripts, session recordings, or open-ended survey responses and needs to synthesize findings via thematic analysis, tagging, or general affinity-based synthesis. Triggers on "analyze interviews", "thematic analysis", "tag transcripts", "synthesize research", "pull together a synthesis", "find themes in these sessions", "what did we hear", or "/analysis".
 ---
 
 # UX Research Analysis
@@ -25,6 +25,19 @@ Per Instacart's AIxUXR Playbook, all AI-assisted analysis must be governed by H.
 
 **The golden rule (AIxUXR System Prompt):** If the output could end up in a research deliverable, treat AI as a specialized research engine — data-centric, objective, grounded. The researcher is always the final authority.
 
+## External validation — how this skill's rigor maps to the field (Sept 2026 research pass)
+
+The Playbook's ladder and critique criteria above aren't Instacart-only conventions — they match how the wider UX research field defines rigorous analysis. Named explicitly so the mapping is auditable, not assumed:
+
+| Field standard | Source | How this skill enforces it |
+|---|---|---|
+| **Data → Findings → Insights hierarchy** ("the gold-standard framework" for structuring analysis) | Nielsen Norman Group, "Data vs. Findings vs. Insights" | This skill's Observation → Insight → Recommendation ladder (Sharon) is the same hierarchy under different labels: Observation = Findings (a pattern across data points), Insight = the actionable "why + so what" layer. Never present a Finding/Observation as if it were already an Insight — see CONTENT GENERATION RULE 4 |
+| **"What Happened + Why + So What"** insight-writing structure | Nikki Anderson (User Research Academy), Findings → Insights Cheatsheet | Cross-check every crafted insight (Step 2's Truth + Unmet Need + Opportunity) against this structure: What Happened = the finding/observation, Why = participant beliefs/expectations/triggers, So What = business/product impact. If an insight can't answer "so what," it's still a finding — demote it |
+| **Document the analysis/synthesis process itself, not just its output** | Nikki Anderson, "Create and present an impactful user research case study" — flags that most researchers skip this and treat synthesis as "mysterious" | Every output template's Appendix requires an **Analysis & Synthesis Process** row (see Step 4.5) naming the method used and whether/why debriefs happened between sessions |
+| **A strong insight is observed, not felt, and answers the stated research question** | Google UX Research Certificate, "Analyze and Synthesize" stage | Mirrors this skill's Rule 3 (separate observation from interpretation) and the requirement that every output template states the Research Question up front — insights are graded against it, not against general interestingness |
+| **Insights should be prioritized by reach/impact, not listed flat** | Cross-corroborated (Torresburriel Estudio, Smashing Magazine, dscout) | Formalized as Self-Critique check #11 below — applies across all 3 modes, not just Mode A's existing Insight → Recommendation Map |
+| **Researchers should narrate their analysis method, not just present conclusions** | Meta Research (Medium), John Hu — "Comparing UX Research Methods" | Reflected in this skill's Theoretical Memo (Mode B) and the new Analysis & Synthesis Process row (all modes) |
+
 ## When to use this skill
 
 Use this skill when the researcher needs to:
@@ -36,7 +49,7 @@ Use this skill when the researcher needs to:
 ### When NOT to use this skill
 
 - Large structured datasets with 50+ rows → use `/batch-analysis` (that skill is for scorecards, HITL reviews, pipeline audits — not qual synthesis)
-- Moderating a session → use `/moderation-guide`
+- Moderating a session → use `/mod-guide`
 - Writing up findings as a stakeholder deliverable → use `/report`
 
 ## Three Modes
@@ -53,6 +66,10 @@ Use this skill when the researcher needs to:
 
 Ask the researcher for inputs, then use **AskUserQuestion** to pick a mode.
 
+**If AskUserQuestion isn't available in the current environment** (it isn't wired into every context this skill can run in), ask the same question as plain text in the conversation and wait for the researcher's reply before proceeding — every gate in Steps 1, 3, and 3.5 that says "use AskUserQuestion" degrades to this. Never guess an answer or skip a gate just because the tool is missing.
+
+**Before processing any pasted or uploaded data — regardless of which mode you'll end up in:** run the Transcript Quality Audit (PII scrub, speaker-label normalization, consent/provenance check — table under Mode A, Step 2) first. Don't wait until a mode-specific methodology step to anonymize; raw names/emails shouldn't sit in the conversation any longer than it takes to redact them. This applies to Thematic and Tagging data just as much as General Synthesis.
+
 ### 1.1 Gather data
 
 Ask what data is being analyzed:
@@ -64,9 +81,15 @@ Ask what data is being analyzed:
 > 4. **Research question** — what were you trying to learn? (1-2 sentences)
 > 5. **Stakeholder audience** — who is the output for? (engineer, PM, VP)"
 
+Use answer 5 to shape the final output, not just to file away: a PM/VP-facing doc should lead harder with the Executive Summary and push methodology detail into the Appendix; an engineer-facing doc can carry more method/technical detail inline. It also decides how the Self-Critique Summary is handled (see Step 4.5's "Audience-based placement").
+
+**Format is itself a decision, not a default.** Per Nikki Anderson (User Research Academy), don't reflexively produce a full written doc just because that's this skill's default output — if the stakeholder audience was closely involved throughout data collection and synthesis (e.g., sat in on sessions, co-built the affinity clusters), a shorter artifact (a synthesis summary, a shared board link, a Slack recap) may serve them better than a maximal report. If it's ambiguous which the researcher wants, ask before defaulting to the full template.
+
+If the research question is being applied retroactively to data that was collected for a different original purpose (a secondary/opportunistic read), note that now — it changes how confidence gets framed later and must be disclosed in Method Notes/Limitations, not left implicit.
+
 Accept any format: pasted text, Google Doc URLs, local file paths, Dovetail/Dscout exports.
 
-If Google Doc URLs are provided, read them via `google-docs:fetch-google-doc` or Glean (`mcp__glean_default__read_document`).
+If Google Doc URLs are provided, read them via Glean's document-read tool (e.g. `mcp__glean__read_document` — confirm the exact connected tool name in your environment, server prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available.
 
 ### 1.2 Select mode
 
@@ -98,8 +121,8 @@ Propose:
 | **Unit of analysis** | [Quotes, observations, or behavioral moments from transcripts] | Per NN/G (Rosala), smallest meaningful unit is a single observation or verbatim quote |
 | **Clustering approach** | [Bottom-up from observations → clusters → insights] | Affinity diagramming: Kate Moran at NN/G describes this as "collaboratively sort findings into themed groups" |
 | **Insight ladder** | Notes → Observations → Insights → Recommendations | Sharon's synthesis ladder — each step increases abstraction; insights are interpretive claims, recommendations are actionable |
-| **Prevalence rule** | [1/3 threshold: if ~33% of participants mention similar, it's a pattern] | Per Nikki Anderson (User Research Academy) |
-| **Output format** | 2-column synthesis doc (Label \| Content) with cluster tables + insight/rec table | Matches Jedida's design system |
+| **Prevalence rule** | [1/3 threshold: if ~33% of participants mention similar, it's a pattern. Does NOT apply to safety/severity-flagged findings — see below] | Per Nikki Anderson (User Research Academy) |
+| **Output format** | 2-column synthesis doc (Label \| Content) with cluster tables + insight/rec table | Matches the researcher's established design system |
 
 #### Session summarization patterns (AIxUXR Playbook — Transcript Summarizer)
 
@@ -124,6 +147,7 @@ Before running Mode A on a transcript corpus, verify transcript hygiene. Garbage
 | **Inconsistent speaker labels** | Standardize to `Interviewer` / `Participant` or single consistent pseudonym | "Speaker 2" and "John" used interchangeably → normalize to "Participant" |
 | **Unintelligible sections** | Listen to source audio to correct; if unfixable, leave explicit note `[Audio unclear at HH:MM]` | |
 | **Noisy timestamps** | Optional — remove line-by-line timestamps if they confuse structure, but preserve quote-level timestamps for attribution | |
+| **Consent / data-reuse scope** | If this corpus was collected for a different research question than the one being answered now (a secondary/opportunistic read), or under a consent scope that didn't anticipate this use, don't treat it as automatically fair game — flag it now and disclose it in Method Notes/Limitations. Previously-collected data isn't free of ethical scope just because it's already on hand | Transcripts from a "Weekly Meal Planning" study repurposed to analyze substitution reactions → disclose as a secondary read, not a purpose-built study |
 
 #### Bias flags to embed in every session summary
 
@@ -149,7 +173,7 @@ Propose:
 | **Theme level** | Semantic vs latent (ask) | Semantic = surface-level, what participants explicitly say. Latent = interpretive, underlying assumptions/ideologies. Choose based on research question |
 | **Theme type** | Fully-realized themes (patterns of shared meaning), NOT topic summaries | Per Braun & Clarke 2022: the #1 pitfall in reflexive TA is reporting topic summaries ("Participants talked about X") instead of patterns of shared meaning with a central organizing concept. Themes must tell an interpretive story |
 | **Phases** | All 6: Familiarization → Coding → Generating initial themes → Reviewing themes → Defining & naming themes → Writing up | Per Braun & Clarke. Each phase has concrete deliverables — see `references/analysis-methodology.md` |
-| **Output format** | Theme report: H2 per theme, 2-col table (Definition \| Illustrative quotes \| Memo \| Prevalence) | Matches Jedida's design system |
+| **Output format** | Theme report: H2 per theme, 2-col table (Definition \| Illustrative quotes \| Memo \| Prevalence) | Matches the researcher's established design system |
 
 #### AI-Assisted Thematic Analysis workflow (AIxUXR Playbook)
 
@@ -328,7 +352,7 @@ Options:
 **If the researcher shares a reference doc:**
 
 1. Accept any format: Google Doc URL, pasted text, uploaded file, or screenshot
-2. If Google Doc URL: read via `google-docs:fetch-google-doc` or Glean
+2. If Google Doc URL: read via Glean's document-read tool (confirm the exact connected tool/server name in your environment — prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available
 3. Analyze the reference doc's style patterns. Extract:
    - **Document structure:** section ordering, header hierarchy, table usage
    - **Theme/cluster/tag presentation:** how are themes/tags introduced? (H2 per theme, table row per theme, numbered list)
@@ -369,7 +393,8 @@ Generate the analysis based on mode + approved methodology + chosen style.
 ### Execution principles (all modes)
 
 1. **Ground every claim in data.** Every theme, cluster, or tag gets at least 2-3 illustrative quotes with participant attribution (e.g., `— P07`).
-2. **Report prevalence honestly.** Use "X of Y participants" format. Avoid "most" or "many" without a number. Per Anderson, use ~1/3 as the pattern threshold.
+2. **Report prevalence honestly.** Use "X of Y participants" format. Avoid "most" or "many" without a number. Per Anderson, use ~1/3 as the pattern threshold. At small sample sizes (e.g., n<10), that threshold is a low bar — sanity-check that a claimed "pattern" isn't just 2-3 participants before treating it as strong evidence, especially in a self-initiated or hypothesis-driven analysis where confirmation bias is a live risk.
+   - **Safety/severity exception:** Never gate a safety- or severity-relevant finding (an allergen risk, a financial-harm or data-loss scenario, anything with real downside if ignored) on hitting the 1/3 threshold. Report it in a dedicated **Safety Flag** callout — outside the normal cluster/theme/tag structure, explicitly labeled low-N/high-severity — and route it to the relevant specialist team (Trust & Safety, legal, etc.) rather than folding it into or dropping it from the standard prevalence-based findings.
 3. **Separate observation from interpretation.** A quote is an observation; the theme definition is interpretation. Never conflate.
 4. **Use reflexive language** (Thematic mode): "I developed..." not "The theme emerged...". Per Braun & Clarke 2022.
 5. **Avoid topic summaries** (Thematic mode): "Participants talked about pricing" is a topic, not a theme. A theme has a central organizing concept: "Pricing transparency builds trust — hidden fees feel like betrayal."
@@ -433,7 +458,9 @@ Last updated: [Month Year]
 |-------|--------|
 | **Participants** | [P01-P08 profile table] |
 | **Method notes** | [Coding approach, prevalence rule, analyst(s), analysis dates] |
+| **Analysis & Synthesis Process** | [2-4 sentences: notetaking/recording → coding → clustering passes actually run; whether a debrief happened after each session and why/why not; what changed between passes. Per Nikki Anderson — name the process, don't let it stay implicit] |
 | **Limitations** | [Sample size, selection bias, temporal scope] |
+| **Self-Critique Summary** | [Step 4.5's mandatory QA table: Check \| Grade + Note. Internal/researcher audience: full table. PM/VP/exec audience: omit this row and fold the confidence label + real limitations into the row above instead — see Step 4.5 "Audience-based placement"] |
 ```
 
 ---
@@ -507,8 +534,10 @@ Last updated: [Month Year]
 |-------|--------|
 | **Codebook** | [Link or inline: code name, definition, example quote per code] |
 | **Coding process** | [Tool used, analyst(s), coding passes, timeline] |
+| **Analysis & Synthesis Process** | [2-4 sentences: which of the 6 B&C phases ran as distinct passes, whether a debrief happened after each interview and why/why not, what codes were merged/split/dropped between passes. Per Nikki Anderson — name the process, don't let it stay implicit] |
 | **Trustworthiness** | [Per Lincoln & Guba: credibility, transferability, dependability, confirmability — how addressed] |
 | **Limitations** | [Sample scope, analyst positionality limits, what this analysis cannot tell us] |
+| **Self-Critique Summary** | [Step 4.5's mandatory QA table: Check \| Grade + Note. Internal/researcher audience: full table. PM/VP/exec audience: omit this row and fold the confidence label + real limitations into the row above instead — see Step 4.5 "Audience-based placement"] |
 ```
 
 ---
@@ -570,8 +599,10 @@ Last updated: [Month Year]
 |-------|--------|
 | **Tag evolution** | [If inductive/hybrid: tags added, merged, dropped during analysis] |
 | **IRR details** | [Kappa formula, double-coded sample size, disagreements reconciliation] |
+| **Analysis & Synthesis Process** | [2-4 sentences: coding pass sequence, whether a debrief/calibration happened between coders and how often, how golden-set validation and disagreement reconciliation were actually run. Per Nikki Anderson — name the process, don't let it stay implicit] |
 | **Tool** | [Dovetail / Dscout / Airtable / Google Sheet — link] |
 | **Limitations** | [What the tag frequencies do and do not tell us] |
+| **Self-Critique Summary** | [Step 4.5's mandatory QA table: Check \| Grade + Note. Internal/researcher audience: full table. PM/VP/exec audience: omit this row and fold the confidence label + real limitations into the row above instead — see Step 4.5 "Audience-based placement"] |
 ```
 
 ---
@@ -586,6 +617,8 @@ Last updated: [Month Year]
 6. **Theme tests (Thematic mode)** — Each proposed theme must pass 3 tests: (1) central organizing concept expressible in 1 sentence, (2) supported by quotes from 2+ participants, (3) coherent across its supporting codes. If any fails, it's likely a topic summary — demote to sub-theme or drop.
 7. **Tag discipline (Tagging mode)** — Every tag has a definition, inclusion criteria, exclusion criteria, and example. If you can't write inclusion/exclusion, the tag is too vague.
 8. **Contradictions** — Actively seek and report quotes that complicate your synthesis. Per NN/G, credibility requires acknowledging disconfirming evidence.
+9. **Prioritize insights, don't just list them** — Every insight/theme/tag-pattern gets a priority (P0/P1/P2, or equivalent) based on how many participants/users it touches and how much of the product or business it affects. An undifferentiated flat list of insights is incomplete — per cross-industry UXR practice (Torresburriel Estudio, dscout, Smashing Magazine), stakeholders need to know where to look first.
+10. **Name the finding-vs-insight line explicitly** — Never let a Finding/Observation stand in a spot that presents it as if it were already an Insight. A Finding states what happened; an Insight adds why it happened and the so-what. If you can't articulate the "so what," it's still a Finding — leave it there rather than inflating it. Per NN/G's Data → Findings → Insights hierarchy.
 
 ---
 
@@ -609,6 +642,8 @@ Run through every item. For each, grade (A / A- / B+ / B / below-B) and justify 
 | 8 | **Tagging-mode only — Codebook rigor** | Does every tag have definition + inclusion + exclusion + example? Are tags MECE as much as possible? | Tag exists without inclusion/exclusion criteria. Two tags overlap semantically |
 | 9 | **Confidence labeled** | Is each major finding labeled High / Medium / Low confidence with rationale? | Unlabeled claims. Over-confident language ("clearly", "obviously") without data to back it |
 | 10 | **H.E.A.R.T. honored** | Human-centered (grounded in participant voice)? Experience-focused (scannable, clear)? Amplifying (researcher remains the final authority)? Responsible (PII scrubbed, bias flagged)? Transparent (AI role attributed)? | Any H.E.A.R.T. dimension missing — block delivery until addressed |
+| 11 | **Insights prioritized** | Does every insight/theme/pattern carry a priority (reach × impact), not just a flat list? | Insights presented in discovery order with no P0/P1/P2 or equivalent ranking |
+| 12 | **Analysis & Synthesis Process documented** | Does the Appendix state which passes were run, what tool/method was used, and whether debriefs happened between sessions (and why/why not)? Per Nikki Anderson, this is the part most researchers skip | Appendix jumps straight from raw data to conclusions with no account of how one became the other |
 
 ### If any critique item grades below A
 
@@ -618,7 +653,9 @@ Run through every item. For each, grade (A / A- / B+ / B / below-B) and justify 
 
 ### Surface the critique in the output
 
-Per H.E.A.R.T. Transparency, include a brief **Self-Critique Summary** section in the Appendix of every analysis output (a 2-col table: Check | Grade + Note). This gives the researcher a running QA signal and models responsible AI practice for stakeholders.
+Per H.E.A.R.T. Transparency, include a brief **Self-Critique Summary** section in the Appendix of every analysis output (a 2-col table: Check | Grade + Note) — each OUTPUT TEMPLATE below has an Appendix row for it. This gives the researcher a running QA signal and models responsible AI practice.
+
+**Audience-based placement (per Step 1.1's stakeholder-audience answer):** For an internal/researcher-facing output, include the full graded table inline. For a PM/VP/exec-facing deliverable, don't ship a letter-graded table of the AI's own performance (hallucination-scan grades, exhaustiveness grades, etc.) to that audience — it reads as an internal QA artifact, not a finding, and can undermine confidence in the doc for the wrong reasons. Instead: keep the full graded table in an internal note for your own records, and fold only the *substance* the audience actually needs — the overall confidence label and any real limitation behind it (e.g., "draft not yet human-validated," "small N," "secondary read") — into the Limitations row and the Executive Summary's Confidence line.
 
 ---
 
@@ -629,21 +666,20 @@ After generating the analysis, ask:
 > "Your analysis is ready! Would you like me to upload it to Google Docs?"
 
 If yes:
-1. Upload via `gws-docs` or `md2doc` (upload-gdoc.py)
-2. **Fix subscript formatting (MANDATORY)** — md2doc's `<br>` handling creates SUBSCRIPT formatting that makes text tiny. After upload, scan the doc via Google Docs API for all `baselineOffset == 'SUBSCRIPT'` ranges and reset them to `'NONE'`. Do this BEFORE styling.
-3. If using the default Instacart template: apply styling via `style-gdoc-full.py`
-4. Place in the correct Google Drive project folder per Jedida's CLAUDE.md auto-categorization rule (Project 1, 2, 3, or Research/)
-5. Share the Google Doc link
+1. **Check what's actually available before assuming a tool works.** Different researchers have different upload tooling configured (a `md2doc`/`gws-docs` skill, a CLI on PATH, or nothing at all). Confirm the tool exists and is callable in this environment (e.g. `command -v gws`, or check the installed skill list) rather than invoking it blind. If nothing usable is found, say so plainly and ask the researcher how they'd like to proceed (e.g., paste the markdown into a blank Google Doc themselves, or fix the tooling first) — don't silently fail or claim a successful upload that didn't happen.
+2. **Fix subscript formatting (MANDATORY, if the upload path renders markdown via `<br>` tags)** — this pattern is known to turn `<br>`-separated content into SUBSCRIPT formatting that makes text tiny. After upload, scan the doc via the Google Docs API for all `baselineOffset == 'SUBSCRIPT'` ranges and reset them to `'NONE'`. Do this BEFORE styling.
+3. **Apply styling per the researcher's own convention, if they have one** (many researchers maintain a personal or team doc-styling system — check their CLAUDE.md, a team wiki, or ask). Only fall back to a generic clean default (clear headers, consistent table formatting) if no such convention is documented — never assume a single hardcoded "default template" script is the right one for every researcher on the team.
+4. **Place in the correct Google Drive project folder using the researcher's own routing convention**, if they have one (ask if unclear). Don't hardcode a fixed list of project numbers/names here — folder structures vary by researcher and team and go stale fast.
+5. Share the Google Doc link.
 
 ---
 
 ## Tool usage
 
-- **AskUserQuestion** — mode selection, methodology approvals, style reference, final checks
-- **google-docs:fetch-google-doc** or **mcp__glean_default__read_document** — reading Google Doc inputs (transcripts, reference docs)
+- **AskUserQuestion** — mode selection, methodology approvals, style reference, final checks. If unavailable in this environment, degrade to plain-text questions (see Step 1)
+- **Glean's document-read tool** (e.g. `mcp__glean__read_document` — confirm the exact connected tool/server name in your environment; prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available — reading Google Doc inputs (transcripts, reference docs)
 - **Read tool** — reading local transcript files
-- **gws-docs / md2doc** — uploading final analysis to Google Docs
-- **style-gdoc-full.py** — applying Instacart design system to uploaded doc
+- **A Google Docs upload path, if the researcher has one configured** (e.g., a `md2doc`/`gws-docs` skill or script) — uploading the final analysis. Confirm it's actually available (on PATH, or callable as an installed skill) before relying on it; don't assume a specific tool name works in every environment
 - **references/analysis-methodology.md** — load on demand for Braun & Clarke 6-phase walkthrough, tag schema patterns, IRR calculation
 
 ## Complementary skills
@@ -651,7 +687,7 @@ If yes:
 | Skill | Relationship |
 |-------|--------------|
 | `/batch-analysis` | **Complementary, not overlapping.** Use `/batch-analysis` for 50+ row structured datasets (scorecards, HITL reviews). Use `/analysis` for qualitative synthesis from transcripts/opens. If a study has both, run `/batch-analysis` on the structured data and `/analysis` on the qual portion |
-| `/moderation-guide` | Upstream — generates the session guide whose transcripts feed `/analysis` |
+| `/mod-guide` | Upstream — generates the session guide whose transcripts feed `/analysis` |
 | `/report` | Downstream — takes `/analysis` output and packages as stakeholder deliverable |
 | `/research-plan` | Upstream — defines the research question that `/analysis` answers |
 
@@ -668,6 +704,15 @@ If yes:
 - **Eisenhauer, K. (Dscout)** — three tagging approaches (organizational, descriptive, thematic)
 - **Young, I.** "Listening Deeply" — emergent affinity technique via mental attention focus
 - **Sharon, T.** *Validating Product Ideas* — synthesis ladder (notes → observations → insights → recommendations)
+
+### External validation, added Sept 2026 (independent of the AIxUXR Playbook — sourced via live web search, not from model pretraining)
+
+- **Nielsen Norman Group** — "Data vs. Findings vs. Insights" (video/article, 2023-12-27) — the Data → Findings → Insights hierarchy this skill's Observation/Insight/Recommendation ladder implements
+- **Nielsen Norman Group** — "Analyzing Qualitative UX Data" course — thematic-analysis skill breakdown, bias-mitigation and stakeholder-communication techniques
+- **Anderson, N. (User Research Academy / The User Research Strategist)** — "Create and present an impactful user research case study" (documenting the analysis/synthesis process itself) and "Activate Your Insights" (audience- and length-driven report format decisions); Findings → Insights Cheatsheet ("What Happened + Why + So What"), cited via Smashing Magazine (2025-05-27)
+- **Google UX Research Certificate** (Coursera) — 4-stage process (Plan → Conduct → Analyze & Synthesize → Share & Promote); definition of a strong insight as observed-not-felt and answering the stated research question
+- **Hu, J. (Meta Research, Medium)** — "Comparing UX Research Methods" — researchers narrating analysis method (not just conclusions) as a literacy-building practice with XFN partners
+- **Torresburriel Estudio, Smashing Magazine, dscout** (cross-corroborated) — insights must be prioritized by reach/impact, not presented as a flat list; a Finding presented as an Insight is the single most common UXR reporting mistake
 
 ### Instacart AIxUXR Playbook (internal)
 
