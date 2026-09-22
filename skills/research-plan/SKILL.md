@@ -7,6 +7,21 @@ description: Use when a UX researcher is planning a new study and needs a struct
 
 Generates a complete, polished UX research plan tailored to the researcher's study. The researcher provides study inputs (brief, objectives, audience, constraints), Claude analyzes them and recommends methodology / sampling / timeline grounded in published canon (Nielsen Norman Group, Erika Hall, Nikki Anderson, Steve Portigal), the researcher reviews and approves, then Claude generates a ready-to-share plan in the Instacart design system.
 
+## Flow Overview
+
+| Step | What happens | Gate before advancing |
+|---|---|---|
+| **1** | Gather study inputs (PRD, brief, Slack thread, kickoff notes) | Input received in any format |
+| **1.5** | Discover existing context & insights (research-insights agent → Glean → project folder) | Researcher confirms or corrects the context summary |
+| **1.6** | Collect logistics gaps (decision, name, topic, timeline, sample, stakeholders) via AskUserQuestion | All required logistics confirmed |
+| **2** | Analyze inputs → propose methodology skeleton as a table with rationale | Researcher approves or overrides the method recommendation |
+| **3** | Section-by-section walk — 13 sections in RPP order, one pop-up each | All 13 sections ✓ approved (or researcher invokes override) |
+| **3.5** | Style reference — pick output format (Jedi's Template default) | Style confirmed |
+| **4** | Generate the complete research plan from approved inputs | Plan drafted; TEST ARTIFACT label applied if mock |
+| **4.5** | Self-critique checklist (11 dimensions) — run before sharing | Gaps noted and incorporated or accepted |
+| **5** | Upload to Google Docs + apply canonical styling + file in Drive | Google Doc link returned to researcher |
+| **6** | Hand off to `/multi-agent-check` for parallel-lens critique | Multi-agent check complete → fixes applied → share |
+
 ## When to use this skill
 
 Use this skill when the user wants to:
@@ -90,7 +105,7 @@ If a Google Doc URL is provided, use Glean (`mcp__glean__read_document`) or the 
 
 Proactively search for prior context and insights — do NOT wait to be asked, and do NOT assume the researcher's project folder holds everything (Prakriti: "all the context will always not live in your folder"):
 
-1. **Dedicated research-insights agent (PRIMARY).** Call `mcp__research-insights__research_insights__updated` with the study topic. This is the team's User & Market Research agent and is the right first stop for "does this answer already exist?" Prakriti called this out specifically — connect to the *research agent*, not just general Glean: *"we should connect it to glean research agent not just glean overall."* **If this call errors, times out, or the server shows as connection-failed:** do not silently fall through to Glean-only and present it as if the full discovery pass ran — say so explicitly to the researcher (e.g., "the dedicated research-insights agent is unreachable right now — this pass is Glean-only, re-run it once that's back") and proceed to Glean below as the working fallback. Treat that flag as a required line in the confirm-or-correct message, not an optional caveat.
+1. **Dedicated research-insights agent (PRIMARY).** Call `mcp__research-insights__research_insights__updated` with the study topic. This is the team's User & Market Research agent and is the right first stop for "does this answer already exist?" Prakriti called this out specifically — connect to the *research agent*, not just general Glean: *"we should connect it to glean research agent not just glean overall."* **If this call errors, times out, or the server shows as connection-failed:** try the UUID-prefixed fallback tool `mcp__dd39bf66-9036-4c3d-98e6-d9e0be4a94ba__Research_Insights__UPDATED` (same tool, stable ID). If that also fails, do not silently fall through to Glean-only — say so explicitly to the researcher (e.g., "the dedicated research-insights agent is unreachable right now — this pass is Glean-only, re-run it once that's back") and proceed to Glean below as the working fallback. Treat that flag as a required line in the confirm-or-correct message, not an optional caveat.
 2. **Glean.** `mcp__glean__search` (keyword) for relevant docs and `mcp__glean__chat` (synthesis) for "what prior research exists on [topic]." Filter to `gdrive` / `confluence` / `slack` as useful. This catches prior research from *other researchers and other teams*, not just the current project.
 3. **Project folder.** Read the researcher's named project / Drive folder for first-party context. Before carrying any name from stored project context (CONTEXT.md, a prior plan's RACI header) into a new plan's Key Stakeholders, cross-check it against current people status (CLAUDE.md's "Key People" section, or ask if unsure) — stored context can go stale (e.g., a named Accountable/Consulted party who has since left the team) and the skill has no other mechanism to catch that.
 4. **Snowflake / behavioral data.** ⚠️ No Snowflake MCP is wired in this environment (verified 2026-06-05). If the study needs behavioral sizing, hand off to the `data:write-query` or `snowflake-development` skill, or flag that the researcher must pull it. NEVER fabricate numbers — see CLAUDE.md "Permanent Facts."
@@ -226,14 +241,14 @@ After parameters are approved, ask for a style reference using AskUserQuestion. 
 
 Options:
 
-- **"Apply Jedi's Doc Styling 1" (Recommended)** — "Jedida's locked-in default for research plans. Deep forest green `#2D4A3E` title in DM Serif Display 26pt, italic green breadcrumb in DM Sans, Arial 11pt body, dark forest-green dual-table layout. Calls into the `jedi-doc-styling-1` skill."
-- **"Apply Jedida's Design Template"** — "Original canonical look — DM Serif title, RACI chip highlights, design table with section bars, sticky header. Calls into the `jedidas-design-template` skill."
+- **"Apply Jedi's Template" (Recommended)** — "The canonical default for all new Google Docs as of 2026-09-08. DM Sans 10pt body, DM Serif Display breadcrumb. Calls into the `jedidas-design-template` skill."
+- **"Apply Jedi's Doc Styling 1"** — "Deep forest green `#2D4A3E` title in DM Serif Display 26pt, italic green breadcrumb in DM Sans, Arial 11pt body, dark forest-green dual-table layout. Calls into the `jedi-doc-styling-1` skill. Use only when explicitly requested."
 - **"I'll share a reference doc"** — "I have a previous research plan, template, or document I'd like you to match."
 - **"Just give me a clean outline"** — "Simple headers and bullets, no tables or heavy formatting."
 
-**Default is Jedi's Doc Styling 1** — Jedida locked it in on 2026-05-12 as the canonical look for all research plans. Only deviate when the researcher explicitly picks another option.
+**Default is Jedi's Template** — per CLAUDE.md 2026-09-08: Jedi's Template is the default for every new Google Doc, no exceptions. Doc Styling 1 applies only when the researcher explicitly requests it.
 
-**If the researcher picks Jedi's Doc Styling 1 (default):** generate the plan in markdown using the OUTPUT TEMPLATE below, then run the upload + styling pipeline in Step 5 (which calls `apply_jedi_style_1.py`).
+**If the researcher picks Jedi's Template (default):** generate the plan in markdown using the OUTPUT TEMPLATE below, then run the upload + styling pipeline in Step 5 (which calls `apply_template_styling.py`).
 
 **If the researcher shares a reference doc:**
 
@@ -258,7 +273,7 @@ Options:
 
 5. Generate matching their style. Content quality stays the same; only formatting adapts.
 
-**If the researcher picks Jedida's Design Template:** use the same OUTPUT TEMPLATE below — only the Step 5 styling pipeline changes.
+**If the researcher picks Jedi's Doc Styling 1:** use the same OUTPUT TEMPLATE below — only the Step 5 styling pipeline changes (calls `apply_jedi_style_1.py`).
 
 **If the researcher picks "clean outline":** simple markdown — H2 headers, bullet lists, no tables.
 
@@ -266,7 +281,13 @@ Options:
 
 Generate the complete plan based on approved parameters and chosen style. For the default template, follow the OUTPUT TEMPLATE below exactly. Adapt section depth and content to the study type (IDI vs. survey vs. diary).
 
-**Test/demo labeling:** If this invocation is a mock-run, demo, or otherwise built on invented/simulated study inputs rather than a real study, label it per `../../references/output-status-and-labeling-conventions.md` before presenting the draft — a research plan found without context could otherwise be mistaken for a real deliverable.
+**Test/demo labeling:** If this invocation is a mock-run, demo, or otherwise built on invented/simulated study inputs rather than a real study, add the following header block before the plan title:
+
+```
+⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.
+```
+
+This prevents a demo plan from being mistaken for a real deliverable if found without context.
 
 ---
 
@@ -533,24 +554,32 @@ Present the self-critique as a 2-column table. Mark any row that fails with a br
 
 ## Step 5: Offer Google Docs Upload + Apply Canonical Styling
 
-**Gate first: check whether Step 4 applied the `⚠️ TEST ARTIFACT` label** (per the Test/demo labeling rule above and `../../references/output-status-and-labeling-conventions.md`). If it did, do NOT run the real upload pipeline against fabricated/simulated content — instead describe what the upload + styling steps *would* do (which doc, which folder, which style) and stop there. Real Google Drive/Docs API writes are for real study content only.
+**Gate first: check whether Step 4 applied the `⚠️ TEST ARTIFACT` label** (per the Test/demo labeling rule in Step 4). If it did, do NOT run the real upload pipeline against fabricated/simulated content — instead describe what the upload + styling steps *would* do (which doc, which folder, which style) and stop there. Real Google Drive/Docs API writes are for real study content only.
 
 Otherwise, after generating the plan, ask:
 
 > "Your research plan is ready! Would you like me to upload it to Google Docs?"
 
-If yes, run the **3-step pipeline** below. **Default path is Jedi's Doc Styling 1** — Jedida locked it in on 2026-05-12 as the canonical look for all research plans. Only run the alternative pipelines if the researcher explicitly picked a different option in Step 3.5.
+If yes, run the **3-step pipeline** below. **Default path is Jedi's Template** — per CLAUDE.md 2026-09-08, Jedi's Template is the default for all new Google Docs. Only run alternative pipelines if the researcher explicitly picked a different option in Step 3.5.
 
 ### 5.1 — Upload markdown to Google Docs
 
+**⚠️ gws/Gohan status check first:** Run `~/.config/gohan/bin/gws whoami` before proceeding. If it hangs (no response in ~5s) or errors, the VPN route is likely broken — skip to the **MCP fallback** below rather than waiting. This is a known recurring issue (last confirmed broken 2026-09-22).
+
 ```bash
-# Preferred: gws CLI (auth-bridge fallback per memory/reference_gws_auth_bridge.md)
+# Preferred: gws CLI
 cd <directory containing plan.md>
 gws drive files create \
   --upload <plan.md> \
   --upload-content-type 'text/markdown' \
-  --json '{"name":"<Plan Title>","parents":["<P5 or matching project folder ID>"],"mimeType":"application/vnd.google-apps.document"}'
+  --json '{"name":"<Plan Title>","parents":["<matching project folder ID>"],"mimeType":"application/vnd.google-apps.document"}'
+```
 
+**MCP fallback (when gws is unavailable):** Use the Google Workspace MCP tools directly:
+1. `import_to_google_doc` — uploads the markdown content and creates the Doc in the correct Drive folder
+2. Capture the returned `DOCUMENT_ID` and proceed to Step 5.2
+
+```bash
 # Alternative: md2doc upload <plan.md>     (requires Python 3.10+; use `uv run` if local Python is older)
 ```
 
@@ -558,10 +587,10 @@ This creates the Google Doc with content but **no styling**. Capture the resulti
 
 **Path note:** the `gws drive files create --upload` command resolves paths relative to the current working directory and rejects `..`-traversal. Always `cd` into the directory containing the markdown file first, then pass just the filename.
 
-### 5.2 — Apply Jedi's Doc Styling 1 (DEFAULT)
+### 5.2 — Apply Jedi's Template (DEFAULT)
 
 ```bash
-python3 ~/.claude/skills/jedi-doc-styling-1/scripts/apply_jedi_style_1.py <DOCUMENT_ID>
+python3 ~/.claude/skills/jedidas-design-template/scripts/apply_template_styling.py <DOCUMENT_ID>
 ```
 
 This runs 5 passes (idempotent; safe to re-run):
@@ -580,8 +609,8 @@ All canonical specs live in `~/.claude/skills/jedi-doc-styling-1/references/desi
 ### 5.3 — (Alternative styles, only if researcher explicitly picked one in Step 3.5)
 
 ```bash
-# Jedida's Design Template — original DM Serif + RACI chips + design table
-python3 ~/.claude/skills/jedidas-design-template/scripts/apply_template_styling.py <DOCUMENT_ID>
+# Jedi's Doc Styling 1 — forest green dual-table layout (explicit request only)
+python3 ~/.claude/skills/jedi-doc-styling-1/scripts/apply_jedi_style_1.py <DOCUMENT_ID>
 ```
 
 Surgical passes from `jedi-doc-styling-1` (only if v1.2.0 content patterns landed):
@@ -595,11 +624,11 @@ python3 ~/.claude/skills/jedi-doc-styling-1/scripts/apply_bulleted_leadins.py <D
 ### 5.4 — Verify the styling landed
 
 ```bash
-# DEFAULT — verify Style 1
-python3 ~/.claude/skills/jedi-doc-styling-1/scripts/verify_jedi_style_1.py <DOCUMENT_ID>
-
-# Alternative
+# DEFAULT — verify Jedi's Template
 python3 ~/.claude/skills/jedidas-design-template/scripts/verify_styling.py <DOCUMENT_ID>
+
+# Alternative (if researcher explicitly chose Doc Styling 1)
+python3 ~/.claude/skills/jedi-doc-styling-1/scripts/verify_jedi_style_1.py <DOCUMENT_ID>
 ```
 
 Each verifier exits non-zero if any check fails — re-run the corresponding apply script if so. Aim for 100% pass; <100% means a styling regression to investigate.
@@ -616,13 +645,18 @@ Place in the correct Google Drive project folder per `~/CLAUDE.md` (route by **s
 | **P4** — Research OKR / AI Enablement | Research OKR, AIxUXR Playbook, research-team-skills, All Hands deck, skills/automations | `1zw--MN_umb_VczMmVhOss6PTn-BCJleg` |
 | **P5** — End-to-End Meals Research | End-to-end meals umbrella spanning ingredient↔parsed↔product, substitution & quantity logic, post-2026-05-11 pipeline | `1XZ9iwyg2U47_nNkpuI-U1DxN1-DpZ519` |
 | **P6** — Search Personalization | MAVEN, LLM Relevance Oracle, brand similarity, lost-intent resurfacing, Suggest, QU, non-English search | `1HSCcGXr06nqY7wBXbQD9icwew284RCrW` |
+| **P7** — Recipe Enrichment v2 | Attribute guidelines, attribute tagging, 5 new attrs, Quality Validation Framework | `1AAv2xIsYhp6QPZOUZXjMPSg86BbOYgfV` |
+| **P8** — Attribute Quality Measurement | HITL annotation, precision/recall/F1 per attribute, golden dataset for enrichment eval | `1TMA4LJvafsjarc8lMfUBqd261P_Y8KG4` |
+| **P9** — Recipe Licensing | Meal & Recipe Quality Guidelines, licensing/display standard, two-layer guideline set | `1jwjUHQxpM5SVa9eklPiwq3ppFVIq8Zso` |
+| **P10** — Recipe & Meal Personalization | Signal-gap research, ML ranking vs. user preference for meals/recipes | `1iSisBENx55WFj6g7TovRH3gR0NGhAqOW` |
+| **P11** — Meal-Aware Replacements | Meal-aware replacement opportunity sizing, shopper substitution & ML rex accuracy | `1UtLApe8RQq4YMYUtwyDd5m4GwXYTtCuZ` |
 | **Research/** — general | Studies not tied to any project bucket | (no Drive folder; local only) |
 
 Share the Google Doc link back to the researcher and offer next-step skills: `/mod-guide` to generate the discussion guide from the approved plan.
 
 ### Auth note
 
-The styling scripts use the `gws` CLI (`/Users/jedidamilton/.config/gohan/bin/gws`), not the slides-generator OAuth token (which lacks Docs scope — gotcha #9). If `gws` isn't available, see `memory/reference_gws_auth_bridge.md` for the auth-bridge fallback.
+The styling scripts use the `gws` CLI (`/Users/jedidamilton/.config/gohan/bin/gws`), not the slides-generator OAuth token (which lacks Docs scope — gotcha #9). If `gws` is unavailable or hanging, use the Google Workspace MCP tools (`batch_update_doc`) directly — see Step 5.1 MCP fallback above. The auth-bridge workaround document no longer exists.
 
 ## Step 6: Hand off to Multi-Agent Check (draft → critique → share)
 
