@@ -1,6 +1,6 @@
 # Forest-Green Mod-Guide Template Spec (Fallback)
 
-> **Status:** This is the **fallback** mod-guide styler, applied only when a researcher explicitly picks "Jedida's mod-guide style (forest green)" in Step 3. The **default** mod-guide styler is **Jedida Reporting (navy/blue)** — promoted to default on 2026-05-20 — at `~/.claude/skills/jedida-reporting/scripts/apply_jedida_reporting.py`. The forest-green values below remain locked and valid; they just no longer represent the default style. (Filename kept as `canonical-template-spec.md` because `SKILL.md`, `apply_canonical_template.py`, and `apply_custom_template.py` reference this path.)
+> **Status:** This is the **fallback** mod-guide styler, applied only when a researcher explicitly picks "Jedida's mod-guide style (forest green)" in Step 3. The **default** mod-guide styler is **Jedida Reporting (navy/blue)** — promoted to default on 2026-05-20 — at `~/.claude/skills/mod-guide/scripts/apply_jedida_reporting.py`. The forest-green values below remain locked and valid; they just no longer represent the default style. (Filename kept as `canonical-template-spec.md` because `SKILL.md`, `apply_canonical_template.py`, and `apply_custom_template.py` reference this path.)
 
 **Source-of-truth reference doc:** `18Q9V4th9BwwNtlLXSncmMpiN591XTV1RzCUAyxym7wI`
 ([open in Google Docs](https://docs.google.com/document/d/18Q9V4th9BwwNtlLXSncmMpiN591XTV1RzCUAyxym7wI/edit))

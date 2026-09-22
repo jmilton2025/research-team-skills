@@ -26,7 +26,7 @@ Usage:
 
 import sys
 
-sys.path.insert(0, '/Users/jedidamilton/.claude/plugins/cache/instacart/md2doc/893dc15bd620/skills/md2doc/scripts')
+sys.path.insert(0, '/Users/jedidamilton/.claude/plugins/marketplaces/instacart/md2doc/skills/md2doc/scripts')
 import _env  # noqa: F401
 from common.drive import get_docs_service
 
