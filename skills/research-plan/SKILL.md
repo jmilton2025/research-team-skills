@@ -136,22 +136,20 @@ Only after context + existing insights are confirmed do you move to logistics.
 
 ### Step 1.6: Logistics + Decision Audit
 
-Now use AskUserQuestion to fill the operational gaps the inputs didn't cover. Ask only for what's missing. Batch (max 4 per batch):
+**Ask one question per `AskUserQuestion` call — not batched together.** *(Added 2026-09-22, per live testing feedback.)* Each question gets its own pop-up, one at a time, so the researcher reacts to a single decision before the next one appears — the same one-at-a-time pattern Step 3 already uses for the section walk. Every question's options must highlight a **Recommended** choice: infer it from the input (PRD, brief, kickoff notes) wherever the input gives you enough to guess, and fall back to the skill's own best-practice default only when the input is silent. Never present an option list with no recommendation marked.
 
-**Batch 1 — Decision & scope:**
+Fill every operational gap the inputs didn't cover — the numbered list below is the minimum, not a cap. Ask as many questions as the input actually leaves open: if it leaves other real ambiguities unresolved (a specific inclusion/exclusion criterion, device/platform, moderation language, a second decision hiding in the same ask), add a question for those too rather than drafting around them silently.
 
 1. **Primary decision** — what product/design decision will this research inform? (Anderson's Mad-Lib: "I need [info] to make [decision] that impacts [team goal].")
 2. **Study name** — a one-line title (e.g., "LLM Parser V5 ingredient accuracy — HITL Phase 2").
 3. **Topic** — one-sentence statement of what this study is about and the user-grounded thing it will define (becomes the **Topic** section — the leadership one-liner at the top of the RPP).
 4. **Timeline** — weeks from plan-approval to readout (1 / 2 / 3 / 4+ / hard deadline date).
 
-**Decision audit (Prakriti):** when the researcher states the primary decision, *audit it for crispness before accepting it*. The point of a research plan is to name the **minimum evidence needed to move a specific decision** — so the decision has to be decision-grade. If it's vague — "help with strategy", "understand users better", "inform the roadmap" — push back instead of silently accepting it:
+**Decision audit (Prakriti):** when the researcher answers question 1 (primary decision), *audit it for crispness before accepting it*. The point of a research plan is to name the **minimum evidence needed to move a specific decision** — so the decision has to be decision-grade. If it's vague — "help with strategy", "understand users better", "inform the roadmap" — push back instead of silently accepting it:
 
 > "That reads more like a goal than a decision. A plan earns its keep by naming the *minimum evidence needed to move a specific decision* — who decides what, and what would change based on the finding? Want to sharpen it with the PM, or should I propose a crisper version?"
 
-Prakriti's example of the behavior wanted: *"cloud should say that's not a great decision. And so then you talk to PMs or get that decision to be very crisp."* A sharp decision is what makes the methodology (Step 2) answerable.
-
-**Batch 2 — Sample & stakeholders:**
+Prakriti's example of the behavior wanted: *"cloud should say that's not a great decision. And so then you talk to PMs or get that decision to be very crisp."* A sharp decision is what makes the methodology (Step 2) answerable. Resolve the audit before moving to question 2.
 
 5. **Target audience** — participants by behavior, not just demographics.
 6. **Stakeholders** — who is Responsible / Accountable / Consulted / Informed? (Default: researcher is Responsible; decision-owner is Accountable; PM, EM, design lead are Consulted; skip-level and partners are Informed.)
