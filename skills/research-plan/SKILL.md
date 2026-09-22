@@ -3,8 +3,9 @@ name: research-plan
 description: Use when a UX researcher is planning a new study and needs a structured research plan with objectives, methodology, sampling, timeline, and deliverables. Triggers on "write a research plan", "kick off a study", "plan a user research study", or "/research-plan".
 ---
 
-# name: research-plan
-description: Generates a complete, polished UX research plan tailored to the researcher's study. The researcher provides study inputs (brief, objectives, audience, constraints), Claude analyzes them and recommends methodology / sampling / timeline grounded in published canon (Nielsen Norman Group, Erika Hall, Nikki Anderson, Steve Portigal), the researcher reviews and approves, then Claude generates a ready-to-share plan in the Instacart design system.
+# Research Plan Generator
+
+Generates a complete, polished UX research plan tailored to the researcher's study. The researcher provides study inputs (brief, objectives, audience, constraints), Claude analyzes them and recommends methodology / sampling / timeline grounded in published canon (Nielsen Norman Group, Erika Hall, Nikki Anderson, Steve Portigal), the researcher reviews and approves, then Claude generates a ready-to-share plan in the Instacart design system.
 
 ## When to use this skill
 
@@ -12,6 +13,7 @@ Use this skill when the user wants to:
 - Plan a brand-new UX research study (IDI, usability test, survey, diary, concept test, mixed-method)
 - Convert a PM brief / Slack thread / kickoff notes into a structured research plan
 - Scaffold an approval-ready plan doc before recruiting or fieldwork
+- Validate a design or PRD against research before it locks for a build sprint (e.g., a designer brings a PRD + Figma prototype ahead of a Crit review)
 - Re-use a vetted plan template across Projects 1, 2, and 3
 
 Trigger phrases:
@@ -20,9 +22,10 @@ Trigger phrases:
 - "kick off a study"
 - "plan a user research study"
 - "draft a research plan for [topic]"
+- "help me put together a research plan before I lock these designs"
 
 Do NOT use this skill for:
-- Writing the moderation / discussion guide — use `moderation-guide` instead
+- Writing the moderation / discussion guide — use `mod-guide` instead
 - Writing the final readout — use the readout/reporting skill
 - Screener authoring only — that is a downstream artifact from the plan
 
@@ -79,7 +82,7 @@ To begin, ask the researcher to share what they already have. Accept any input f
 
 > "To draft a tailored research plan, share what you have — a PRD, brief, Slack thread, kickoff notes, or just a paragraph describing the study. Point me at the project folder too, and I'll pull existing context before I ask you anything."
 
-If a Google Doc URL is provided, use Glean (`mcp__glean__read_document`) or the `google-docs:fetch-google-doc` skill to read it. If a Slack thread URL is provided, use the Slack MCP to pull the thread.
+If a Google Doc URL is provided, use Glean (`mcp__glean__read_document`) or the `google-docs:fetch-google-doc` skill to read it. If a Slack thread URL is provided, use the Slack MCP to pull the thread. If a Figma URL or other design-prototype link is provided (common when the input is a designer's PRD + Figma pair), use a connected Figma MCP tool to pull frame/comment content when one is available in the environment; otherwise treat the link as a stimulus reference — ask the researcher for a one-line description of what it shows and carry the URL through to the Stimuli row and Additional → Documents rather than leaving it un-actioned.
 
 ### Step 1.5: Discover Existing Context & Insights FIRST (before any logistics questions)
 
@@ -87,10 +90,12 @@ If a Google Doc URL is provided, use Glean (`mcp__glean__read_document`) or the 
 
 Proactively search for prior context and insights — do NOT wait to be asked, and do NOT assume the researcher's project folder holds everything (Prakriti: "all the context will always not live in your folder"):
 
-1. **Dedicated research-insights agent (PRIMARY).** Call `mcp__research-insights__research_insights__updated` with the study topic. This is the team's User & Market Research agent and is the right first stop for "does this answer already exist?" Prakriti called this out specifically — connect to the *research agent*, not just general Glean: *"we should connect it to glean research agent not just glean overall."*
+1. **Dedicated research-insights agent (PRIMARY).** Call `mcp__research-insights__research_insights__updated` with the study topic. This is the team's User & Market Research agent and is the right first stop for "does this answer already exist?" Prakriti called this out specifically — connect to the *research agent*, not just general Glean: *"we should connect it to glean research agent not just glean overall."* **If this call errors, times out, or the server shows as connection-failed:** do not silently fall through to Glean-only and present it as if the full discovery pass ran — say so explicitly to the researcher (e.g., "the dedicated research-insights agent is unreachable right now — this pass is Glean-only, re-run it once that's back") and proceed to Glean below as the working fallback. Treat that flag as a required line in the confirm-or-correct message, not an optional caveat.
 2. **Glean.** `mcp__glean__search` (keyword) for relevant docs and `mcp__glean__chat` (synthesis) for "what prior research exists on [topic]." Filter to `gdrive` / `confluence` / `slack` as useful. This catches prior research from *other researchers and other teams*, not just the current project.
-3. **Project folder.** Read the researcher's named project / Drive folder for first-party context.
+3. **Project folder.** Read the researcher's named project / Drive folder for first-party context. Before carrying any name from stored project context (CONTEXT.md, a prior plan's RACI header) into a new plan's Key Stakeholders, cross-check it against current people status (CLAUDE.md's "Key People" section, or ask if unsure) — stored context can go stale (e.g., a named Accountable/Consulted party who has since left the team) and the skill has no other mechanism to catch that.
 4. **Snowflake / behavioral data.** ⚠️ No Snowflake MCP is wired in this environment (verified 2026-06-05). If the study needs behavioral sizing, hand off to the `data:write-query` or `snowflake-development` skill, or flag that the researcher must pull it. NEVER fabricate numbers — see CLAUDE.md "Permanent Facts."
+
+**If discovery turns up an adjacent project currently being scoped or run (not a completed finding)** — a same-cycle effort on an overlapping question — call it out distinctly from Existing Insights rather than folding it in as if it were settled prior research. State it plainly ("[Project] is scoping/running an adjacent question this cycle — coordinate to avoid duplicate work") with a link, and place it in Product Context or Project Details → Dependencies (whichever fits), not as a numbered Existing Insight (those are for what's already known, not what's in flight).
 
 Then **show, don't interrogate.** Present back as a confirm-or-correct, NOT a 15-question quiz (Prakriti: *"It can say, here's the context. Does this look right? Yes. So move to right."*):
 
@@ -201,7 +206,7 @@ So Step 3 is NOT a few batched method questions. It is a **guided walk through t
 - **"Brainstorm it with me"** → drop into a short back-and-forth on just that section (this is the "think through with Claude" the team asked for), then re-show the revised draft and re-confirm before advancing.
 - **Advance in order.** Only move to the next section after the current one is approved. Keep a running "✓ approved / ◻ pending" list of the 13 sections so the researcher always knows where they are in the walk.
 
-**Pacing & batching:** sections 1–9 are the strategic front half — give each its own pop-up, don't rush them (see the Pacing note above; Prakriti: *"the research plan is the foundation"*). Sections 11 and 13 are logistics and can each be a single batched pop-up. Never collapse the whole walk back into 2 generic batches — that defeats the section-by-section approval the team explicitly asked for.
+**Pacing & batching:** sections 1–9 are the strategic front half — give each its own pop-up, don't rush them (see the Pacing note above; Prakriti: *"the research plan is the foundation"*). Sections 10 (Sampling Plan) and 12 (Timeline) are substantive decisions in their own right (recruit tradeoffs, dated milestones) and each also gets its own pop-up — don't fold them into the logistics batch. Sections 11 and 13 are the actual logistics cells and can each be a single batched pop-up. Never collapse the whole walk back into 2 generic batches — that defeats the section-by-section approval the team explicitly asked for.
 
 **Override:** if the researcher says *"just generate the whole thing, I'll review at the end"*, skip the walk and go straight to Step 4 (single full draft), then still route through Step 6 multi-agent-check. The section-by-section walk is the default, not a hard gate.
 
@@ -213,7 +218,7 @@ To convert approved inputs into objectives + research questions, apply Nikki And
 
 ### Step 3.5: Style Reference (REQUIRED before generating)
 
-After parameters are approved, ask for a style reference using AskUserQuestion. This step is mandatory — copy the pattern from `moderation-guide/SKILL.md`.
+After parameters are approved, ask for a style reference using AskUserQuestion. This step is mandatory — copy the pattern from `mod-guide/SKILL.md`.
 
 **Question — Output Style**
 
@@ -222,7 +227,6 @@ After parameters are approved, ask for a style reference using AskUserQuestion. 
 Options:
 
 - **"Apply Jedi's Doc Styling 1" (Recommended)** — "Jedida's locked-in default for research plans. Deep forest green `#2D4A3E` title in DM Serif Display 26pt, italic green breadcrumb in DM Sans, Arial 11pt body, dark forest-green dual-table layout. Calls into the `jedi-doc-styling-1` skill."
-- **"Apply Jedi's Doc Styling 2"** — "GlossGenius look — alternate styling option. Same content; different visual feel. Calls into the `jedi-doc-styling-2` skill."
 - **"Apply Jedida's Design Template"** — "Original canonical look — DM Serif title, RACI chip highlights, design table with section bars, sticky header. Calls into the `jedidas-design-template` skill."
 - **"I'll share a reference doc"** — "I have a previous research plan, template, or document I'd like you to match."
 - **"Just give me a clean outline"** — "Simple headers and bullets, no tables or heavy formatting."
@@ -254,7 +258,7 @@ Options:
 
 5. Generate matching their style. Content quality stays the same; only formatting adapts.
 
-**If the researcher picks Jedi's Doc Styling 2 OR Jedida's Design Template:** use the same OUTPUT TEMPLATE below — only the Step 5 styling pipeline changes.
+**If the researcher picks Jedida's Design Template:** use the same OUTPUT TEMPLATE below — only the Step 5 styling pipeline changes.
 
 **If the researcher picks "clean outline":** simple markdown — H2 headers, bullet lists, no tables.
 
@@ -354,7 +358,7 @@ Objectives are statements per Anderson (2022) — if it ends in a question mark,
 
 The key questions stakeholders hope to answer through research, comprehensive, bullet format (ResOps row name: "Key Research Questions"). Numbered list. **Keep each short** — one broad project-level question with the strategic uncertainty bolded, followed by ≤1 sentence of follow-on framing.
 
-These are NOT TEDW interview probes ("Walk me through the last time…") — those belong in the moderation/discussion guide, a downstream artifact generated by `/moderation-guide`. See `references/content-rules.md` §1.
+These are NOT TEDW interview probes ("Walk me through the last time…") — those belong in the moderation/discussion guide, a downstream artifact generated by `/mod-guide`. See `references/content-rules.md` §1.
 
 1. **[Short, broad project-level question with the key uncertainty bolded?]** [Optional ≤1 sentence of follow-on framing.]
 2. **[Short, broad project-level question?]** [Optional ≤1 sentence of follow-on framing.]
@@ -418,7 +422,7 @@ Single crisp table — the ResOps "Project Details" block. Absorbs method, sampl
 
 **Auto-linking rule (Rule #26):** Any document the researcher mentions in the kickoff inputs (PRD, Slack thread, Glean doc, brief) MUST appear here as a clickable link — use the real URL when present in the source, else `(#)`.
 
-- **[Discussion Guide](#)** — to be generated via `/moderation-guide` skill
+- **[Discussion Guide](#)** — to be generated via `/mod-guide` skill
 - **[Questionnaire / Survey (Qualtrics)](#)** — [drafted by date]
 - **[Screener](#)** — [drafted by date]
 - **[Datasheet / recruit query](#)** — [context]
@@ -460,20 +464,20 @@ The skill previously used a Goal-led Parameters table + standalone Methodology /
 2. **Objectives are statements, not questions.** If an objective ends in a question mark, rewrite it. Cite Anderson (2022) when pushed back on.
 3. **Every objective ties to a decision.** Apply Anderson's Mad-Lib test ("I need [info] to make [decision] that impacts [team goal]"). If it fails, cut or rework.
 4. **Objectives compress to bold statement + 1-2 sentence context.** NOT H3 + sub-bullets, NOT a 2-column table. A numbered list of 3 objectives, each with the *what* in bold and the *why* as plain prose. See OUTPUT TEMPLATE.
-5. **Research questions in the plan are BROAD project-level questions.** They capture the strategic uncertainty the study resolves — NOT TEDW-format interview probes ("Walk me through…", "Tell me about…"). TEDW probes belong in the moderation/discussion guide, generated by `/moderation-guide`. Single source of truth: `references/content-rules.md` §1.
+5. **Research questions in the plan are BROAD project-level questions.** They capture the strategic uncertainty the study resolves — NOT TEDW-format interview probes ("Walk me through…", "Tell me about…"). TEDW probes belong in the moderation/discussion guide, generated by `/mod-guide`. Single source of truth: `references/content-rules.md` §1.
 6. **Research questions = bold question + 1 sentence framing.** A numbered list of 3 questions, each one bold broad question followed by one sentence of follow-on framing (sub-uncertainty or angle). NOT a table.
 7. **Hypotheses are a STANDALONE H2 section named "Hypotheses / Questions of Interest from XFN leads," placed AFTER Key Research Questions.** This matches BOTH the 2026-06-02 workshop (Prakriti: hypotheses "comes after objectives and research questions… then it decides your methodology") AND the ResOps RPP row name — confirmed canonical 2026-06-08, no longer provisional. 3 one-sentence bullets stating the team's beliefs / expected outcomes the study will validate or invalidate (Portigal 2023 confirmation-bias guardrail). Each hypothesis should trace back to an item in the Existing Insights section.
 8. **Problem Statement = 3 bold-lead bullets, not paragraphs.** Each bullet has a 1-3 word bold lead-word + one-sentence explanation. Leadership scans the 3 bold keywords before reading any explanation.
 9. **Product Context = 3-4 bullets, not paragraphs.** 1-2 sentences each. If you find yourself writing a paragraph, break it into bullets.
 10. **Project Details absorbs Method, Participants & Recruitment.** No standalone Methodology or Participants section — Method + Approach, Sampling Plan / Participants, Stimuli, Dependencies, Compensation, Research Platform, and Deliverable Format are all rows in the single ResOps **Project Details** table.
-11. **Proposed Research Timeline is the dated milestone table** (Milestone | Date), separate from the **Research Timeline** phase grid in the header. Milestones follow ResOps: RPP share at Crit → Recruiting request → Recruit dates (SLA: min 10 business days) → Launch → End → Synthesis → Final Deliverables → Sharpr upload.
+11. **Proposed Research Timeline is the dated milestone table** (Milestone | Date), separate from the **Research Timeline** phase grid in the header. Milestones follow ResOps: RPP share at Crit → Recruiting request → Recruit dates (SLA: min 10 business days) → Launch → End → Synthesis → Final Deliverables → Sharpr upload. **If the study is explicitly scoped lean/quick and bypasses the standard recruiting pipeline** (existing panel, convenience sample, internal/employee sample), mark the affected row `N/A — see Dependencies` and disclose the actual recruiting source in Dependencies rather than leaving the SLA row looking unmet. See `references/content-rules.md` §8.
 12. **Deliverables fold into Project Details → Deliverable Format + Additional → Documents.** No standalone Deliverables section. Name the format in the Deliverable Format cell; list the actual artifact links under Additional → Documents.
 13. **Risks fold into Project Details → Dependencies — ResOps has no Risks section.** Surface schedule/recruit risks inside the Dependencies cell, each with a date or owner. "Schedule risk" is not a risk; "Prototype not finalized until April 30; fieldwork cannot begin before then" is.
 14. **Additional → Documents items are clickable markdown links.** Format: `[Document Name](URL)`. For docs that don't exist yet, use `(#)` as a placeholder URL so the link styling shows up; researcher fills in real URLs as the docs land. This is the single document list (no separate Previous Research subsection — prior research lives in Existing Insights).
 15. **Plan ends at Additional → Documents.** No FAQ, no separate Resources & Links, no Risks, no Open Questions section — Additional → Documents IS the final element and the resources list.
 16. **RACI lives in the document header.** Above Topic, under Key Stakeholders, as 4 disc bullets (R/A/C/I), each with `[TBD — fill in]` placeholders for unknown names. NO standalone Stakeholders & RACI H2 section.
 17. **Sample size defended by decision, not dogma.** Open with the decision the study informs; cite canon (Nielsen 2000 for usability N=5; Guest et al. 2006 for IDI saturation) only when questioned.
-18. **No interface terminology in research questions.** Describe user goals, not UI. "Find a recipe" not "click the search icon."
+18. **No interface terminology in research questions.** Describe user goals, not UI. "Find a recipe" not "click the search icon." **Exception — evaluative/concept-test study types:** when the study exists to test a specific stimulus (a concept, a design, a named feature), the research question can and should name that stimulus — that's the point of the test, not a violation of the rule. The rule targets *generic exploratory* questions that shouldn't be pre-anchored to a UI path; it doesn't mean concept/usability tests must speak in vague goal language about the very thing they're evaluating. See the Concept Test row below.
 19. **Time-aware protocol shape.** If the Methodology row includes a session-protocol breakdown, the time slots must sum to session duration.
 20. **Anchor-not-substance bolding.** Bold the *answer-word*, never the row label. Tables aim for ≤10% bold density. See `jedi-doc-styling-1/references/bolding-philosophy.md`.
 21. **Bullet bodies are complete sentences, not fragments.** A reader landing on a single bullet without surrounding context must still understand it. See `jedi-doc-styling-1/references/bolding-philosophy.md`.
@@ -529,7 +533,9 @@ Present the self-critique as a 2-column table. Mark any row that fails with a br
 
 ## Step 5: Offer Google Docs Upload + Apply Canonical Styling
 
-After generating the plan, ask:
+**Gate first: check whether Step 4 applied the `⚠️ TEST ARTIFACT` label** (per the Test/demo labeling rule above and `../../references/output-status-and-labeling-conventions.md`). If it did, do NOT run the real upload pipeline against fabricated/simulated content — instead describe what the upload + styling steps *would* do (which doc, which folder, which style) and stop there. Real Google Drive/Docs API writes are for real study content only.
+
+Otherwise, after generating the plan, ask:
 
 > "Your research plan is ready! Would you like me to upload it to Google Docs?"
 
@@ -574,9 +580,6 @@ All canonical specs live in `~/.claude/skills/jedi-doc-styling-1/references/desi
 ### 5.3 — (Alternative styles, only if researcher explicitly picked one in Step 3.5)
 
 ```bash
-# Jedi Style 2 — GlossGenius look
-python3 ~/.claude/skills/jedi-doc-styling-2/scripts/apply_jedi_style_2.py <DOCUMENT_ID>
-
 # Jedida's Design Template — original DM Serif + RACI chips + design table
 python3 ~/.claude/skills/jedidas-design-template/scripts/apply_template_styling.py <DOCUMENT_ID>
 ```
@@ -595,8 +598,7 @@ python3 ~/.claude/skills/jedi-doc-styling-1/scripts/apply_bulleted_leadins.py <D
 # DEFAULT — verify Style 1
 python3 ~/.claude/skills/jedi-doc-styling-1/scripts/verify_jedi_style_1.py <DOCUMENT_ID>
 
-# Alternatives
-python3 ~/.claude/skills/jedi-doc-styling-2/scripts/verify_jedi_style_2.py <DOCUMENT_ID>
+# Alternative
 python3 ~/.claude/skills/jedidas-design-template/scripts/verify_styling.py <DOCUMENT_ID>
 ```
 
@@ -616,7 +618,7 @@ Place in the correct Google Drive project folder per `~/CLAUDE.md` (route by **s
 | **P6** — Search Personalization | MAVEN, LLM Relevance Oracle, brand similarity, lost-intent resurfacing, Suggest, QU, non-English search | `1HSCcGXr06nqY7wBXbQD9icwew284RCrW` |
 | **Research/** — general | Studies not tied to any project bucket | (no Drive folder; local only) |
 
-Share the Google Doc link back to the researcher and offer next-step skills: `/moderation-guide` to generate the discussion guide from the approved plan.
+Share the Google Doc link back to the researcher and offer next-step skills: `/mod-guide` to generate the discussion guide from the approved plan.
 
 ### Auth note
 
@@ -639,10 +641,10 @@ The full pipeline the team agreed on: **draft (this skill) → `/multi-agent-che
 ## Tool usage
 
 - **AskUserQuestion** — Gather inputs, present recommendations, get approvals, ask for style reference.
-- **`mcp__research-insights__research_insights__updated`** *(the "User & Market Research" agent — PRIMARY discovery tool, Step 1.5)* — This is the dedicated Glean research agent Prakriti asked the skill to lead with. Query it FIRST to surface what's already known about the topic before asking the researcher anything. Returns synthesized prior-research insights with sources. Verified wired in this environment (2026-06-05).
-- **Glean keyword + chat** (`mcp__glean__search`, `mcp__glean__chat`) — Secondary discovery in Step 1.5: `search` for keyword hits across indexed Drive/docs, `chat` for synthesis across multiple sources. Use after the research-insights agent to widen the net.
+- **`mcp__research-insights__research_insights__updated`** *(the "User & Market Research" agent — PRIMARY discovery tool, Step 1.5)* — This is the dedicated Glean research agent Prakriti asked the skill to lead with. Query it FIRST to surface what's already known about the topic before asking the researcher anything. Returns synthesized prior-research insights with sources. Wired and working as of 2026-06-05, but this server has since shown intermittent connection failures — if it errors or times out, don't treat that as "not configured": tell the researcher this pass is Glean-only and proceed on Glean as the fallback (see Step 1.5).
+- **Glean keyword + chat** (`mcp__glean__search`, `mcp__glean__chat`) — Secondary discovery in Step 1.5: `search` for keyword hits across indexed Drive/docs, `chat` for synthesis across multiple sources. Use after the research-insights agent to widen the net, and as the working fallback when that agent is unreachable.
 - **Snowflake** — *NOT wired as an MCP in this environment (verified 2026-06-05).* Only the `snowflake-development` and `data:write-query` skills exist. When a plan needs behavioral/usage data, FLAG that Snowflake isn't connected and route the researcher to those skills or to a DS partner — never fabricate query results.
-- **Glean** (`mcp__glean_default__read_document`) — Read Google Doc PRDs or style references when URL is provided.
+- **Glean** (`mcp__glean__read_document`) — Read Google Doc PRDs or style references when URL is provided.
 - **google-docs:fetch-google-doc** — Alternative fetcher for Google Docs.
 - **Slack MCP** — Pull kickoff threads when a Slack URL is provided.
 - **gws-docs** (or md2doc `upload-gdoc.py`) — Upload markdown to Google Docs.

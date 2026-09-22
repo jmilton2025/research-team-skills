@@ -27,7 +27,7 @@ This is the **most-confused rule**, so it leads. *(ResOps row name: "Key Researc
 | **Broad research question** | The research plan's *Key Research Questions* section | Bold broad question + 1 sentence of follow-on framing | "**What does 'good' recipe-to-cart mapping mean to users?** What signals make a cart feel acceptable vs. broken, and how does that judgment shift when the recipe is for tonight's dinner vs. weekend prep?" |
 | **Probing interview question** | The downstream **moderation / discussion guide** (separate artifact) | TEDW stem (Tell me / Explain / Describe / Walk me through) | "Walk me through the last time you cooked from a recipe you found in the app." |
 
-Do NOT put TEDW probes in the research plan. The plan answers *what the study will resolve at a project level*. The moderation guide answers *what we'll literally ask participants in a session*. Different doc, different scope, different generation skill (`/moderation-guide`).
+Do NOT put TEDW probes in the research plan. The plan answers *what the study will resolve at a project level*. The moderation guide answers *what we'll literally ask participants in a session*. Different doc, different scope, different generation skill (`/mod-guide`).
 
 ### Why it matters
 
@@ -237,6 +237,7 @@ Rules:
 
 - **Keep the ResOps milestone names** — they map to the ResOps recruiting/SLA workflow. Don't rename "Submit Participant Recruiting Request" to a generic "Recruit."
 - **Honor the 10-business-day recruiting SLA** in the Recruit dates row — flag if the requested timeline violates it.
+- **If the study is explicitly scoped as lean/quick and bypasses the standard ResOps recruiting pipeline** (e.g., an existing panel, a convenience sample, or an internal/employee sample with no new recruiting request) — don't leave the SLA rows looking like a silent violation. Mark the affected milestone row `N/A — see Dependencies` and add a one-line disclosure bullet in Project Details → Dependencies naming the actual recruiting source and why the SLA doesn't apply. This keeps the deviation visible and intentional rather than reading as a missed step.
 - 2-column (Milestone | Date). Add an Owner column ONLY if multiple owners are realistic.
 
 ---
@@ -280,7 +281,7 @@ The plan ends at **Additional → Documents** — no FAQ, no Open Questions, no 
 
 **Documents**
 
-- **[Discussion Guide](#)** — to be generated via `/moderation-guide` skill
+- **[Discussion Guide](#)** — to be generated via `/mod-guide` skill
 - **[Questionnaire / Survey (Qualtrics)](#)** — to be drafted by May 13–14
 - **[Screener](#)** — to be drafted by May 14
 - **[Datasheet / recruit query](#)** — pending DS pull
@@ -297,6 +298,7 @@ Rules:
 | **Use `(#)` as placeholder URL for docs that don't exist yet.** | The link styling shows up immediately; the researcher fills in real URLs as the docs land. Without a URL, markdown renders as plain bold text and loses the visual cue. |
 | **Single Documents list — no Previous Research subsection here.** | Prior research moved to **Existing Insights** (§6). Don't sprout new subsections like "Tools" or "Templates" — tools belong in Project Details → Research Platform. |
 | **Auto-link every doc surfaced in the kickoff inputs.** | Capture every doc the researcher cited (PRD, Slack thread, Glean doc, Screener, Mod Guide, Dovetail project, PII consent script) and emit each as a link. The researcher shouldn't re-type doc names she already mentioned. |
+| **Prune the Documents list to the study type — don't emit every row by default.** | A fully unmoderated study with no live moderator (e.g., an unmoderated usability test or a survey-only concept test) has no Discussion Guide — drop that row rather than listing it as a placeholder that will never get filled in. Same logic for any other row that structurally doesn't apply to the chosen method (e.g., no Screener for a study drawing on an existing panel with no new recruit). |
 
 ---
 
