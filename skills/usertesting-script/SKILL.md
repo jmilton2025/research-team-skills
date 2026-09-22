@@ -21,8 +21,14 @@ Trigger phrases:
 - "How do I phrase this question?"
 - "Help with the action ladder"
 - "What's the closing question?"
+- "I don't need the whole plan re-litigated, just the script/questions"
+- "Turn this into the UserTesting script" / "Write the questions so I can hand this to the programmer"
+
+**vs. [[usertesting-plan]]:** if the requester treats study structure as already decided — even informally (a task list in a PRD appendix, a Slack thread, "we already agreed on 3 tasks") — this is the right skill. Only redirect to usertesting-plan when they're asking for help deciding structure itself (task count, ordering, coverage levels).
 
 ## Core rules
+
+Most rules below (tagging discipline, numbering, probing, closing cards) are format-agnostic and apply to any study topic. A few — the cart-specific action ladders in Rule 6, and "shopper" vs. "picker" in Rule 24 — assume a commerce/cart context. For a non-commerce study (search relevance, onboarding copy, etc.), adapt or skip those two; the rest still applies.
 
 ### 1. Question types — only 4 allowed
 
@@ -51,7 +57,16 @@ Please give a verbal response.
 > **USERTESTING QUESTION TYPE: VERBAL RESPONSE** (NOT Written response).
 ```
 
-Apply the same 4-place pattern to SINGLE CHOICE and MULTI-SELECT (substitute the type name). When adding a new type mid-revision, also update the **top-of-doc banner** so all valid types are declared.
+Apply the same 4-place pattern to SINGLE CHOICE, MULTI-SELECT, and DRAG-TO-RANK — but do NOT substitute the type name into the spoken trailer literally. "Please give a single choice response" / "Please give a multi-select response" reads as nonsense for a tap-based question. Use the type-appropriate close instead:
+
+- VERBAL RESPONSE → "Please give a verbal response."
+- SINGLE CHOICE → "Please select one option."
+- MULTI-SELECT → "Please select all that apply."
+- DRAG-TO-RANK → "Please drag the items into your preferred order." (DRAG-TO-RANK isn't at risk of the Written-Response auto-default bug, but keep all four tags anyway — header tag, block label, this close, and the programming opener — so the programmer never has to guess a type from context.)
+
+Full copy-paste templates (header tag + block label + close + programming opener, worked for all four types) → `references/question-type-templates.md`.
+
+When adding a new type mid-revision, also update the **top-of-doc banner** so all valid types are declared.
 
 **Top-of-doc banner template:**
 ```
@@ -66,6 +81,8 @@ Number questions Q1 → Q[final] in one flat sequence across the entire script. 
 
 ❌ Bad: "Task 1 Q1," "Task 2 Q1," nested "1.1 / 1.2 / T1 / G1 / D1"
 ✅ Good: Q1, Q2, Q3 … Q31
+
+Pre-task questions consume Q-numbers too — they're the start of the same flat sequence, not a separate block. If there are 2 pre-task questions, the first task's questions start at Q3, not Q1.
 
 **Why:** UserTesting platform handles flat numbering cleanly; compound numbering creates programming overhead and confuses participants.
 
@@ -100,7 +117,7 @@ Action ladders are ordinal. Randomizing destroys the ordering.
 2. Modify — "I'd swap it myself" / "I'd swap for a smaller size"
 3. Skip — "I'd skip it"
 
-Pick the shortest ladder that captures the decision space.
+Pick the shortest ladder that captures the decision space. The 3-option substitution ladder isn't tied to a single-row layout — use it for any item-level accept/modify/skip decision, including one flagged/badged item inside an otherwise-full cart (e.g., a confidence-badge or signal-detection study). Whether the stimulus renders as an isolated single-row card or as one highlighted item within a full cart is a [[usertesting-html]] layout decision; the ladder wording is the same either way.
 
 ### 7. Soft abandonment wording
 
@@ -125,7 +142,8 @@ For verbal responses, allow ONE probe with "Anything else?" if the answer is sho
 | Stack-rank with no escape | Do NOT randomize | Goal is hierarchy detection |
 | Temporal sequence | Do NOT randomize | Order is the variable being tested |
 | Ordinal rating scale | Do NOT randomize | Order is the scale |
-| Demographics (ordinal) | Do NOT randomize | Order is the scale |
+| Demographics (ordinal — age band, frequency scale) | Do NOT randomize | Order is the scale |
+| Demographics (nominal — household size, region, category with no inherent order) | Randomize OK | No ordinal relationship to preserve |
 
 ### 10. Recap multi-select before the verbal "why?"
 
@@ -153,6 +171,7 @@ Collapse a single-choice + verbal "why?" pair into one VERBAL ranking when:
 **Mechanic:**
 - All options displayed on screen so the participant can see them while ranking
 - Display order randomized (controls primacy/recency on the displayed list)
+- Prompt explicitly invites indifference — e.g., "...and if any of these feel about the same to you, just say so." Unlike SINGLE CHOICE, there's no tappable escape option here, so the indifference signal only survives if the prompt asks for it; forced-ranking framing alone will suppress it.
 - One probe: "Anything else stand out about why that's the worst one for you?"
 - ~60 sec time budget
 
@@ -175,6 +194,8 @@ Whenever a question references one of two stimuli in a side-by-side comparison, 
 
 **Why:** "left / right" is bound to screen geometry — breaks the moment a participant rotates a device, the platform mirrors, or randomization swaps positions. "Image 1 / Image 2" is stable because it's bound to the labels under each phone (see [[usertesting-html]] Rule on image labels).
 
+This rule governs participant-facing question wording only. A plan doc describing layout internally as "asked left, result right" is fine — that's shorthand for the researcher/programmer, not text a participant reads.
+
 The physical stimulus shown as Image 1 vs Image 2 is still randomized via within-task randomization — labels stay stable; position is what randomizes.
 
 ### 15. Instruction CTA must echo stimulus button text verbatim
@@ -186,6 +207,8 @@ Whenever a question references an action the participant "took," quote the butto
 ❌ "Imagine you tapped 'Add all to cart.'" (when button says "Add all 6")
 
 **Why:** participants cross-check the prompt against the button. Any mismatch — even a paraphrase — causes them to pause and disambiguate, wasting the first ~5 seconds of every task.
+
+**When no stimulus HTML exists yet** (common in a standalone script-only run, before [[usertesting-html]] has built anything): write the best-available CTA text as a clearly marked placeholder — `[PLACEHOLDER — unconfirmed button text: "Add all 6 ingredients to cart"]` — and list every placeholder CTA together in the Programming Instructions block as an open item for design/HTML to confirm before fielding. Never present an invented quote as if it were confirmed, and never stall the whole script waiting on it.
 
 ### 16. Pre-reveal context cards must be neutral
 
@@ -214,7 +237,7 @@ First screen = warm intro that:
 
 Adapt the wording to the subject, but always include:
 
-*"These [items] are just examples for the study. Please answer based on what's in the [interface] and how it's working — not on whether you personally like the content, have an allergy, or [have any personal restriction]. Imagine you're [acting on behalf of] someone who [engages with all of these]."*
+*"These [items] are just examples for the study. Please answer based on what's in the [interface] and how it's working — not on whether you personally like the content or have a personal dietary/health restriction (an allergy, for example). Imagine you're [acting on behalf of] someone who [engages with all of these] without any issue."*
 
 **Why:** prevents refusals based on personal taste rather than UX evaluation. Without this, you lose data on every item a participant personally objects to.
 
@@ -255,7 +278,7 @@ If a stack-rank already captures pain-point hierarchy at the end, don't ALSO ask
 
 ## Standing preferences
 
-- **Show 2–3 wording approaches before significant rewrites.** Don't pick one and run.
+- **Show 2–3 wording approaches before significant rewrites.** Don't pick one and run. This gate is for reworking existing content or genuinely open structural calls (e.g., which action ladder fits an undocumented stimulus type) — not for a first draft under a stated deadline. When the requester has declined discussion ("just write the script," a hard deadline) or has already locked the structure, draft straight through; still flag every judgment call and invented input inline (per the rule below) instead of silently resolving it.
 - **Flag every mismatch explicitly.** If a question references a stimulus element that doesn't exist or has different wording, surface the conflict — don't paper over it.
 - **Pending vs. live edits labeled clearly.** Mark `v2-queued (not pushed)` vs. `v1-live (in Google Doc)`. Don't cite pending changes as canonical.
 - **Auto-open created docs.** After uploading a script to Google Doc, open it in the browser.
@@ -265,7 +288,10 @@ If a stack-rank already captures pain-point hierarchy at the end, don't ALSO ask
 The script deliverable contains:
 
 1. **Banner** — 🚨 READ THIS FIRST — UserTesting Question Type Rules + all valid types declared
-2. **Programming Instructions** — global rules for the platform programmer (no conditional logic, randomization rules, stimulus pinning)
+2. **Programming Instructions** — global rules for the platform programmer:
+   - **No conditional logic** — every participant sees every question in the same form; no branching, no skip logic. This is the default; the only exception is a conditional follow-up the plan explicitly documented and approved (see [[usertesting-plan]] Discipline notes and [[usertesting-html]] Rule 20) — if one exists, name the trigger condition here in plain English so the programmer builds the branch correctly.
+   - Randomization rules (per Rule 9)
+   - Stimulus pinning (per Rule 5)
 3. **Intro card** — display-only, with time / format / no-right-answers / personal-preference caveat
 4. **Pre-task questions** — mental-model + concrete-grounding questions
 5. **Task questions** — Q1 → QN, flat numbering, each task block with stimulus + questions
@@ -275,7 +301,7 @@ The script deliverable contains:
 
 ## Workflow
 
-1. Confirm the plan inputs (task count, stimulus types per task, synthesis-tail format chosen). If unknown, invoke [[usertesting-plan]] first.
+1. Confirm the plan inputs (task count, stimulus type per task, synthesis-tail format). **"Known" is a low bar:** an informal task list in a PRD appendix, a Slack thread, or "we already agreed on N tasks" counts as known, even with no formal usertesting-plan doc. Invoke [[usertesting-plan]] first only when (a) the request is actually study-design work (matches usertesting-plan's own trigger phrases), or (b) none of the three inputs has been stated in any form at all. Otherwise proceed and self-declare the gaps: note each unconfirmed input in the Programming Instructions block (e.g., "stimulus types unconfirmed — placeholders used, see below") rather than blocking. This applies even to self-initiated research with no stakeholder ask yet — a minimal, clearly-flagged self-declaration beats stalling on a full plan intake.
 2. Draft the banner + Programming Instructions block.
 3. Draft the intro card + Pre-task questions.
 4. For each task, draft the question block with proper 4-way tagging, action ladder, and probing rules.
@@ -283,7 +309,8 @@ The script deliverable contains:
 6. Draft demographics + warm closing card.
 7. Run the 4-way tagging audit: every Q has header tag + block label + spoken trailer + programming opener. If MULTI-SELECT appears, banner declares it.
 8. Run the wording audit: CTA quotes match stimulus button wording verbatim (Rule 15); side-by-side wording uses "image 1 / image 2" (Rule 14); verbal follow-ups use the standard "previous option" wording (Rule 13).
-9. Output the script. Auto-open if uploaded to Google Doc.
+9. Run a time-budget check: tally realistic per-question time (~10–15 sec for SINGLE CHOICE/MULTI-SELECT, ~20–30 sec for a standard VERBAL, ~60 sec for anything tagged `~60 sec`) against the session-length target from intake. Flag it if the total leaves less than ~15% slack for stimulus-reading and platform lag — don't ship an overloaded script silently.
+10. Output the script. Auto-open if uploaded to Google Doc.
 
 ## Bundled resources
 
