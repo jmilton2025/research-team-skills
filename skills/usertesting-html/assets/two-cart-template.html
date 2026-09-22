@@ -1,0 +1,116 @@
+<!--
+  usertesting-html starter: TWO-CART A/B PATTERN (Rule 3)
+  Use for: A/B preference between two strategies (e.g., substitution approach,
+  badge vs. no badge, signal vs. no signal).
+
+  RANDOMIZATION (Rule 3): a static file can't randomize per participant.
+  This template ships as ONE mirrored pair — duplicate it and swap which
+  variant is Image 1 / Image 2, e.g.:
+    two-cart-{task}-la.html  → Variant A = Image 1 (left), Variant B = Image 2 (right)
+    two-cart-{task}-lb.html  → Variant B = Image 1 (left), Variant A = Image 2 (right)
+  Tell the UserTesting programmer which file(s) exist and how to alternate them,
+  OR ship one file and add an explicit programmer note to randomize L/R at the
+  platform level. Record which approach you used in the header overview table.
+
+  Before fielding:
+  - Crop or hide every .internal-ref-banner (Rule 14).
+  - Use "Cart A / Cart B" position chips ONLY if the script's question references
+    them; otherwise leave captions out entirely (Rule 12).
+  - Recalculate both .cart-subtotal values (Rule 11).
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>UT Stimuli — Two Cart A/B</title>
+<style>
+  :root {
+    --ic-green: #0AAD0A;
+    --label-ink: #2D4A3E;
+    --ic-bg: #FFFFFF;
+    --row-divider: #E8E8E8;
+    --meta-muted: #6B7280;
+    --asked-bg: #F3F4F6;
+    --added-bg: #E6F4EA;
+    --star-color: #F5A623;
+    --conditional-bg: #FEF3C7;
+    --conditional-border: #F59E0B;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #F5F5F5; margin: 0; padding: 32px; color: var(--label-ink); }
+
+  .internal-ref-banner {
+    background: #111827; color: #FBBF24; font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.03em;
+    padding: 6px 14px; border-radius: 4px 4px 0 0; display: inline-block;
+  }
+  .fielding-mode .internal-ref-banner { display: none; }
+
+  .stimulus-section { margin-bottom: 56px; }
+
+  /* Optional, neutral position chip — only if the script question references
+     "Cart A / Cart B" by name (Rule 3). Delete this block otherwise. */
+  .position-chip { font-size: 11.5px; font-weight: 700; color: var(--meta-muted); text-align: center; margin-bottom: 4px; }
+
+  .phones-row { display: flex; gap: 24px; align-items: flex-start; flex-wrap: nowrap; }
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+  .phone {
+    width: 340px; aspect-ratio: 393 / 852; background: var(--ic-bg);
+    border-radius: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .phone-topbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--row-divider); }
+  .phone-body { padding: 0 14px 14px; overflow-y: auto; flex: 1; }
+
+  /* No hero block on cart screens — see Rule 8 exception. */
+  .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--row-divider); font-size: 13.5px; }
+  .cart-row .line-item-price { font-weight: 600; }
+  .cart-subtotal { display: flex; justify-content: space-between; padding: 12px 0 4px; font-weight: 700; font-size: 14.5px; margin-top: 4px; }
+
+  .signal-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; margin-top: 2px; }
+  .signal-badge.high-confidence { background: var(--added-bg); color: #146C2E; }
+
+  .phone-label { text-align: center; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--meta-muted); }
+</style>
+</head>
+<body>
+
+  <!-- ================= TASK (duplicate per task; this is one L/R variant of the pair) ================= -->
+  <section class="stimulus-section">
+    <span class="internal-ref-banner"><!-- PLACEHOLDER --> Task N · [what this A/B tests] · Variant [A/B] shown as Image [1/2] </span>
+
+    <div class="phones-row">
+      <div class="phone-col">
+        <!-- <div class="position-chip">Cart A</div> only if the script references it -->
+        <div class="phone">
+          <div class="phone-topbar">‹&nbsp;&nbsp;&nbsp;Your Cart&nbsp;&nbsp;&nbsp;♡</div>
+          <div class="phone-body">
+            <div class="cart-row"><span>Item one</span><span class="line-item-price" data-price="4.29">$4.29</span></div>
+            <div class="cart-row"><span>Item two <!-- PLACEHOLDER: signal variant --><span class="signal-badge high-confidence">Great match found</span></span><span class="line-item-price" data-price="3.99">$3.99</span></div>
+            <div class="cart-row"><span>Item three</span><span class="line-item-price" data-price="2.50">$2.50</span></div>
+            <div class="cart-subtotal" data-subtotal="10.78"><span>Subtotal</span><span>$10.78</span></div>
+          </div>
+        </div>
+        <div class="phone-label">Image 1<br>Cart</div>
+      </div>
+
+      <div class="phone-col">
+        <!-- <div class="position-chip">Cart B</div> only if the script references it -->
+        <div class="phone">
+          <div class="phone-topbar">‹&nbsp;&nbsp;&nbsp;Your Cart&nbsp;&nbsp;&nbsp;♡</div>
+          <div class="phone-body">
+            <div class="cart-row"><span>Item one</span><span class="line-item-price" data-price="4.29">$4.29</span></div>
+            <div class="cart-row"><span>Item two <!-- PLACEHOLDER: no-signal variant, otherwise identical --></span><span class="line-item-price" data-price="3.99">$3.99</span></div>
+            <div class="cart-row"><span>Item three</span><span class="line-item-price" data-price="2.50">$2.50</span></div>
+            <div class="cart-subtotal" data-subtotal="10.78"><span>Subtotal</span><span>$10.78</span></div>
+          </div>
+        </div>
+        <div class="phone-label">Image 2<br>Cart</div>
+      </div>
+    </div>
+  </section>
+  <!-- ================= end Task ================= -->
+
+</body>
+</html>

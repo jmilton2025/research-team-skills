@@ -1,0 +1,140 @@
+<!--
+  usertesting-html starter: SINGLE-ROW SUBSTITUTION CARD PATTERN (Rule 4)
+  Use for: an isolated substitution decision with no full-cart context needed.
+
+  This card IS the whole stimulus — it does NOT get the Rule 8 hero block
+  (no thumbnail / name / meta-line / star rating on this pattern).
+
+  Three variants included below, matching Rule 4 exactly:
+  1. .single-row-card           — the default fielded pattern (no mismatch pill)
+  2. .single-row-card.context-only (.ut-context-card) — explanatory framing, no question
+  3. .ut-choices.multi           — recap multi-select checkbox markers
+
+  Before fielding:
+  - Crop or hide every .internal-ref-banner (Rule 14).
+  - Default to NO mismatch pill (Rule 4). Only use .mismatch-pill on context-only
+    cards or stakeholder/training materials — remove it from anything asking for
+    an unprompted reaction.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>UT Stimuli — Single-Row Card</title>
+<style>
+  :root {
+    --ic-green: #0AAD0A;
+    --label-ink: #2D4A3E;
+    --ic-bg: #FFFFFF;
+    --row-divider: #E8E8E8;
+    --meta-muted: #6B7280;
+    --asked-bg: #F3F4F6;
+    --added-bg: #E6F4EA;
+    --star-color: #F5A623;
+    --conditional-bg: #FEF3C7;
+    --conditional-border: #F59E0B;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #F5F5F5; margin: 0; padding: 32px; color: var(--label-ink); }
+
+  .internal-ref-banner {
+    background: #111827; color: #FBBF24; font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.03em;
+    padding: 6px 14px; border-radius: 4px 4px 0 0; display: inline-block;
+  }
+  .fielding-mode .internal-ref-banner { display: none; }
+
+  .stimulus-section { margin-bottom: 48px; max-width: 520px; }
+
+  /* ---- Rule 4: 3-column grid, asked-pane · arrow column · added-pane ---- */
+  .single-row-card {
+    display: grid;
+    grid-template-columns: 1fr 44px 1fr;
+    align-items: stretch;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    background: var(--ic-bg);
+  }
+  .asked-pane, .added-pane { padding: 14px 16px; }
+  .asked-pane { background: var(--asked-bg); }
+  .added-pane { background: var(--added-bg); }
+  .pane-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--meta-muted); margin-bottom: 6px; }
+  .pane-item-name { font-size: 14.5px; font-weight: 600; }
+  .pane-item-meta { font-size: 12.5px; color: var(--meta-muted); margin-top: 2px; }
+  .arrow-col { display: flex; align-items: center; justify-content: center; background: var(--ic-bg); font-size: 18px; color: var(--meta-muted); }
+
+  /* OPTIONAL ornamentation — default OFF. Only for context-only cards or
+     stakeholder/training decks. Remove for any fielded unprompted-reaction card. */
+  .mismatch-pill {
+    display: inline-block; font-size: 10.5px; font-weight: 700;
+    background: #FEE2E2; color: #B91C1C; padding: 2px 8px; border-radius: 999px;
+    margin-top: 6px;
+  }
+
+  /* ---- Context-only variant: explanatory framing, no question, no panes/pill ---- */
+  .ut-context-card {
+    border: 1.5px dashed var(--meta-muted);
+    border-radius: 12px;
+    padding: 16px;
+    background: var(--ic-bg);
+    font-size: 13.5px;
+    color: var(--label-ink);
+  }
+
+  /* ---- Multi-select recap variant: square checkbox marker ---- */
+  .ut-choices { list-style: none; padding: 0; margin: 12px 0; }
+  .ut-choices li { padding: 8px 0; border-bottom: 1px solid var(--row-divider); font-size: 13.5px; }
+  .ut-choices.multi li::before {
+    content: "";
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--meta-muted);
+    border-radius: 3px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ================= Variant 1: default fielded card (no pill) ================= -->
+  <section class="stimulus-section">
+    <span class="internal-ref-banner"><!-- PLACEHOLDER --> Task N · [item] · [what this isolates] </span>
+    <div class="single-row-card">
+      <div class="asked-pane">
+        <div class="pane-label">Recipe asked:</div>
+        <div class="pane-item-name"><!-- PLACEHOLDER -->Fresh basil, 1 bunch</div>
+        <div class="pane-item-meta">Produce</div>
+      </div>
+      <div class="arrow-col">→</div>
+      <div class="added-pane">
+        <div class="pane-label">We added:</div>
+        <div class="pane-item-name"><!-- PLACEHOLDER -->Dried basil, 1.5 oz</div>
+        <div class="pane-item-meta">Spices</div>
+        <!-- No .mismatch-pill here — default fielded state asks for unprompted reaction -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Variant 2: context-only (framing, no question) ================= -->
+  <section class="stimulus-section">
+    <span class="internal-ref-banner">Context card · [what this sets up]</span>
+    <div class="ut-context-card">
+      <!-- PLACEHOLDER: neutral framing text only — no failure-mode language (Rule 12) -->
+      Here's a closer look at one ingredient from your recipe.
+    </div>
+  </section>
+
+  <!-- ================= Variant 3: recap multi-select ================= -->
+  <section class="stimulus-section">
+    <span class="internal-ref-banner">Synthesis tail · recap multi-select</span>
+    <ul class="ut-choices multi">
+      <li><!-- PLACEHOLDER -->Chicken Tortilla Soup</li>
+      <li>Sheet-Pan Veggie Fajitas</li>
+      <li>None — I would still use all of them</li>
+    </ul>
+  </section>
+
+</body>
+</html>

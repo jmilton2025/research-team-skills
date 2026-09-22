@@ -1,0 +1,182 @@
+<!--
+  usertesting-html starter: DUAL-PHONE PATTERN (Rule 2)
+  Use for: "compare what was asked vs. what was delivered" tasks.
+  LEFT phone = source/recipe view. RIGHT phone = result/cart view.
+
+  Duplicate the <section class="stimulus-section"> block once per task.
+  Everything marked PLACEHOLDER — is copy you swap per task.
+  Everything else (classes, structure, tokens) stays as-is across the study.
+
+  Before fielding:
+  - Crop or hide every .internal-ref-banner (Rule 14) — participants never see it.
+  - Confirm the recipe/content name matches EXACTLY on both phones (Rule 5).
+  - Recalculate every .cart-subtotal against its .line-item-price rows (Rule 11) —
+    see references/subtotal-audit-script.md.
+  - Run the image-quality QA pass (Rule 22 / references/image-qa-checklist.md).
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>UT Stimuli — Dual Phone</title>
+<style>
+  /* ---- Design tokens (Rule 21) — always include the full set ---- */
+  :root {
+    --ic-green: #0AAD0A;        /* Primary CTA, brand accent, success states */
+    --label-ink: #2D4A3E;       /* Section banners, headers, primary text */
+    --ic-bg: #FFFFFF;           /* Phone body background */
+    --row-divider: #E8E8E8;     /* Cart row dividers */
+    --meta-muted: #6B7280;      /* Meta labels, secondary text */
+    --asked-bg: #F3F4F6;        /* Single-row card asked-pane background */
+    --added-bg: #E6F4EA;        /* Single-row card added-pane background */
+    --star-color: #F5A623;      /* Hero-block star rating */
+    --conditional-bg: #FEF3C7;  /* Conditional-question callout background */
+    --conditional-border: #F59E0B; /* Conditional-question callout left border */
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #F5F5F5;
+    margin: 0;
+    padding: 32px;
+    color: var(--label-ink);
+  }
+
+  /* ---- Internal reference banner (Rule 14) — NEVER participant-facing ---- */
+  .internal-ref-banner {
+    background: #111827;
+    color: #FBBF24;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 6px 14px;
+    border-radius: 4px 4px 0 0;
+    display: inline-block;
+  }
+  /* Toggle this on before exporting/screenshotting for fielding. */
+  .fielding-mode .internal-ref-banner { display: none; }
+
+  .stimulus-section { margin-bottom: 56px; }
+
+  .phones-row {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    /* Rule 17: scale so both phones fit without horizontal scroll */
+    flex-wrap: nowrap;
+  }
+
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+  /* ---- Default phone mockup spec (Rule 16) ---- */
+  .phone {
+    width: 340px;               /* scaled down from 393 for side-by-side fit (Rule 17) */
+    aspect-ratio: 393 / 852;
+    background: var(--ic-bg);
+    border-radius: 28px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--row-divider);
+  }
+  .phone-body { padding: 0 14px 14px; overflow-y: auto; flex: 1; }
+
+  /* ---- Hero block (Rule 8) — SOURCE screens only, never on cart/result screens ---- */
+  .hero-block { padding: 14px 0 10px; }
+  .hero-thumb { width: 100%; height: 140px; object-fit: cover; border-radius: 12px; background: #ddd; }
+  .hero-name { font-size: 17px; font-weight: 700; margin: 10px 0 2px; }
+  .hero-meta { font-size: 12.5px; color: var(--meta-muted); } /* Rule 7: Serves N · N ingredients · T min — never reorder */
+  .hero-stars { color: var(--star-color); font-size: 13px; margin-top: 2px; }
+
+  .ingredient-list { list-style: none; margin: 12px 0; padding: 0; }
+  .ingredient-list li { padding: 6px 0; border-bottom: 1px solid var(--row-divider); font-size: 13.5px; }
+
+  .cta-button {
+    width: 100%;
+    background: var(--ic-green);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14.5px;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  /* ---- Cart / result screen (Rule 8 exception) — no hero block, no star rating ---- */
+  .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--row-divider); font-size: 13.5px; }
+  .cart-row .line-item-price { font-weight: 600; }
+  .cart-subtotal { display: flex; justify-content: space-between; padding: 12px 0 4px; font-weight: 700; font-size: 14.5px; margin-top: 4px; }
+
+  /* ---- Image-number labels (Rule 6) — under EVERY phone in multi-image stimuli ---- */
+  .phone-label {
+    text-align: center;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--meta-muted);
+  }
+</style>
+</head>
+<body>
+
+  <!-- ================= TASK 1 (duplicate this whole <section> per task) ================= -->
+  <section class="stimulus-section">
+    <span class="internal-ref-banner"><!-- PLACEHOLDER --> Task 1 · [Recipe/content name] · [what this task tests] </span>
+
+    <!-- Rule 12: no participant-facing caption may name the mechanic. A plain recipe-name
+         or "Here's your cart" line is fine; nothing that pre-labels the failure mode. -->
+
+    <div class="phones-row">
+      <div class="phone-col">
+        <div class="phone">
+          <div class="phone-topbar">‹&nbsp;&nbsp;&nbsp;<!-- PLACEHOLDER -->Recipe Name&nbsp;&nbsp;&nbsp;♡</div>
+          <div class="phone-body">
+            <div class="hero-block">
+              <img class="hero-thumb" src="" alt="" />
+              <div class="hero-name"><!-- PLACEHOLDER: MUST match right phone exactly (Rule 5) -->Classic Buttermilk Pancakes</div>
+              <div class="hero-meta">Serves 4 · 6 ingredients · 20 min</div> <!-- Rule 7: never reorder -->
+              <div class="hero-stars">★★★★☆</div>
+            </div>
+            <ul class="ingredient-list">
+              <li><!-- PLACEHOLDER -->2 cups all-purpose flour</li>
+              <li>2 tbsp sugar</li>
+              <li>1 tbsp baking powder</li>
+            </ul>
+            <button class="cta-button"><!-- PLACEHOLDER: exact wording must match the script prompt verbatim (Rule 13) -->Add all 6 ingredients to cart</button>
+          </div>
+        </div>
+        <div class="phone-label">Image 1<br>Recipe</div>
+      </div>
+
+      <div class="phone-col">
+        <div class="phone">
+          <div class="phone-topbar">‹&nbsp;&nbsp;&nbsp;Your Cart&nbsp;&nbsp;&nbsp;♡</div>
+          <div class="phone-body">
+            <!-- No hero block here — cart/result screens use row layout only (Rule 8 exception) -->
+            <div class="cart-row"><span>All-purpose flour, 2 cups</span><span class="line-item-price" data-price="3.49">$3.49</span></div>
+            <div class="cart-row"><span>Sugar, 2 tbsp</span><span class="line-item-price" data-price="2.19">$2.19</span></div>
+            <div class="cart-row"><span>Baking powder</span><span class="line-item-price" data-price="2.99">$2.99</span></div>
+            <div class="cart-subtotal" data-subtotal="8.67"><span>Subtotal</span><span>$8.67</span></div>
+            <!-- Subtotal MUST equal sum(line-item-price) — see Rule 11 / subtotal-audit-script.md -->
+          </div>
+        </div>
+        <div class="phone-label">Image 2<br>Cart</div>
+      </div>
+    </div>
+  </section>
+  <!-- ================= end Task 1 ================= -->
+
+</body>
+</html>
