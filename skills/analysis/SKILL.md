@@ -9,6 +9,42 @@ description: Use when a UX researcher has interview transcripts, session recordi
 
 Synthesize qualitative research data (interview transcripts, session recordings, open-ended survey responses, diary entries) into rigorous, defensible findings using one of three methodologies: General Affinity Synthesis, Thematic Analysis (Braun & Clarke), or Tagging.
 
+Build the analysis collaboratively, one unit at a time. Anonymize the data first, recommend the fit-for-purpose methodology, approve each parameter and each synthesis unit with the researcher, run both quality checks, and only then produce the deliverable.
+
+## Completion contract
+
+A run is complete only when all of the following are true:
+
+1. The Transcript Quality Audit / PII scrub has run on the raw data **before** any mode-specific analysis.
+2. The researcher has approved the methodology, the output style, and every synthesis unit (each cluster in Mode A, theme in Mode B, or codebook tag group in Mode C).
+3. The self-critique pass (Step 4.5's 12-item Devil's Advocate) and the multi-agent review have both run, with fixes folded in.
+4. When the analysis is being uploaded, the Google Drive destination has been confirmed before the document is created.
+5. The analysis has been produced in the approved output template/style, and — when upload is requested — created through the portable Google Docs path.
+6. A working deliverable has been returned: the verified markdown analysis, or a Google Doc link with verification status.
+
+Both quality checks run before the final deliverable is produced. Drive-destination confirmation must happen before document creation.
+
+Markdown is the completed deliverable only when the researcher does not request an upload; when an upload is requested, markdown is an intermediate representation and the verified Google Doc is the deliverable. A mock or demo stays out of Drive unless the tester explicitly requests a test document.
+
+## Portable deliverable contract
+
+This skill must work for any researcher, not only in one person's configured environment.
+
+- **Native Google Docs is the default deliverable path.** Use the Google Docs tools connected in the current session (create the doc, apply native styles, read it back to verify).
+- Confirm the Google Drive destination with the researcher before creating any document. Never write to a hardcoded personal folder ID.
+- Do not depend on a personal template, custom font, custom palette, private reference document, hardcoded folder, local styling script, command-line utility, or researcher-specific authentication setup for the default path.
+- **Optional Instacart / Jedida variant:** a personal pipeline (e.g. the `gws`/Gohan CLI, `style-gdoc-full.py` / `apply_jedida_reporting.py`, project-specific Drive folder IDs, or CLAUDE.md folder-routing) may be used *only* when it is actually available in the environment and the researcher wants it. It is a clearly-labeled alternative, never the assumed path. Step 5 already gates on this correctly (`command -v gws`, the researcher's own convention, refuses a false success) — preserve that behavior.
+- If no write-capable Docs integration is available, preserve the approved markdown analysis and report that the upload is blocked rather than claiming a doc was created.
+
+## Flow overview
+
+| Section | Work | Completion gate |
+|---|---|---|
+| **1 · Inputs & Framing** | Gather the 5-question intake → run the mandatory Transcript Quality Audit / PII scrub on the raw data → orient the researcher to the 4-section flow → select the analysis mode (pop-up) | Inputs read, data anonymized, mode locked |
+| **2 · Methodology & Style** | Propose the mode-specific methodology, then approve each applicable parameter in its own labeled pop-up (methodology, orientation, theme level, IRR, scope, output style) — conditional steps skipped when the mode doesn't need them | Every applicable parameter approved |
+| **3 · Synthesis** | Draft → approve → lock one unit at a time: per cluster (Mode A) / per theme (Mode B) / per codebook tag group (Mode C), each showing quotes + prevalence + Observation → Insight → Recommendation before locking. Whole-draft override available | Every unit locked (or the whole draft approved via override) |
+| **4 · Quality Gate & Deliverable** | Announce the gate → run the 12-item self-critique (critique half) → run `/multi-agent-check` → fold fixes → confirm Drive destination → produce/upload via the portable Step 5 | Both checks run, fixes folded, deliverable returned |
+
 ## Guiding Philosophy — H.E.A.R.T. (AIxUXR Playbook)
 
 Per Instacart's AIxUXR Playbook, all AI-assisted analysis must be governed by H.E.A.R.T.:
@@ -32,7 +68,7 @@ The Playbook's ladder and critique criteria above aren't Instacart-only conventi
 | Field standard | Source | How this skill enforces it |
 |---|---|---|
 | **Data → Findings → Insights hierarchy** ("the gold-standard framework" for structuring analysis) | Nielsen Norman Group, "Data vs. Findings vs. Insights" | This skill's Observation → Insight → Recommendation ladder (Sharon) is the same hierarchy under different labels: Observation = Findings (a pattern across data points), Insight = the actionable "why + so what" layer. Never present a Finding/Observation as if it were already an Insight — see CONTENT GENERATION RULE 4 |
-| **"What Happened + Why + So What"** insight-writing structure | Nikki Anderson (User Research Academy), Findings → Insights Cheatsheet | Cross-check every crafted insight (Step 2's Truth + Unmet Need + Opportunity) against this structure: What Happened = the finding/observation, Why = participant beliefs/expectations/triggers, So What = business/product impact. If an insight can't answer "so what," it's still a finding — demote it |
+| **"What Happened + Why + So What"** insight-writing structure | Nikki Anderson (User Research Academy), Findings → Insights Cheatsheet | Cross-check every crafted insight (Section 2's Truth + Unmet Need + Opportunity) against this structure: What Happened = the finding/observation, Why = participant beliefs/expectations/triggers, So What = business/product impact. If an insight can't answer "so what," it's still a finding — demote it |
 | **Document the analysis/synthesis process itself, not just its output** | Nikki Anderson, "Create and present an impactful user research case study" — flags that most researchers skip this and treat synthesis as "mysterious" | Every output template's Appendix requires an **Analysis & Synthesis Process** row (see Step 4.5) naming the method used and whether/why debriefs happened between sessions |
 | **A strong insight is observed, not felt, and answers the stated research question** | Google UX Research Certificate, "Analyze and Synthesize" stage | Mirrors this skill's Rule 3 (separate observation from interpretation) and the requirement that every output template states the Research Question up front — insights are graded against it, not against general interestingness |
 | **Insights should be prioritized by reach/impact, not listed flat** | Cross-corroborated (Torresburriel Estudio, Smashing Magazine, dscout) | Formalized as Self-Critique check #11 below — applies across all 3 modes, not just Mode A's existing Insight → Recommendation Map |
@@ -62,15 +98,32 @@ Use this skill when the researcher needs to:
 
 ---
 
-## Step 1: Gather Inputs & Select Mode
+## Interaction contract
 
-Ask the researcher for inputs, then use **AskUserQuestion** to pick a mode.
+Use native `AskUserQuestion` checklist pop-ups when available.
 
-**If AskUserQuestion isn't available in the current environment** (it isn't wired into every context this skill can run in), ask the same question as plain text in the conversation and wait for the researcher's reply before proceeding — every gate in Steps 1, 3, and 3.5 that says "use AskUserQuestion" degrades to this. Never guess an answer or skip a gate just because the tool is missing.
+- Ask one decision per pop-up.
+- **Use `multiSelect: true` where multiple items legitimately apply** — synthesis units and their contents (which quotes, findings, and recommendations to keep), tags/themes, and stakeholder lists. **Keep single-select for genuinely exclusive choices** — analysis mode, methodology approval, orientation, theme level, IRR approach, scope, and output-style variant. Do not force single-select onto a decision where the researcher should be able to keep several items, and do not offer multiSelect on a truly either/or choice.
+- Number the options. Mark a **Recommended** option based on the data and the discovered evidence.
+- Preserve the built-in **Other / comments** field so researchers can add, correct, or rewrite.
+- Show the proposed content before asking for approval.
+- **The last option in every pop-up must be "Brainstorm with me"** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. Never bury it mid-list.
+- Label every pop-up with its section and step: **"Section 2 > Step 3 of 5: Theme Level"**. The researcher must always know exactly where they are.
+- Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Section 3.
 
-**Before processing any pasted or uploaded data — regardless of which mode you'll end up in:** run the Transcript Quality Audit (PII scrub, speaker-label normalization, consent/provenance check — table under Mode A, Step 2) first. Don't wait until a mode-specific methodology step to anonymize; raw names/emails shouldn't sit in the conversation any longer than it takes to redact them. This applies to Thematic and Tagging data just as much as General Synthesis.
+If native pop-ups are unavailable, state **"Inline fallback — native checklist unavailable in this environment"** and reproduce the same numbered options and selection instructions in chat. Do not silently substitute an unlabeled prose question.
 
-### 1.1 Gather data
+The number of options per pop-up should match the content — no fixed cap. Show all relevant items; if there are many, show the most important ones first and include an "Other / see more" slot.
+
+---
+
+## Section 1 — Inputs & Framing
+
+Gather the intake, anonymize the data, orient the researcher, then select the mode. This section has three steps: **Step 1 · Gather inputs** (plain-text intake), **Step 2 · Transcript Quality Audit / PII scrub** (mandatory pre-processing, no pop-up), and **Step 3 · Select analysis mode** (pop-up, single-select).
+
+**If AskUserQuestion isn't available in the current environment** (it isn't wired into every context this skill can run in), ask the same question as plain text in the conversation and wait for the researcher's reply before proceeding — every gate across Sections 1–4 that says "use AskUserQuestion" degrades to this (state the inline-fallback line from the Interaction contract). Never guess an answer or skip a gate just because the tool is missing.
+
+### 1.1 Gather data — Step 1
 
 Ask what data is being analyzed:
 
@@ -91,22 +144,55 @@ Accept any format: pasted text, Google Doc URLs, local file paths, Dovetail/Dsco
 
 If Google Doc URLs are provided, read them via Glean's document-read tool (e.g. `mcp__glean__read_document` — confirm the exact connected tool name in your environment, server prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available.
 
-### 1.2 Select mode
+### 1.2 Transcript Quality Audit / PII scrub — Step 2 (mandatory, before the mode branch)
 
-Use **AskUserQuestion** with one question:
+**Before processing any pasted or uploaded data — regardless of which mode you'll end up in:** run the Transcript Quality Audit (PII scrub, speaker-label normalization, consent/provenance check — the "Pre-summarization: Transcript Quality Audit" table under Mode A in Section 2, Step 2.1). Don't wait until a mode-specific methodology step to anonymize; raw names/emails shouldn't sit in the conversation any longer than it takes to redact them. This applies to Thematic and Tagging data just as much as General Synthesis. This is a processing step, not a pop-up — no approval gate, but it must complete before Step 3.
+
+### Orient the researcher (say this in chat before the mode pop-up)
+
+Once inputs are read and the data is anonymized, tell the researcher how the whole run works and that we advance only on approval:
+
+> Thanks — I have your data and context, and I've scrubbed PII from the raw data. Here's how we'll work: I'll recommend a methodology, then we'll build the analysis together, one step at a time.
+>
+> **We'll work in four sections:**
+>
+> **Section 1 — Inputs & Framing** *(what we have)*
+> Gather inputs · Transcript Quality Audit / PII scrub · Select analysis mode
+>
+> **Section 2 — Methodology & Style** *(how we'll analyze)*
+> Methodology · Orientation · Theme level · IRR · Scope · Output style *(only the steps your mode needs)*
+>
+> **Section 3 — Synthesis** *(the findings)*
+> One unit at a time — each cluster / theme / tag group drafted, reviewed, and locked before the next
+>
+> **Section 4 — Quality Gate & Deliverable** *(checks, then hand-off)*
+> Self-critique · Multi-agent review · Fold fixes · Confirm Drive · Produce/upload
+>
+> For each step I'll show you what I've drafted — you can accept it, pick what to keep, or brainstorm with me to refine it. We move to the next step only after you approve the current one.
+>
+> Starting with **Section 1 > Step 3 — Select analysis mode.**
+
+### 1.3 Select mode — Step 3
+
+Use **AskUserQuestion** with one question. Pop-up label: **"Section 1 > Step 3 of 3: Select Analysis Mode"**. Single-select (the mode is an exclusive choice). Last option: **"Brainstorm with me"**.
 
 **Question — Which analysis mode?**
 
 Options:
-- **General Affinity Synthesis (Recommended for fast turnaround)** — "Cluster observations into patterns, extract insights, write recommendations. Best for 5-10 sessions, <1 week timeline."
-- **Thematic Analysis (Braun & Clarke)** — "Rigorous 6-phase process producing defensible themes with illustrative quotes and theoretical memos. Best for 10-30 interviews, academic or high-stakes findings."
-- **Tagging** — "Apply a tag schema (deductive, inductive, or hybrid) across a large corpus. Produces a codebook and frequency table. Best for 30+ transcripts or 200+ survey opens."
+1. **General Affinity Synthesis (Recommended for fast turnaround)** — "Cluster observations into patterns, extract insights, write recommendations. Best for 5-10 sessions, <1 week timeline."
+2. **Thematic Analysis (Braun & Clarke)** — "Rigorous 6-phase process producing defensible themes with illustrative quotes and theoretical memos. Best for 10-30 interviews, academic or high-stakes findings."
+3. **Tagging** — "Apply a tag schema (deductive, inductive, or hybrid) across a large corpus. Produces a codebook and frequency table. Best for 30+ transcripts or 200+ survey opens."
+4. **Brainstorm with me**
 
 If the researcher is unsure, recommend based on volume: ≤10 sessions → General; 10-30 interviews → Thematic; 30+ or survey opens at scale → Tagging.
 
+After the mode is locked, say: *"Mode locked. Section 1 — Inputs & Framing is complete. Moving on to Section 2 — Methodology & Style."*
+
 ---
 
-## Step 2: Propose Methodology
+## Section 2 — Methodology & Style
+
+### Step 2.1 · Propose the methodology
 
 Branch based on the mode selected. Each branch proposes a concrete methodology tailored to the data, then presents it in a structured summary.
 
@@ -308,46 +394,42 @@ For tagging at scale, layer these on top of standard IRR (Cohen's κ):
 
 ---
 
-## Step 3: Researcher Reviews & Approves
+### Step 2.2 · Approve each methodology parameter — one decision per pop-up
 
-Present the proposed methodology as a structured summary. Then use **AskUserQuestion** to confirm in batches of up to 4 questions.
+Present the proposed methodology as a structured summary first, then approve it parameter by parameter — **one decision per pop-up**, each with its own section/step label. These are exclusive choices, so each is **single-select** with **"Brainstorm with me"** as the last option.
 
-### Batch 1 — Methodology approval
+**Determine M before the first pop-up.** Count only the steps that apply to the selected mode, and use that count as M in every label. Skip an inapplicable step entirely — never show an empty pop-up. The applicable steps by mode:
 
-**Question 1 — Methodology**
-- Options: "Approve as proposed" (Recommended), "Adjust one parameter", "Start over with a different mode"
+| Step | Pop-up | Applies to | M contribution |
+|---|---|---|---|
+| Methodology approval | *Approve as proposed / Adjust one parameter / Start over with a different mode* | All modes | always |
+| Orientation | *Inductive / Deductive / Hybrid* (mark the recommendation) | Thematic or Tagging | conditional |
+| Theme level | *Semantic (surface-level) / Latent (interpretive) / Both* | Thematic only | conditional |
+| IRR | *Single coder (no IRR) / Multi-coder with Cohen's κ / Multi-coder with % agreement only* | Tagging + multi-coder | conditional |
+| Scope | *Analyze all data (Recommended) / Sample N transcripts first / Pilot with 2-3 then review* | All modes | always |
+| Output style | *see Step 2.3* | All modes | always |
 
-**Question 2 — Orientation** (if Thematic or Tagging)
-- Options: Inductive, Deductive, Hybrid (with Claude's recommendation marked)
+So M is **3 for Mode A** (Methodology, Scope, Output style), **5 for Mode B** (Methodology, Orientation, Theme level, Scope, Output style), and **4–5 for Mode C** (Methodology, Orientation, [IRR if multi-coder], Scope, Output style).
 
-**Question 3 — Theme level** (if Thematic only)
-- Options: Semantic (surface-level), Latent (interpretive), Both
+Label each pop-up accordingly, e.g. **"Section 2 > Step 1 of 5: Methodology"**, **"Section 2 > Step 2 of 5: Orientation"**, **"Section 2 > Step 3 of 5: Theme Level"**, then Scope, then Output style. Announce each transition after a step locks (e.g. *"Orientation locked. Moving on to Theme Level."*). Do not advance until the current parameter is approved.
 
-**Question 4 — IRR** (if Tagging + multi-coder)
-- Options: Single coder (no IRR), Multi-coder with Cohen's κ, Multi-coder with % agreement only
+Each pop-up's options are numbered, with a **Recommended** marker and **"Brainstorm with me"** last. Preserve the Other / comments field so the researcher can adjust a single parameter without starting over.
 
-### Batch 2 — Scope and format (if needed)
+### Step 2.3 · Style reference (REQUIRED before generating) — last step of Section 2
 
-**Question 5 — Scope**
-- Options: "Analyze all data" (Recommended), "Sample N transcripts first", "Pilot with 2-3 then review"
-
-**Question 6 — Final check**
-- Options: "Looks good, let's pick a style!" (Recommended), "I want to adjust the output format", "I want to add more context"
-
----
-
-## Step 3.5: Style Reference (REQUIRED before generating)
-
-After methodology is approved, ask for an output style reference. Use **AskUserQuestion**:
+After every methodology parameter is approved, ask for an output style reference. Use **AskUserQuestion**. Pop-up label: **"Section 2 > Step [M] of [M]: Output Style"**. Single-select (the style variant is an exclusive choice). Last option: **"Brainstorm with me"**.
 
 **Question — Output Style**
 
 > "One last thing before I generate your analysis — I want to make sure the output matches your preferred style and format."
 
 Options:
-- **"I'll share a reference doc"** — "I have a previous synthesis doc, theme report, or codebook I'd like you to match."
-- **"Use the default Instacart template" (Recommended)** — "Use the standard 2-column layout with section bars, RACI header, and structured tables."
-- **"Just give me a clean outline"** — "Simple headers and bullets, no tables or heavy formatting."
+1. **"I'll share a reference doc"** — "I have a previous synthesis doc, theme report, or codebook I'd like you to match."
+2. **"Use the default 2-column template" (Recommended)** — "Use the standard 2-column layout with section bars, RACI header, and structured tables (the OUTPUT TEMPLATE for your mode below)."
+3. **"Just give me a clean outline"** — "Simple headers and bullets, no tables or heavy formatting."
+4. **"Brainstorm with me"**
+
+After output style is locked, say: *"Output style locked. Section 2 — Methodology & Style is complete. Moving on to Section 3 — Synthesis."*
 
 **If the researcher shares a reference doc:**
 
@@ -369,19 +451,19 @@ Options:
    >
    > Does that capture your style? Anything to adjust?"
 
-5. Generate the output matching their style.
+5. Apply their style when you generate the synthesis in Section 3.
 
 **If the researcher picks the default template:**
-- Use the appropriate OUTPUT TEMPLATE below (one per mode)
+- Use the appropriate OUTPUT TEMPLATE below (one per mode) when generating in Section 3
 
 **If the researcher picks "clean outline":**
 - Use simple markdown: H2 per theme/cluster/tag, bullet lists, blockquote quotes. No tables.
 
 ---
 
-## Step 4: Execute Analysis
+## Section 3 — Synthesis
 
-Generate the analysis based on mode + approved methodology + chosen style.
+Build the analysis based on mode + approved methodology + chosen style — but **do not generate the whole deliverable in one shot.** Draft, approve, and lock **one synthesis unit at a time**, so the researcher stays the author of every finding (H.E.A.R.T. "Amplifying" — lead the dance).
 
 **Methodology reference:** For detailed execution of each mode, load `references/analysis-methodology.md`:
 - Braun & Clarke's 6-phase walkthrough with worked example
@@ -389,6 +471,41 @@ Generate the analysis based on mode + approved methodology + chosen style.
 - Inter-rater reliability (Cohen's κ) formula and interpretation
 - Theme vs topic summary pitfall with corrected examples
 - Ladder of inference for General Synthesis
+
+### Step-by-step synthesis: draft → approve → lock, one unit at a time
+
+The **unit** depends on the mode:
+
+| Mode | Synthesis unit (one pop-up each) |
+|------|----------------------------------|
+| **A · General Affinity Synthesis** | one **cluster** |
+| **B · Thematic Analysis** | one **theme** |
+| **C · Tagging** | one **codebook tag group** (a parent tag and its children) |
+
+First do the analytical work internally (cluster / develop themes / build the codebook against the approved methodology). Then, once you know how many units there are, set **M = number of units** and walk them one at a time:
+
+1. **Show the draft first.** For each unit, show its illustrative quotes + prevalence (`X of Y participants`) + the **Observation → Insight → Recommendation** ladder (Mode A/B) or the tag's definition + inclusion/exclusion + example + frequency (Mode C) — before asking for approval.
+2. **Approve / pick / brainstorm.** Pop-up label: **"Section 3 > Step N of M: Cluster/Theme/Tag group — [name]"**. Use **`multiSelect: true`** — within a unit, multiple quotes, sub-findings, and recommendations legitimately apply, so the researcher can keep several. Number the options; mark a **Recommended** set; keep the Other / comments field. Last option: **"Brainstorm with me"** — refine that unit in chat, then re-show the revised draft for approval before locking.
+3. **Lock, then announce the transition.** After approval, say e.g. *"Cluster 2 locked. Moving on to Cluster 3."*
+4. **Keep a visible approved/pending checklist** so the researcher always sees which units are locked and which remain.
+
+After the last unit locks, say: *"All units locked. Section 3 — Synthesis is complete. Moving on to Section 4 — Quality Gate & Deliverable."*
+
+**Whole-draft override:** if the researcher explicitly asks for the entire synthesis at once (e.g. *"just draft the whole thing and I'll review it"*), skip the unit-by-unit pop-ups — but still show the complete draft for a single approval before advancing, then run every Section 4 step (self-critique, multi-agent review, Drive confirmation, deliverable).
+
+### Stakeholder / RACI verification (before writing any name)
+
+Every output template carries a RACI-style header (Responsible / Consulted / Informed), and recommendations name owners. Before writing any person's name into that header or an owner field, verify the name is current using the directory / people-search tool. Stored context and project files go stale (someone may have left or changed roles). If there is any doubt about who belongs in a role, ask the researcher directly: *"I have [Name] as [Role] — is that still right?"* Never carry a name forward from memory or a stale file without a live check.
+
+*Current-session caveat:* the people-directory and Glean MCPs may require auth in this environment. If people-search is unavailable, do not guess — mark the role `[TBD — verify]` and ask the researcher to confirm the name.
+
+### Mock / test-artifact warning
+
+If the inputs are invented, simulated, or a demo, place this line directly under the RACI header of the output. Treat any invocation described as a test, pressure scenario, regression, example, fixture, mock, or demo as simulated even when the data sounds realistic; omit the warning only when the researcher confirms it is a real study.
+
+> ⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.
+
+Keep it prominent in every rendered option, and keep any mock/test analysis out of Google Drive unless the tester explicitly asks for a test document.
 
 ### Execution principles (all modes)
 
@@ -622,9 +739,23 @@ Last updated: [Month Year]
 
 ---
 
-## Step 4.5: Playbook-Specific Self-Critique (MANDATORY before delivery)
+## Section 4 — Quality Gate & Deliverable
 
-Before presenting the analysis to the researcher, run the AIxUXR Playbook's Devil's Advocate critique on your own output. This is the internal QA gate — a systematic pass against methodological, evidentiary, and communicative criteria. It is not optional. Per the AIxUXR System Prompt, the AI must label confidence (High / Medium / Low) and flag any findings it cannot support.
+Once every synthesis unit is locked (end of Section 3), set expectations before running the gate. Say in chat:
+
+> All units are approved — I now have everything I need. Here's what I'll do before I hand you the final analysis:
+>
+> 1. **Run a critique pass** — the AIxUXR Devil's Advocate self-critique that pressure-tests the analysis for gaps, weak evidence, and unsupported claims.
+> 2. **Run the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel.
+> 3. **Then I'll produce your [synthesis doc / theme report / codebook]** — formatted in your approved style, and uploaded to your confirmed Drive folder if you want it there.
+>
+> Running the critique and multi-agent checks now — I'll fold in any fixes before the deliverable is produced.
+
+The deliverable is produced **last**, after both checks. The order is **locked units → self-critique (Step 4.5) → multi-agent review → fold fixes → confirm Drive → produce/upload (Step 5)**. Never call the analysis final before both checks have run.
+
+### Step 4.5: Playbook-Specific Self-Critique (the critique half — MANDATORY before delivery)
+
+This is the **critique half** of the quality gate — run the AIxUXR Playbook's Devil's Advocate critique on your own output. Use the existing 12-item checklist below as-is; do not rebuild it. This is the internal QA gate — a systematic pass against methodological, evidentiary, and communicative criteria. It is not optional. Per the AIxUXR System Prompt, the AI must label confidence (High / Medium / Low) and flag any findings it cannot support.
 
 ### Analysis-output self-critique checklist
 
@@ -657,29 +788,55 @@ Per H.E.A.R.T. Transparency, include a brief **Self-Critique Summary** section i
 
 **Audience-based placement (per Step 1.1's stakeholder-audience answer):** For an internal/researcher-facing output, include the full graded table inline. For a PM/VP/exec-facing deliverable, don't ship a letter-graded table of the AI's own performance (hallucination-scan grades, exhaustiveness grades, etc.) to that audience — it reads as an internal QA artifact, not a finding, and can undermine confidence in the doc for the wrong reasons. Instead: keep the full graded table in an internal note for your own records, and fold only the *substance* the audience actually needs — the overall confidence label and any real limitation behind it (e.g., "draft not yet human-validated," "small N," "secondary read") — into the Limitations row and the Executive Summary's Confidence line.
 
----
+### Step 4.6: Multi-agent review (the second half of the gate — automatic, before the deliverable)
 
-## Step 5: Offer Google Docs Upload
+Run the multi-agent review on the fixed analysis content — before the deliverable is produced. This is automatic; do not ask permission. The researcher was already told this is coming (the gate announcement at the top of Section 4).
 
-After generating the analysis, ask:
+- Say in chat: *"Running the multi-agent review now — several independent reviewers check the analysis for inconsistencies and problems in parallel."*
+- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate.
+- If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass (Step 4.5).
+- Fold any confirmed fixes into the analysis before producing the deliverable.
+
+The expected sequence is **locked units → self-critique → multi-agent → fixes → produce/upload the deliverable → share**. Never describe the analysis as final before both checks have run.
+
+### Step 4.7: Confirm the Drive destination (before any document is created)
+
+If the analysis will be uploaded, confirm the destination **before** creating the doc (see the Portable deliverable contract):
+
+1. Infer the exact Drive folder from the supplied project context when possible.
+2. Confirm it plainly: **"I'm going to create the analysis in [folder/link]. Is that the right destination?"**
+3. If no destination is known, ask: **"Which Google Drive folder should this analysis live in?"**
+4. Write only to the confirmed folder. Never use a hardcoded personal folder ID.
+5. For a mock or demo, do not create a Drive artifact unless the tester explicitly asks for one.
+
+### Step 5: Produce & (optionally) upload the deliverable
+
+Produce the analysis in the approved output template/style. Then offer the upload — **native Google Docs is the default path** (use the Google Docs tools connected in the current session). The personal `gws`/Gohan pipeline is the **optional Instacart / Jedida variant**, used only when it is actually available and the researcher wants it.
+
+Ask:
 
 > "Your analysis is ready! Would you like me to upload it to Google Docs?"
 
 If yes:
-1. **Check what's actually available before assuming a tool works.** Different researchers have different upload tooling configured (a `md2doc`/`gws-docs` skill, a CLI on PATH, or nothing at all). Confirm the tool exists and is callable in this environment (e.g. `command -v gws`, or check the installed skill list) rather than invoking it blind. If nothing usable is found, say so plainly and ask the researcher how they'd like to proceed (e.g., paste the markdown into a blank Google Doc themselves, or fix the tooling first) — don't silently fail or claim a successful upload that didn't happen.
+1. **Check what's actually available before assuming a tool works.** Prefer the session's connected native Google Docs tools. Different researchers have different upload tooling configured (native Docs tools, a `md2doc`/`gws-docs` skill, a CLI on PATH, or nothing at all). Confirm the tool exists and is callable in this environment (e.g. `command -v gws`, or check the installed skill list) rather than invoking it blind. If nothing usable is found, say so plainly and ask the researcher how they'd like to proceed (e.g., paste the markdown into a blank Google Doc themselves, or fix the tooling first) — don't silently fail or claim a successful upload that didn't happen.
 2. **Fix subscript formatting (MANDATORY, if the upload path renders markdown via `<br>` tags)** — this pattern is known to turn `<br>`-separated content into SUBSCRIPT formatting that makes text tiny. After upload, scan the doc via the Google Docs API for all `baselineOffset == 'SUBSCRIPT'` ranges and reset them to `'NONE'`. Do this BEFORE styling.
 3. **Apply styling per the researcher's own convention, if they have one** (many researchers maintain a personal or team doc-styling system — check their CLAUDE.md, a team wiki, or ask). Only fall back to a generic clean default (clear headers, consistent table formatting) if no such convention is documented — never assume a single hardcoded "default template" script is the right one for every researcher on the team.
-4. **Place in the correct Google Drive project folder using the researcher's own routing convention**, if they have one (ask if unclear). Don't hardcode a fixed list of project numbers/names here — folder structures vary by researcher and team and go stale fast.
-5. Share the Google Doc link.
+4. **Place in the confirmed Google Drive folder (from Step 4.7), using the researcher's own routing convention** if they have one. Don't hardcode a fixed list of project numbers/names here — folder structures vary by researcher and team and go stale fast.
+5. Share the Google Doc link, and state verification status (content complete, formatting checked, links checked).
+
+If the analysis is not being uploaded, the verified markdown analysis is the deliverable — return it and state that it passed both quality checks.
 
 ---
 
 ## Tool usage
 
-- **AskUserQuestion** — mode selection, methodology approvals, style reference, final checks. If unavailable in this environment, degrade to plain-text questions (see Step 1)
+- **AskUserQuestion** — mode selection (Section 1), methodology approvals (Section 2), style reference (Section 2), per-unit synthesis approvals (Section 3). If unavailable in this environment, degrade to plain-text questions per the Interaction contract's inline-fallback line
+- **Directory / people-search tool** — verify current stakeholder identities before writing any name into a RACI header or owner field (Section 3). May require auth in this session; if unavailable, mark `[TBD — verify]` and ask the researcher rather than guessing
+- **`/multi-agent-check`** — the parallel review half of the quality gate (Step 4.6). Check the live skill list; invoke when installed, disclose and continue on the critique-only pass when not
+- **Native Google Docs tools (default deliverable path)** — create the doc in the confirmed Drive folder, apply native styles, read it back to verify. Prefer these over any personal CLI
 - **Glean's document-read tool** (e.g. `mcp__glean__read_document` — confirm the exact connected tool/server name in your environment; prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available — reading Google Doc inputs (transcripts, reference docs)
 - **Read tool** — reading local transcript files
-- **A Google Docs upload path, if the researcher has one configured** (e.g., a `md2doc`/`gws-docs` skill or script) — uploading the final analysis. Confirm it's actually available (on PATH, or callable as an installed skill) before relying on it; don't assume a specific tool name works in every environment
+- **Optional personal upload path (Instacart / Jedida variant), if the researcher has one configured** (e.g., a `md2doc`/`gws-docs` skill, the `gws`/Gohan CLI) — only when the native path isn't preferred and the tool is actually available. Confirm it's callable (on PATH, or as an installed skill) before relying on it; don't assume a specific tool name works in every environment
 - **references/analysis-methodology.md** — load on demand for Braun & Clarke 6-phase walkthrough, tag schema patterns, IRR calculation
 
 ## Complementary skills

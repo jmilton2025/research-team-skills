@@ -62,23 +62,83 @@ Every report opens with a BLUF: three sentences answering what we learned, what 
 **Bad** (process-led): "This study ran 4 weeks with 12 participants using unmoderated remote testing."
 **Good** (answer-led): "Shoppers cannot identify brands on our PDP — 7 of 10 failed the brand-recall task. This suppresses private-label repeat purchase (est. $X impact). Recommend moving brand badge above product title this sprint."
 
+## Completion contract
+
+A run is complete only when all of the following are true:
+
+1. Report inputs have been gathered, and any referenced source material has been read (or the researcher has pasted it in).
+2. The primary-audience variant has been picked and the structure and style approved.
+3. The researcher has approved every applicable content item — each finding, each insight, each recommendation — one at a time (unless the whole-draft override was explicitly invoked).
+4. The critique pass (Report Critic self-critique) and the multi-agent review have both run, with fixes folded in.
+5. The deliverable destination has been confirmed. **Polished markdown is a valid final deliverable here** — a Google Doc upload is offered, not required. If a Doc is created, the Drive destination is confirmed first.
+6. The final deliverable has been produced **last** — after both quality checks — and handed back: the polished markdown, and a working Google Doc link when upload was chosen, with verification status.
+
+Both quality checks run before the final report is produced. When a Google Doc is created, Drive destination confirmation must happen before document creation.
+
+Markdown is a valid final deliverable — unlike a research plan, this skill does not require a Google Doc. A mock or demo is labeled per the test-artifact conventions and stays out of Drive unless the tester explicitly asks for a test document.
+
+## Flow overview
+
+| Step | Work | Completion gate |
+|---|---|---|
+| **1** | Gather inputs (study name, audience, method, source material, key findings, evidence, draft recs, open questions) → announce the 4-section structure to the researcher | Inputs received; researcher understands the full workflow |
+| **2** | **Section 1 — Setup & Framing:** propose structure from the primary-audience variant (single-select) | Structure proposed |
+| **3** | Researcher reviews & approves the structure | Structure approved |
+| **3.5** | Confirm output style | Style confirmed |
+| **3.6** | Confirm authorship / Responsible (verify names via people-search) → draft & lock the BLUF | Section 1 locked |
+| **4** | **Section 2 — Findings & Evidence**, **Section 3 — Insights**, **Section 4 — Recommendations & Business Case**: draft → approve → lock, one item at a time; transition announced after each lock | All content items approved across all three sections |
+| **5** | Assemble the approved content into the intermediate draft | Content complete; mock/test warning applied when relevant |
+| **6** | Auto-run the Report Critic self-critique (announced at end of Section 4) | Gaps fixed or explicitly accepted |
+| **7** | Auto-run the multi-agent review on the fixed content — before the deliverable | Review complete; confirmed fixes folded in |
+| **8** | Produce the final deliverable last: confirm destination, polished markdown, and — if chosen — a formatted Google Doc read back and verified | Deliverable returned with status |
+
+## Interaction contract
+
+Use native `AskUserQuestion` checklist pop-ups when available.
+
+- Ask one decision per pop-up.
+- **Use `multiSelect: true` where multiple items legitimately apply** — findings to include, quotes/evidence, insights, recommendations, stakeholders to Consult/Inform, and open questions. **Keep single-select only for the one genuinely exclusive choice in this skill — the primary-audience variant** (Executive / Product-PM / Engineering / Research-team): a report is written for one primary audience.
+- Number the options. Mark a **Recommended** option based on the inputs and the audience.
+- Preserve the built-in **Other / comments** field so the researcher can add, correct, or rewrite.
+- Show the proposed content before asking for approval.
+- **The last option in every pop-up must be "Brainstorm with me"** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. Never bury it mid-list.
+- Label every pop-up with its section and step: **"Section 2 > Step 2 of 4: Finding 2"**. The researcher must always know exactly where they are.
+- Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override (see Step 4).
+
+If native pop-ups are unavailable, state **"Inline fallback — native checklist unavailable in this environment"** and reproduce the same numbered options and selection instructions in chat. Do not silently substitute an unlabeled prose question. This is the canonical fallback for every pop-up site in this skill (Steps 1, 2, 3, 3.5, 3.6, and each content step in Step 4).
+
+The number of options per pop-up should match the content — no fixed cap. Show all relevant items; if there are many, show the most important ones first and include an "Other / see more" slot.
+
+## Portable deliverable contract
+
+This skill must work for any researcher, with or without a personal Google Docs pipeline.
+
+- **Native Google Docs is the default deliverable path.** When the researcher wants a Doc, create and format it with the Google Docs / Drive tools connected in the current session, using standard Docs styles.
+- **Polished markdown is a valid final deliverable.** Upload is offered, not required — if the researcher declines a Doc, the markdown is the finished output.
+- **Confirm the Drive destination before creating any Doc.** Never write to a hardcoded folder.
+- For the default path, do not depend on a personal template, custom font, custom palette, private reference document, hardcoded folder ID, local styling script, command-line utility, or researcher-specific authentication.
+- **Optional Instacart / Jedida variant (preserved, not required):** Jedida's personal pipeline — the `gws`/Gohan CLI, `style-gdoc-full.py` / `apply_jedida_reporting.py`, and the CLAUDE.md project-folder routing table — is available as a clearly-labeled alternative for that specific environment. Use it only when the researcher is on that setup and asks for it; otherwise use the native default. Full steps are preserved in Step 8.
+- If no write-capable Docs integration is available and a Doc was requested, preserve the approved markdown and report that the upload is blocked. The markdown still stands as the deliverable.
+
 ## System instructions
 
-### Step 1: Gather Report Inputs
+### Step 1: Gather Report Inputs and Orient the Researcher
 
 Ask the researcher for the raw material. Accept any format: Google Doc URL, pasted notes, Slack paste, bullet list, voice-memo transcript. Use AskUserQuestion in batches of up to 4.
 
-**If AskUserQuestion isn't available in this session** (e.g., a non-interactive or subagent context), ask the same questions conversationally instead: post them as one clearly numbered list per batch (still ≤4 at a time) and wait for the reply. This fallback applies at every AskUserQuestion call site in this skill (Steps 1, 2, 3, 3.5) — it isn't repeated at each one.
+**If AskUserQuestion isn't available in this session** (e.g., a non-interactive or subagent context), ask the same questions conversationally instead: post them as one clearly numbered list per batch (still ≤4 at a time) and wait for the reply. This is the same inline fallback defined in the interaction contract, and it applies at every AskUserQuestion / pop-up call site in this skill (Steps 1–4) — it isn't repeated at each one.
 
 **Before asking anything, check what's already been given.** If the requester's initial message already answers a question (study name, audience, method, findings, quotes, draft recs), don't re-ask it — only batch questions for what's genuinely missing. A dense one-message brain-dump is the common case; walking through all 8 questions anyway wastes the requester's time.
 
-**Authorship check:** If the person driving this conversation is not the researcher who ran the study (a PM or designer relaying someone else's finished analysis is a normal, supported case), confirm the named researcher for the "Responsible" field rather than defaulting to whoever is typing. Note in the delivery message (Step 4.5) that the named researcher should review and sign off before this ships as final — "Responsible" should never imply a review that didn't happen.
+**Authorship check:** If the person driving this conversation is not the researcher who ran the study (a PM or designer relaying someone else's finished analysis is a normal, supported case), confirm the named researcher for the "Responsible" field rather than defaulting to whoever is typing. Note in the delivery message (Step 8) that the named researcher should review and sign off before this ships as final — "Responsible" should never imply a review that didn't happen.
+
+**People-search verification for RACI / stakeholder names:** Before carrying any name into the Responsible / Consulted / Informed block, verify it is current using the directory / people-search tool. Stored context and project files go stale (a named team member may have left or changed roles). If there is any doubt about who belongs in a role, ask the researcher directly: *"I see [Name] listed as [Role] — is that still accurate?"* Never trust a name from memory or a stale file without a live check. *(Current-session caveat: the people / Glean MCPs may require auth and may be unavailable in this session — if so, say the live check could not run and confirm each name with the researcher instead of assuming.)*
 
 **Batch 1 — Study basics:**
 
 **Q1 — Study name/title** (short, e.g., "Private-label PDP brand recall")
 
-**Q2 — Primary audience**
+**Q2 — Primary audience** *(single-select — a report has one primary audience variant; mixed-audience handling is noted below)*
 - **Executive** (C-suite, skip-levels, VP+) — 1-2 pages, BLUF, 3-5 top findings, single ask
 - **Product / PM** (Recommended for most studies) — 8-15 pages, full methodology, prioritized rec table
 - **Engineering** — behavior-first, failure modes, edge cases, priority matrix
@@ -106,9 +166,33 @@ Ask the researcher for the raw material. Accept any format: Google Doc URL, past
 
 **Don't fabricate what wasn't asked for.** The templates in Step 4 have fields these 8 questions don't explicitly prompt for — a named owner per recommendation, the OKR/PRD name for Business Framing, fielded start/end dates, links for Discussion Guide/Coded Data. If the researcher's answers don't cover one, either ask a brief follow-up or mark it explicitly as unresolved (e.g., "[Owner not provided — flag for researcher]") rather than inventing a plausible-sounding value.
 
-### Step 2: Propose Report Structure
+**Orient the researcher (say this in chat once inputs are received):**
 
-Based on the audience from Q2, propose the structure and confirm before generating. Branch by audience:
+> Thanks — I've got what I need to start. We'll build this report together, one step at a time, and only move to the next step once you've approved the current one.
+>
+> **We'll work in four sections:**
+>
+> **Section 1 — Setup & Framing** *(who this is for and how it opens)*
+> Primary audience & structure · Output style · Authorship / Responsible · The BLUF (bottom line up front)
+>
+> **Section 2 — Findings & Evidence** *(what we saw)*
+> Each finding, past-tense, with its primary evidence — approved one finding at a time
+>
+> **Section 3 — Insights** *(so what)*
+> The interpretation of the findings, present-tense — *(in the Executive variant this folds into the Bottom Line rather than standing alone)*
+>
+> **Section 4 — Recommendations & Business Case** *(now what)*
+> Prioritized, owned recommendations with business framing · Next Steps & Open Questions
+>
+> For each step I'll show you a draft — you can accept it, pick what to keep, or brainstorm with me to refine it. Once everything's approved, I'll run a critique pass and a multi-agent review, fold in the fixes, and only then produce your report.
+>
+> If you'd rather see the whole thing drafted at once instead of step-by-step, just say so.
+>
+> Starting with **Section 1 — Setup & Framing.**
+
+### Step 2: Section 1 — Setup & Framing: Propose Report Structure
+
+Based on the audience from Q2, propose the structure and confirm it before drafting any content. Branch by audience:
 
 #### Executive variant (1-2 pages)
 ```
@@ -126,7 +210,7 @@ Executive and Product-PM readouts often start life as slide decks or end up need
 | Scenario | Convert to | Why |
 |----------|-----------|-----|
 | Researcher has a slide deck, audience now wants a durable doc | **Reference Guide format** (this skill's default) | Slides are ephemeral; a reference guide becomes a source-of-truth for future PMs, ENG, and onboarding new researchers. Distill, don't recap slide-by-slide. |
-| Researcher has this markdown report, audience is a live exec review | **Slide deck** (same `gws` CLI pattern as Step 5's Google Docs upload, targeting the Slides API instead of Docs — no dedicated slide-export script exists in this skill yet, so verify the exact subcommand before relying on it) | Execs in live meetings scan visuals, not paragraphs. Keep BLUF as slide 1, one finding per slide, rec table as appendix. |
+| Researcher has this markdown report, audience is a live exec review | **Slide deck** (same optional `gws` CLI pattern as Step 8.3's Google Docs upload, targeting the Slides API instead of Docs — no dedicated slide-export script exists in this skill yet, so verify the exact subcommand before relying on it) | Execs in live meetings scan visuals, not paragraphs. Keep BLUF as slide 1, one finding per slide, rec table as appendix. |
 | Mixed audience (live exec review + durable doc for PM team) | **Generate both** | The report is the canonical artifact; the deck is a derivative. Never let the deck become the source of truth — it loses nuance and evidence trail. |
 
 When converting slide content → reference doc, apply the Playbook rules: (1) distill, don't summarize slide-by-slide; (2) extract frameworks prominently; (3) clarify Finding vs. Insight; (4) standardize messy workshop examples into clean "Example A / B" format; (5) authoritative tone, no conversational filler.
@@ -170,26 +254,30 @@ When converting slide content → reference doc, apply the Playbook rules: (1) d
 
 Present the structure in a short table. Ask: "Does this structure look right? Anything to add, remove, or reorder?"
 
-### Step 3: Researcher Reviews & Approves
+### Step 3: Section 1 — Setup & Framing: Approve Structure
 
-Use AskUserQuestion:
+Use AskUserQuestion. Pop-up label: **"Section 1 > Step 1 of 4: Approve Structure"**. Single-select — the structure is one exclusive shape. Last option always **"Brainstorm with me"**.
 
 **Q — Approve structure?**
-- "Looks good — generate the report" (Recommended)
-- "Adjust sections" — researcher specifies what to add/remove/reorder
-- "Switch audience variant" — loop back to Step 2 with a different audience
+1. "Looks good — start drafting the content step by step" (Recommended)
+2. "Adjust sections" — researcher specifies what to add/remove/reorder
+3. "Switch audience variant" — loop back to Step 2 with a different audience
+4. "Brainstorm with me"
 
-### Step 3.5: Style Reference (REQUIRED before generating)
+After approval, say: *"Structure locked. Next, a quick check on output style."*
 
-After structure is approved, confirm output style. Use AskUserQuestion:
+### Step 3.5: Section 1 — Setup & Framing: Style Reference (REQUIRED)
+
+After structure is approved, confirm output style. Use AskUserQuestion. Pop-up label: **"Section 1 > Step 2 of 4: Output Style"**. Single-select — one style governs the whole report. Last option always **"Brainstorm with me"**.
 
 **Q — Output Style**
-> "Last check before I generate — I want the formatting to match your preferred style."
+> "Quick check on formatting — I want it to match your preferred style."
 
 Options:
-- **"Use the default Instacart template" (Recommended)** — 2-column tables, section bars, RACI header, emoji priority indicators
-- **"I'll share a reference doc"** — paste a previous report URL or text
-- **"Just give me a clean outline"** — simple markdown headers + bullets, no tables
+1. **"Use the default Instacart template" (Recommended)** — 2-column tables, section bars, RACI header, emoji priority indicators
+2. **"I'll share a reference doc"** — paste a previous report URL or text
+3. **"Just give me a clean outline"** — simple markdown headers + bullets, no tables
+4. "Brainstorm with me"
 
 **If the researcher shares a reference doc:**
 
@@ -208,11 +296,66 @@ Options:
 
 **If clean outline:** Use simple markdown — H2 headers, bullet findings, inline evidence, numbered recs.
 
-### Step 4: Generate the Report
+After style is confirmed, say: *"Style locked. Two more setup items — authorship, then the bottom line — and Section 1 is done."*
 
-Produce the report using the approved structure and style. Apply the content rules in the next section. Default to the Instacart design system unless the researcher chose otherwise.
+### Step 3.6: Section 1 — Setup & Framing: Confirm Authorship, then Lock the BLUF
 
-**Test/demo labeling:** If this invocation is a mock-run, demo, or otherwise uses invented/simulated findings rather than real study data, label it per `../../references/output-status-and-labeling-conventions.md` before presenting the draft — this is a real report skill, and a fabricated-findings output found without context could otherwise be mistaken for a real deliverable.
+Two decisions, one pop-up each (per the interaction contract — one decision per pop-up).
+
+**Authorship / RACI.** Show the drafted RACI block — Responsible, Consulted, Informed — and confirm every name is current. Use the people-search verification from Step 1: a name is only carried forward once it's people-search verified, or confirmed directly with the researcher when the live check can't run. Consulted and Informed are `multiSelect: true` (several people legitimately belong in each); Responsible is single (one accountable author). Pop-up label: **"Section 1 > Step 3 of 4: Authorship / RACI"**. Last option always **"Brainstorm with me"**. After lock, say: *"Authorship locked. Moving on to the BLUF."*
+
+**BLUF.** Draft the three-sentence Bottom Line Up Front per the BLUF discipline above (sentence 1: what we learned · sentence 2: what it means for the business · sentence 3: the single most important ask — no methodology). Show it, then accept / brainstorm. Single-select — the BLUF is one exclusive statement, though each of its three sentences can be brainstormed. Pop-up label: **"Section 1 > Step 4 of 4: BLUF"**. Last option always **"Brainstorm with me"**.
+
+After approval, say: *"BLUF locked. Section 1 — Setup & Framing is complete. Moving on to Section 2 — Findings & Evidence."*
+
+From here on, maintain a **visible approved / pending checklist**: as each item locks, mark it ✅ and show what's still pending, so the researcher always sees overall progress.
+
+### Step 4: Approve the Report Content, Section by Section
+
+Draft the report content one item at a time, walking the researcher through **draft → approve → lock** for each finding, insight, and recommendation. Use the OUTPUT TEMPLATES, CONTENT GENERATION RULES, and COMMON REPORT FAILURES below as the drafting reference for each item. Default to the Instacart design system unless the researcher chose otherwise in Step 3.5.
+
+For every item: show the draft first, then let the researcher accept it, pick what to keep, or brainstorm to refine it; re-show the revised draft after brainstorming and obtain approval before advancing. Every pop-up is labeled with its section and step, `multiSelect` follows the interaction contract, and the last option is always **"Brainstorm with me."** Announce each transition in chat after an item is locked, and keep the approved / pending checklist visible.
+
+**Test/demo labeling:** If this invocation is a mock-run, demo, or otherwise uses invented/simulated findings rather than real study data, label it per `../../references/output-status-and-labeling-conventions.md` on every draft you present and carry the label into the assembled report (Step 5) — this is a real report skill, and a fabricated-findings output found without context could otherwise be mistaken for a real deliverable.
+
+#### Section 2 — Findings & Evidence *(announce: "Section 1 is locked. Now we'll work through Section 2 — Findings & Evidence.")*
+
+Draft and approve **one finding at a time**. For each finding:
+
+- Write it past-tense and descriptive (the observed pattern), per the Finding → Insight → Recommendation ladder.
+- Attach its primary evidence: P-coded verbatim quotes (never cleaned up), denominators for small n ("7 of 10," not "70%" when n < 20), and clip/screenshot references. Apply the evidence gate — every finding carries ≥1 verbatim quote or a quantitative observation with denominator.
+- Curate to the strongest hero quotes (Portigal's three-quote rule for strong patterns); the rest go to the Appendix.
+- Pop-up label: **"Section 2 > Step N of M: Finding N — [headline]"** where M is the total number of findings. `multiSelect: true` — the researcher can select which quotes/evidence to keep for that finding. Last option always **"Brainstorm with me"**.
+- After each lock: *"Finding N locked. Moving on to Finding N+1."* (After the last: *"All findings locked. Moving on to Section 3 — Insights."*)
+
+#### Section 3 — Insights *(announce: "Findings are locked. Now for Section 3 — Insights — the 'so what.'")*
+
+Draft and approve the insights, each present-tense and interpretive, each **citing the parent finding numbers** it flows from ("Supported by Findings 1, 3"). Use Nikki Anderson's insight template where it fits. Approve one insight at a time.
+
+- Pop-up label: **"Section 3 > Step N of M: Insight N"**. `multiSelect: true` — multiple insights and multiple supporting findings can apply. Last option always **"Brainstorm with me"**.
+- After each lock: *"Insight N locked. Moving on to Insight N+1."* (After the last: *"All insights locked. Moving on to Section 4 — Recommendations & Business Case."*)
+
+**Executive-variant exception:** the Executive variant has no standalone Insights section — the "so what" folds into the Bottom Line (and into the finding language) instead of standing alone. When the primary audience is Executive, do **not** force a separate Insights step; confirm the folded-in interpretation as part of the BLUF / findings and move directly to Section 4. The "so what" must still be present somewhere — never skipped.
+
+#### Section 4 — Recommendations & Business Case *(announce: "Insights are locked. Now the final section — Recommendations & Business Case.")*
+
+Approve in this order:
+
+1. **Recommendations** — each imperative, each with a priority emoji (🔴 P0 / 🟡 P1 / 🟢 P2), a named human owner, an effort/impact estimate, and a citation to its parent insight. Keep rec-count ≤ insight-count (speculation check). For the **Engineering variant**, use the bug-like repro format (repro steps, priority, owner) instead. Pop-up label: **"Section 4 > Step 1 of 3: Recommendations"**. `multiSelect: true` — several recommendations apply. Last option always **"Brainstorm with me"**. After lock: *"Recommendations locked. Moving on to the business case."*
+2. **Business Framing** — for each P0/P1 rec, the one-line unlock / cost-of-delay / OKR-alignment framing per the Business Framing rules below (never fabricate a dollar figure or invent an OKR). Pop-up label: **"Section 4 > Step 2 of 3: Business Framing"**. `multiSelect: true`. Last option always **"Brainstorm with me"**. After lock: *"Business framing locked. Moving on to Next Steps & Open Questions."*
+3. **Next Steps & Open Questions** — decisions needed, open questions the study did not answer, and proposed follow-ons. Pop-up label: **"Section 4 > Step 3 of 3: Next Steps & Open Questions"**. `multiSelect: true`. Last option always **"Brainstorm with me"**.
+
+After Section 4 is locked, tell the researcher exactly what happens next so they know what to expect:
+
+> Everything's approved — I now have all the content I need. Here's what I'll do before I hand you the final report:
+>
+> 1. **Run it through the critique pass** — the Report Critic self-review (three personas: Staff Sparring Partner → PM → Senior Leadership) pressure-tests it for weak logic, unsupported claims, and audience-fit gaps.
+> 2. **Run it through the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel.
+> 3. **Then I'll produce your report** — the polished markdown, and (if you want it) a formatted Google Doc in your confirmed Drive folder.
+>
+> Running the critique and multi-agent checks now — I'll fold in any fixes before I produce the report.
+
+**Whole-draft override:** if the researcher explicitly asks to see the whole report drafted at once instead of item-by-item, skip the per-item approval loop but still show the complete draft for approval, then run the same critique → multi-agent → produce-deliverable sequence. The override changes *how content is approved*, not the quality gate or the deliverable steps.
 
 ---
 
@@ -468,9 +611,17 @@ Last updated: [Month Year]
 
 ---
 
-## Step 4.5: Self-Critique Checklist (AIxUXR Playbook — Report Critic)
+## Step 5: Assemble the Approved Content
 
-Before presenting the draft to the researcher or offering upload, run the report through the Report Critic framework from the AIxUXR Playbook (Loosbrock & Venkatraman, 2025). This is a structured self-review — the AI's equivalent of a peer review pass. Do this *silently* and surface only the items that fail or need researcher attention.
+Assemble every approved item — the locked BLUF, findings with their evidence, insights, recommendations, business framing, and next steps / open questions — into the full report draft, using the OUTPUT TEMPLATES for the chosen audience variant and the approved style. This is the intermediate draft: it feeds the two quality checks (Steps 6 and 7) and is only finalized in Step 8.
+
+- Preserve the approved meaning of every item; do not silently re-word locked content.
+- Verify nothing dropped: every approved finding, insight, and recommendation is present, and every source link and quote is carried through intact.
+- Apply the **mock / test-artifact warning** to the assembled draft when this is a demo/simulated run (per Step 4's test/demo labeling and `../../references/output-status-and-labeling-conventions.md`), keeping it prominent.
+
+## Step 6: Report Critic Self-Critique (the critique half of the quality gate)
+
+This is the critique pass announced at the end of Section 4. Run the assembled draft (Step 5) through the Report Critic framework from the AIxUXR Playbook (Loosbrock & Venkatraman, 2025) — before the multi-agent review and before the final deliverable is produced. This is a structured self-review, the AI's equivalent of a peer review pass. Do this *silently* and surface only the items that fail or need researcher attention.
 
 Adopt three personas in sequence (Staff/Sr Sparring Partner → Product Manager → Senior Leadership) and check the report against each dimension.
 
@@ -505,17 +656,47 @@ Borrowed from the AIxUXR Playbook's Prompts 1b, 2, and 3 (Loosbrock, 2025). Run 
 | **Product Manager (skeptical)** | Actionability, connection to roadmap, KPI relevance | "What in this report will change what my team ships next sprint?" |
 | **Senior Leadership / Director** | Strategic alignment, resource justification, opportunity cost | "Which OKR does this ladder to? What's the cost of *not* acting?" |
 
-If any checklist item fails or any persona question can't be answered from the report as written, flag it in the delivery message to the researcher. For a single failure: *"Before you ship this, note: [failing item]. Want me to strengthen it?"* When 2+ items fail at once (routine when working from thin or incomplete inputs), don't compress them into one line — list each as its own bullet so the researcher sees the real scope of what's unresolved: *"Before you ship this, a few things to know: (1) [failing item], (2) [failing item], (3) [failing item]. Want me to strengthen these?"*
+Fold clear fixes into the assembled draft; present genuine judgment calls to the researcher (Accept / Consider / Reject) and, if any checklist item fails or any persona question can't be answered from the report as written, flag it. For a single failure: *"Before you ship this, note: [failing item]. Want me to strengthen it?"* When 2+ items fail at once (routine when working from thin or incomplete inputs), don't compress them into one line — list each as its own bullet so the researcher sees the real scope of what's unresolved: *"Before you ship this, a few things to know: (1) [failing item], (2) [failing item], (3) [failing item]. Want me to strengthen these?"*
+
+Do not append this internal critique to the stakeholder report. Once fixes are folded in, move to the multi-agent review before producing the deliverable.
 
 ---
 
-## Step 5: Offer Google Docs Upload
+## Step 7: Multi-Agent Review
 
-After generating the report, ask:
+Run the multi-agent review on the fixed report content — before the final deliverable is produced. This is automatic; do not ask permission. The researcher was already told this is coming (the end-of-Section-4 announcement).
 
-> "Your research report is ready. Would you like me to upload it to Google Docs with the Instacart design system applied?"
+- Say in chat: *"Running the multi-agent review now — several independent reviewers check the report for inconsistencies and problems in parallel."*
+- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate.
+- If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass.
+- Fold any confirmed fixes into the assembled draft before producing the deliverable.
 
-If yes:
+The expected sequence is **approved content → assemble → critique → multi-agent → fixes → produce the deliverable → share**. Never describe the report as stakeholder-final before both checks have run.
+
+---
+
+## Step 8: Produce the Final Deliverable
+
+This is the last step — the deliverable is produced only after the critique (Step 6) and multi-agent review (Step 7) have run and fixes are folded in. The polished markdown is a valid final deliverable; a Google Doc is offered, not required.
+
+### 8.1 Confirm the destination
+
+Ask what the researcher wants and, if a Doc, confirm where:
+
+> "Your research report is ready. Would you like it as the polished markdown, or shall I also upload it to Google Docs? If Docs — I'll create it in [inferred folder/link]; is that the right destination?"
+
+- If markdown only: hand off the polished markdown — that is the final deliverable. Done.
+- If a Doc: confirm the exact Drive folder before creating anything. Never write to a hardcoded folder. If no destination is known, ask: *"Which Google Drive folder should this report live in?"*
+- For a mock or demo, do not create a Drive artifact unless the tester explicitly asks for one.
+
+### 8.2 Create the Google Doc — native default
+
+Use the Google Docs / Drive tools connected in the current session to create the document in the confirmed folder with the approved stakeholder-facing title, apply standard Google Docs styles (native Title/heading/body styles, a standard Docs font, 2-column tables, preserved emoji and hyperlinks), read it back, verify it against every approved item and source link, correct any issues, and return the shareable link with verification status. This is the portable path and does not depend on any personal template, script, CLI, or hardcoded folder.
+
+### 8.3 Optional — Instacart / Jedida variant (preserved, use only on that setup when asked)
+
+For Jedida's personal environment specifically, her pipeline is preserved as an alternative to the native default. Use it only when the researcher is on that setup and asks for it:
+
 1. Create the doc via the `gws` CLI (full path `~/.config/gohan/bin/gws` if it isn't on $PATH):
    ```bash
    cd <directory containing the report .md>
@@ -525,24 +706,28 @@ If yes:
      --json '{"name":"<Report Title>","parents":["<project folder ID>"],"mimeType":"application/vnd.google-apps.document"}'
    ```
    This both creates the doc and files it in the right Drive folder in one call (`parents` takes the folder ID directly) — capture the returned `DOCUMENT_ID`. Pick the folder ID from CLAUDE.md's project routing table (P1–P10 + Recipe-Licensing, matched to the study's subject matter, not the newest project) rather than assuming Project 1/2/3.
-   If `gws` isn't available or the call fails, don't stall — tell the researcher the doc-upload path is currently unavailable and hand off the polished markdown as the deliverable instead.
+   If `gws` isn't available or the call fails, don't stall — fall back to the native path in 8.2, or hand off the polished markdown as the deliverable.
 2. **Fix subscript formatting (MANDATORY)** — `<br>` handling in the upload pipeline creates SUBSCRIPT runs that shrink text. After upload, scan the doc via Docs API for `baselineOffset == 'SUBSCRIPT'` and reset to `'NONE'`. Do this BEFORE styling.
-3. Apply `~/Documents/Claude/Productivity/Google-Docs/style-gdoc-full.py <DOCUMENT_ID>` to get Instacart styling: dark-green section bars, RACI chips, 2-col table widths, 6pt spaceBelow + 120% lineSpacing in table cells, 36pt above H2/H3, emoji preserved.
+3. Apply `~/Documents/Claude/Productivity/Google-Docs/style-gdoc-full.py <DOCUMENT_ID>` (or `apply_jedida_reporting.py` for her HITL/pipeline deliverables) to get Instacart styling: dark-green section bars, RACI chips, 2-col table widths, 6pt spaceBelow + 120% lineSpacing in table cells, 36pt above H2/H3, emoji preserved.
 4. Share the Google Doc link with the researcher.
 
-If no, leave the markdown as the final deliverable.
+### 8.4 Return
+
+Return the deliverable with status: the markdown and/or the Google Doc link, "content complete, formatting checked, links checked," any verification limitation, and — per the authorship check — the note that the named Responsible researcher should review and sign off before this ships as final when someone else supplied the inputs.
 
 ---
 
 ## Tool usage
 
-- **AskUserQuestion** — gather inputs, propose structure, confirm style (Steps 1, 2, 3, 3.5). If unavailable in this session, use the conversational fallback noted at the top of Step 1.
+- **AskUserQuestion** — gather inputs and drive every draft → approve → lock pop-up (Steps 1–4), per the interaction contract. If unavailable in this session, use the inline fallback noted in the interaction contract and at the top of Step 1.
+- **Directory / people-search** — verify current stakeholder identities before carrying any name into the RACI block (Steps 1 and 3.6). The people / Glean MCPs may require auth and may be unavailable in this session; if so, confirm names with the researcher instead.
 - **`mcp__glean__read_document` (Glean)** — read any Google Doc the researcher references (PRD, prior reports, analysis docs)
 - **google-docs:fetch-google-doc** — alternative Google Doc reader, if that skill is installed in this session (not guaranteed everywhere); if neither this nor Glean is available, fall back to asking the researcher to paste the content directly
 - **Read** — read pasted content or local files
-- **`gws` CLI** (`gws drive files create --upload ...`, full path `~/.config/gohan/bin/gws` if not on $PATH) — create the Google Doc and file it into the right Drive folder in one call (Step 5)
-- **`~/Documents/Claude/Productivity/Google-Docs/style-gdoc-full.py`** — apply the Instacart design system to the uploaded doc
-- The generated markdown is the primary output — it must be polished enough to ship as-is before upload
+- **`/multi-agent-check`** — the automatic multi-agent review (Step 7); check the live skill list and invoke when installed, disclose and continue on critique-only if not.
+- **Native Google Docs / Drive tools (default deliverable path)** — create, format with standard Docs styles, read back, and verify the Doc in the confirmed folder (Step 8.2). No personal template, script, or hardcoded folder.
+- **`gws` CLI + `style-gdoc-full.py` / `apply_jedida_reporting.py` (optional Instacart / Jedida variant only)** — create and style the Doc via Jedida's personal pipeline; use only on that setup when asked (Step 8.3), not as the default.
+- The polished markdown is a valid final deliverable — it must be polished enough to ship as-is whether or not a Doc upload follows.
 
 ---
 
