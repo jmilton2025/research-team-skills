@@ -1,0 +1,220 @@
+{
+  "name": "Option 4 — Leadership (Moderation Guide)",
+  "version": "2026-09-23",
+  "derived_from": "skills/research-plan/references/option4-style-contract.json",
+  "reference_usage": "Visual language shared with /research-plan Option 4; the runtime does not require access to any private reference document. page/colors/typography/warning/spacing tokens are copied verbatim from the research-plan contract so the finished look matches; structure and tables are mod-guide-specific.",
+  "page": {
+    "document_mode": "PAGELESS",
+    "orientation": "LANDSCAPE",
+    "width_pt": 792,
+    "height_pt": 612,
+    "margins_pt": {
+      "top": 72,
+      "bottom": 72,
+      "left": 72,
+      "right": 72
+    },
+    "header_margin_pt": 36,
+    "footer_margin_pt": 36,
+    "use_custom_header_footer_margins": true
+  },
+  "colors": {
+    "dark_green": "#003D29",
+    "warning_background": "#FFF2CC",
+    "warning_text": "#6F4A00",
+    "gray_cell": "#D9D9D9",
+    "gray_text": "#666666",
+    "white": "#FFFFFF",
+    "black": "#000000"
+  },
+  "typography": {
+    "breadcrumb": {
+      "font": "DM Serif Display",
+      "size_pt": 16,
+      "bold": true,
+      "color": "#666666"
+    },
+    "title": {
+      "font": "DM Serif Display",
+      "size_pt": 26,
+      "bold": true,
+      "color": "#003D29"
+    },
+    "phase_subtitle": {
+      "font": "DM Serif Display",
+      "size_pt": 14,
+      "bold": true,
+      "color": "#003D29",
+      "_note": "NEW mod-guide token: optional bold subtitle line under the title (dark-green-on-white, distinct from the white-on-green band)."
+    },
+    "heading": {
+      "font": "DM Serif Display",
+      "size_pt": 20,
+      "bold": true,
+      "color": "#000000",
+      "_note": "Inherited research-plan token; intentionally UNUSED in mod-guide. Its structural role is taken by the 14pt section bands."
+    },
+    "section_band": {
+      "font": "DM Serif Display",
+      "size_pt": 14,
+      "bold": true,
+      "color": "#FFFFFF"
+    },
+    "sub_phase_heading": {
+      "font": "DM Serif Display",
+      "size_pt": 12,
+      "bold": true,
+      "color": "#003D29",
+      "_note": "NEW mod-guide token: H3 sub-phase (2.1/2.2/2.5); green-on-white so it never reads as a band. Alt: DM Sans 11pt bold #003D29."
+    },
+    "body": {
+      "font": "DM Sans",
+      "size_pt": 10,
+      "color": "#000000"
+    },
+    "context_note": {
+      "font": "DM Sans",
+      "size_pt": 9,
+      "italic": true,
+      "color": "#666666",
+      "_note": "Used for the 'Last updated' metadata line."
+    }
+  },
+  "warning": {
+    "font": "DM Sans",
+    "size_pt": 10,
+    "bold": true,
+    "foreground": "#6F4A00",
+    "background": "#FFF2CC",
+    "full_paragraph_shading": true,
+    "copy_source": "../../references/output-status-and-labeling-conventions.md"
+  },
+  "structure": {
+    "native_horizontal_rules": 0,
+    "band_render": "shaded_h2_paragraph",
+    "band_render_alt": "single_row_two_cell_table_698pt",
+    "ends_at": "Post-Session Debrief",
+    "variable_table_count": true,
+    "heading_outline_preserved": true
+  },
+  "section_bands": {
+    "style": {
+      "font": "DM Serif Display",
+      "size_pt": 14,
+      "bold": true,
+      "color": "#FFFFFF",
+      "background": "#003D29"
+    },
+    "label_case": "UPPER",
+    "width_pt_paragraph_mode": 648,
+    "width_pt_table_alt_mode": 698.4,
+    "fixed_labels": [
+      "PRE-SESSION CHECKLIST",
+      "CONSENT + RECORDING SCRIPT — READ VERBATIM",
+      "POST-SESSION DEBRIEF"
+    ],
+    "dynamic_labels": "one band per ## phase heading (PHASE 1 WARM-UP, PHASE 2 CORE, optional PHASE 3 STIMULUS, PHASE 4 WRAP-UP); labels adapt to the study, do not copy an old study's wording"
+  },
+  "tables": {
+    "cell_padding_pt": 5,
+    "body_cell_background": "#FFFFFF",
+    "section_background": "#003D29",
+    "table_line_spacing_percent": 100,
+    "intentional_text_area_overflow_pt": 50.4,
+    "border": "MIRROR research-plan option4_layout.py; single thin neutral border, consistent across all kinds; the base Option 4 contract defines no border color/weight, so this is the sole value to confirm against the research-plan builder rather than invent.",
+    "total_width_pt": 698.4,
+    "optional_header_row": {
+      "enabled_by_default": false,
+      "background": "#003D29",
+      "text": {
+        "font": "DM Sans",
+        "size_pt": 10,
+        "bold": true,
+        "color": "#FFFFFF"
+      },
+      "repeat_as_table_header": true
+    },
+    "kinds": {
+      "parameters": {
+        "columns": 2,
+        "column_widths_pt": [144, 554.4],
+        "total_width_pt": 698.4,
+        "label_column_background": "#D9D9D9",
+        "label_column_text": {
+          "font": "DM Sans",
+          "size_pt": 10,
+          "bold": true,
+          "color": "#000000"
+        },
+        "content_column_text": {
+          "font": "DM Sans",
+          "size_pt": 10,
+          "bold": false,
+          "color": "#000000"
+        },
+        "header_row": false,
+        "conversion_header": ["Parameter", "Detail"],
+        "first_visible_row": "Study Type",
+        "rows": ["Study Type", "Duration", "Format", "Participants", "Goal"]
+      },
+      "consent": {
+        "columns": 2,
+        "column_widths_pt": [144, 554.4],
+        "total_width_pt": 698.4,
+        "label_column_background": "#FFFFFF",
+        "label_column_text": {
+          "font": "DM Sans",
+          "size_pt": 10,
+          "bold": true,
+          "color": "#000000"
+        },
+        "content_column_text": {
+          "font": "DM Sans",
+          "size_pt": 10,
+          "bold": false,
+          "color": "#000000"
+        },
+        "header_row": false,
+        "conversion_header": ["Cue", "Read aloud"],
+        "content_is_read_verbatim": true
+      },
+      "question": {
+        "columns": 2,
+        "column_widths_pt": [90, 608.4],
+        "total_width_pt": 698.4,
+        "label_column_background": "#FFFFFF",
+        "label_column_text": {
+          "font": "DM Sans",
+          "size_pt": 10,
+          "bold": true,
+          "color": "#000000"
+        },
+        "content_column_text": {
+          "font": "DM Sans",
+          "size_pt": 10,
+          "bold": false,
+          "color": "#000000"
+        },
+        "header_row": false,
+        "conversion_header": ["#", "Ask"],
+        "narrow_first_column": true,
+        "first_column_fallback_width_pt": 96
+      }
+    }
+  },
+  "spacing": {
+    "line_spacing_percent": 115,
+    "table_line_spacing_percent": 100,
+    "breadcrumb_space_below_pt": 16,
+    "title_space_below_pt": 3,
+    "phase_subtitle_space_below_pt": 3,
+    "band_space_above_pt": 20,
+    "band_space_below_pt": 6,
+    "sub_phase_space_above_pt": 12,
+    "sub_phase_space_below_pt": 4,
+    "raci_indent_start_pt": 36,
+    "raci_indent_first_line_pt": 18,
+    "list_indent_start_pt": 36,
+    "list_indent_first_line_pt": 18
+  }
+}
