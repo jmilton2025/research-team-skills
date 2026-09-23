@@ -194,25 +194,35 @@ Prakriti's example of the behavior wanted: *"cloud should say that's not a great
 
 Do NOT auto-bypass the context, existing-insights, hypotheses, or decision steps to "save time." Prakriti was explicit: *"I don't think we should spend only five minutes on a research plan… research plan is the foundation."* These steps are where the plan earns its value; a 5-minute plan that skips them isn't a plan. Spend the depth up front — context, existing insights, sharp research questions, hypotheses, and an audited decision. Timeline and methodology *mechanics* can move fast; the strategic front half cannot. The only exception is an explicitly scoped quick study (*"I'm taking this to 5 users, quick turn"*) — then a lighter pass is fine.
 
-### Step 2: Analyze & Propose Methodology
+### Step 2: Analyze & Propose Methodology — ONE PER POP-UP
 
-**Frame methodology as "the minimum evidence needed to move the decision" — not "the most thorough study possible."** Prakriti (2026-06-02): *"it knows all the different methodology and what's the minimum evidence I need to get this through, and then it suggests a few."* Open the methodology recommendation by restating the audited decision from Step 1.6, then propose the **leanest valid path** to evidence that would actually move it, plus 1–2 alternatives (e.g., "moderated-first", "unmoderated + card sort", "two-phase hybrid"). Recommend one, flag any timeline conflict ("you have one week — a two-phase study won't fit; here's the single-phase version"), and let the researcher override.
+**Frame methodology as "the minimum evidence needed to move the decision" — not "the most thorough study possible."** Prakriti (2026-06-02): *"it knows all the different methodology and what's the minimum evidence I need to get this through, and then it suggests a few."*
 
-After inputs are gathered, analyze them and present a **recommended plan skeleton** as a 2-column table. Ground every recommendation in published canon. Cite sources inline.
+**Walk methodology parameters one at a time** — same pattern as Section 1's sequential pop-ups. *(Added 2026-09-22, per live testing feedback: "for methodology it should be one by one till we lock in.")* Do NOT dump all parameters into a single table and ask for one thumbs-up. Each parameter gets its own `AskUserQuestion`, the researcher locks it in, then the next appears. Announce at the start:
 
-Present recommendations in this format:
+> "Section 1 is locked — let's figure out how to run the study. I'll walk you through each methodology choice one at a time. We'll lock each one in before moving on."
 
-> **Based on your inputs, here's what I recommend:**
->
-> | Parameter | Recommendation | Rationale |
-> |-----------|----------------|-----------|
-> | **Study Type** | [e.g., Moderated IDI] | [Hall's research-type logic — e.g., "Generative — exploring unknown motivations, not testing a solution"] |
-> | **Method** | [e.g., 60-min remote IDI via Zoom] | [e.g., "NNG recommends qualitative methods for formative work (Farrell, 2017)"] |
-> | **Sample Size** | [e.g., N=8] | [e.g., "Saturation by ~12 for homogeneous samples (Guest et al., 2006); Instacart convention is 8 for B2C"] |
-> | **Recruitment Criteria** | [screener behaviors + demos derived from inputs] | [mapped to primary decision] |
-> | **Timeline** | [e.g., 4 weeks end-to-end] | [broken down: plan approval → recruit → field → synthesis → readout] |
-> | **Primary Deliverable** | [e.g., Readout deck + journey map] | [tied to primary decision] |
-> | **Key Risks** | [e.g., low-incidence persona; recruitment risk] | — |
+**Methodology pop-up sequence — lock each before advancing:**
+
+**Pop-up M1 — Study Type**
+Show Claude's recommendation with rationale (Hall's generative/descriptive/evaluative/causal logic). Options: recommended type + 1–2 alternatives + "Brainstorm it with me." Lock before M2.
+
+**Pop-up M2 — Method & Format**
+E.g., "60-min remote moderated IDI via Zoom" vs. "unmoderated async via UserTesting" vs. "hybrid." Cite NNG/Portigal rationale inline. Lock before M3.
+
+**Pop-up M3 — Sample Size**
+Show the recommended N with citation (Guest et al., 2006 for IDI saturation; Nielsen 2000 for usability). Options: recommended N / N+2 / N−2 / "Brainstorm it with me." Lock before M4.
+
+**Pop-up M4 — Recruitment Criteria**
+Show proposed screener behaviors + demographics derived from the PRD inputs. Options: "Accept these criteria" / "Adjust inclusion criteria" / "Adjust exclusion criteria" / "Brainstorm." Lock before M5.
+
+**Pop-up M5 — Timeline**
+Show proposed end-to-end timeline (plan approval → recruit → field → synthesis → readout), with a flag if the researcher's stated constraint is too tight for the recommended method. Options: recommended timeline / compressed version / "I have a hard deadline — let me type it." Lock before M6.
+
+**Pop-up M6 — Key Risks**
+Show the top 2–3 risks derived from the method + sample choice (e.g., low-incidence recruit, single-session fatigue, timeline slip). `multiSelect: true` — researcher confirms which risks to carry into the plan, deselects irrelevant ones, can add via "Other." Lock the confirmed risk set.
+
+*When all 6 methodology parameters are locked: "Methodology is set — moving to Section 2 of the plan walk."*
 
 Methodology selection logic to apply:
 
@@ -248,7 +258,7 @@ So Step 3 is NOT a few batched method questions. It is a **guided walk through t
 
 5. **Objectives** — Claude's 3 proposed objectives; approve / edit / rewrite.
 6. **Key Research Questions** — 3 broad project-level questions; approve / edit / rewrite.
-7. **What decisions will be made with such research?** — confirm the decision fork(s).
+7. **What decisions will be made with such research?** — use `multiSelect: true`. Present each decision fork derived from the PRD/inputs as its own selectable option (e.g., "Whether to ship at the current agreement threshold", "How to refine scoring guidelines", "Whether to expand to a new user segment"). The researcher picks all that apply — research often informs multiple decisions. Include "Add another decision" as the last option slot. Lock the full set before advancing.
 8. **What Research Priorities is this relevant to (Themes)** — confirm theme mapping.
 9. **Method + Approach** *(Project Details)* — the minimum-evidence recommendation + 1–2 alternatives; pick the tradeoff.
 10. **Sampling Plan / Participants** *(Project Details)* — cohorts, completes, recruit source.
