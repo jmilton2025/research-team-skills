@@ -13,11 +13,12 @@ A run is complete only when all of the following are true:
 
 1. Existing context has been searched and sourced.
 2. The researcher has approved every applicable plan row.
-3. The Google Drive destination has been confirmed.
-4. The plan has gone through the **create → copyedit → format → verify** pipeline.
-5. A working Google Doc link has been returned with verification status.
+3. The critique pass and the multi-agent review have both run, with fixes folded in.
+4. The Google Drive destination has been confirmed.
+5. The plan has gone through the **create → copyedit → format → verify** pipeline.
+6. A working Google Doc link has been returned with verification status.
 
-Drive destination confirmation must happen before document creation.
+Both quality checks run before the Google Doc is drafted. Drive destination confirmation must happen before document creation.
 
 Markdown is an intermediate representation, not the completed deliverable. A mock or demo stays out of Drive unless the tester explicitly requests a test document.
 
@@ -31,10 +32,10 @@ Markdown is an intermediate representation, not the completed deliverable. A moc
 | **2** | Recommend the minimum valid Method & approach and applicable conditional fields | Research design approved |
 | **3** | **Section 2 — Research Design** (7 labeled steps) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, multi-select, "Brainstorm with me" always last, transition announced after each lock | All steps approved across both sections |
 | **3.5** | Confirm the Google Drive destination | Exact folder confirmed |
-| **4** | Assemble the approved plan | Content complete; mock warning applied when relevant |
-| **4.5** | Auto-run critique checklist | Gaps fixed or explicitly accepted |
-| **5** | Create, format, read back, inspect, correct, and re-verify the Google Doc | Content, structure, bullets, links, and location pass |
-| **6** | Auto-run multi-agent check (no option — announce and run both critique + multi-agent) | Both checks complete; fixes applied; final Doc ready to share |
+| **4** | Assemble the approved plan (markdown intermediate) | Content complete; mock warning applied when relevant |
+| **4.5** | Auto-run critique checklist (announced at end of Step 3) | Gaps fixed or explicitly accepted |
+| **5** | Auto-run multi-agent review on the fixed content — before the Doc | Review complete; confirmed fixes folded in |
+| **6** | Draft the Google Doc last: create, format, read back, inspect, correct, re-verify, return | Content, structure, bullets, links, and location pass |
 
 ## When to use
 
@@ -83,7 +84,7 @@ The number of options per pop-up should match the content — no fixed cap. Show
 The skill must work for any researcher with a write-capable Google Docs integration.
 
 - Use only native Google Docs capabilities and tools available in the current environment.
-- Use the portable Leadership layout defined in Step 5: landscape, a concise opening, and one two-column plan table with four section-divider rows.
+- Use the portable Leadership layout defined in Step 6: landscape, a concise opening, and one two-column plan table with four section-divider rows.
 - Use a standard Google Docs font and native styles. Do not depend on a personal template, custom font, custom palette, private reference document, hardcoded folder, local styling script, command-line utility, or researcher-specific authentication setup.
 - If no write-capable Docs integration is available, preserve the approved draft and report that the required deliverable is blocked. Do not call the markdown output final.
 
@@ -263,7 +264,15 @@ Approve in this order:
 3. **Timeline** — Pop-up label: **”Section 3 > Step 3 of 4: Timeline”**. After lock: *”Timeline locked. Moving on to Next Steps & Appendix.”*
 4. **Next steps + Additional UXR documents + Resources from XFN** — Pop-up label: **”Section 3 > Step 4 of 4: Next Steps & Appendix”**. Auto-sort every relevant kickoff document into Additional UXR documents or Resources from XFN. Existing documents use real links; future artifacts are labeled “to be created” without fake links.
 
-After all three sections are locked, say: *”All three sections are approved — the full plan is ready. I'm now going to run two quality checks before the final draft: a critique pass and a multi-agent review.”*
+After all three sections are locked, tell the researcher exactly what happens next so they know what to expect:
+
+> All three sections are approved — I now have everything I need. Here's what I'll do before I hand you the final plan:
+>
+> 1. **Run it through a critique agent** — a pressure-test that checks the plan for gaps, weak logic, and unsupported claims.
+> 2. **Run it through the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel.
+> 3. **Then I'll draft your Google Doc** — the formatted, verified plan in your confirmed Drive folder.
+>
+> Running the critique and multi-agent checks now — I'll fold in any fixes before the Doc is created.
 
 **Override:** if the researcher explicitly requests a full draft for review at the end, skip row-by-row approval but still show the complete draft for approval, confirm the Drive destination, and perform every output and verification step.
 
@@ -279,7 +288,7 @@ A real run requires a Google Doc, so ask about location—not output format.
 
 ## Step 4: Assemble the approved plan
 
-Load `references/content-rules.md` and assemble the approved material in the exact contract below. Verify completeness, names, dates, and source-link coverage. Preserve the approved meaning and label uncertainty rather than guessing; the copyedit happens in the created Google Doc in Step 5.2.
+Load `references/content-rules.md` and assemble the approved material in the exact contract below. Verify completeness, names, dates, and source-link coverage. Preserve the approved meaning and label uncertainty rather than guessing; the copyedit happens in the created Google Doc in Step 6.2.
 
 ### Mock warning
 
@@ -351,13 +360,24 @@ Pressure-test the assembled plan before creating the final Doc. Fix clear gaps; 
 | **Ethics and Responsible AI** | Consent, privacy, fairness, accessibility, security, attribution, and human authority are protected. |
 | **Misinterpretation risk** | The plan names the most important limitation, assumption, and over-generalization risk. |
 
-Do not append this internal critique to the stakeholder plan unless the researcher asks.
+Do not append this internal critique to the stakeholder plan unless the researcher asks. Fold clear fixes into the assembled plan, then move to the multi-agent review before creating the Doc.
 
-## Step 5: Create, copyedit, format, and verify the Google Doc
+## Step 5: Multi-agent review
+
+Run the multi-agent review on the fixed plan content — before the Google Doc is created. This is automatic; do not ask permission. The researcher was already told this is coming (the end-of-Step-3 announcement).
+
+- Say in chat: *"Running the multi-agent review now — several independent reviewers check the plan for inconsistencies and problems in parallel."*
+- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate.
+- If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass.
+- Fold any confirmed fixes into the assembled plan before creating the Doc.
+
+The expected sequence is **approved plan → critique → multi-agent → fixes → draft the Google Doc → share**. Never describe the plan as stakeholder-final before both checks have run.
+
+## Step 6: Create, copyedit, format, and verify the Google Doc
 
 A successful API response is not completion. The finished link must point to the confirmed folder and the document must pass content and structure verification.
 
-### 5.1 Create
+### 6.1 Create
 
 1. Import or create the approved copyedited content with the current researcher’s connected Google Docs integration.
 2. Use the confirmed Drive folder.
@@ -366,7 +386,7 @@ A successful API response is not completion. The finished link must point to the
 
 If the integration cannot write, report the blocker and preserve the approved draft for retry.
 
-### 5.2 Copyedit and apply the portable Leadership layout
+### 6.2 Copyedit and apply the portable Leadership layout
 
 First copyedit the created document for clarity, grammar, complete sentences, consistent terminology, and unnecessary repetition. Confirm that the edit preserves every approved claim, decision, and source link. Then use native Google Docs operations to format it:
 
@@ -384,7 +404,7 @@ First copyedit the created document for clarity, grammar, complete sentences, co
 
 Do not call any personal styling skill or local formatting script. If a nonessential table-format operation is unsupported, use the native fallback above and continue.
 
-### 5.3 Verify and correct
+### 6.3 Verify and correct
 
 1. Read the created document back with `get_doc_as_markdown`.
 2. Compare it against every approved row and source link.
@@ -401,7 +421,7 @@ Do not call any personal styling skill or local formatting script. If a nonessen
 5. When a PDF, thumbnail, or render is available, visually inspect the opening page and at least one dense table page for clipping, illegible wrapping, poor column proportions, and low contrast. If rendering is unavailable, disclose that verification was structural rather than visual.
 6. Correct every issue, then read and inspect again. Repeat until all checks pass.
 
-### 5.4 Return the verified document
+### 6.4 Return the verified document
 
 Confirm the file location, obtain the shareable Google Doc URL, and return:
 
@@ -412,18 +432,7 @@ Confirm the file location, obtain the shareable Google Doc URL, and return:
 
 Open the verified Google Doc in the browser when the environment supports it. Do not update project trackers, progress files, or unrelated systems unless the researcher separately asks.
 
-## Step 6: Auto-run critique and multi-agent check before the final draft
-
-After all three sections are approved, do not ask permission. Announce and run both quality checks automatically:
-
-Say in chat: *”All sections are locked. I'm now running two quality checks before the final draft — a critique pass and a multi-agent review. These help catch any inconsistencies or gaps before the plan is shared.”*
-
-1. **Critique** — run the Step 4.5 critique checklist now (if not already run). Fix clear gaps; present judgment calls to the researcher for Accept / Consider / Reject.
-2. **Multi-agent check** — invoke `/multi-agent-check` if installed. Let it run its own questions and approval gate.
-
-If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed with the critique-only pass.
-
-After both are complete, assemble and verify the final Google Doc. The expected sequence is **approved plan → critique → multi-agent → fixes → final Doc → share**. Never describe the first draft as stakeholder-final before this gate.
+This is the final step. The plan has already passed the critique (Step 4.5) and multi-agent review (Step 5); the verified Google Doc is the deliverable to hand back.
 
 ## Tool guidance
 
