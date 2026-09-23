@@ -1,8 +1,13 @@
 {
   "name": "Option 4 — Leadership (Moderation Guide)",
-  "version": "2026-09-23",
+  "version": "2026-09-23b",
   "derived_from": "skills/research-plan/references/option4-style-contract.json",
-  "reference_usage": "Visual language shared with /research-plan Option 4; the runtime does not require access to any private reference document. page/colors/typography/warning/spacing tokens are copied verbatim from the research-plan contract so the finished look matches; structure and tables are mod-guide-specific.",
+  "reference_usage": "Visual language shared with /research-plan Option 4; the runtime does not require access to any private reference document. page/colors/typography/warning/spacing tokens are copied verbatim from the research-plan contract so the finished look matches. The document structure is inferred generically (structure-agnostic) and each table's geometry is derived from its own column count and first header cell.",
+  "structure_agnostic": true,
+  "supported_guide_shapes": [
+    "Interview / IDI (two-tier header, extended RACI, prose-bullet themes with indented probes, Participants Log / Parking Lot table after the debrief)",
+    "Prototype / Usability (single breadcrumb, Session Flow Overview, '#|Ask' & '#|Ask / Do' task tables under '### Flow N', vendor Communication & Deliverables back-matter after the debrief)"
+  ],
   "page": {
     "document_mode": "PAGELESS",
     "orientation": "LANDSCAPE",
@@ -32,7 +37,8 @@
       "font": "DM Serif Display",
       "size_pt": 16,
       "bold": true,
-      "color": "#666666"
+      "color": "#666666",
+      "_note": "Styles a single breadcrumb line AND the interview two-tier header (all-caps kicker above the title + the italic period line below it). Any short pre-title line and the interview period line render at this breadcrumb level."
     },
     "title": {
       "font": "DM Serif Display",
@@ -45,7 +51,7 @@
       "size_pt": 14,
       "bold": true,
       "color": "#003D29",
-      "_note": "NEW mod-guide token: optional bold subtitle line under the title (dark-green-on-white, distinct from the white-on-green band)."
+      "_note": "Optional bold subtitle line under the title (dark-green-on-white, distinct from the white-on-green band)."
     },
     "heading": {
       "font": "DM Serif Display",
@@ -58,14 +64,15 @@
       "font": "DM Serif Display",
       "size_pt": 14,
       "bold": true,
-      "color": "#FFFFFF"
+      "color": "#FFFFFF",
+      "_note": "Applied to EVERY Heading-2, generically (Research Objectives, Prototype Tasks, Wrap-Up, Post-Session Debrief, Participants Log, Parking Lot, Communication & Deliverables, …)."
     },
     "sub_phase_heading": {
       "font": "DM Serif Display",
       "size_pt": 12,
       "bold": true,
       "color": "#003D29",
-      "_note": "NEW mod-guide token: H3 sub-phase (2.1/2.2/2.5); green-on-white so it never reads as a band. Alt: DM Sans 11pt bold #003D29."
+      "_note": "Applied to EVERY Heading-3 (e.g. 'Flow 1', '2.1'); green-on-white so it never reads as a band. Alt: DM Sans 11pt bold #003D29."
     },
     "body": {
       "font": "DM Sans",
@@ -77,7 +84,7 @@
       "size_pt": 9,
       "italic": true,
       "color": "#666666",
-      "_note": "Used for the 'Last updated' metadata line."
+      "_note": "Used for the optional 'Last updated' metadata line."
     }
   },
   "warning": {
@@ -93,8 +100,11 @@
     "native_horizontal_rules": 0,
     "band_render": "shaded_h2_paragraph",
     "band_render_alt": "single_row_two_cell_table_698pt",
-    "ends_at": "Post-Session Debrief",
+    "role_inference": "generic — title = first H1; breadcrumb/kicker = short pre-title line(s) or the italic period line after the title; RACI = consecutive '**Label:** …' bullets (any label set); warning = the TEST ARTIFACT paragraph; every H2 = band; every H3 = sub-phase; every table = Option 4 table styling; every list preserves nesting; all other paragraphs = body.",
+    "no_terminal_section": "The guide may end anywhere (a table may appear after Post-Session Debrief). The formatter does NOT enforce a terminal section — that content rule lives in SKILL.md / the templates.",
     "variable_table_count": true,
+    "variable_columns": true,
+    "variable_header_rows": true,
     "heading_outline_preserved": true
   },
   "section_bands": {
@@ -108,12 +118,7 @@
     "label_case": "UPPER",
     "width_pt_paragraph_mode": 648,
     "width_pt_table_alt_mode": 698.4,
-    "fixed_labels": [
-      "PRE-SESSION CHECKLIST",
-      "CONSENT + RECORDING SCRIPT — READ VERBATIM",
-      "POST-SESSION DEBRIEF"
-    ],
-    "dynamic_labels": "one band per ## phase heading (PHASE 1 WARM-UP, PHASE 2 CORE, optional PHASE 3 STIMULUS, PHASE 4 WRAP-UP); labels adapt to the study, do not copy an old study's wording"
+    "applies_to": "every ## heading in the document, generically; labels adapt to the study, do not copy an old study's wording"
   },
   "tables": {
     "cell_padding_pt": 5,
@@ -121,10 +126,29 @@
     "section_background": "#003D29",
     "table_line_spacing_percent": 100,
     "intentional_text_area_overflow_pt": 50.4,
-    "border": "MIRROR research-plan option4_layout.py; single thin neutral border, consistent across all kinds; the base Option 4 contract defines no border color/weight, so this is the sole value to confirm against the research-plan builder rather than invent.",
     "total_width_pt": 698.4,
+    "border": "MIRROR research-plan option4_layout.py; single thin neutral border, consistent across all tables; the base Option 4 contract defines no border color/weight, so this is the sole value to confirm against the research-plan builder rather than invent.",
+    "narrow_first_column_trigger": "#",
+    "narrow_first_column_pt": 90,
+    "label_first_column_pt": 144,
+    "column_width_rule": "The first column is narrow (90pt) when the first header cell is '#' (question/task tables), otherwise it uses the label width (144pt). The remaining width is split evenly across the other columns so every table's outer edge aligns at total_width_pt. Examples: 2-col '#|Ask' -> [90, 608.4]; 2-col Parameter|Detail / Cue|Read aloud / Time|Phase -> [144, 554.4]; 3-col Date & Time|Panelist Bio|Recording -> [144, 277.2, 277.2].",
+    "top_matter_label_background": "#D9D9D9",
+    "section_label_background": "#FFFFFF",
+    "label_background_rule": "A two-column table in the top matter (the Parameter|Detail dashboard) gets the gray label column so it reads as an at-a-glance dashboard; every in-section table (consent, question/task, Session Flow Overview, Participants Log, Timeline, …) uses a white label column.",
+    "first_column_bold_rule": "The first (label) column renders bold when EVERY first cell in the source Markdown is fully bold (Parameter|Detail, Cue|Read aloud, #|Ask). Tables whose first column is not uniformly bold (e.g. a Participants Log's Date & Time values) render the first column at normal weight; inline emphasis from the source is honored either way.",
+    "label_column_text": {
+      "font": "DM Sans",
+      "size_pt": 10,
+      "color": "#000000"
+    },
+    "content_column_text": {
+      "font": "DM Sans",
+      "size_pt": 10,
+      "color": "#000000"
+    },
     "optional_header_row": {
       "enabled_by_default": false,
+      "note": "The Markdown header row is treated as a conversion header and dropped on import (the first content row becomes the first visible row). Header presence is detected per table by row count, so a table may or may not arrive with the header still attached.",
       "background": "#003D29",
       "text": {
         "font": "DM Sans",
@@ -133,73 +157,6 @@
         "color": "#FFFFFF"
       },
       "repeat_as_table_header": true
-    },
-    "kinds": {
-      "parameters": {
-        "columns": 2,
-        "column_widths_pt": [144, 554.4],
-        "total_width_pt": 698.4,
-        "label_column_background": "#D9D9D9",
-        "label_column_text": {
-          "font": "DM Sans",
-          "size_pt": 10,
-          "bold": true,
-          "color": "#000000"
-        },
-        "content_column_text": {
-          "font": "DM Sans",
-          "size_pt": 10,
-          "bold": false,
-          "color": "#000000"
-        },
-        "header_row": false,
-        "conversion_header": ["Parameter", "Detail"],
-        "first_visible_row": "Study Type",
-        "rows": ["Study Type", "Duration", "Format", "Participants", "Goal"]
-      },
-      "consent": {
-        "columns": 2,
-        "column_widths_pt": [144, 554.4],
-        "total_width_pt": 698.4,
-        "label_column_background": "#FFFFFF",
-        "label_column_text": {
-          "font": "DM Sans",
-          "size_pt": 10,
-          "bold": true,
-          "color": "#000000"
-        },
-        "content_column_text": {
-          "font": "DM Sans",
-          "size_pt": 10,
-          "bold": false,
-          "color": "#000000"
-        },
-        "header_row": false,
-        "conversion_header": ["Cue", "Read aloud"],
-        "content_is_read_verbatim": true
-      },
-      "question": {
-        "columns": 2,
-        "column_widths_pt": [90, 608.4],
-        "total_width_pt": 698.4,
-        "label_column_background": "#FFFFFF",
-        "label_column_text": {
-          "font": "DM Sans",
-          "size_pt": 10,
-          "bold": true,
-          "color": "#000000"
-        },
-        "content_column_text": {
-          "font": "DM Sans",
-          "size_pt": 10,
-          "bold": false,
-          "color": "#000000"
-        },
-        "header_row": false,
-        "conversion_header": ["#", "Ask"],
-        "narrow_first_column": true,
-        "first_column_fallback_width_pt": 96
-      }
     }
   },
   "spacing": {
@@ -215,6 +172,7 @@
     "raci_indent_start_pt": 36,
     "raci_indent_first_line_pt": 18,
     "list_indent_start_pt": 36,
-    "list_indent_first_line_pt": 18
+    "list_indent_first_line_pt": 18,
+    "list_indent_level_step_pt": 18
   }
 }
