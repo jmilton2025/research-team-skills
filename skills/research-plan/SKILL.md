@@ -11,11 +11,11 @@ Generates a complete, polished UX research plan tailored to the researcher's stu
 
 | Step | What happens | Gate before advancing |
 |---|---|---|
-| **1** | Gather study inputs (PRD, brief, Slack thread, kickoff notes) | Input received in any format |
-| **1.5** | Discover existing context & insights (research-insights agent → Glean → project folder) → walk researcher through 3 sequential pop-ups: Background, Existing Insights, Hypotheses — one category at a time, multi-select | All three categories locked by researcher |
+| **1** | Gather study inputs (PRD, brief, Slack thread, kickoff notes) → **announce 3-section structure** to researcher before doing anything else | Input received; researcher sees the full plan for the session |
+| **1.5** | Discover existing context & insights (research-insights agent → Glean → project folder) → walk researcher through 3 sequential pop-ups: Background, Existing Insights, Hypotheses — one category at a time, multi-select | All three categories locked by researcher (Section 1 complete) |
 | **1.6** | Collect logistics gaps (decision, name, topic, timeline, sample, stakeholders) via AskUserQuestion | All required logistics confirmed |
 | **2** | Analyze inputs → propose methodology skeleton as a table with rationale | Researcher approves or overrides the method recommendation |
-| **3** | Section-by-section walk — 13 sections in RPP order, one pop-up each | All 13 sections ✓ approved (or researcher invokes override) |
+| **3** | Section-by-section walk — grouped into 3 named sections, one pop-up per subsection, in RPP order. Announce section transitions ("Section 1 locked — moving to Section 2"). | All subsections ✓ approved (or researcher invokes override) |
 | **3.5** | Style reference — pick output format (Jedi's Template default) | Style confirmed |
 | **4** | Generate the complete research plan from approved inputs | Plan drafted; TEST ARTIFACT label applied if mock |
 | **4.5** | Self-critique checklist (11 dimensions) — run before sharing | Gaps noted and incorporated or accepted |
@@ -98,6 +98,27 @@ To begin, ask the researcher to share what they already have. Accept any input f
 > "To draft a tailored research plan, share what you have — a PRD, brief, Slack thread, kickoff notes, or just a paragraph describing the study. Point me at the project folder too, and I'll pull existing context before I ask you anything."
 
 If a Google Doc URL is provided, use Glean (`mcp__glean__read_document`) or the `google-docs:fetch-google-doc` skill to read it. If a Slack thread URL is provided, use the Slack MCP to pull the thread. If a Figma URL or other design-prototype link is provided (common when the input is a designer's PRD + Figma pair), use a connected Figma MCP tool to pull frame/comment content when one is available in the environment; otherwise treat the link as a stimulus reference — ask the researcher for a one-line description of what it shows and carry the URL through to the Stimuli row and Additional → Documents rather than leaving it un-actioned.
+
+**Once input is received — orient the researcher before anything else.** *(Added 2026-09-22. The skill is designed for researchers who are not AI-native. Make the workflow completely legible upfront so there are no surprises.)* Before running any discovery or asking any question, say in chat:
+
+> "Got it — I'll help you build this research plan step by step. I'll propose content for each piece and we can brainstorm together to refine it. Nothing will be locked until you approve it.
+>
+> Here's how we'll work — **three sections, in order:**
+>
+> **Section 1 — Context & Foundation** *(what we already know)*
+> → Background · Previous insights · Hypotheses
+>
+> **Section 2 — Research Design** *(how we'll study it)*
+> → Objectives · Key Research Questions · Decisions this answers · Method & Approach · Sample/Participants · Timeline
+>
+> **Section 3 — Outputs** *(what comes out)*
+> → Deliverable format · Additional docs
+>
+> For each piece I'll show you a draft, then a pop-up with options: accept it, brainstorm with me to refine it, or rewrite it yourself. We move to the next section only after you've approved the current one.
+>
+> Starting with **Section 1 — Context & Foundation.** Pulling background and prior research now..."
+
+Then immediately continue to Step 1.5 (discovery).
 
 ### Step 1.5: Discover Existing Context & Insights FIRST (before any logistics questions)
 
@@ -208,21 +229,43 @@ Defend sample size with the decision the research informs, not the number alone.
 
 So Step 3 is NOT a few batched method questions. It is a **guided walk through the plan's sections, one pop-up per section, in the exact same order as the OUTPUT TEMPLATE.** For each section: show Claude's proposed draft of that section, then a pop-up to approve / brainstorm / edit it, then move to the next. The researcher is co-authoring section by section, not approving a finished artifact at the end.
 
-**Walk order (identical to the OUTPUT TEMPLATE order — DO NOT reorder):**
+**Walk order — grouped into 3 named sections.** When starting each section, announce it in chat: *"Section 1 locked — moving to Section 2: Research Design."* This keeps non-AI-native researchers oriented throughout the session.
+
+---
+
+**SECTION 1 — Context & Foundation** *(announce at start: "Let's start with Section 1 — what we already know about this topic.")*
 
 1. **Existing Insights** *(FIRST pop-up)* — "Here's what we already know" (from Step 1.5 discovery). Confirm / correct / add. This comes first because it grounds everything that follows (Prakriti + Amalia: lead with what's known). *(Topic + TL;DR are auto-drafted and shown alongside, but the discovery review is the first interactive gate.)*
-2. **Topic** — the one-line leadership framing.
-3. **Background** — Problem Statement (3 bold-lead bullets) + Product Context.
-4. **Objectives** — Claude's 3 proposed objectives; approve / edit / rewrite.
-5. **Key Research Questions** — 3 broad project-level questions; approve / edit / rewrite.
-6. **Hypotheses / Questions of Interest from XFN leads** — beliefs to pressure-test; approve / edit.
+2. **Background** — Problem Statement (3 bold-lead bullets) + Product Context.
+3. **Topic** — the one-line leadership framing (auto-drafted; confirm or reword).
+4. **Hypotheses / Questions of Interest from XFN leads** — beliefs to pressure-test; approve / edit.
+
+*When all 4 are approved: "Section 1 is locked in — moving to Section 2: Research Design."*
+
+---
+
+**SECTION 2 — Research Design** *(announce: "Now we'll work through how we'll actually run the study.")*
+
+5. **Objectives** — Claude's 3 proposed objectives; approve / edit / rewrite.
+6. **Key Research Questions** — 3 broad project-level questions; approve / edit / rewrite.
 7. **What decisions will be made with such research?** — confirm the decision fork(s).
 8. **What Research Priorities is this relevant to (Themes)** — confirm theme mapping.
 9. **Method + Approach** *(Project Details)* — the minimum-evidence recommendation + 1–2 alternatives; pick the tradeoff.
 10. **Sampling Plan / Participants** *(Project Details)* — cohorts, completes, recruit source.
-11. **Stimuli → Dependencies → Compensation → Research Platform → Deliverable Format** *(rest of Project Details)* — can batch these last logistics cells into one pop-up.
-12. **Proposed Research Timeline** — dated milestones; confirm / shift.
+11. **Proposed Research Timeline** — dated milestones; confirm / shift.
+
+*When all 7 are approved: "Section 2 is locked in — just one section left: Outputs."*
+
+---
+
+**SECTION 3 — Outputs** *(announce: "Last section — what the research will produce and where it lives.")*
+
+12. **Stimuli → Dependencies → Compensation → Research Platform → Deliverable Format** *(rest of Project Details)* — can batch these logistics cells into one pop-up.
 13. **Additional → Documents** — confirm the auto-linked doc list; add any missing.
+
+*When both are approved: "All three sections are locked — ready to generate the full plan."*
+
+---
 
 **How each section pop-up works (the pattern, repeated per section):**
 
