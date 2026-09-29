@@ -354,7 +354,7 @@ For smaller studies or when kappa is overkill, report **% agreement** on a doubl
 
 ## 4. General Synthesis: Ladder of Inference
 
-For **Mode A (General Affinity Synthesis)**, use the synthesis ladder (adapted from Sharon's *Validating Product Ideas* and Argyris' ladder of inference).
+For **General Affinity Synthesis**, use the synthesis ladder (adapted from Sharon's *Validating Product Ideas* and Argyris' ladder of inference).
 
 Each step UP the ladder increases abstraction and interpretation. Each step must be grounded in the one below.
 
