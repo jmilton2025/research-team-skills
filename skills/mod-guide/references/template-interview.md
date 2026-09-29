@@ -41,11 +41,14 @@ Ask these **in addition to** the shared Section 1 rows (study title, moderation 
 
 Walk these blocks in order, draft → approved → locked, labeled `Section 2 > Step N of M`.
 
+**Pop-up usage rule:** Pop-ups (`AskUserQuestion`) are used **only** for the guide-format question (prototype vs. interview — Section 1 Step 1). Do **not** use pop-ups for Introduction, Background Questions, or Wrap-Up — these sections have fixed, template-driven content and are drafted directly, not gate-kept with pop-ups.
+
 1. **Objectives** — plain goal bullets (understand / envision / identify), horizon-framed where relevant. **No hypotheses, no P0 labels** (that's the prototype style).
-2. **Introduction & Rapport** *(verbatim — confirm, don't re-draft)* — thanks + framing (incl. any blinded-session note), 1–2 ice-breaker / background-verification questions, and a scripted **screen-out** to gracefully end the call if the participant doesn't fit.
-3. **Thematic deep-dive blocks** — **one block per theme** from the approved I3 list. Open how/why/what questions as nested prose bullets (main question → indented probes). Flag conditional blocks in the heading ("(15 min — if applicable based on background)").
-4. **Wrap-Up** — anything to add/emphasize, thank-you, invite additional feedback.
-5. **Parking Lot** *(optional)* — emergent topics for later rounds, grouped.
+2. **Introduction & Rapport** *(verbatim — confirm, don't re-draft)* — condensed 3-bullet welcome (recording/privacy · session overview · logistics/prototype caveat), screen-out script. No pop-up.
+3. **Background Questions** *(verbatim — confirm, don't re-draft)* — 4–6 topic-adjacent icebreaker questions. Use the grocery/in-store standard block for store-based studies. No pop-up.
+4. **Thematic deep-dive blocks** — **one block per theme** from the approved I3 list. Open how/why/what questions as nested prose bullets (main question → indented probes). Flag conditional blocks in the heading ("(15 min — if applicable based on background)").
+5. **Wrap-Up** *(verbatim — confirm, don't re-draft)* — standard 3-line close (open catch-all · questions for me · thank-you + incentive). No pop-up.
+6. **Parking Lot** *(optional)* — emergent topics for later rounds, grouped.
 
 The truly-shared spine (parameter table, Pre-Session Checklist, Consent script, Post-Session Debrief) is assembled around these per SKILL.md; the two-tier interview header/RACI block and the interview-specific **Participants Log** are defined in this template.
 
@@ -120,14 +123,41 @@ The truly-shared spine (parameter table, Pre-Session Checklist, Consent script, 
 
 ## Introduction & Rapport Building (~[X] min)
 
-**Goal:** Build rapport and verify the participant's background; screen out gracefully if they don't fit.
+**Goal:** Build rapport, set expectations, and screen out gracefully if needed.
 
-*(Prose bullets, not a table — the interview body has no tables, per the core principle above.)*
+> "Hi [name]! I'm [moderator name], [role framing — e.g. an independent researcher partnering with Instacart]. There are no right or wrong answers — we just want your honest opinion."
 
-- "To start, share a bit about your experience with [domain]."
-- "Where would you say your deepest expertise is?"
+- **Recording & privacy:** I'll be recording and taking notes throughout. Everything stays internal to this study — your feedback will be shared anonymously.
+- **What we'll do:**
+  - *Interview guide:* "We're going to spend about [X] minutes talking about your [domain — e.g. grocery shopping] experience. I just want to hear what it's really like for you."
+  - *Prototype guide:* "We're going to spend about [X] minutes looking at some [concepts / ideas / screens] and hearing what you think about them. As you go through each one, think out loud — share what you notice, like, or don't like."
+- **[Prototype only — logistics note]:** "Some of what you'll see are early prototypes, so not everything will be tappable the way it would be on the real [product/device]. [Any required items — e.g. 'Also confirming — did you bring [cash/EBT] for today?']"
 
-> **Screen-out (if they don't fit the profile):** "Thank you — it sounds like your focus is a bit different from what we're exploring today, so I don't want to take more of your time. We'll still process your incentive. [End call.]"
+> Any questions before we start?
+
+> **Screen-out (if they don't fit the profile):** "Thank you — it sounds like your background is a bit different from what we're exploring today, so I don't want to take more of your time. We'll still process your incentive. [End session.]"
+
+---
+
+## Background Questions (~[X] min)
+
+**Goal:** Warm up the participant and establish relevant context before the core tasks/themes.
+
+*(Icebreaker questions — keep general but topic-adjacent. Adapt to the study domain.)*
+
+- [Who is typically involved in [the relevant behavior — e.g. grocery shopping, decision-making] in your household?]
+- [How often do you [relevant behavior]? Is it usually [mode A] or [mode B]? Why do you tend to choose one over the other?]
+- [Tell me about the last time you [relevant behavior] — walk me through what that was like.]
+- [Are you familiar with [the product/concept under study]? Have you used it before?]
+  - *[If yes]* Where / when? How did it go?
+- [Any contextual grounding question specific to the study location or setup.]
+
+**Grocery/in-store shopping studies — standard background block:**
+- Who takes care of the grocery shopping for your household?
+- How often do you shop for groceries — and is it mostly in-store or online? Why do you tend to choose one over the other?
+  - What type of cart do you typically use when shopping in-store? Why?
+- Tell me about your last grocery trip — where did you go and how did it go?
+- How often do you shop at this store?
 
 ---
 
@@ -152,8 +182,11 @@ The truly-shared spine (parameter table, Pre-Session Checklist, Consent script, 
 
 ## Wrap-Up (~[X] min)
 
-- "Is there anything you'd add or want to emphasize?"
-- "Thank you so much — may I follow up if more questions come up?"
+*(Standard close — no pop-up needed for this section.)*
+
+- Thinking back to everything we've discussed, is there anything you didn't get a chance to share that you'd like to?
+- Do you have any questions for me?
+- Thank you again for your time today! [Incentive delivery note if applicable.]
 
 ---
 

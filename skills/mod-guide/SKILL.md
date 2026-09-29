@@ -153,29 +153,11 @@ Analyze the inputs, then present recommended study parameters as a table. Extrac
 
 Rationale: time splits follow NN/g's qualitative usability testing study guide and Rosala's interview-guide conventions.
 
-### 2b. Present recommendations
+### 2b. Skip the recommendation table — go straight to Section 1 pop-ups
 
-**Render as a real Markdown table — NEVER inside a triple-backtick code fence.** The researcher needs to scan this in proper table formatting, not in monospaced code. Show it directly in the chat as:
+**Do NOT show a "Based on your inputs, here's what I recommend" summary table.** After analyzing the inputs internally, go straight into the Section 1 `AskUserQuestion` pop-ups (Step 3). The extracted parameters inform the Recommended options in each pop-up — they do not need to be shown as a standalone table first.
 
-> Based on your inputs, here's what I recommend:
->
-> | Parameter | Recommendation | Why |
-> |-----------|---------------|-----|
-> | **Guide format** | **[Prototype/Usability OR Interview]** | [1-line — which top-level fork the signals point to, per Step 2a] |
-> | Sub-type (within format) | [Prototype → Usability / Concept · Interview → IDI / Diary / Focus] | [1-line rationale from inputs] |
-> | Moderated vs Unmoderated | Moderated | [rationale — depth, probing, observation] |
-> | Duration | [30/45/60/90 min] | [based on scope + format] |
-> | Number of Participants | [N=8 / 12 / 24] | [based on objectives + saturation] |
-> | Participant Profile | [e.g., "Instacart shoppers 25-45, 2+ orders/week"] | [derived from target users] |
-> | Key Topics / Tasks / **Flows** | • [Topic 1 · Topic 2 · Topic 3] *(interview themes)* OR • [Flow 1 · Flow 2 · Flow 3] *(prototype tasks)* | [mapped to objectives] |
-> | Research Goal | [1-2 sentences] | — |
-> | Say-Do Gap Risk | [Low / Medium / High] | [see Step 2c] |
-
-**When the recommended format is Prototype/Usability, append the prototype-specific rows** the loaded reference will ask about, so every Section 1 popup's Recommended option has a backing entry here: **Prototype / stimulus link** · **Backup** · **Device / platform** · **Experimental design** · **Post-task rating style** · **Delivery model (internal / vendor)**. When it's Interview, append: **Recruit source** · **Blinded?** · **Horizon framing** (if future-looking). Pull these from the matching template reference's parameter set.
-
-(Use the example above as a template — strip the leading `>` characters and write the table directly. The point is: no triple backticks, no code block. A real table.)
-
-**Hand-off to Section 1 (Step 3):** this table is read-only context, not a checkpoint — do not wait for the researcher to react to it. Post the table and immediately continue into Section 1's `AskUserQuestion` batches in the same turn. The table exists so the researcher can see Claude's reasoning at a glance *while* answering the popups (each popup's "Recommended" option is exactly what the table already proposed), not as a separate approve/reject step.
+**Hand-off to Section 1 (Step 3):** immediately after Step 2a/2c analysis, launch the first Section 1 `AskUserQuestion` batch in the same turn. No intermediate table, no interim summary in chat.
 
 ### 2c. Say-Do Gap Risk Check
 
@@ -331,37 +313,39 @@ Every content pop-up must be labeled with its section and step (e.g. **"Section 
 **The blocks, in order — use the sequence from the loaded template reference (M = the number of blocks this study actually has):**
 
 **If the format is Interview** (`references/template-interview.md`):
-1. **Objectives** — plain goal bullets (no hypotheses / P0 labels).
-2. **Introduction & Rapport** — verbatim; incl. any blinded-session note + a screen-out script. Confirmed, not re-drafted.
-3. **Thematic deep-dive blocks** — **one block per theme** from the approved Row-7 list; open questions as nested prose probes; conditional themes flagged "if applicable." **When the Say-Do Gap module is Included (Row 8), each affected block's draft carries the visible `**Say-Do Gap Probe:**` prose line** — this is what makes Include vs. Skip visibly different.
-4. **Wrap-Up** + optional **Parking Lot**.
+1. **Objectives** — plain goal bullets (no hypotheses / P0 labels). **No pop-up — auto-generated from inputs, shown for confirmation only.**
+2. **Introduction & Rapport** — verbatim 3-bullet welcome (recording/privacy · session overview · logistics). Auto-generated from template. **No pop-up, no approval gate.**
+3. **Background Questions** — topic-adjacent icebreaker questions. Auto-generated from template (use grocery/in-store standard block for store-based studies). **No pop-up, no approval gate.**
+4. **Thematic deep-dive blocks** — **one block per theme** from the approved Row-7 list; open questions as nested prose probes; conditional themes flagged "if applicable." **Pop-up for each block.** **When the Say-Do Gap module is Included (Row 8), each affected block's draft carries the visible `**Say-Do Gap Probe:**` prose line** — this is what makes Include vs. Skip visibly different.
+5. **Wrap-Up** + optional **Parking Lot** — standard close. **No pop-up, no approval gate.**
 
 **If the format is Prototype/Usability** (`references/template-prototype-usability.md`):
-1. **Objectives & Research Questions** — hypotheses + P0/P1 labels, kept separate from the script.
-2. **Test Stimuli & Setup** — primary + backup prototype links, device, experimental-design note.
-3. **Introduction** — verbatim; independent-researcher framing + think-aloud ("brain on speakerphone") + prototype-limitations caveat. Confirmed, not re-drafted.
-4. **Background / Warm-Up** — profiling + tech-setup handoff.
-5. **Task Flows** — **one block per flow** from the approved Row-7 list: scenario setup, think-aloud directive, guided-tap steps, behavior forks, observation cues (in prose below the table), and the reused post-task ease rating + reflection.
-6. **Comparisons** (multi-variant only) → **Cross-flow Recap** (optional) → **Wrap-Up**.
-7. **Communication & Deliverables (+ Timeline)** — vendor-run only.
+1. **Objectives & Research Questions** — hypotheses + P0/P1 labels, kept separate from the script. **No pop-up — auto-generated.**
+2. **Session Flow** — simple phase list (Background & Warm-Up → Phase 1 → Phase 2 → Phase 3 → Wrap-Up). No minute-by-minute breakdown, no counterbalance grid here. **Auto-generated.**
+3. **Background & Warm-Up** *(no pop-up, no approval gate)* — simple numbered questions (Q1, Q2, Q3), no table format, no "Probes to use:" header. Observation cues at the end. Auto-generated from template.
+4. **Phases (the core)** — **one block per phase / stimulus** from the approved Row-7 list. Named Phase 1, Phase 2, Phase 3 — simple, consistent naming. Each: stimulus link, question prompts as a table (Cue | Ask/Do), observation cues in prose below. **Pop-up for each phase.**
+5. **Wrap-Up** *(no pop-up, no approval gate)* — standard 3-question numbered close. Auto-generated.
+6. **Communication & Deliverables (+ Timeline)** — vendor-run only.
 
-The **shared scaffolding** — breadcrumb, stakeholder/ownership block (RACI or POC), parameter table, Pre-Session Checklist, Consent + Recording (+ think-aloud, for prototype) script, and Post-Session Debrief — is standardized on **both** formats and assembled automatically around the approved blocks (the Consent script is read verbatim, so it is shown for confirmation, not re-drafted). Show the scaffolding alongside the first content block so the researcher sees the whole shape.
+The **shared scaffolding** — header (Moderation Guide title + study title), ownership block (RACI), parameter table, Pre-Session Checklist, and Post-Session Debrief — is standardized on **both** formats and assembled automatically around the approved blocks. The Consent + Recording script is **not included** in the guide — sessions start directly with Background & Warm-Up. Show the scaffolding alongside the first content block so the researcher sees the whole shape.
 
 **Whole-draft override:** if the researcher explicitly asks for the full guide at once instead of block-by-block, skip the per-block pop-ups but still show the complete assembled draft for a single approval, keep the confirmed destination, and perform every Section 3 and verification step. Default to block-by-block unless they ask.
 
 ### Quality-gate announcement (say this after the last content block is locked)
 
-Once all content blocks are approved, tell the researcher exactly what happens next so they know what to expect:
+Once all content blocks are approved, **ask the researcher** whether they want to run the two quality checks before the final doc. Use `AskUserQuestion`:
 
-> All blocks are approved — I now have everything I need. Here's what I'll do before I hand you the final guide:
->
-> 1. **Run a critique pass** — the self-critique audit below pressure-tests the guide for methodology gaps, biased phrasing, and weak probes.
-> 2. **Run the multi-agent review** — several independent reviewers check the guide for inconsistencies and problems in parallel.
-> 3. **Then I'll produce your moderation guide** — the formatted, verified Google Doc in your confirmed Drive folder.
->
-> Running the critique and multi-agent checks now — I'll fold in any fixes before the Doc is created.
+> "All blocks are approved! Before I create the Google Doc, I can run two optional quality checks:
+> 1. **Critique pass** — I self-audit for methodology gaps, biased phrasing, and weak probes.
+> 2. **Multi-agent review** — independent reviewers check in parallel.
+> 
+> Would you like to run these before the final guide?"
 
-The moderation guide (the final Google Doc) is drafted **last**, after both checks. The expected sequence is **approved blocks → self-critique → multi-agent → fixes → create the Google Doc → share.** Never describe the guide as final before both checks have run.
+Options: "Yes — run both checks first" (Recommended) · "Skip — go straight to the Google Doc" · "Brainstorm with me"
+
+**Only run the checks if the researcher says yes.** If they say skip, proceed directly to Step 6 (create the Google Doc). Never auto-run the checks without asking.
+
+The moderation guide (the final Google Doc) is drafted **last**. Expected sequence when checks are included: **approved blocks → self-critique → multi-agent → fixes → create Google Doc → share.** When checks are skipped: **approved blocks → create Google Doc → share.**
 
 ### Assembly
 
@@ -375,20 +359,19 @@ Apply the researcher's approved parameters and blocks. **Both OUTPUT TEMPLATES l
 
 Both guide types wrap the **same spine** — parameter table, Pre-Session Checklist, Consent script, Post-Session Debrief. Assemble it around the format-specific body (interview blocks or prototype task flows). The Consent script is read verbatim (confirm, don't re-draft); a **prototype** guide inserts three extra cues into it — "no right answers," think-aloud ("put your brain on speakerphone"), and the prototype-limitations caveat — per `references/template-prototype-usability.md`.
 
-**The document header is format-styled, not shared.** The skeleton below shows the **prototype** header — a `UX Research | Research Plan/Discussion Guide | Round N` breadcrumb + a Study-Title H1 + a Links row. An **interview** guide instead uses its own two-tier title (all-caps study kicker + doc-type title + italic period), per `references/template-interview.md`. The breadcrumb's doc-type label is `Research Plan` (internal) or `Discussion Guide` (vendor/interview); `Moderation Guide` is only a generic fallback when neither fits. The ownership block is standardized as full RACI on both.
+**The document header is always "Moderation Guide."** Both formats use `# Moderation Guide` as the document title, followed by `## [Study Title]` and `*[Month Year]*`. Do not use "UX Research | Research Plan | Q3/Q4 2026" or any breadcrumb format — the doc type is always "Moderation Guide." The ownership block is standardized as full RACI on both.
 
-> **Core principle (codified 2026-05-04 from Diet Personalization mod guide):** the moderator's eye should land on a table that holds **only the words to read, ask, or do aloud**. Probes, watch-fors, observation cues, "don'ts," and methodology rationale all live in **prose around the tables**, never inside cells. Interview length target **~4–5 pages**; prototype guides run **~6–8 pages** (task tables + screens).
+> **Core principle (codified 2026-05-04 from Diet Personalization mod guide):** the moderator's eye should land on **only the words to read, ask, or do aloud**. Probes, watch-fors, observation cues, "don'ts," and methodology rationale all live in **prose around** those lines, never mixed in. Interview length target **~4–5 pages**; prototype guides run **~6–8 pages** (task lists + screens).
+>
+> **Prototype format update (Jedida, 2026-09-24):** in a **prototype/usability** guide the read-aloud Introduction and every phase/task, comparison, and recap block are **bold-label lists** (`- **Label:** "line"`), NOT Cue tables. The **only** two tables a prototype guide keeps are the top **Parameter dashboard** and the **Session Flow** agenda. (Interview guides are unchanged — they already use prose bullets, with a Cue table only for consent.) See `references/template-prototype-usability.md`.
 
 ```
-*UX Research | [Moderation Guide | Research Plan | Discussion Guide] | [Round N · Quarter Year]*
+# Moderation Guide
 
-# [Study Title — derived from research goal]
+## [Study Title — derived from research goal]
 
-**[Feature/prototype under test, or study sub-title]**
+*[Month Year]*
 
-Last updated: [Month Year]
-
-[Standardized ownership block on BOTH formats — full RACI. (A prototype guide's source docs used a lighter Designer + UXR POC line; RACI is the standardized default — swap to a POC line only if the researcher asks.):]
 - **Responsible:** [Name] (Role) — `[TBD — fill in]` if not confirmed in Section 1
 - **Accountable:** [Name] (Role) — `[TBD — fill in]`
 - **Consulted:** [Names with roles] — `[TBD — fill in]`
@@ -398,12 +381,11 @@ Last updated: [Month Year]
 
 | Parameter | Detail |
 |-----------|--------|
-| **Study Type** | [format + sub-type — e.g. "Moderated usability test (think-aloud)" or "1:1 in-depth interview (IDI)"] |
-| **Duration** | [X] minutes — [per-phase split in minutes from the chosen format's Step 2a % row applied to the final duration; for interviews add a 4th "probe" bucket carved out of core-time only when the Say-Do Module is included] |
-| **Format** | [Moderated remote / In-person / Unmoderated], [tools/device] |
-| **Participants** | [profile + screening criterion; N=main (+alternates) for prototype] |
-| [Prototype only] **Stimulus** | [Prototype platform; primary [link], backup [link] "use only if main fails"] |
-| **Goal** | [1-sentence research goal — · for multiple objectives] |
+| **Study Type & Format** | [Combined — e.g. "Moderated usability test — in-person" or "Moderated cognitive interview — remote via Zoom"] |
+| **Duration** | [X] minutes |
+| **Participants** | N=[N] — [screening criterion] |
+| [Prototype only] **Stimulus** | [Link to stimulus — Phase A: [link] · Phase B: [link]] |
+| **Goal** | [1-sentence research goal] |
 
 ---
 
@@ -452,13 +434,13 @@ Last updated: [Month Year]
 The body that sits **between the Consent script and the Post-Session Debrief** is format-specific — build it from the matching reference, following its skeleton, table shapes, and generation rules exactly:
 
 - **Interview** → `references/template-interview.md`: **Objectives** (plain goals — no hypotheses/P0) → **Introduction & Rapport** (+ screen-out script) → **Thematic deep-dive blocks** (open questions as nested prose probes; conditional "if applicable" blocks) → **Wrap-Up** → **Participants Log** → optional **Parking Lot**. When the Say-Do Gap module is Included, each affected theme block's draft carries a visible `**Say-Do Gap Probe:**` prose line (see that reference's Say-Do rule).
-- **Prototype/Usability** → `references/template-prototype-usability.md`: **Objectives** (hypotheses + P0) → **Test Stimuli & Session Flow Overview** → **Introduction** (+ think-aloud + prototype caveat) → **Background/Warm-Up** → **Task Flows** (task tables + observation-cue prose lines + reused ease rating) → optional **Comparisons/Recap** → **Wrap-Up** → **Communication & Deliverables (+ Timeline)** for vendor-run.
+- **Prototype/Usability** → `references/template-prototype-usability.md`: **Objectives** (hypotheses + P0) → **Test Stimuli & Session Flow Overview** → **Introduction** (read-aloud **bold-label list** — think-aloud + prototype caveat + consent) → **Background/Warm-Up** → **Task Flows** (each phase a **bold-label list**, not a table — with an observation-cue prose line below + reused ease rating) → optional **Comparisons/Recap** (lists) → **Wrap-Up** → **Communication & Deliverables (+ Timeline)** for vendor-run. Only the Parameter dashboard and Session Flow agenda are tables.
 
 The shared scaffolding above wraps this body identically for both formats.
 
 **IMPORTANT:**
 - The guide MUST end at its last content section, which depends on format: the **(optional) Parking Lot, else the Participants Log**, for an **INTERVIEW** guide; the **Post-Session Debrief** for an **INTERNAL prototype** guide; or **Communication & Deliverables (+ Timeline)** for a **VENDOR-RUN prototype** guide. (The Post-Session Debrief is a shared element that sits near the end but is *not* the last section for interviews or vendor prototypes.) Do NOT add Master Probe Bank, Bias Mitigation Checklist, Self-Critique Audit, or a pilot reminder inside the guide document itself. Those live in `references/mod-guide-methodology.md` for the moderator to consult separately, or — for the pilot reminder specifically — get delivered as one line in the Step 6 chat summary alongside the doc link (see Step 4.5 Part 4 "Pilot reminder" and Step 6.3 item 1). Never inside the guide's own pages.
-- **Tables contain ONLY questions / read-aloud / do lines.** Probes, watch-fors, observation cues, tagging guidance, "don'ts," and methodology rationale ALWAYS live in prose above or below the table — never inside cells. (Prototype guides: observation cues go in a prose line *below* the task table.)
+- **Tables contain ONLY questions / read-aloud / do lines.** Probes, watch-fors, observation cues, tagging guidance, "don'ts," and methodology rationale ALWAYS live in prose above or below the table — never inside cells. (Prototype guides: phase/task content is a bold-label list — observation cues go in a prose line *below* the list.)
 
 ---
 
@@ -470,7 +452,7 @@ The shared scaffolding above wraps this body identically for both formats.
 - **Use `>` blockquotes** for one-line moderator reminders that follow a table (e.g. "Wait for explicit verbal 'yes' before pressing record.").
 - **No `<br><br>` line breaks inside table cells.** Each cell holds one short scannable line. If a question has multiple parts, split into separate rows (`Q12`, `Q12 follow-up`) or sub-questions (`Q6a`, `Q6b`, …).
 - **Pre-Session Checklist and Post-Session Debrief are bullets/numbered lists, NOT tables** (they aren't questions).
-- **Total target length is format-dependent: interview ~4–5 pages (max 7); prototype/usability ~6–8 pages** (task tables + screens push it longer). If a guide exceeds its ceiling, cut moderator-note paragraphs and redundant explanation — never the task/observation content.
+- **Total target length is format-dependent: interview ~4–5 pages (max 7); prototype/usability ~6–8 pages** (task lists + screens push it longer). If a guide exceeds its ceiling, cut moderator-note paragraphs and redundant explanation — never the task/observation content.
 - **Comparison-cohort studies:** label any Ask-table row needing per-cohort variants with the `(Cohort A) / (Cohort B)` convention (see "Multi-cohort studies" in Step 3) rather than improvising inline labels.
 
 #### Visual (portable-first — default vs. optional variants)
@@ -596,7 +578,7 @@ Run the assembled guide through this self-audit (do not rebuild it — this is t
 | Check | Tag | What to Verify |
 |-------|-----|----------------|
 | **Probe quality per question** | [Interview] | Each interview Core question has 1-2 named probes attached (Echo, Tell-Me-More, Laddering, Silence, Critical Incident). No "naked" questions. (Prototype: think-aloud + observation cues play this role.) (See Probing Taxonomy.) |
-| **Moderator Notes / cues embedded** | [Both] | Interview: `[Moderator Note: ...]` at every transition + Core topic. Prototype: per-task **observation cues** (yes/no + "if not, what instead?") in a prose line below each task table, plus behavior forks / WoZ triggers. (AIxUXR §Prompt A.5) |
+| **Moderator Notes / cues embedded** | [Both] | Interview: `[Moderator Note: ...]` at every transition + Core topic. Prototype: per-phase **observation cues** (yes/no + "if not, what instead?") in a prose line below each phase list, plus behavior forks / WoZ triggers. (AIxUXR §Prompt A.5) |
 | **Silence as a tool** | [Both] | Reminds moderator to count 5-10 seconds before filling gaps. (NN/g Fessenden; Portigal) |
 | **Observation cues present** | [Prototype] | Every task flow carries a success/observation cue (yes/no + "if not, what do they do instead?") and a reused post-task ease rating. No task flow without a cue. |
 | **Task framing: goal not UI** | [Prototype] | Tasks describe the goal, not the UI ("find a way to…" not "click the red button"). (AIxUXR §Use Case 2 Critical Rule) |
@@ -670,7 +652,7 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 2. Compare it against every approved block and the parameter header — ownership block completeness (`[TBD — fill in]` where unconfirmed), the parameter table, Pre-Session Checklist and Post-Session Debrief as lists (not tables), the Consent script verbatim, and **tables containing only read-aloud/do lines** (probes/watch-fors/observation-cues/don'ts/rationale in prose, per the domain rule).
 3. **Confirm the guide ends at the format-correct last section** (per the "guide MUST end at…" rule): interview → optional Parking Lot, else Participants Log; internal prototype → Post-Session Debrief; vendor prototype → Communication & Deliverables (+ Timeline). No Master Probe Bank, Bias Mitigation Checklist, Self-Critique Audit, or pilot reminder inside the doc.
 4. **Confirm length against the format ceiling:** interview ~4–5 pages (max 7); prototype ~6–8 pages. If over ceiling, cut moderator-note paragraphs and redundant explanation — never task/observation content.
-5. **When the format is Prototype/Usability, additionally confirm the prototype must-haves:** primary + backup prototype links; a per-task **observation-cue prose line below each task table** (not inside cells); the reused post-task ease rating after every flow; the experimental-design/counterbalance prose note (if any); P0/P1 objectives kept out of the task cells; the top Links row; and (vendor-run) the Communication & Deliverables back-matter.
+5. **When the format is Prototype/Usability, additionally confirm the prototype must-haves:** primary + backup prototype links; the read-aloud Introduction and every phase/task, comparison, and recap block rendered as **bold-label lists, not Cue tables** (only the Parameter dashboard and Session Flow agenda are tables); a per-phase **observation-cue prose line below each phase list** (not inside list items); the reused post-task ease rating after every flow; the experimental-design/counterbalance prose note (if any); P0/P1 objectives kept out of the task lists; the top Links row; and (vendor-run) the Communication & Deliverables back-matter.
 6. Correct every issue, then read back again. If rendering (PDF/thumbnail) is unavailable, disclose that verification was structural rather than visual.
 
 ### 6.3 Return the verified guide
