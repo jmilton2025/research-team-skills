@@ -128,8 +128,24 @@ def parse_inline(markdown: str) -> dict[str, Any]:
                     i = end + 1
                     continue
             if value.startswith("[", i):
-                close = value.find("](", i + 1)
-                if close >= 0:
+                # Pair this "[" with its own balanced "]"; a literal bracket earlier in
+                # the line must not borrow the "](" of a later link.
+                close = -1
+                depth = 0
+                cursor = i
+                while cursor < len(value):
+                    if value[cursor] == "\\":
+                        cursor += 2
+                        continue
+                    if value[cursor] == "[":
+                        depth += 1
+                    elif value[cursor] == "]":
+                        depth -= 1
+                        if depth == 0:
+                            close = cursor
+                            break
+                    cursor += 1
+                if close >= 0 and value.startswith("](", close):
                     depth = 1
                     close_url = -1
                     cursor = close + 2

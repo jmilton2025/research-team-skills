@@ -16,7 +16,7 @@ This file is the content source of truth for `/research-plan`. Every final Googl
 8. **Deliverables & Next Steps**.
 9. **Appendix**.
 
-The four named overview sections must stay in that order. The leadership timeline summarizes the approved detailed Timeline row; it never imports dates or week labels from an older study. The interactive approval walk in `SKILL.md` follows the same content order so the researcher sees the final document take shape.
+The four named overview sections must stay in that order. The leadership timeline summarizes the approved detailed Timeline row; it never imports dates or week labels from an older study. The interactive approval walk in `SKILL.md` approves each row once, grouped by section (context first, then design, then outputs); assembly puts every row back in this canonical order.
 
 ## 1. Opening block
 
@@ -217,7 +217,7 @@ Nothing follows these two Appendix rows.
 | Study type | Likely adaptations |
 |---|---|
 | **In-depth interview (IDI) / generative** | Narrative objectives and questions; behavioral Sample & evaluators; no task metrics unless the decision requires them. Typical N=6–12 for a reasonably homogeneous sample. |
-| **Moderated usability** | Task-oriented Stimuli & protocol; task-level evidence in Measures & analysis; typical N=5–8 per critical group. |
+| **Moderated usability** | Task-oriented Stimuli & protocol; task-level evidence in Measures & analysis; typical N=5 for one group, 3–4 per group for two groups, 3 per group for three or more (Nielsen, 2000 — see `research-plan-methodology.md` §5). Going above that is a judgment call; state the reason in the plan (e.g., each finding must hold within every group, or a no-show buffer) rather than citing a range. |
 | **Unmoderated usability** | Larger sample; task success, time, and post-task ease measures when relevant. |
 | **Survey** | Measures & analysis includes population, precision, confidence interval, and weighting assumptions when used. |
 | **Diary study** | Timeline reflects setup, longitudinal fieldwork, check-ins, and synthesis; protocol includes entry cadence. |

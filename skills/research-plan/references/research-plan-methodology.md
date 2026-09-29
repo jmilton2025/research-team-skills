@@ -83,7 +83,7 @@ Combining NNG (Farrell, 2017 — "UX Research Cheat Sheet"), Erika Hall's four r
 |-----------------------|-----|-----------|
 | Understand motivations, mental models, context | In-Depth Interview (IDI) | 6–12 |
 | Observe behavior in natural setting | Field study / contextual inquiry | 4–8 |
-| Evaluate a flow or prototype for friction | Moderated usability test | 5–8 per persona |
+| Evaluate a flow or prototype for friction | Moderated usability test | 5 for one group; 3–4 per group for two (see §5) |
 | Measure a behavior or attitude at scale | Survey | N≥100 for descriptive; N≥385 for ±5% CI |
 | Track behavior over time in context | Diary study | 8–15 over 1–2 weeks |
 | Compare two or more concepts | Concept test or unmoderated preference test | 30–50 unmoderated, or 8–12 moderated |
@@ -91,7 +91,7 @@ Combining NNG (Farrell, 2017 — "UX Research Cheat Sheet"), Erika Hall's four r
 
 ## 5. Sample Size Rationales — defending N to skeptics
 
-- **N=5 for qualitative usability**: Nielsen (2000), "Why You Only Need to Test with 5 Users." Each user surfaces ~31% of usability problems; ROI flattens after five. For two distinct user groups, run 3–4 per group. For three+ groups, 3 per group. Run more small tests, not one big one.
+- **N=5 for qualitative usability**: Nielsen (2000), "Why You Only Need to Test with 5 Users." Each user surfaces ~31% of usability problems; ROI flattens after five. For two distinct user groups, run 3–4 per group. For three+ groups, 3 per group. Run more small tests, not one big one. This is the one sample-size rule for moderated usability across the skill; `content-rules.md` points here. Going above it (e.g., 6 per group so each finding can be checked within both groups, or a no-show buffer) is a researcher judgment call, so state the reason in the plan instead of citing an uncited range such as "5–8 per group."
 - **N=6–12 for IDIs**: Guest, Bunce, & Johnson (2006) — saturation reached by ~12 interviews for homogeneous samples; Instacart convention is 8 for B2C studies, 6 for expert/B2B studies.
 - **N≥100 for descriptive surveys**: Sauro & Lewis (2012), *Quantifying the User Experience*.
 - **N≥385 for ±5% CI on a general-population proportion**: standard sample-size calculation, 95% confidence.

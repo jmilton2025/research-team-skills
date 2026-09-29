@@ -137,12 +137,22 @@ for name in ("skill", "rules"):
 # Workflow must confirm destination before creating and run the exact pipeline.
 for term in (
     "Confirm the Google Drive Destination",
-    "get_doc_as_markdown",
-    "inspect_doc_structure",
+    "Read the document back as text",
+    "structure-inspection tool",
     "Open the verified Google Doc in the browser",
     "scripts/option4_layout.py",
 ):
     require("skill", term)
+# Read-back and inspection stay tool-agnostic so any connected Docs integration works.
+for retired in ("get_doc_as_markdown", "inspect_doc_structure"):
+    forbid("skill", retired)
+require_regex("skill", r"persistent working folder.{0,120}not `/tmp`", "persistent working folder rule")
+require_regex("skill", r"### Connection check.{0,600}multi-agent-check", "connection check before discovery")
+require_regex("skill", r"multi-agent review has run when it is installed.{0,120}critique-only", "critique-only fallback")
+require_regex("skill", r"Check each fix's wording against the sources", "fix-wording check before applying review fixes")
+require("skill", "examples/multi-agent-review-example.md")
+if not (SKILL_DIR / "examples" / "multi-agent-review-example.md").is_file():
+    failures.append("examples: multi-agent-review-example.md is missing")
 require_regex("skill", r"auto-draft.{0,300}title.{0,300}date.{0,300}RACI", "auto-drafted opening")
 require_order(
     "skill",
@@ -166,6 +176,14 @@ for term in (
     "Brainstorm with me",
 ):
     require("skill", term)
+# Pop-up rules match AskUserQuestion: at most 4 options, multi-select only for combinable choices,
+# and each row approved once (Section 2 no longer re-approves Section 1 rows or the opening).
+require_regex("skill", r"At most 4 options per pop-up", "four-option pop-up cap")
+require_regex("skill", r"multiSelect: true` only when the options can be combined", "conditional multi-select rule")
+forbid("skill", "Always use `multiSelect: true`")
+forbid("skill", "no fixed cap")
+forbid("skill", "of 7:")
+forbid("skill", "### Opening\n")
 
 # Retired fixed-template concepts must not return.
 for name in ("skill", "rules"):

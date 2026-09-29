@@ -13,12 +13,12 @@ A run is complete only when all of the following are true:
 
 1. Existing context has been searched and sourced.
 2. The researcher has approved every applicable plan row.
-3. The critique pass and the multi-agent review have both run, with fixes folded in.
+3. The critique pass has run, and the multi-agent review has run when it is installed (otherwise the run is disclosed as critique-only), with fixes folded in.
 4. The Google Drive destination has been confirmed.
 5. The plan has gone through the **copyedit → create → normalize → Option 4 format → verify → render** pipeline.
 6. The exact **Option 4 — Leadership** visual contract has passed, and a working Google Doc link has been returned with verification status.
 
-Both quality checks run before the Google Doc is drafted. Drive destination confirmation must happen before document creation.
+The quality checks run before the Google Doc is drafted. Drive destination confirmation must happen before document creation.
 
 Markdown is an intermediate representation, not the completed deliverable. A mock or demo stays out of Drive unless the tester explicitly requests a test document.
 
@@ -26,15 +26,15 @@ Markdown is an intermediate representation, not the completed deliverable. A moc
 
 | Step | Work | Completion gate |
 |---|---|---|
-| **1** | Gather PRD, brief, kickoff notes, Slack thread, or free-form context → announce the 3-session-section structure to the researcher | Inputs received; researcher understands the full workflow |
-| **1.5** | **Section 1 — Context & Foundation:** discover background, existing insights, and hypotheses → three sequential pop-ups (Step 1 of 3, 2 of 3, 3 of 3), each multi-select, each locked before the next | All three steps approved; researcher says "Section 1 locked" |
-| **1.6** | Audit the decision; fill only unresolved logistics; auto-draft title, date, and RACI (verify all names via people-search) | Decision is actionable; opening details confirmed |
-| **2** | Recommend the minimum valid Method & approach and applicable conditional fields | Research design approved |
-| **3** | **Section 2 — Research Design** (7 labeled steps) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, multi-select, "Brainstorm with me" always last, transition announced after each lock | All steps approved across both sections |
+| **1** | Gather PRD, brief, kickoff notes, Slack thread, or free-form context → check the connections the run needs → announce the 3-section structure to the researcher | Inputs received; each missing connection connected or explicitly skipped; researcher understands the full workflow |
+| **1.5** | **Section 1 — Context & Foundation:** discover background, existing insights, and hypotheses → three sequential pop-ups (Step 1 of 3, 2 of 3, 3 of 3), each locked before the next | Background, Existing insights, and Hypotheses approved |
+| **1.6** | Audit the decision; fill only unresolved logistics; auto-draft title, date, RACI, and Topic (verify all names via people search) | Decision is actionable; opening approved |
+| **2** | Recommend the minimum valid method direction and the conditional rows the study needs | Method direction picked (the rows are approved in Step 3) |
+| **3** | **Section 2 — Research Design** (4 labeled steps: Objectives, Key research questions, Decisions, Method & approach) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, "Brainstorm with me" always offered, transition announced after each lock | All remaining rows approved; no row approved twice |
 | **3.5** | Confirm the Google Drive destination | Exact folder confirmed |
-| **4** | Assemble the approved plan (markdown intermediate) | Content complete; mock warning applied when relevant |
+| **4** | Assemble the approved plan (markdown intermediate, saved in a persistent working folder) | Content complete; mock warning applied when relevant |
 | **4.5** | Auto-run critique checklist (announced at end of Step 3) | Gaps fixed or explicitly accepted |
-| **5** | Auto-run multi-agent review on the fixed content — before the Doc | Review complete; confirmed fixes folded in |
+| **5** | Auto-run multi-agent review on the fixed content — before the Doc; if it isn't installed, disclose a critique-only run | Review complete (or critique-only disclosed); confirmed fixes folded in |
 | **6** | Copyedit, create, normalize, apply the exact Option 4 — Leadership layout, verify, render, correct, and return | Content, links, location, exact visual contract, and rendered pages pass |
 
 ## When to use
@@ -64,20 +64,19 @@ Load `references/research-plan-methodology.md` when method choice is disputed, s
 
 ## Interaction contract
 
-Use native `AskUserQuestion` checklist pop-ups when available.
+Use native `AskUserQuestion` checklist pop-ups when available, within the tool's limits:
 
 - Ask one decision per pop-up.
-- **Always use `multiSelect: true`.** Research plans rarely have a single right answer — the researcher should always be able to select multiple items.
-- Number the options. Mark a **Recommended** option based on the PRD and discovered evidence.
-- Preserve the built-in **Other / comments** field so researchers can add, correct, or rewrite.
-- Show the proposed content before asking for approval.
-- **The last option in every pop-up must be “Brainstorm with me”** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. Never bury it mid-list.
-- Label every pop-up with its section and step: **”Section 1 > Step 2 of 3: Existing Insights”**. The researcher must always know exactly where they are.
+- **At most 4 options per pop-up.** “Brainstorm with me” takes one slot, so show up to 3 content options. When a row has more items than fit (e.g., six background facts), list them all, numbered, in chat first; then offer grouped options (e.g., “Keep all 6 (Recommended)”, “Keep 1–4, drop 5–6”) and let the researcher name specific items in the comments field.
+- **Use `multiSelect: true` only when the options can be combined** (e.g., which insights to keep, which fixes to apply). Use single-select for either/or choices (e.g., which method direction, which Drive folder).
+- Put the **Recommended** option first, with “(Recommended)” in its label. Base it on the PRD and discovered evidence.
+- Keep the built-in **Other / comments** field so researchers can add, correct, or rewrite. The tool adds it automatically; don't add your own “Other” option.
+- Show the proposed content in chat before the pop-up. Options are short labels, not the content itself.
+- **Offer “Brainstorm with me” as the last option in every approval pop-up.** It opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing.
+- Label every pop-up with its section and step in the question text: **“Section 1 > Step 2 of 3: Existing Insights”**. The researcher must always know exactly where they are. (The short header chip holds at most 12 characters, so the full label goes in the question.)
 - Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Step 3.
 
-If native pop-ups are unavailable, state **”Inline fallback — native checklist unavailable in this environment”** and reproduce the same numbered options and selection instructions in chat. Do not silently substitute an unlabeled prose question.
-
-The number of options per pop-up should match the content — no fixed cap. Show all relevant items; if there are many, show the most important ones first and include an “Other / see more” slot.
+If native pop-ups are unavailable, state **“Inline fallback — native checklist unavailable in this environment”** and reproduce the same numbered options and selection instructions in chat. Do not silently substitute an unlabeled prose question.
 
 ## Option 4 — Leadership Google Docs contract
 
@@ -97,6 +96,21 @@ Ask the researcher to share what already exists: product requirements document, 
 
 When a design link cannot be opened, request one sentence describing the stimulus and retain the URL for Resources from XFN (cross-functional partners).
 
+### Connection check
+
+Before discovery, check each connection the run depends on, with a quick test call rather than trusting the tool list (a listed tool can still ask for sign-in):
+
+| Connection | Needed for |
+|---|---|
+| Research-insights agent | Prior findings (Step 1.5) |
+| Enterprise search (e.g., Glean) | Prior research, supplied internal docs (Steps 1–1.5) |
+| Google Drive / Docs (connector or `gws`) | Reading supplied docs; creating and verifying the final Doc (Step 6) |
+| Slack | Supplied kickoff threads |
+| People / directory search | Verifying RACI names (Step 1.6) |
+| `multi-agent-check` skill | The multi-agent review (Step 5); check the live skill list |
+
+For each missing connection, stop and tell the researcher right then: which connection, what the plan needs it for, and how to connect it (`/mcp` in Claude Code, or the connector's settings on claude.ai). Wait for them to connect it or explicitly choose to skip it. Never quietly work around a missing connection and mention it at the end. Report the result in one line before the announcement below (e.g., “Connected: Glean, Drive, Slack. Skipped: research-insights agent.”), and treat claims that depended on a skipped source as unverified. If Google Docs write access can't be connected, say now that the run will end with the approved draft blocked, not a Google Doc. If `multi-agent-check` isn't installed, say the review in Step 5 will be critique-only.
+
 Before discovery, say in chat:
 
 > Now that you’ve shared your document, I’ll pull relevant prior research and materials, then we’ll build this plan together — one step at a time.
@@ -106,13 +120,15 @@ Before discovery, say in chat:
 > **Section 1 — Context & Foundation** *(what we already know)*
 > Background · Existing Insights · Hypotheses
 >
+> *Then I’ll pin down the decision this study informs and draft the title, date, RACI, and Topic for one quick confirmation.*
+>
 > **Section 2 — Research Design** *(how we’ll run the study)*
-> Objectives · Key Research Questions · What decisions this answers · Method & Approach · Sample / Participants · Timeline
+> Objectives · Key Research Questions · Decisions · Method & Approach (plus sample, measures, or stimuli rows when the study needs them)
 >
 > **Section 3 — Outputs** *(what comes out)*
-> Deliverables · Additional Docs · Next Steps
+> Success & Guardrails · Deliverables · Timeline · Next Steps & Appendix
 >
-> For each step I’ll show you what I’ve found or drafted — you can accept it, pick what to keep, or brainstorm with me to refine it. We move to the next step only after you approve the current one.
+> For each step I’ll show you what I’ve found or drafted — you can accept it, pick what to keep, or brainstorm with me to refine it. Each part is approved once, and we move to the next step only after you approve the current one.
 >
 > Starting with **Section 1 — Context & Foundation.** Pulling background and prior research now…
 
@@ -135,27 +151,29 @@ Walk the researcher through three sequential pop-ups. Announce each one in chat 
 
 **Section 1 > Step 1 of 3: Background & Context**
 
-Say in chat: *”Let's start with background and context — here's what I found from your PRD and prior research.”*
+Say in chat: *“Let's start with background and context — here's what I found from your PRD and prior research.”*
 
-Show concise source-backed facts. Pop-up label: **”Section 1 > Step 1 of 3: Background & Context”**. `multiSelect: true`. Last option: **”Brainstorm with me”**. Lock before advancing.
+Show concise source-backed facts in chat, numbered. Pop-up label: **“Section 1 > Step 1 of 3: Background & Context”**. The researcher picks which facts to keep, so use multi-select (grouped when there are more than 3 facts), with **“Brainstorm with me”** last. Lock before advancing.
 
-After approval, say: *”Background & Context locked. Moving on to Existing Insights.”*
+After approval, say: *“Background & Context locked. Moving on to Existing Insights.”*
 
 ---
 
 **Section 1 > Step 2 of 3: Existing Insights**
 
-Show up to five prior findings with source links and verbatim evidence when available; show fewer when fewer relevant findings exist. Pop-up label: **”Section 1 > Step 2 of 3: Existing Insights”**. `multiSelect: true`. Last option: **”Brainstorm with me”**. Lock before advancing.
+Show up to five prior findings in chat with source links and verbatim evidence when available; show fewer when fewer relevant findings exist. Pop-up label: **“Section 1 > Step 2 of 3: Existing Insights”**. Multi-select for which findings to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
 
-After approval, say: *”Existing Insights locked. Moving on to Hypotheses.”*
+After approval, say: *“Existing Insights locked. Moving on to Hypotheses.”*
 
 ---
 
 **Section 1 > Step 3 of 3: Hypotheses**
 
-Show proposed, falsifiable beliefs grounded in evidence or explicit stakeholder assumptions. If none are grounded yet, propose the explicit empty state: *”No hypotheses confirmed at planning time.”* Pop-up label: **”Section 1 > Step 3 of 3: Hypotheses”**. `multiSelect: true`. Last option: **”Brainstorm with me”**. Lock before advancing.
+Show proposed, falsifiable beliefs grounded in evidence or explicit stakeholder assumptions. If none are grounded yet, propose the explicit empty state: *“No hypotheses confirmed at planning time.”* Pop-up label: **“Section 1 > Step 3 of 3: Hypotheses”**. Multi-select for which hypotheses to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
 
-After approval, say: *”Hypotheses locked. Section 1 — Context & Foundation is complete. Moving on to Section 2 — Research Design.”*
+After approval, say: *“Hypotheses locked. Section 1 — Context & Foundation is complete. Next I’ll pin down the decision and the opening details, then we’ll move into Section 2 — Research Design.”*
+
+These three rows are now approved. Don't ask for them again in Step 3; if later work changes one (e.g., a new hypothesis surfaces), show just the change and ask once.
 
 ---
 
@@ -187,7 +205,7 @@ Infer known information from the inputs. Ask one pop-up at a time only for unres
 
 ### Opening confirmation
 
-Auto-draft the title, date, and RACI from the PRD and current people context. Show the complete opening once and ask for a simple confirmation or correction. Include all four RACI roles and use `[TBD — fill in]` only where discovery cannot identify the person.
+Auto-draft the title, date, and RACI from the PRD and current people context. Show the complete opening (breadcrumb, title, date, RACI, and Topic) once and ask for a simple confirmation or correction. Pop-up label: **“Opening: Title, Date & RACI”**. This is the only time the opening is approved. Include all four RACI roles and use `[TBD — fill in]` only where discovery cannot identify the person.
 
 **Stakeholder identity verification:** Before carrying any name into the RACI block, verify it is still current using the people/directory search tool. Stored context and project files can become stale (e.g., a named team member may have left or changed roles). If there is any doubt about who belongs in a role, ask the researcher directly: *"I see [Name] listed as [Role] — is that still accurate?"* Never assume a name from memory is current without a live check.
 
@@ -207,15 +225,13 @@ Choose the method family based on the evidence need:
 
 Resolve conflicts between the minimum valid design and the deadline; do not merely flag them. Present three paths: descope the decision or evidence need, extend the timeline, or pause/escalate because the study cannot validly answer the decision as scoped. Record the approved tradeoff in Dependencies & guardrails. Never compress a method below validity without explicit disclosure.
 
-### Adaptive approval sequence
+### Pick the direction, then draft the rows
 
-Always approve:
+Ask one single-select pop-up for the method direction: the recommended design first, up to two alternatives, and **“Brainstorm with me”** last. This picks the direction only; the rows themselves are approved once, in Step 3.
 
-1. **Method & approach**.
-2. **What does success look like?**
-3. **Dependencies & guardrails**.
+Every plan drafts **Method & approach** (approved in Section 2), plus **What does success look like?** and **Dependencies & guardrails** (approved together in Section 3).
 
-Present these conditional choices only when relevant:
+Draft these conditional rows only when relevant; they are approved with Method & approach:
 
 - **Sample & evaluators** appears only when relevant to participant recruitment, rater/evaluator selection, sample coverage, strata, or independence.
 - **Measures & analysis** appears only when relevant to scoring, comparison, statistical precision, coding, adjudication, or a defined analytical decision rule.
@@ -230,29 +246,24 @@ Prevent conditional-row duplication. Give each fact one primary home: case or pa
 
 For multi-item rows, draft each method, phase, criterion, measure, or analysis step as a separate bullet.
 
-## Step 3: Approve the plan in final output order
+## Step 3: Approve the remaining rows in output order
 
 Show the proposed row content first, then ask the researcher to accept, brainstorm, or edit it. Maintain a visible approved/pending checklist. Re-show revised content after brainstorming and obtain approval before advancing.
 
-Every pop-up must be labeled with its section and step (e.g., **”Section 2 > Step 3 of 7: Objectives”**). `multiSelect: true` on every pop-up. Last option always **”Brainstorm with me”**. Announce each transition in chat after a step is locked.
+Every pop-up must be labeled with its section and step (e.g., **“Section 2 > Step 1 of 4: Objectives”**) and follow the pop-up rules in the Interaction contract. Announce each transition in chat after a step is locked.
 
-### Opening
-
-Confirm the combined breadcrumb, title, date, RACI, and Topic. The findings placeholder is automatic. Pop-up label: **”Opening: Title, Date & RACI”**.
+Background, Existing insights, and Hypotheses were approved in Section 1, and the opening in Step 1.6. Don't re-ask for them here.
 
 ---
 
-### Section 2 — Research Design *(announce: “Section 1 is locked. Now we'll work through Section 2 — Research Design.”)*
+### Section 2 — Research Design *(announce: “The decision, opening, and method direction are set. Now we'll work through Section 2 — Research Design.”)*
 
 Approve in this order:
 
-1. **Background** — Pop-up label: **”Section 2 > Step 1 of 7: Background”**. After lock: *”Background locked. Moving on to Existing Insights.”*
-2. **Existing insights** — Pop-up label: **”Section 2 > Step 2 of 7: Existing Insights”**. After lock: *”Existing Insights locked. Moving on to Objectives.”*
-3. **Objectives** — Pop-up label: **”Section 2 > Step 3 of 7: Objectives”**. After lock: *”Objectives locked. Moving on to Key Research Questions.”*
-4. **Key research questions** — Pop-up label: **”Section 2 > Step 4 of 7: Key Research Questions”**. After lock: *”Research Questions locked. Moving on to Hypotheses.”*
-5. **Hypotheses** — Pop-up label: **”Section 2 > Step 5 of 7: Hypotheses”**. After lock: *”Hypotheses locked. Moving on to Decisions.”*
-6. **What decisions will be made with this research?** — `multiSelect: true` — each decision fork is its own selectable option. Pop-up label: **”Section 2 > Step 6 of 7: What Decisions”**. After lock: *”Decisions locked. Moving on to Method & Approach.”*
-7. **Method & approach** + applicable conditional rows — Pop-up label: **”Section 2 > Step 7 of 7: Method & Approach”**. After lock: *”Method locked. Section 2 — Research Design is complete. Moving on to Section 3 — Outputs.”*
+1. **Objectives** — Pop-up label: **“Section 2 > Step 1 of 4: Objectives”**. After lock: *“Objectives locked. Moving on to Key Research Questions.”*
+2. **Key research questions** — Pop-up label: **“Section 2 > Step 2 of 4: Key Research Questions”**. After lock: *“Research Questions locked. Moving on to Decisions.”*
+3. **What decisions will be made with this research?** — multi-select; each decision fork is its own option (grouped when there are more than 3). Pop-up label: **“Section 2 > Step 3 of 4: What Decisions”**. After lock: *“Decisions locked. Moving on to Method & Approach.”*
+4. **Method & approach** + applicable conditional rows — Pop-up label: **“Section 2 > Step 4 of 4: Method & Approach”**. After lock: *“Method locked. Section 2 — Research Design is complete. Moving on to Section 3 — Outputs.”*
 
 Use **Hypotheses** only. Keep Key research questions broad and project-level; interview probes belong in the downstream moderation guide. The Project Details fields are adaptive — include only the rows the study actually needs.
 
@@ -262,20 +273,22 @@ Use **Hypotheses** only. Keep Key research questions broad and project-level; in
 
 Approve in this order:
 
-1. **What does success look like? + Dependencies & guardrails** — Pop-up label: **”Section 3 > Step 1 of 4: Success & Guardrails”**. After lock: *”Guardrails locked. Moving on to Deliverables.”*
-2. **Deliverables** — Pop-up label: **”Section 3 > Step 2 of 4: Deliverables”**. After lock: *”Deliverables locked. Moving on to Timeline.”*
-3. **Timeline** — Pop-up label: **”Section 3 > Step 3 of 4: Timeline”**. After lock: *”Timeline locked. Moving on to Next Steps & Appendix.”*
-4. **Next steps + Additional UXR documents + Resources from XFN** — Pop-up label: **”Section 3 > Step 4 of 4: Next Steps & Appendix”**. Auto-sort every relevant kickoff document into Additional UXR documents or Resources from XFN. Existing documents use real links; future artifacts are labeled “to be created” without fake links.
+1. **What does success look like? + Dependencies & guardrails** — Pop-up label: **“Section 3 > Step 1 of 4: Success & Guardrails”**. After lock: *“Success & Guardrails locked. Moving on to Deliverables.”*
+2. **Deliverables** — Pop-up label: **“Section 3 > Step 2 of 4: Deliverables”**. After lock: *“Deliverables locked. Moving on to Timeline.”*
+3. **Timeline** — Pop-up label: **“Section 3 > Step 3 of 4: Timeline”**. After lock: *“Timeline locked. Moving on to Next Steps & Appendix.”*
+4. **Next steps + Additional UXR documents + Resources from XFN** — Pop-up label: **“Section 3 > Step 4 of 4: Next Steps & Appendix”**. Auto-sort every relevant kickoff document into Additional UXR documents or Resources from XFN. Existing documents use real links; future artifacts are labeled “to be created” without fake links.
 
 After all three sections are locked, tell the researcher exactly what happens next so they know what to expect:
 
 > All three sections are approved — I now have everything I need. Here's what I'll do before I hand you the final plan:
 >
 > 1. **Run it through a critique agent** — a pressure-test that checks the plan for gaps, weak logic, and unsupported claims.
-> 2. **Run it through the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel.
+> 2. **Run it through the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel. This one can take up to an hour.
 > 3. **Then I'll draft your Google Doc** — the formatted, verified plan in your confirmed Drive folder.
 >
 > Running the critique and multi-agent checks now — I'll fold in any fixes before the Doc is created.
+
+If the Step 1 connection check found `multi-agent-check` isn't installed, drop item 2 and say the plan gets the critique pass only.
 
 **Override:** if the researcher explicitly requests a full draft for review at the end, skip row-by-row approval but still show the complete draft for approval, confirm the Drive destination, and perform every output and verification step.
 
@@ -292,6 +305,8 @@ A real run requires a Google Doc, so ask about location—not output format.
 ## Step 4: Assemble the approved plan
 
 Load `references/content-rules.md` and assemble the approved material in the exact contract below. Verify completeness, names, dates, and source-link coverage. Preserve the approved meaning and label uncertainty rather than guessing; the copyedit happens in the created Google Doc in Step 6.2.
+
+Save the assembled plan as a Markdown file in a persistent working folder (for example, `research-plan-work/<study-slug>/` in the project you're working from), not `/tmp`: a reboot can clear `/tmp` mid-run, and Steps 5–6 read from these files. Keep every later working file (source copies for the review, manifest, batch and document JSON, rendered PDF) in the same folder.
 
 ### Mock warning
 
@@ -386,10 +401,12 @@ Run the multi-agent review on the fixed plan content — before the Google Doc i
 
 - Say in chat: *"Running the multi-agent review now — several independent reviewers check the plan for inconsistencies and problems in parallel."*
 - Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate.
-- If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass.
-- Fold any confirmed fixes into the assembled plan before creating the Doc.
+- If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass. This is a complete run, not a blocked one; say “critique-only” when you return the Doc.
+- **Runtime:** budget up to an hour. The one timed run (5 reviewers, an 8-page plan, 4 source files) took about 56 minutes. Never promise minutes.
+- **Live demo:** don't run the panel on stage. Walk through the saved run in `examples/multi-agent-review-example.md` instead, and say it's a saved run.
+- Fold any confirmed fixes into the assembled plan before creating the Doc. **Check each fix's wording against the sources before applying it.** Apply only what the source supports: if a fix adds a fact, count, attribution, study detail, or quote the source doesn't support, apply the supported part and tell the researcher what you left out and why.
 
-The expected sequence is **approved plan → critique → multi-agent → fixes → copyedit → exact Option 4 Google Doc → verify/render → share**. Never describe the plan as stakeholder-final before both checks and the final visual gate have run.
+The expected sequence is **approved plan → critique → multi-agent (or disclosed critique-only) → fixes → copyedit → exact Option 4 Google Doc → verify/render → share**. Never describe the plan as stakeholder-final before the quality checks and the final visual gate have run.
 
 ## Step 6: Copyedit, create, normalize, format, verify, and render the Google Doc
 
@@ -397,7 +414,7 @@ A successful API response is not completion. The final link must point to the co
 
 ### 6.1 Final copyedit and manifest
 
-Copyedit the approved Markdown for clarity, grammar, complete sentences, consistent terminology, and unnecessary repetition. Preserve every approved claim, decision, row, and source link. Resolve all relative paths below from the directory containing this `SKILL.md`, then generate the manifest:
+Copyedit the approved Markdown for clarity, grammar, complete sentences, consistent terminology, and unnecessary repetition. Preserve every approved claim, decision, row, and source link. Resolve `scripts/…` paths below from the directory containing this `SKILL.md`; every other file lives in the working folder from Step 4. Then generate the manifest:
 
 ```bash
 python3 scripts/option4_layout.py manifest APPROVED.md manifest.json
@@ -450,8 +467,8 @@ The script emits native Google Docs API requests. An equivalent connected integr
 
 ### 6.4 Verify and visually inspect
 
-1. Read the document back with `get_doc_as_markdown` and compare it against every approved row and source link.
-2. Inspect the active content tab with `inspect_doc_structure(detailed=true)`.
+1. Read the document back as text with the connected Google Docs integration (for example, a Markdown or plain-text export) and compare it against every approved row and source link.
+2. Inspect the active content tab's structure (tables, cell text, list paragraphs, and links) in freshly fetched raw document JSON, or with the integration's structure-inspection tool when it has one.
 3. Run the hard verifier against newly fetched raw JSON:
 
 ```bash
@@ -472,18 +489,20 @@ A structural-only pass is insufficient. If raw verification or rendering is unav
 Confirm the file location and return:
 
 - the working Google Doc link;
-- `content complete, Option 4 formatting checked, links checked, rendered pages checked`;
+- `content complete, Option 4 formatting checked, links checked, rendered pages checked` (add `critique-only review` when the multi-agent review couldn't run);
 - no styling caveat—any unresolved styling limitation means the document is not final.
 
 Open the verified Google Doc in the browser when the environment supports it. Do not update project trackers, progress files, or unrelated systems unless the researcher separately asks.
 
-This is the final step. The plan has already passed the critique (Step 4.5) and multi-agent review (Step 5); only the exact verified Option 4 Google Doc is handed back.
+This is the final step. The plan has already passed the critique (Step 4.5) and the multi-agent review or its disclosed critique-only fallback (Step 5); only the exact verified Option 4 Google Doc is handed back.
 
 ## Tool guidance
 
 - **Enterprise research agent / Glean:** discover prior evidence and read supplied internal documents.
 - **Slack:** read supplied kickoff threads.
-- **Drive / Google Docs:** create the document in the confirmed folder, expose raw document structure, apply native batch updates, read it back with `get_doc_as_markdown`, inspect it with `inspect_doc_structure`, export/render it, and return the link only after the Option 4 gate passes.
+- **Drive / Google Docs (connector or `gws`):** create the document in the confirmed folder, expose raw document structure, apply native batch updates, read it back as text, inspect its structure, export/render it, and return the link only after the Option 4 gate passes.
+- **`multi-agent-check` (optional skill):** the Step 5 parallel review; without it, the run is critique-only and says so.
+- **`examples/multi-agent-review-example.md`:** a saved Step 5 run to show in demos instead of running the panel live.
 - **Directory / people search:** validate current stakeholder identities before carrying names forward.
 - **Approved data tooling or data-science partner:** obtain behavioral evidence when needed; report unavailable data rather than estimating it.
 - **`references/content-rules.md`:** exact row order, writing rules, adaptive fields, and bullet rules.

@@ -515,6 +515,21 @@ class Option4ContractTest(unittest.TestCase):
         self.assertEqual(item["text"][link["start"]:link["end"]], "link")
         self.assertEqual(link["url"], "https://example.com/a_(b)?x=1&y=2")
 
+    def test_inline_parser_keeps_literal_brackets_before_a_real_link(self) -> None:
+        item = self.module.parse_inline(
+            "“I wish [the page] loaded faster” — from the [example study](https://example.com/study)"
+        )
+        self.assertEqual(item["text"], "“I wish [the page] loaded faster” — from the example study")
+        self.assertEqual(len(item["links"]), 1)
+        link = item["links"][0]
+        self.assertEqual(item["text"][link["start"]:link["end"]], "example study")
+        self.assertEqual(link["url"], "https://example.com/study")
+
+        nested = self.module.parse_inline("See [the [draft] plan](https://example.com/p) today")
+        self.assertEqual(nested["text"], "See the [draft] plan today")
+        link = nested["links"][0]
+        self.assertEqual(nested["text"][link["start"]:link["end"]], "the [draft] plan")
+
     def test_inline_ranges_use_google_docs_utf16_indices(self) -> None:
         item = self.module.parse_inline("⚠️ Read [source](https://example.com)")
         element = {"startIndex": 10}
