@@ -1,6 +1,8 @@
 # Sample comparison — ResOps RPP exact vs. order-matched-richer
 
-Same study in both structures so you can pick which one the `research-plan` skill should output.
+> **Archived decision record — not the current output contract.** This June 2026 comparison documents an earlier choice. The current **Option 4 — Leadership** content and visual contracts live in `SKILL.md`, `references/content-rules.md`, `references/option4-leadership-style.md`, and `tests/fixtures/leadership-plan.md`.
+
+Same study in both historical structures that were compared at the time.
 Study used: **Recipe-to-Cart Mapping — "good enough" acceptability thresholds** (the Jun 2 demo study).
 
 Both follow the ResOps section ORDER. The only difference is how much of your richer content (Existing Insights w/ verbatim sources, Goal-led framing, bold-lead styling) stays in.

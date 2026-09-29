@@ -1,343 +1,248 @@
-# Content Rules — Research Plan Skill
+# Content Rules — Research Plan
 
-These are the **content** rules for a research plan — what goes where, how questions are scoped, how objectives are compressed. They govern the *substance* of the doc, not its typography. The typography spec lives in the [`jedi-doc-styling-1`](../../jedi-doc-styling-1/) skill.
+This file is the content source of truth for `/research-plan`. Every final Google Doc uses the exact **Option 4 — Leadership** hierarchy: concise opening, separate leadership timeline, and the two-column Project Plan Overview.
 
-**Companion files (cross-referenced):**
-- [`jedi-doc-styling-1/references/bolding-philosophy.md`](../../jedi-doc-styling-1/references/bolding-philosophy.md) — what to bold, ≤10% density, complete-sentence bodies.
-- [`jedi-doc-styling-1/references/design-spec.md`](../../jedi-doc-styling-1/references/design-spec.md) — anchor + body type spec (§9d), Bulleted Lead-in pattern (§9e).
+**Current contract: 2026-09-23.** It preserves the research rigor added in the June team workshops—discovery before logistics, sourced existing insights, decision-quality auditing, and minimum evidence to move the decision—while enforcing the verified Option 4 visual system for every researcher.
 
-Single source of truth: **content rules live here in `research-plan`; styling rules live in `jedi-doc-styling-1`.** Each skill links to the other rather than duplicating.
+## Canonical order
 
-**Locked in: 2026-05-12. Updated: 2026-06-02 (team workshop). Restructured to canonical ResOps RPP: 2026-06-08.**
+1. Opening block: breadcrumb, title, last-updated date, RACI roles (Responsible, Accountable, Consulted, Informed), and mock warning when applicable.
+2. **Research Timeline** heading, five-row leadership timeline, and one-sentence timing note.
+3. **Project Plan Overview** heading.
+4. Topic.
+5. TL;DR summary of findings: *“To be filled out at the end of the study.”*
+6. **Key Information**.
+7. **Project Details**.
+8. **Deliverables & Next Steps**.
+9. **Appendix**.
 
-On **2026-06-08** Jedida supplied the official ResOps **Research Project Plan (RPP)** template (Doc `1s6Lg4ZsiIypqANdpg4hrCwxkgwP0qOwJvGNekzgj9k0`) as *the* format, and chose **"Option B"**: adopt the ResOps section names + order, but **keep the richer Jun-2 content folded in** (Existing Insights with verbatim sources, bold-lead scannable styling, "minimum evidence to move the decision" framing). This file now reflects that structure. The canonical section order is:
+The four named overview sections must stay in that order. The leadership timeline summarizes the approved detailed Timeline row; it never imports dates or week labels from an older study. The interactive approval walk in `SKILL.md` follows the same content order so the researcher sees the final document take shape.
 
-> Header (Key Contacts → Key Stakeholders/RACI → Research Timeline phase grid) → **Topic → TL;DR Summary of Findings → Background → Existing Insights → Objectives → Key Research Questions → Hypotheses / Questions of Interest from XFN leads → What decisions will be made with such research? → What Research Priorities is this relevant to (Themes) → Proposed Research Timeline → Project Details → Additional / Documents.**
+## 1. Opening block
 
-The interactive pop-up (SKILL.md Step 3) walks these sections in this SAME order, one at a time — first pop-up is Existing Insights — so researchers approve and brainstorm each section in sequence.
+Auto-draft the title, current date, and RACI from the PRD, brief, current directory information, and confirmed people context. Ask for one simple confirmation rather than asking the researcher to compose each field.
 
----
+Order:
 
-## 1. Key Research Questions = broad project-level, NOT interview probes
+1. Short title-case breadcrumb.
+2. Wide, stakeholder-facing research-plan title.
+3. `Last updated: [Month Year]`.
+4. RACI as four true bullet paragraphs.
+5. Mock warning, when applicable.
 
-This is the **most-confused rule**, so it leads. *(ResOps row name: "Key Research Questions.")*
+Always include all four roles. Unknown names use `[TBD — fill in]`.
 
-| Type | Belongs in | Format | Example |
-|---|---|---|---|
-| **Broad research question** | The research plan's *Key Research Questions* section | Bold broad question + 1 sentence of follow-on framing | "**What does 'good' recipe-to-cart mapping mean to users?** What signals make a cart feel acceptable vs. broken, and how does that judgment shift when the recipe is for tonight's dinner vs. weekend prep?" |
-| **Probing interview question** | The downstream **moderation / discussion guide** (separate artifact) | TEDW stem (Tell me / Explain / Describe / Walk me through) | "Walk me through the last time you cooked from a recipe you found in the app." |
+- **Responsible:** the researcher running the study.
+- **Accountable:** the owner of the decision.
+- **Consulted:** partners whose expertise shapes the decision.
+- **Informed:** people who need the outcome but do not make the decision.
 
-Do NOT put TEDW probes in the research plan. The plan answers *what the study will resolve at a project level*. The moderation guide answers *what we'll literally ask participants in a session*. Different doc, different scope, different generation skill (`/mod-guide`).
+If a consulted partner is the practical decision-maker, mark that inline. Cross-check people against current directory information before reusing names from an older plan.
 
-### Why it matters
+A mock, demo, test, pressure scenario, regression, example, fixture, or otherwise simulated study includes this prominent line, even when its brief sounds realistic. Omit it only when the researcher confirms the study is real:
 
-Leadership reads the research plan to decide whether to fund / scope / time-box the study. Probing questions look like fieldwork minutiae and bury the strategic bet. Broad questions surface the bet immediately:
+> ⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.
 
-> *"What does 'good' recipe-to-cart mapping mean to users?"* — leadership instantly knows what's on the line.
-
-If a researcher pushes back, the answer is: probes belong in the moderation guide because that's where they're actually moderated. The plan is for the *decision* the study informs.
-
----
-
-## 2. Default = 3 broad questions, mapped 1:1 to 3 objectives
-
-The template specifies **3 key research questions** by default, mapped 1:1 with the 3 objectives. This is a substance rule, not a formatting one — most studies have one strategic uncertainty per objective.
-
-| Pattern | When to apply |
-|---|---|
-| **3 questions, 1:1 with objectives** *(default)* | Most studies. Each objective has exactly one broad uncertainty driving it. |
-| **Fewer than 3** | Rare — only when one objective has no question of its own (i.e., it's pure synthesis, not investigation). Document why. |
-| **More than 3** | Rare — only when one objective genuinely has two distinct broad sub-uncertainties (e.g., "what counts as a substitute?" AND "in what order are substitutes chosen?"). Otherwise it's probe-leakage. |
-
-If a researcher's first draft has 5+ questions, that's a smell that probes leaked in. Audit each — if a question reads like "Tell me about…" or "Walk me through…", move it to the moderation guide.
-
----
-
-## 3. Key Research Questions = numbered list, NOT a table
-
-The Key Research Questions section is a **numbered list**, not a table. Each item is one bold broad question + one sentence of follow-on framing.
-
-```
-## Key Research Questions
-
-1. **[Bold broad project-level question?]** [One sentence of follow-on framing — what sub-uncertainty or angle this opens.]
-2. **[Bold broad project-level question?]** [One sentence of follow-on framing.]
-3. **[Bold broad project-level question?]** [One sentence of follow-on framing.]
-```
-
-Rules:
-
-| Rule | Reasoning |
-|---|---|
-| **Numbered list, not a table.** Each list item is a paragraph: bold question + plain prose framing. | The v1 2-column table format (Topic \| Question) implied separate "topic anchors" for each question. The v2 lock-in dropped that — questions stand on their own; the bold question IS the anchor. |
-| **One bold north-star phrase per question.** Bold the entire broad question; leave the framing sentence plain. | Per [`bolding-philosophy.md`](../../jedi-doc-styling-1/references/bolding-philosophy.md) — multi-bold dilutes the signal. |
-| **End the bold with the question mark.** The question mark is part of the bold span, not appended after. | Visual closure — the eye recognizes a bold question as a unit. |
-| **Framing sentence = ONE sentence, not two.** If you need two sentences, the question is too big — split into two questions. | Forcing one-sentence framing keeps the section scannable. |
-
-The same numbered-list shape applies to **Objectives** — see §4.
-
----
-
-## 4. Objectives compression pattern (numbered list, bold + 1-2 sentence context)
-
-Each objective compresses to a **bold statement + 1-2 sentences of context**, as a numbered list item — NOT an H3 + 2 sub-bullets, NOT a 2-column table row. *(ResOps row name: "Objectives.")*
-
-```
-## Objectives
-
-1. **[Bold statement of objective.]** [1-2 sentences of context — why this matters, what's missing today, what decision it unlocks.]
-2. **[Bold statement of objective.]** [1-2 sentences of context.]
-3. **[Bold statement of objective.]** [1-2 sentences of context.]
-```
-
-Rules:
-
-| Rule | Reasoning |
-|---|---|
-| **Bold = the *what*; plain prose = the *why*.** | Leadership scans the bold statements first to grasp the study's three pillars; only reads the prose if a pillar grabs them. |
-| **Statements, not questions.** End in a period, never a question mark. | Per Anderson (2022) — objectives are statements; questions live in the Key Research Questions section. |
-| **1-2 sentences of context, never more.** | If you need a paragraph, the objective is too big — split it. |
-| **Context names the *decision* the objective unlocks.** | Per Anderson's Mad-Lib test ("I need [info] to make [decision]"). The "what's missing today" framing makes the decision visible. |
-
-**Out of Scope as a separate subsection was REMOVED.** If scope-creep is a real concern, surface it in **Project Details → Dependencies** as a scope/dependency risk (one line with a date or owner). Do not add a standalone "Out of Scope" subsection back — it bloated the Objectives section without adding decision value.
-
----
-
-## 5. Topic, What-decisions, and Themes — the framing sections (replaces the old Parameters table)
-
-The pre-2026-06-08 template opened with a Goal-led **Parameters table**. The ResOps RPP has no such table; its contents are re-mapped to three dedicated sections plus Project Details:
-
-| Old Parameters row | → ResOps home |
-|---|---|
-| **Goal** (row 1) | **Topic** — the one-sentence leadership framing at the very top. Lead with the *why* before the *how*. |
-| **Primary Decision** | **What decisions will be made with such research?** — its own section after Hypotheses. |
-| **Study Type / Method / Sample** | **Project Details** (Method + Approach, Sampling Plan / Participants). |
-| **Timeline** | **Proposed Research Timeline** (dated milestones) + the **Research Timeline** phase grid in the header. |
-| *(new in ResOps)* | **What Research Priorities is this relevant to (Themes)** — which org/research themes this maps to. |
+## 2. Topic and TL;DR
 
 ### Topic
 
-One high-level sentence. Leadership reads this first to decide whether to read further. Replaces the old "Goal" row. Bold the decision-driving phrase inside it.
+Use one high-level sentence that states the user or evidence gap and the decision the study will support. Lead with why the study matters before naming its mechanics.
 
-> **Topic:** Define the **user-grounded threshold for "good enough" recipe-to-cart mapping** — the line between an acceptable cart and a broken one.
+### TL;DR summary of findings
 
-### TL;DR Summary of Findings
+At planning time, insert exactly:
 
-A placeholder at plan-time: *"To be filled out at the end of the study."* It sits right after Topic in the ResOps template (findings get pasted here at readout).
+> *To be filled out at the end of the study.*
 
-### What decisions will be made with such research?
+Do not ask the researcher to predict findings before the study.
 
-Bullet form. Each must be a **real fork** — a different finding leads to a different action. If a "decision" doesn't change anyone's behavior, it isn't one; cut it or sharpen it. This is where the audited Step-1.6 primary decision lands.
+## 3. Leadership timeline
 
-- **Calibrate the AIQA framework's severity thresholds** to the user-grounded line.
-- **Select among the improved-mapping A/B variants** for rollout.
+Every plan includes a separate at-a-glance timeline above Project Plan Overview:
 
-### What Research Priorities is this relevant to (Themes)
+- exactly two columns and five rows: one header plus four study-specific milestones;
+- concise left labels no longer than 32 characters and one-sentence leadership summaries no longer than 160 characters in the right column;
+- milestones derived from the approved detailed Timeline row, never copied from a reference study;
+- an italic one-sentence timing note immediately below the table.
 
-Short bullets naming the themes/priorities this study maps to.
+The four milestones should cover the study's meaningful leadership checkpoints, such as setup, fieldwork or evaluation, synthesis or validation, and decision/readout. Keep detailed dependencies, dates, and contingencies in the Timeline row. If the at-a-glance table spills awkwardly across pages, tighten the summary without changing the approved detailed timeline.
 
-- Good Ingredient Impressions (Meals northstar).
-- AI quality evaluation.
+## 4. Key Information
 
-**Bolding:** bold the answer-word, never the row/section label. Density ≤ 10% (the old ≤15% Parameters-table allowance is retired — there is no Parameters table).
+Use these rows in this order:
 
----
+1. Background.
+2. Existing insights.
+3. Objectives.
+4. Key research questions.
+5. Hypotheses.
+6. What decisions will be made with this research?
 
-## 6. Background = Problem Statement + Product Context, followed by an Existing Insights H2
+### Background
 
-The Background section is **two sub-blocks**, each a tight bullet list — never a paragraph. Immediately after it comes a separate `## Existing Insights` H2 surfacing what's already known. *(ResOps places Existing Insights between Background and Objectives — Option B keeps it.)*
+Write 3–6 true bullet paragraphs. Each bullet uses a short bold lead-in plus one concise explanation. Cover the problem, current state, evidence gap, and relevant product context. Keep implementation detail only when it changes scope or interpretation.
 
-```
-## Background
+Every material claim must link to its source. If a background statement is an interpretation rather than a direct fact, label it as such.
 
-### Problem Statement
-- **[Lead-word]** — [One-sentence explanation of the gap.]   (3 bullets max)
-- **[Lead-word]** — [One-sentence explanation of the gap.]
-- **[Lead-word]** — [One-sentence explanation of the gap.]
+### Existing insights
 
-### Product Context
-- [Concise 1-2 sentence bullet]   (3-4 bullets max)
-- [Concise 1-2 sentence bullet]
-- [Concise 1-2 sentence bullet]
+Include up to five findings that materially shape this study; include fewer when fewer relevant findings exist. Each item must contain:
 
-## Existing Insights
-*(what we already know — top 3-5, each with a verbatim source link)*
+- one plainly stated insight;
+- a clickable source link; and
+- a verbatim supporting quote when the finding rests on a specific line.
 
-1. **[Insight stated plainly.]** "[Verbatim supporting line from the source.]" — [Source name](URL)
-2. **[Insight stated plainly.]** — [Source name](URL)
-3. **[Insight stated plainly.]** — [Source name](URL)
-```
+Do not treat an in-flight adjacent project as a completed insight. Put it in Background or Dependencies & guardrails as coordination context. If no relevant prior research exists, state: *“No prior user research on [topic] — this is net-new territory.”*
 
-Rules:
+### Objectives
 
-| Block | Format | Anti-pattern |
-|---|---|---|
-| **Problem Statement** | 3 bullets max. Each = 1-3 word bold lead-word + one-sentence explanation. Render the two sub-labels as `###` H3, not bold paragraphs. | A paragraph. A 5-item list. Generic lead-words like "Issue 1." |
-| **Product Context** | 3-4 bullets, 1-2 sentences each. | A wall of context. Backstory unrelated to *this study's* decisions. |
-| **Existing Insights** | 3-5 numbered items, each = one plainly-stated insight + clickable source; quote the supporting line **verbatim** where the insight rests on a specific prior finding. | Stating an insight without a source. Padding with generic/assumed "insights." Burying it below the fold. |
+Objectives are statements, not questions. Use a true bulleted list; each objective contains:
 
-**Why Existing Insights sits near the top (after Background, before Objectives):** the team must see *what's already known* before scoping the study, so they don't reinvent the wheel (Prakriti + Amalia, 2026-06-02). It's sourced via the research-insights agent + Glean during Step 1.5. **Prior Research lives here** (the old Appendix → Previous Research subsection folded in). If there's genuinely no prior research: *"No prior user research on [topic] — this is net-new territory."* — never fabricate.
+- a short bold statement of what the study must establish; and
+- at most one sentence explaining what is missing and what decision the objective unlocks.
 
----
+Do not force exactly three. Use the minimum complete set, usually 2–4. Every objective must pass Anderson’s test: “I need [information] to make [decision] that affects [goal].”
 
-## 7. Project Details absorbs Method, Participants, Stimuli, Dependencies, Compensation, Platform, Deliverable Format
+### Key research questions
 
-There is **no standalone Methodology, Participants, Deliverables, or Risks H2 section.** All of it lives in the single ResOps **Project Details** table. *(ResOps block name: "Project Details.")*
+These are broad project-level questions, not interview probes. Use a true bulleted list; each item contains one bold strategic question and, when needed, one sentence of framing.
 
-```
-## Project Details
+Do not put TEDW prompts (“Tell me…”, “Explain…”, “Describe…”, “Walk me through…”) here. Those belong in a moderation or discussion guide. Use the minimum complete set and map each question to an objective.
 
-| Element | Detail |
+### Hypotheses
+
+Use the heading **Hypotheses** only. Include concise, falsifiable team beliefs that the study can pressure-test. Prefix them `H1`, `H2`, and so on, but do not force a fixed count. Each hypothesis should be grounded in an existing insight, stakeholder belief, or explicit assumption; label the source type.
+
+Do not combine hypotheses with a second category of stakeholder questions. If no hypothesis is grounded in evidence or an explicit stakeholder assumption, keep the row and state: *“No hypotheses confirmed at planning time.”* Do not invent one to fill the space.
+
+### What decisions will be made with this research?
+
+Use true bullet paragraphs. Each item must be a real fork: a different finding produces a different action. Name the owner or affected decision when useful. If the answer cannot change behavior, sharpen or remove the item.
+
+Do not add a research-priorities or themes row.
+
+## 5. Project Details
+
+`Method & approach` is the core row. Add other rows only when the PRD, approved research questions, or study type makes them useful. Do not emit empty or irrelevant methodology fields merely because they exist in another plan.
+
+### Core rows
+
+| Row | Rule |
 |---|---|
-| **Method + Approach** | *Minimum evidence to move the decision:* 8 moderated interviews (45 min) + survey N=75–100, 5-pt acceptability scale. Lean alt: survey-only if timeline tightens. |
-| **Sampling Plan / Participants** | <ul><li>Ordered from a recipe ≥2× in past 60 days</li><li>Quad-cell by cooking context</li><li>iOS + Android + web; US-based</li><li>[recruit query link]</li></ul> |
-| **Stimuli** | 5–6 mocked recipe→cart scenarios at varying mapping quality (Figma). |
-| **Dependencies** | Blazer recruit query [link]; stimulus mocks finalized by May 18. *(Surface schedule/recruit RISKS here with a date or owner — ResOps has no separate Risks section.)* |
-| **Compensation** | $75 (qual) / $5 (quant). |
-| **Research Platform** | Zoom (sessions), Qualtrics (survey), Dovetail (synthesis). |
-| **Deliverable Format** | Readout deck (Google Slides) + severity matrix (Sheet). |
-```
+| **Method & approach** | Always include. Lead with the minimum valid evidence needed to move the decision. Put each method, phase, or procedure in its own true Google Docs bullet paragraph. Offer a faster/lower-confidence or slower/higher-confidence alternative during approval, but include only the chosen approach in the plan. |
+| **What does success look like?** | Always include. Define success in the context of the product requirements document (PRD), research question, and decision. A numeric threshold is appropriate only when the evidence supports one; otherwise define the credible evidence or decision-readiness outcome. |
+| **Dependencies & guardrails** | Always include. Use true bullet paragraphs for dependencies, sequencing constraints, ethics, privacy, accessibility, decision boundaries, and known interpretation risks. Attach an owner or date when one exists. |
 
-Rules:
+### Conditional rows
 
-- **Method + Approach leads with "minimum evidence to move the decision."** The leanest valid path first, then a lean alternative if the timeline tightens. Not the most comprehensive study possible (Prakriti, 2026-06-02).
-- **No prose rationale paragraphs.** If the method needs defending in detail, save it for the readout. The plan is decision-ready, not academic.
-- **Sampling Plan carries behavioral criteria, not demographics.** "Ordered from a recipe ≥2× in past 60 days" — not "Ages 25–55, suburban."
-- **Multi-criteria cells use `<ul><li>` bullets** (Sampling, Stimuli, Dependencies) so they read as scannable checklists. Single-criterion cells (Compensation, Platform, Deliverable Format) stay one line.
-- **Risks fold into Dependencies.** "Schedule risk" is not a risk; "Prototype not finalized until April 30; fieldwork cannot begin before then" is. Each risk gets a date or owner. An un-owned mitigation is a wish.
-- **Deliverables fold into Deliverable Format (the format) + Additional → Documents (the artifact links).** No standalone numbered Deliverables list.
-
----
-
-## 8. Proposed Research Timeline = dated milestone table (separate from the header phase grid)
-
-Two timeline artifacts, do not conflate them:
-
-| Artifact | Where | What |
-|---|---|---|
-| **Research Timeline** (phase grid) | Document header | Phase × stage grid with status codes — **PL** Planning, **KO** Kick off, **IP** In progress, **RO** Read Out. |
-| **Proposed Research Timeline** (milestones) | Its own H2, late in the plan | Dated milestone list following ResOps. |
-
-```
-## Proposed Research Timeline
-
-| Milestone | Date |
+| Row | Include when |
 |---|---|
-| RPP share at Crit / solicit feedback | [date] |
-| Submit Participant Recruiting Request | [date] |
-| Recruit dates *(ResOps SLA: minimum 10 business days notice)* | [range] |
-| Study Launch Date | [date] |
-| Study End Date | [date] |
-| Insights Synthesis | [range] |
-| Final Deliverables | [date] |
-| Upload Findings Deck to Sharpr | [date] |
-```
+| **Sample & evaluators** | Include only when relevant: the study recruits participants, uses human evaluators, requires sampling strata, or needs defensible coverage. State behavioral criteria before demographics, sample rationale, exclusions, and evaluator independence where applicable. |
+| **Measures & analysis** | Include only when relevant: the decision depends on metrics, scoring, comparison, statistical precision, coding, adjudication, or a defined analysis approach. Put every measure and analysis step in its own true Google Docs bullet paragraph. |
+| **Stimuli & protocol** | The study evaluates concepts, designs, tasks, scenarios, content, or benchmark cases. Name counterbalancing or blinding when needed. |
+| **Recruitment & incentives** | Operational recruiting details materially affect feasibility or ethics. |
+| **Data sources & coverage** | Behavioral, log, corpus, benchmark, or secondary-data work requires explicit source and coverage definitions. |
+| **Platforms & tools** | Tool choice changes study execution, access, security, or handoff. |
 
-Rules:
+Use the study’s language for any additional conditional row. Do not create generic rows that add no decision value.
 
-- **Keep the ResOps milestone names** — they map to the ResOps recruiting/SLA workflow. Don't rename "Submit Participant Recruiting Request" to a generic "Recruit."
-- **Honor the 10-business-day recruiting SLA** in the Recruit dates row — flag if the requested timeline violates it.
-- **If the study is explicitly scoped as lean/quick and bypasses the standard ResOps recruiting pipeline** (e.g., an existing panel, a convenience sample, or an internal/employee sample with no new recruiting request) — don't leave the SLA rows looking like a silent violation. Mark the affected milestone row `N/A — see Dependencies` and add a one-line disclosure bullet in Project Details → Dependencies naming the actual recruiting source and why the SLA doesn't apply. This keeps the deviation visible and intentional rather than reading as a missed step.
-- 2-column (Milestone | Date). Add an Owner column ONLY if multiple owners are realistic.
+Prevent conditional-row duplication by keeping each fact in one primary row. Coverage and evaluator criteria belong in Sample & evaluators; procedure, calibration, sequencing, and blinding belong in Method & approach; source provenance and corpus boundaries belong in Data sources & coverage; presentation and task-order rules belong in Stimuli & protocol. If a conditional row would only repeat another row, omit it.
 
----
+### Adaptive examples
 
-## 9. Hypotheses / Questions of Interest from XFN leads = standalone H2, AFTER Key Research Questions
+- An interview study usually needs Sample & evaluators, Stimuli & protocol only if stimuli exist, and may not need Measures & analysis.
+- A human/model calibration study usually needs Sample & evaluators plus Measures & analysis, but may not need participant recruitment or compensation.
+- A log analysis may need Data sources & coverage and Measures & analysis, but no Sample & evaluators row if there are no human participants or raters.
+- A quick concept review may need Stimuli & protocol and Sample & evaluators, with a qualitative success definition rather than a universal threshold.
 
-Hypotheses are their own H2 section named exactly **"Hypotheses / Questions of Interest from XFN leads"** (the ResOps row name), positioned **after Key Research Questions and before What-decisions**. This matches BOTH the 2026-06-02 workshop (Prakriti: hypotheses "comes after objectives and research questions… then it decides your methodology") AND the ResOps template — **canonical as of 2026-06-08, no longer provisional.**
+## 6. Deliverables & Next Steps
 
-```
-## Key Research Questions
-1. ...
+Use these rows in this order:
 
-## Hypotheses / Questions of Interest from XFN leads
-*(expected outcomes / team beliefs to pressure-test per Portigal 2023 — each traces to an Existing Insight)*
+1. Deliverables.
+2. Timeline.
+3. Next steps.
 
-- **H1** — [Team belief / expected outcome, one sentence.]
-- **H2** — [Team belief / expected outcome, one sentence.]
-- **H3** — [Team belief / expected outcome, one sentence.]
+### Deliverables
 
-## What decisions will be made with such research?
-...
-```
+Name what stakeholders will receive, not merely a file type. Put each artifact in its own true Google Docs bullet paragraph and connect it to the decision or objective it serves.
 
-Rules:
+Use **Deliverables** as the label.
 
-| Rule | Reasoning |
+### Timeline
+
+Use true bullet paragraphs for phases or dated milestones. Choose the level of detail the study needs:
+
+- a short phase plan for exploratory or technical evaluation work;
+- dated recruiting, fieldwork, synthesis, and readout milestones for participant studies;
+- an explicit Research Operations (ResOps) recruiting lead-time note only when the standard recruiting workflow applies.
+
+Do not force generic week labels or recruiting milestones into the detailed Timeline row. The separate leadership table always contains four concise study-specific milestones, while this row carries the dates and operational detail the study actually needs. If the minimum valid design cannot fit the requested deadline, require a choice: descope the decision or evidence need, extend the timeline, or pause/escalate the study. Record the accepted tradeoff in Dependencies & guardrails; do not silently compress the design below validity.
+
+### Next steps
+
+List immediate actions required to start the study, each as a true bullet paragraph. Include owners or dates when known. Do not repeat the full timeline.
+
+## 7. Appendix
+
+The Appendix contains exactly two rows:
+
+1. **Additional UXR documents** (“UXR” means UX research).
+2. **Resources from XFN** (“XFN” means cross-functional partners).
+
+### Additional UXR documents
+
+Include prior studies and research-owned artifacts such as the research brief, moderation guide, screener, survey instrument, analysis workspace, consent language, and final report. Prune the list to the approved method. Do not invent placeholder artifacts the study will never use.
+
+### Resources from XFN
+
+“XFN” means cross-functional partners. Include partner-owned inputs such as the product requirements document, design files, technical framework, scorecard, experiment plan, requirements, and kickoff notes.
+
+Auto-carry every relevant document surfaced in the kickoff inputs into one of these two rows. Existing documents use real clickable links. Future artifacts may be plain text marked “to be created”; do not create fake links.
+
+Nothing follows these two Appendix rows.
+
+## 8. Bullet and prose rules
+
+- Use actual list paragraphs in the Google Doc—true Google Docs bullets—not typed bullet glyphs, arrow chains, or dense sentences separated by semicolons.
+- In the intermediate markdown, use separate `- ` lines. After import, apply and verify list formatting inside table cells with Google Docs editing tools.
+- Methods, phases, sample criteria, measures, analysis steps, dependencies, guardrails, deliverables, timeline phases, and next steps each receive separate bullets when there is more than one item.
+- Every bullet must make sense on its own.
+- Use bold lead-ins sparingly to support scanning. Bold the decision-driving words, not every label or full paragraph.
+- Preserve clickable source links. If a link is unavailable, state that it is unavailable rather than inventing one.
+
+## 9. Study-type adaptation
+
+| Study type | Likely adaptations |
 |---|---|
-| **Standalone H2, not a Background sub-block.** | Prakriti, 2026-06-02; matches the ResOps row. |
-| **Placed between Key Research Questions and What-decisions.** | They are what the methodology is designed to test — the method (Project Details) follows from the beliefs being pressure-tested. |
-| **3 bullets, one sentence each, prefixed `**H1**`/`**H2**`/`**H3**`.** | Tight, scannable. |
-| **Each hypothesis traces back to an item in Existing Insights.** | Hypotheses are derived from what's already known — not invented. Keeps the Portigal (2023) confirmation-bias guardrail intact. |
+| **In-depth interview (IDI) / generative** | Narrative objectives and questions; behavioral Sample & evaluators; no task metrics unless the decision requires them. Typical N=6–12 for a reasonably homogeneous sample. |
+| **Moderated usability** | Task-oriented Stimuli & protocol; task-level evidence in Measures & analysis; typical N=5–8 per critical group. |
+| **Unmoderated usability** | Larger sample; task success, time, and post-task ease measures when relevant. |
+| **Survey** | Measures & analysis includes population, precision, confidence interval, and weighting assumptions when used. |
+| **Diary study** | Timeline reflects setup, longitudinal fieldwork, check-ins, and synthesis; protocol includes entry cadence. |
+| **Concept test** | Stimulus handling, order effects, comparison logic, and a contextual success definition. |
+| **Mixed method** | Separate sample and analysis logic by strand; state when and how the evidence is integrated. |
+| **Human/model evaluation** | Evaluator independence, calibration versus blind validation, adjudication, coverage, and decision-specific success evidence. |
 
----
+## 10. Option 4 — Leadership visual contract
 
-## 10. Additional → Documents = clickable markdown links, the final section
+Every final Google Doc must match [`option4-leadership-style.md`](option4-leadership-style.md) and pass the machine-readable contract in [`option4-style-contract.json`](option4-style-contract.json):
 
-The plan ends at **Additional → Documents** — no FAQ, no Open Questions, no separate Resources & Links, no Risks section follows it. *(ResOps block name: "Additional," with a "Documents" list.)*
+- pageless editing mode with landscape-letter export geometry and one-inch print margins;
+- DM Serif Display breadcrumb, title, headings, and section bands;
+- DM Sans body, RACI, labels, timeline, and table content;
+- a separate five-row Research Timeline and a Project Plan Overview table, both with fixed 144pt / 554.4pt columns;
+- pale-yellow full-paragraph test warning when applicable;
+- white ordinary cells and dark-green `#003D29` two-cell section bands;
+- Topic as the first visible overview row, with no generic conversion header;
+- true native bullet paragraphs, active links, and restrained emphasis.
 
-```
-## Additional
+Use `scripts/option4_layout.py` to parse, normalize, format, and verify the document. The historical private Option 4 reference is an audit source only; colleagues do not need access to it. If the connected Google Docs environment cannot apply or verify the exact contract, **block completion** and preserve the approved draft for retry. A standard-font, one-table, generic-color, merged-band, or structural-only fallback is not a finished research plan.
 
-**Documents**
+## Source history
 
-- **[Discussion Guide](#)** — to be generated via `/mod-guide` skill
-- **[Questionnaire / Survey (Qualtrics)](#)** — to be drafted by May 13–14
-- **[Screener](#)** — to be drafted by May 14
-- **[Datasheet / recruit query](#)** — pending DS pull
-- **[PRD / Brief](#)** — pending Trace
-- **[Stimulus mocks (Figma)](#)** — pending stimulus owner decision
-- **[Final Report](#)** — created at readout
-```
-
-Rules:
-
-| Rule | Reasoning |
-|---|---|
-| **EVERY item is a clickable markdown link.** Format: `[Document Name](URL)`. | When the doc is uploaded to Google Docs and styled, the items render as blue underlined links — readers click directly to the source. |
-| **Use `(#)` as placeholder URL for docs that don't exist yet.** | The link styling shows up immediately; the researcher fills in real URLs as the docs land. Without a URL, markdown renders as plain bold text and loses the visual cue. |
-| **Single Documents list — no Previous Research subsection here.** | Prior research moved to **Existing Insights** (§6). Don't sprout new subsections like "Tools" or "Templates" — tools belong in Project Details → Research Platform. |
-| **Auto-link every doc surfaced in the kickoff inputs.** | Capture every doc the researcher cited (PRD, Slack thread, Glean doc, Screener, Mod Guide, Dovetail project, PII consent script) and emit each as a link. The researcher shouldn't re-type doc names she already mentioned. |
-| **Prune the Documents list to the study type — don't emit every row by default.** | A fully unmoderated study with no live moderator (e.g., an unmoderated usability test or a survey-only concept test) has no Discussion Guide — drop that row rather than listing it as a placeholder that will never get filled in. Same logic for any other row that structurally doesn't apply to the chosen method (e.g., no Screener for a study drawing on an existing panel with no new recruit). |
-
----
-
-## 11. RACI block — keep all four roles in the document HEADER
-
-RACI lives in the document header — the four disc-bullet lines under **Key Stakeholders**, above the **Topic** section — NOT as a standalone H2 section.
-
-Always include all four RACI roles (Responsible / Accountable / Consulted / Informed), even if some names aren't known yet. Use `[TBD — fill in]` placeholders.
-
-```
-**Key Contacts:** Jedida Milton (UX Researcher)
-
-**Key Stakeholders:**
-- **Responsible:** Jedida Milton (UX Researcher)
-- **Accountable:** Trace Levinson (PM, Meals)
-- **Consulted:** Callum Wood (DS, AIQA — *decision-maker*), Eric Hermann (Meals Lead), [TBD — fill in]
-- **Informed:** Prakriti Parijat (UXR Skip-level), Heather Matley (Content)
-```
-
-Why: forces stakeholder alignment early. An empty `Accountable:` slot is a flag that the decision-owner hasn't been named, which is itself information.
-
-When the *decision-maker* is a Consulted party (not the Accountable), call it out inline with `*decision-maker*` in italics. Example: `Callum Wood (DS, AIQA — *decision-maker*)`.
-
-See also: `~/.claude/projects/.../memory/feedback_raci_placeholder_format.md`.
-
----
-
-## Source
-
-Locked in during the v2 Recipe→Cart Mapping research plan iteration on **2026-05-12**. Prior version crystallized during the v3 iteration (Doc `1kp8qSIM8sMys2ytwHuBcwQKOhnAJVcENlq8ucik5hxM`).
-
-**Updated 2026-06-02** from the team workshop where Jedida demoed the research skills. Team feedback drove: a new Existing Insights H2 surfacing what's already known (Prakriti + Amalia), a verbatim-source requirement on every insight (Amalia), existing-context discovery running first via the research-insights agent + Glean (Step 1.5), an active decision-quality audit (Step 1.6), minimum-evidence methodology framing (Step 2), and a `/multi-agent-check` draft→critique handoff (Step 6).
-
-**Restructured 2026-06-08** to the canonical ResOps **Research Project Plan (RPP)** template (Doc `1s6Lg4ZsiIypqANdpg4hrCwxkgwP0qOwJvGNekzgj9k0`) under Jedida's **"Option B"** (match ResOps order + names, keep the richer Jun-2 content). Section re-mapping from the old template:
-- Goal-led **Parameters table** → split into **Topic** + **What decisions will be made** + **Project Details** + **Proposed Research Timeline** (§5).
-- **Methodology** (absorbed Participants) → **Project Details** (§7).
-- **Deliverables** → **Project Details → Deliverable Format** + **Additional → Documents** (§7, §10).
-- **Risks** → **Project Details → Dependencies** (ResOps has no Risks section) (§7).
-- **Appendix → Additional Documents** → **Additional → Documents** (§10); **Appendix → Previous Research** → **Existing Insights** (§6).
-- **Research Questions** → **Key Research Questions**; **Research Objectives** → **Objectives**; **Hypotheses** → **Hypotheses / Questions of Interest from XFN leads** (no longer provisional) (§1, §4, §9).
-- New ResOps sections added: **TL;DR Summary of Findings**, **What Research Priorities is this relevant to (Themes)** (§5).
-- The interactive pop-up (SKILL.md Step 3) now walks these sections in the same order, one at a time, first pop-up = Existing Insights.
+- 2026-05-12: objectives, broad research-question distinction, and scannable content patterns established.
+- 2026-06-02: discovery-first workflow, verbatim sourcing, decision audit, minimum-evidence methodology, and critique handoff added from the team workshop.
+- 2026-09-23: approved Leadership structure adopted after an end-to-end mock test; fields made adaptive; Deliverables & Next Steps separated; Appendix restricted.
+- 2026-09-23: the mock exposed visual drift in the portable fallback; the exact Option 4 — Leadership timeline, typography, colors, geometry, formatter, and hard verification gate became mandatory for every final Doc.

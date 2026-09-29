@@ -15,8 +15,8 @@ A run is complete only when all of the following are true:
 2. The researcher has approved every applicable plan row.
 3. The critique pass and the multi-agent review have both run, with fixes folded in.
 4. The Google Drive destination has been confirmed.
-5. The plan has gone through the **create → copyedit → format → verify** pipeline.
-6. A working Google Doc link has been returned with verification status.
+5. The plan has gone through the **copyedit → create → normalize → Option 4 format → verify → render** pipeline.
+6. The exact **Option 4 — Leadership** visual contract has passed, and a working Google Doc link has been returned with verification status.
 
 Both quality checks run before the Google Doc is drafted. Drive destination confirmation must happen before document creation.
 
@@ -35,7 +35,7 @@ Markdown is an intermediate representation, not the completed deliverable. A moc
 | **4** | Assemble the approved plan (markdown intermediate) | Content complete; mock warning applied when relevant |
 | **4.5** | Auto-run critique checklist (announced at end of Step 3) | Gaps fixed or explicitly accepted |
 | **5** | Auto-run multi-agent review on the fixed content — before the Doc | Review complete; confirmed fixes folded in |
-| **6** | Draft the Google Doc last: create, format, read back, inspect, correct, re-verify, return | Content, structure, bullets, links, and location pass |
+| **6** | Copyedit, create, normalize, apply the exact Option 4 — Leadership layout, verify, render, correct, and return | Content, links, location, exact visual contract, and rendered pages pass |
 
 ## When to use
 
@@ -60,7 +60,7 @@ Work as a senior UX research partner. Apply both meanings of H.E.A.R.T. used by 
 
 The researcher is the final authority. Recommend clearly, but never silently lock a method, claim, or threshold.
 
-Load `references/research-plan-methodology.md` when method choice is disputed, sample-size defense is needed, or stakeholders request citation-level rationale. Load `references/content-rules.md` whenever drafting or editing the plan; it is the content source of truth.
+Load `references/research-plan-methodology.md` when method choice is disputed, sample-size defense is needed, or stakeholders request citation-level rationale. Load `references/content-rules.md` whenever drafting or editing the plan; it is the content source of truth. Load `references/option4-leadership-style.md` before assembling or formatting the final Google Doc.
 
 ## Interaction contract
 
@@ -79,14 +79,17 @@ If native pop-ups are unavailable, state **”Inline fallback — native checkli
 
 The number of options per pop-up should match the content — no fixed cap. Show all relevant items; if there are many, show the most important ones first and include an “Other / see more” slot.
 
-## Portable Google Docs contract
+## Option 4 — Leadership Google Docs contract
 
-The skill must work for any researcher with a write-capable Google Docs integration.
+The skill must produce the same leadership-ready visual system for every researcher. Runtime access to Jedida's private reference Doc is neither assumed nor required.
 
-- Use only native Google Docs capabilities and tools available in the current environment.
-- Use the portable Leadership layout defined in Step 6: landscape, a concise opening, and one two-column plan table with four section-divider rows.
-- Use a standard Google Docs font and native styles. Do not depend on a personal template, custom font, custom palette, private reference document, hardcoded folder, local styling script, command-line utility, or researcher-specific authentication setup.
-- If no write-capable Docs integration is available, preserve the approved draft and report that the required deliverable is blocked. Do not call the markdown output final.
+- Use the bundled machine-readable contract in `references/option4-style-contract.json` and the executable pipeline in `scripts/option4_layout.py`.
+- Build the exact hierarchy: concise opening → separate **Research Timeline** → **Project Plan Overview** table.
+- Apply DM Serif Display and DM Sans, the exact colors, pageless editing mode with landscape-letter export geometry, one-inch print margins, fixed table widths, pale-yellow warning treatment, white body cells, and dark-green two-cell section bands.
+- Keep adaptive study content and milestones; never copy wording, dates, week labels, people, or findings from the historical reference plan.
+- Run the bundled verifier and inspect rendered pages. Structural similarity or a successful API response is not enough.
+- If the connected environment cannot apply or verify the exact contract, preserve the approved draft and **block completion**. Do not return a standard-font, one-table, generic-color, merged-band, or structural-only fallback as final.
+- This visual gate is not researcher-, stakeholder-, or leadership-waivable. An instruction to accept a downgrade still blocks final delivery; return the approved draft as blocked, not an approximate Google Doc as final.
 
 ## Step 1: Gather study inputs and orient the researcher
 
@@ -221,7 +224,7 @@ Present these conditional choices only when relevant:
 - **Data sources & coverage** appears for logs, corpora, benchmarks, or secondary data.
 - **Platforms & tools** appears only when the choice changes execution, security, access, or handoff.
 
-Do not force a Sample & evaluators or Measures & analysis row into a study that does not need it. Conversely, do not omit them from a technical evaluation merely because it has no consumer participants.
+Do not force a Sample & evaluators or Measures & analysis row into a study that does not need it. A technical evaluation with raters, sampling strata, or defensible coverage still needs Sample & evaluators even when it has no consumer participants; a pure log analysis with no participants or raters omits that row.
 
 Prevent conditional-row duplication. Give each fact one primary home: case or participant coverage belongs in Sample & evaluators; procedure, sequencing, calibration, and blinding belong in Method & approach; source provenance and corpus boundaries belong in Data sources & coverage; presentation, task order, and stimulus handling belong in Stimuli & protocol. Omit a conditional row when its only content would duplicate another row.
 
@@ -308,9 +311,24 @@ The opening order is:
 4. RACI bullet list.
 5. Mock warning, when applicable.
 
-Then create one two-column plan table. The left column contains the row label; the right column contains the approved content. The markdown header below is only a conversion aid; remove that generic header row from the finished Google Doc so Topic is the first visible table row.
+Then add the separate Option 4 leadership timeline and the Project Plan Overview. The leadership timeline has one header plus four study-specific milestones derived from the approved detailed Timeline row. Each left-hand label is no more than 32 characters; each right-hand summary is one sentence and no more than 160 characters. The old reference study's four-week schedule is never reused.
 
 ```markdown
+# Research Timeline
+
+| Milestone | Leadership milestone |
+|---|---|
+| [Milestone 1] | [Concise study-specific summary.] |
+| [Milestone 2] | [Concise study-specific summary.] |
+| [Milestone 3] | [Concise study-specific summary.] |
+| [Milestone 4] | [Concise study-specific summary.] |
+
+*[One-sentence timing dependency or decision-point note.]*
+
+---
+
+# Project Plan Overview
+
 | Section / element | Approved content |
 |---|---|
 | **Topic** | [One-sentence leadership framing.] |
@@ -338,9 +356,9 @@ Then create one two-column plan table. The left column contains the row label; t
 
 Use separate markdown list lines in multi-item cells during assembly. In Google Docs, convert and verify them as true Google Docs bullet paragraphs. Do not use arrow chains, typed bullet glyphs, or dense run-on sentences as a substitute.
 
-> ⚠️ **Bullets inside table cells are expensive in the Google Docs API.** Markdown import cannot produce true list paragraphs inside cells; `inspect_doc_structure` does not expose per-cell indices directly. The reliable path is: `debug_table_structure` to get cell paragraph IDs → bottom-to-top cell rebuild with `insertText` + `createParagraphBullets` → re-verify with `inspect_doc_structure`. This is multi-step and fragile. If you are sharing this skill with colleagues, flag in your notes that this step may require retries and that a bullet-list layout (paragraphs outside the table) is a simpler alternative if the table format causes repeated failures.
+The generic `Section / element | Approved content` row is a conversion aid only. Remove it from the Google Doc so Topic is the first visible overview row. Do not remove the visible leadership-timeline header.
 
-The durable executable example is `tests/fixtures/leadership-plan.md`. The contract validator is `tests/validate_contract.py`.
+The bundled normalizer rebuilds every multi-item table cell as clean paragraphs before native bullets and links are applied. Use it instead of accepting conversion artifacts or simplifying the layout. The durable executable example is `tests/fixtures/leadership-plan.md`; the contract validators are `tests/validate_contract.py` and `tests/test_option4_layout.py`.
 
 ## Step 4.5: Research-plan critique
 
@@ -371,79 +389,109 @@ Run the multi-agent review on the fixed plan content — before the Google Doc i
 - If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass.
 - Fold any confirmed fixes into the assembled plan before creating the Doc.
 
-The expected sequence is **approved plan → critique → multi-agent → fixes → draft the Google Doc → share**. Never describe the plan as stakeholder-final before both checks have run.
+The expected sequence is **approved plan → critique → multi-agent → fixes → copyedit → exact Option 4 Google Doc → verify/render → share**. Never describe the plan as stakeholder-final before both checks and the final visual gate have run.
 
-## Step 6: Create, copyedit, format, and verify the Google Doc
+## Step 6: Copyedit, create, normalize, format, verify, and render the Google Doc
 
-A successful API response is not completion. The finished link must point to the confirmed folder and the document must pass content and structure verification.
+A successful API response is not completion. The final link must point to the confirmed folder and pass the exact **Option 4 — Leadership** machine and visual checks.
 
-### 6.1 Create
+### 6.1 Final copyedit and manifest
 
-1. Import or create the approved copyedited content with the current researcher’s connected Google Docs integration.
-2. Use the confirmed Drive folder.
-3. Give the file the approved stakeholder-facing title.
-4. Capture the document ID, URL, and active tab ID when the document uses tabs.
+Copyedit the approved Markdown for clarity, grammar, complete sentences, consistent terminology, and unnecessary repetition. Preserve every approved claim, decision, row, and source link. Resolve all relative paths below from the directory containing this `SKILL.md`, then generate the manifest:
 
-If the integration cannot write, report the blocker and preserve the approved draft for retry.
+```bash
+python3 scripts/option4_layout.py manifest APPROVED.md manifest.json
+```
 
-### 6.2 Copyedit and apply the portable Leadership layout
+The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, or a leadership-timeline summary is too long.
 
-First copyedit the created document for clarity, grammar, complete sentences, consistent terminology, and unnecessary repetition. Confirm that the edit preserves every approved claim, decision, and source link. Then use native Google Docs operations to format it:
+### 6.2 Create in the confirmed folder
 
-- set landscape orientation;
-- apply the native Title style to the title and native heading/body styles where applicable;
-- use a standard Docs font at a readable size;
-- keep the breadcrumb visually secondary and the title dominant;
-- keep RACI as four actual bullet paragraphs;
-- format the main content as one two-column table with a narrow label column and wide content column, with Topic as the first visible row and no generic table header;
-- make the four section-divider rows visually distinct; when using shading, target at least 4.5:1 text-to-background contrast, and use black/white or the bold-text fallback when contrast cannot be verified;
-- use readable padding and text wrapping;
-- convert every multi-item cell to actual list paragraphs—true Google Docs bullets;
-- preserve hyperlinks and restrained intentional emphasis;
-- remove raw markdown, fake links, duplicate blank lines, and conversion artifacts.
+1. Import the copyedited Markdown as a dedicated one-tab Google Doc with the current researcher’s connected Google Docs integration. Do not reuse a multi-tab document; the formatter blocks it to avoid styling the wrong tab.
+2. Use only the confirmed Drive folder and approved stakeholder-facing title.
+3. Capture the document ID, URL, active tab ID, and raw Google Docs JSON.
+4. Confirm that the import produced two tables—a five-row leadership timeline and the Project Plan Overview conversion table—and converted the intermediate `---` into one native horizontal rule between them. The Docs batch API cannot create that rule later; if the importer drops or leaves it as text, retry with a Markdown-to-Google-Docs import path that preserves horizontal rules or block completion.
 
-Do not call any personal styling skill or local formatting script. If a nonessential table-format operation is unsupported, use the native fallback above and continue.
+With Google Workspace CLI (`gws`), fetch the required raw JSON like this; an equivalent connected integration is also valid:
 
-### 6.3 Verify and correct
+```bash
+gws docs documents get \
+  --params "{\"documentId\":\"$DOC_ID\",\"includeTabsContent\":true}" \
+  > imported-doc.json
+```
 
-1. Read the created document back with `get_doc_as_markdown`.
-2. Compare it against every approved row and source link.
-3. Inspect it with `inspect_doc_structure(detailed=true)`. If the document has tabs, inspect the active content tab rather than the empty document shell.
-4. Confirm:
-   - opening order and RACI completeness;
-   - Topic and findings placeholder;
-   - Key Information, Project Details, Deliverables & Next Steps, and Appendix in order;
-   - adaptive Project Details rows with no empty or irrelevant fields;
-   - actual list structure inside multi-item cells;
-   - section-divider contrast of at least 4.5:1 when shading is used, or the bold-text fallback when it cannot be verified;
-   - Appendix contains only Additional UXR documents and Resources from XFN;
-   - active links, correct names and dates, no raw markdown, and no missing approved content.
-5. When a PDF, thumbnail, or render is available, visually inspect the opening page and at least one dense table page for clipping, illegible wrapping, poor column proportions, and low contrast. If rendering is unavailable, disclose that verification was structural rather than visual.
-6. Correct every issue, then read and inspect again. Repeat until all checks pass.
+If the integration cannot write or expose equivalent raw structure and indices, preserve the approved Markdown and **block completion**.
 
-### 6.4 Return the verified document
+### 6.3 Normalize and apply the exact Option 4 layout
 
-Confirm the file location, obtain the shareable Google Doc URL, and return:
+Generate and apply normalization operations:
 
-- the document link;
-- “content complete, formatting checked, links checked”;
-- any explicit verification limitation;
-- the next relevant artifact only after verification passes.
+```bash
+python3 scripts/option4_layout.py normalize imported-doc.json manifest.json normalize-batch.json
+```
+
+The normalizer validates the manifest version and digest, confirms that the imported leadership timeline plus every Project Plan Overview label and body still match the approved Markdown, rebuilds clean overview-cell paragraphs, removes the generic conversion header, and restores two physical cells for section bands. It blocks rather than rewriting pre-overview timeline text, because a length change there would invalidate later Google Docs table indices in the same native batch. Apply `normalize-batch.json` through the connected Google Docs batch-update capability, then re-fetch the raw document JSON. With `gws`:
+
+```bash
+gws docs documents batchUpdate \
+  --params "{\"documentId\":\"$DOC_ID\"}" \
+  --json "$(cat normalize-batch.json)"
+```
+
+Generate and apply exact formatting operations:
+
+```bash
+python3 scripts/option4_layout.py format normalized-doc.json manifest.json format-batch.json
+```
+
+Apply `format-batch.json`, then re-fetch again. With `gws`, use the same `batchUpdate` command with `format-batch.json`. This step must produce DM Serif Display/DM Sans typography, pageless editing mode with landscape-letter export geometry, one-inch print margins, the exact Option 4 colors and spacing, fixed 144pt / 554.4pt table columns, a repeating dark-green timeline header, a gray milestone column, white overview body cells, true bullets, active links, and dark-green two-cell section bands. The two columns intentionally total 698.4pt and extend 50.4pt beyond the 648pt paragraph text area; this matches the approved source and must not be “corrected” by shrinking the table.
+
+The script emits native Google Docs API requests. An equivalent connected integration may apply the same operations directly. If the environment cannot apply an essential operation, **block completion**—do not simplify the design.
+
+### 6.4 Verify and visually inspect
+
+1. Read the document back with `get_doc_as_markdown` and compare it against every approved row and source link.
+2. Inspect the active content tab with `inspect_doc_structure(detailed=true)`.
+3. Run the hard verifier against newly fetched raw JSON:
+
+```bash
+python3 scripts/option4_layout.py verify final-doc.json manifest.json
+```
+
+4. Export or render the Google Doc and inspect all three:
+   - the opening page;
+   - at least one dense middle table page; and
+   - the final Appendix page.
+5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. If the leadership timeline splits, tighten only its at-a-glance summaries; preserve the approved detailed Timeline row.
+6. Correct every issue, then re-fetch, rerun the verifier, and re-render. Repeat until all checks pass.
+
+A structural-only pass is insufficient. If raw verification or rendering is unavailable, **block completion** rather than returning an approximate document.
+
+### 6.5 Return the verified document
+
+Confirm the file location and return:
+
+- the working Google Doc link;
+- `content complete, Option 4 formatting checked, links checked, rendered pages checked`;
+- no styling caveat—any unresolved styling limitation means the document is not final.
 
 Open the verified Google Doc in the browser when the environment supports it. Do not update project trackers, progress files, or unrelated systems unless the researcher separately asks.
 
-This is the final step. The plan has already passed the critique (Step 4.5) and multi-agent review (Step 5); the verified Google Doc is the deliverable to hand back.
+This is the final step. The plan has already passed the critique (Step 4.5) and multi-agent review (Step 5); only the exact verified Option 4 Google Doc is handed back.
 
 ## Tool guidance
 
 - **Enterprise research agent / Glean:** discover prior evidence and read supplied internal documents.
 - **Slack:** read supplied kickoff threads.
-- **Drive / Google Docs:** create the document in the confirmed folder, edit it, apply native formatting, read it back with `get_doc_as_markdown`, inspect it with `inspect_doc_structure`, and return the link.
+- **Drive / Google Docs:** create the document in the confirmed folder, expose raw document structure, apply native batch updates, read it back with `get_doc_as_markdown`, inspect it with `inspect_doc_structure`, export/render it, and return the link only after the Option 4 gate passes.
 - **Directory / people search:** validate current stakeholder identities before carrying names forward.
 - **Approved data tooling or data-science partner:** obtain behavioral evidence when needed; report unavailable data rather than estimating it.
-- **`references/content-rules.md`:** exact row order, writing rules, adaptive fields, bullet rules, and portable layout.
+- **`references/content-rules.md`:** exact row order, writing rules, adaptive fields, and bullet rules.
+- **`references/option4-leadership-style.md`:** human-readable Option 4 hierarchy and hard completion gate.
+- **`references/option4-style-contract.json`:** machine-readable typography, colors, geometry, spacing, and table invariants.
+- **`scripts/option4_layout.py`:** manifest, normalize, format, and verify pipeline.
 - **`references/research-plan-methodology.md`:** deeper method and sample-size rationale.
-- **`tests/validate_contract.py`:** regression check for the maintained skill contract.
+- **`tests/validate_contract.py` and `tests/test_option4_layout.py`:** regression checks for the maintained content and visual contracts.
 
 ## Methodology sources
 
@@ -460,4 +508,4 @@ Use these when the recommendation is challenged or when rationale belongs in the
 | Quantitative sample recommendations depend on precision and decision needs | Sauro, J., & Lewis, J. R. (2012), *Quantifying the User Experience* |
 | Human authority, critique patterns, and Responsible AI guardrails | Loosbrock, K. (2025), *AIxUXR Playbook*, Instacart Internal |
 
-The verified Google Doc is the primary output. A real run is incomplete until its location, content, structure, bullets, and links have been checked and its URL returned.
+The verified Google Doc is the primary output. A real run is incomplete until its location, content, links, exact Option 4 styling, and rendered pages have passed and its URL is returned.

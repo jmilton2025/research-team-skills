@@ -8,7 +8,7 @@ Each skill is grounded in methodology from the most trusted voices in UX researc
 
 | Command | Skill | What it does |
 |---------|-------|--------------|
-| `/research-plan` | Research Plan | Generates a structured research plan (objectives, methodology, timeline, deliverables) tailored to your study |
+| `/research-plan` | Research Plan | Generates a structured research plan and delivers it as an edited, verified Google Doc in the exact Option 4 — Leadership visual system |
 | `/mod-guide` | Moderation Guide | Generates moderation guides for in-depth interviews, usability tests, and diary studies |
 | `/analysis` | Analysis | Thematic analysis, tagging, and pattern recognition for qualitative and quantitative data |
 | `/report` | Research Report | Research reports with executive summaries, findings, recommendations, and next steps |
@@ -17,14 +17,19 @@ Each skill is grounded in methodology from the most trusted voices in UX researc
 | `/usertesting-html` | UserTesting HTML | Builds the visual stimuli HTML — dual-phone / two-cart / single-row card patterns, design tokens, image labels, subtotal audit, image-quality QA |
 | `/usertesting-orchestrator` | UserTesting Orchestrator | Coordinates the full plan → script → HTML pipeline end-to-end, owns shared-context handoffs, runs the 3-layer triangulation audit |
 
-All skills follow the same pattern:
+All skills use collaborative approval gates: Claude recommends starting content, the researcher can accept, edit, or brainstorm alternatives, and nothing advances until the current decision is approved.
 
-1. Ask introductory questions about your study
-2. Propose a methodology grounded in published research standards
-3. Let you review and adjust
-4. Ask about style (reference doc, Instacart default template, or clean outline)
-5. Generate the deliverable
-6. Offer to upload to Google Docs
+**`/research-plan` contract:**
+
+1. Discover existing evidence before asking logistics.
+2. Audit the decision and recommend the minimum valid research design.
+3. Approve the plan in four parts: **Key Information → Project Details → Deliverables & Next Steps → Appendix**.
+4. Confirm the exact Google Drive destination.
+5. Copyedit, create, normalize, apply the exact Option 4 layout, verify, render, and only then return the Google Doc link.
+
+Every final plan uses **Option 4 — Leadership**: pageless editing with landscape-letter export geometry, DM Serif Display/DM Sans typography, a separate at-a-glance Research Timeline, pale-yellow mock warning when applicable, and the two-column Project Plan Overview with white body cells and dark-green two-cell section bands. The bundled formatter and verifier make this consistent for colleagues without requiring access to Jedida's private reference Doc. Final delivery requires a write-capable Google Docs integration that can apply native batch updates, return raw document structure, and export/render the result; `gws` is the documented command-line path. If the exact contract cannot be applied and rendered, the skill blocks completion instead of returning a downgraded document. Project Details remains adaptive: **Method & approach**, **What does success look like?**, and **Dependencies & guardrails** are core; fields such as **Sample & evaluators** and **Measures & analysis** appear only when the study needs them. The Appendix contains only **Additional UXR documents** and **Resources from XFN**.
+
+Mock/test runs keep artifacts out of Drive by default and add a prominent test warning unless the tester explicitly requests a test document.
 
 ## Need a self-serve, no-researcher-required read instead?
 
@@ -37,6 +42,15 @@ See [INSTALL.md](./INSTALL.md).
 ## Contributing
 
 Found a better methodology? Want to add a new skill? Open a PR. Each skill lives in `skills/{skill-name}/SKILL.md`. Heavy methodology references live in `skills/{skill-name}/references/`.
+
+Before changing `/research-plan`, run its contract test:
+
+```bash
+python3 skills/research-plan/tests/validate_contract.py
+python3 skills/research-plan/tests/test_option4_layout.py
+```
+
+Behavioral pressure scenarios, the Option 4 fixture, and the exact visual-contract test are documented in `skills/research-plan/tests/README.md`.
 
 ## Credits
 

@@ -1,0 +1,113 @@
+{
+  "name": "Option 4 — Leadership",
+  "version": "2026-09-23",
+  "reference_usage": "Visual audit source only; the runtime does not require access to this private document.",
+  "page": {
+    "document_mode": "PAGELESS",
+    "orientation": "LANDSCAPE",
+    "width_pt": 792,
+    "height_pt": 612,
+    "margins_pt": {
+      "top": 72,
+      "bottom": 72,
+      "left": 72,
+      "right": 72
+    },
+    "header_margin_pt": 36,
+    "footer_margin_pt": 36,
+    "use_custom_header_footer_margins": true
+  },
+  "structure": {
+    "native_horizontal_rules": 1,
+    "top_level_tables": 2
+  },
+  "colors": {
+    "dark_green": "#003D29",
+    "warning_background": "#FFF2CC",
+    "warning_text": "#6F4A00",
+    "gray_cell": "#D9D9D9",
+    "gray_text": "#666666",
+    "white": "#FFFFFF",
+    "black": "#000000"
+  },
+  "typography": {
+    "breadcrumb": {
+      "font": "DM Serif Display",
+      "size_pt": 16,
+      "bold": true,
+      "color": "#666666"
+    },
+    "title": {
+      "font": "DM Serif Display",
+      "size_pt": 26,
+      "bold": true,
+      "color": "#003D29"
+    },
+    "heading": {
+      "font": "DM Serif Display",
+      "size_pt": 20,
+      "bold": true,
+      "color": "#000000"
+    },
+    "section_band": {
+      "font": "DM Serif Display",
+      "size_pt": 14,
+      "bold": true,
+      "color": "#FFFFFF"
+    },
+    "body": {
+      "font": "DM Sans",
+      "size_pt": 10,
+      "color": "#000000"
+    },
+    "context_note": {
+      "font": "DM Sans",
+      "size_pt": 9,
+      "italic": true,
+      "color": "#666666"
+    }
+  },
+  "warning": {
+    "font": "DM Sans",
+    "size_pt": 10,
+    "bold": true,
+    "foreground": "#6F4A00",
+    "background": "#FFF2CC",
+    "full_paragraph_shading": true
+  },
+  "tables": {
+    "columns": 2,
+    "column_widths_pt": [144, 554.4],
+    "total_width_pt": 698.4,
+    "intentional_text_area_overflow_pt": 50.4,
+    "cell_padding_pt": 5,
+    "timeline_rows": 5,
+    "timeline_header_rows": 1,
+    "timeline_body_rows": 4,
+    "timeline_left_cell_max_characters": 32,
+    "timeline_right_cell_max_characters": 160,
+    "overview_section_rows": [
+      "KEY INFORMATION",
+      "PROJECT DETAILS",
+      "DELIVERABLES & NEXT STEPS",
+      "APPENDIX"
+    ],
+    "section_rows_keep_two_cells": true,
+    "body_cell_background": "#FFFFFF",
+    "timeline_header_background": "#003D29",
+    "timeline_first_column_background": "#D9D9D9",
+    "section_background": "#003D29"
+  },
+  "spacing": {
+    "line_spacing_percent": 115,
+    "table_line_spacing_percent": 100,
+    "breadcrumb_space_below_pt": 16,
+    "title_space_below_pt": 3,
+    "heading_space_above_pt": 20,
+    "heading_space_below_pt": 6,
+    "raci_indent_start_pt": 36,
+    "raci_indent_first_line_pt": 18,
+    "cell_bullet_indent_start_pt": 36,
+    "cell_bullet_indent_first_line_pt": 18
+  }
+}
