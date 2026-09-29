@@ -1,887 +1,196 @@
 ---
 name: analysis
-description: Use when a UX researcher has interview transcripts, session recordings, or open-ended survey responses and needs to synthesize findings via thematic analysis, tagging, or general affinity-based synthesis. Triggers on "analyze interviews", "thematic analysis", "tag transcripts", "synthesize research", "pull together a synthesis", "find themes in these sessions", "what did we hear", or "/analysis".
+description: Use when analyzing qualitative UX research data, from one transcript through larger interview or open-response corpora, including pilot-signal synthesis, affinity synthesis, thematic analysis, or qualitative tagging; not for moderation or final stakeholder storytelling.
 ---
 
 # UX Research Analysis
 
-> Invoke with `/analysis`
+Use this skill to turn authorized, deidentified qualitative data into bounded, auditable research findings. The researcher owns the interpretation and final approval; AI extracts, organizes, challenges, and documents evidence.
 
-Synthesize qualitative research data (interview transcripts, session recordings, open-ended survey responses, diary entries) into rigorous, defensible findings using one of three methodologies: General Affinity Synthesis, Thematic Analysis (Braun & Clarke), or Tagging.
+## Non-negotiable contract
 
-Build the analysis collaboratively, one unit at a time. Anonymize the data first, recommend the fit-for-purpose methodology, approve each parameter and each synthesis unit with the researcher, run both quality checks, and only then produce the deliverable.
+1. **Do not open or process a source until the pre-ingestion authorization and privacy gate passes.**
+2. **Analyze only the exact approved scope.** A request for “five” items is not enough; identify the five tasks, sections, responses, files, or line ranges.
+3. **Trace every evidence item to an exact source locator and preserve how it was elicited.**
+4. **Keep stated evidence separate from inference.** Never invent or silently repair quotes.
+5. **Match claim strength to the sample and method.** One session cannot establish a theme, pattern, prevalence, saturation, or transferable product recommendation.
+6. **Run evidence QA before asking the researcher to approve findings.** Do not use researcher approval to discover preventable evidence errors.
+7. **Run mode-aware final QA before delivery.** A limitation must stay visible; approval does not convert weak evidence into strong evidence.
+
+## H.E.A.R.T. operating principles
+
+| Principle | Required behavior |
+|---|---|
+| **Human-centered** | Preserve participant meaning, context, contradictions, and potential harm. |
+| **Experience-focused** | Keep the workflow and output clear enough for the intended audience to use. |
+| **Amplifying** | The researcher chooses the question, scope, method, and final interpretation. |
+| **Responsible** | Enforce authorization, privacy, purpose limitation, and evidence boundaries. |
+| **Transparent** | Attribute AI assistance, document the method, and expose uncertainty and limitations. |
+
+## Workflow at a glance
+
+| Stage | Work | Gate |
+|---|---|---|
+| 1 | Intake metadata without opening sources | Authorization, reuse, and deidentification confirmed |
+| 2 | Open the approved source and audit data quality | No unexpected identifiers; provenance and scope recorded |
+| 3 | Route by sample and objective; propose method | Researcher approves framing, exact scope, and method |
+| 4 | Extract evidence and develop bounded claims | Evidence ledger complete |
+| 5 | Run early evidence QA | Unsupported or mis-scoped claims revised or removed |
+| 6 | Present the draft for researcher approval | Consolidated by default for n=1–4; unit-by-unit optional |
+| 7 | Run final QA, fold fixes, and deliver | Materially changed claims reapproved |
+
+## 1. Pre-ingestion authorization and privacy gate
+
+Before reading a pasted transcript, opening an attachment, following a document link, transcribing media, or sending content to another tool, gather only metadata:
+
+- data type and volume;
+- source location and access method;
+- research question and intended audience;
+- exact requested scope;
+- whether the researcher is authorized to use the data for AI-assisted analysis;
+- whether participant consent, company policy, and the original collection purpose permit this use;
+- whether the source was deidentified **before** being supplied.
+
+Ask for a direct confirmation when any item is unknown. Record the basis, such as `researcher attestation`, an approved protocol, or a consent artifact.
+
+### Gate decision
+
+- **Pass:** authorization and permitted use are confirmed, and the supplied source is already deidentified. Continue.
+- **Stop:** authorization, reuse scope, or deidentification is absent or uncertain. Do not open the source. Ask for an authorized, deidentified replacement or for processing in an organization-approved secure environment.
+- An approved local preprocessing tool may redact the source only if it keeps raw content outside model and conversation context. Verify the redacted derivative before analysis.
+
+Never say that raw PII was “scrubbed after receipt.” Once raw content has entered model or conversation context, later redaction cannot remove that exposure or rewrite history. If unexpected PII appears after opening a source, do not repeat it; stop analysis, state that the exposure cannot be undone, and request a properly deidentified replacement.
+
+## 2. Source, quality, and exact-scope audit
+
+After the gate passes, inspect the approved source and record:
+
+- legibility, completeness, truncation, transcription uncertainty, and missing stimuli;
+- speaker separation and normalized participant IDs;
+- consent/provenance evidence and whether this is a secondary-use analysis;
+- residual direct or contextual identifiers;
+- exact included and excluded source units.
+
+Define scope with stable locators: task or section IDs, question IDs, response IDs, timestamps, page/paragraph IDs, row IDs, or line ranges. If the source has none, assign stable IDs before analysis. Record exclusions explicitly. Do not draw evidence from material outside the approved scope, even when it is present in the same file.
+
+Minor transcription uncertainty may remain if it is flagged at the affected evidence item. Material ambiguity, uncertain speaker attribution, or residual identifiers block analysis of that passage.
+
+## 3. Route by sample and research objective
+
+Count independent participants or response units, not pages or excerpts. Use volume as a starting route and the research objective as the final decision.
+
+| Sample | Default route | What it can support |
+|---|---|---|
+| **n=1** | **Single-Session Evidence Memo** | Participant-specific evidence, bounded interpretation, hypotheses, and research validation priorities |
+| **n=2–4** | **Pilot Signals** | Directional convergence, divergence, contradictions, and questions to validate; not cross-population themes |
+| **n=5–10** | **General Affinity Synthesis** | Cross-session clusters and patterns with exact participant support |
+| **n=10–30** | **Thematic Analysis, when the objective is patterns of shared meaning** | Developed themes with a coherent methodological variant |
+| **n=30+** | **Tagging** | Systematic coding, filtering, and frequency reporting; survey opens may require a larger threshold |
+
+At **n=10**, choose by objective: use affinity for a rapid “what did we hear?” briefing, or thematic analysis for interpretive patterns of shared meaning. A pre-existing schema or counting objective may justify tagging at a smaller n; document the exception rather than pretending volume alone chose the method.
+
+When n=1, read [single-session-analysis.md](references/single-session-analysis.md) in full. For affinity, thematic analysis, tagging, method variants, codebook design, the ladder of inference, and IRR, read only the relevant section of [analysis-methodology.md](references/analysis-methodology.md). Preserve these coherence rules:
+
+- Reflexive thematic analysis constructs themes through researcher interpretation and does **not** use IRR.
+- Coding-reliability or codebook approaches may use agreement checks when the objective requires coder convergence.
+- Tagging requires explicit definitions, inclusion criteria, exclusion criteria, and examples.
+- Safety- or harm-relevant evidence is surfaced regardless of frequency and labeled low-n/high-severity.
+
+### Pilot Signals, n=2–4
+
+Report each signal with exact support (`2 of 3 participants`), divergent or contradictory cases, source-backed evidence, multidimensional confidence, and a validation question. Call it a **signal**, not a theme or general user pattern. Do not convert small-n support into percentages, saturation claims, or population prevalence.
+
+## 4. Approve framing, method, and scope
+
+Before substantive analysis, show one compact proposal containing:
+
+- research question and audience;
+- data, sample, and exact included/excluded scope;
+- recommended mode and methodological variant;
+- unit of analysis and intended claim language;
+- known data-quality, consent, or secondary-use limitations;
+- approval cadence.
+
+Ask the researcher to approve or revise the proposal. For **n=1–4**, consolidate these decisions into one pre-analysis approval by default and plan one approval of the QA-checked draft. Offer unit-by-unit review when the researcher wants it or when risk and ambiguity make it useful. For larger studies, grouped or unit-by-unit approval is appropriate; a researcher may request one whole-draft review.
+
+Do not add a separate style-selection gate to the analysis method. Formatting and publication decisions happen only after the analysis is approved.
+
+## 5. Build an evidence ledger before writing claims
+
+Every quote, observed behavior, or analytic note used in a claim needs these fields:
+
+| Field | Required value |
+|---|---|
+| **Evidence ID** | Stable unique ID |
+| **Participant / unit** | Deidentified ID |
+| **Source** | File, session, or response set |
+| **Source locator** | Exact timestamp, task/section, response ID, page/paragraph, row, or line |
+| **Evidence text** | Verbatim text or precise behavioral description; mark transcription uncertainty |
+| **Evidence origin** | `observed`, `spontaneous`, `prompted`, or `annotation` |
+| **Attribution certainty** | `certain`, `probable`, or `uncertain` with reason when not certain |
+| **Claim status** | `stated` or `inferred`; explain the inference |
+| **Scope status** | Included scope unit and any relevant exclusion |
+
+Quotation marks mean verbatim. Mark paraphrases as paraphrases and do not put them in quotation marks. A platform label, moderator annotation, or analyst note is not participant speech. Prompted evidence remains valid but must not be presented as spontaneous. Observed behavior and self-report remain distinct.
+
+Develop claims upward from this ledger:
+
+`evidence → observation/finding → bounded interpretation → implication`
+
+Do not skip a rung. Actively seek negative, contradictory, and boundary evidence. Keep participant context separate from findings unless it directly answers the research question.
+
+## 6. Confidence is multidimensional
+
+Do not attach an unexplained single `High / Medium / Low` label to a finding. For each major claim, rate and justify:
+
+- **source integrity** — clarity and completeness of the underlying passage;
+- **attribution certainty** — confidence in who said or did it;
+- **evidence directness** — distance between the source and the claim;
+- **within-case coherence** — consistency or contradiction within a participant/response;
+- **cross-case support** — exact support across independent participants; `N/A` for n=1;
+- **transferability** — what contexts the evidence may reasonably inform; normally `Not assessable` for n=1.
+
+Use `High`, `Medium`, `Low`, or `N/A / Not assessable` per dimension with a short rationale. Do not average dimensions into false precision. If a summary label is required, it cannot exceed the weakest dimension material to the claim.
+
+## 7. Early evidence QA, then researcher approval
+
+Before showing findings for approval, read and run the **Early Evidence QA** in [quality-gates.md](references/quality-gates.md). Mechanically verify quote-marked text against the source, source locators, attribution, scope, evidence origin, stated-versus-inferred status, claim fit, contradictions, and confidence. Revise or remove failures first.
+
+Then present the QA-checked draft:
+
+- **n=1–4:** one consolidated approval by default, with an optional unit-by-unit path;
+- **n=5+:** grouped or unit-by-unit approval, with a whole-draft option;
+- show what is approved, revised, excluded, and still uncertain;
+- never interpret a partial selection as permission to silently drop the rest—read back the change.
+
+The researcher may edit or reject any claim. Approval locks the analytic meaning, not hidden evidence defects.
+
+## 8. Final QA and delivery
+
+After researcher approval, run the mode-aware final gate in `quality-gates.md`. Use only `Pass`, `Pass with limitation`, `Fail`, or `N/A`, with evidence and a reason for every limitation or N/A. Run an independent review when available without moving deidentified data outside its approved environment. Fold confirmed fixes into the draft. If a fix materially changes an approved claim, its evidence, confidence, or implication, return only that affected unit for reapproval.
+
+Do not deliver while any applicable check is `Fail`. A final `Pass with limitation` is acceptable only when the limitation is explicit and does not invalidate the claims.
+
+After analytic approval and final QA, follow the [delivery rules](references/delivery-routing.md) as the single authoritative source for artifact type, formatting, test labeling, destination confirmation, creation, and verification. Do not duplicate or override those rules here.
 
 ## Completion contract
 
-A run is complete only when all of the following are true:
-
-1. The Transcript Quality Audit / PII scrub has run on the raw data **before** any mode-specific analysis.
-2. The researcher has approved the methodology, the output style, and every synthesis unit (each cluster in Mode A, theme in Mode B, or codebook tag group in Mode C).
-3. The self-critique pass (Step 4.5's 12-item Devil's Advocate) and the multi-agent review have both run, with fixes folded in.
-4. The Google Drive destination has been confirmed before the document is created.
-5. The analysis has been produced in the approved output template/style and created as a Google Doc through the portable Google Docs path.
-6. The Google Doc link has been returned with verification status.
-
-Both quality checks run before the final deliverable is produced. Drive-destination confirmation must happen before document creation.
-
-**The final deliverable is always a Google Doc — including mock, test, and demo runs**, so the researcher can see the output exactly as it will look. Markdown is only an intermediate representation; never offer or recommend "markdown only" as the finish. For a mock/test/demo run, still create the doc: prefix the title with `[TEST]`, keep the TEST ARTIFACT warning under the masthead, and confirm the Drive destination like any other run. Markdown is returned only when no write-capable Docs path exists even after asking the researcher to connect one (see Connect-when-needed in the Interaction contract) — and then it's labeled "upload blocked", never reported as done.
-
-## Portable deliverable contract
-
-This skill must work for any researcher, not only in one person's configured environment.
-
-- **Native Google Docs is the default deliverable path.** Use the Google Docs tools connected in the current session (create the doc, apply native styles, read it back to verify).
-- Confirm the Google Drive destination with the researcher before creating any document. Never write to a hardcoded personal folder ID.
-- Do not depend on a personal template, custom font, custom palette, private reference document, hardcoded folder, local styling script, command-line utility, or researcher-specific authentication setup for the default path.
-- **Optional Instacart / Jedida variant:** a personal pipeline (e.g. the `gws`/Gohan CLI, `style-gdoc-full.py` / `apply_jedida_reporting.py`, project-specific Drive folder IDs, or CLAUDE.md folder-routing) may be used *only* when it is actually available in the environment and the researcher wants it. It is a clearly-labeled alternative, never the assumed path. Step 5 already gates on this correctly (`command -v gws`, the researcher's own convention, refuses a false success) — preserve that behavior.
-- If no write-capable Docs integration is available, first ask the researcher to connect one at that moment (Connect-when-needed). Only if they can't, preserve the approved markdown analysis and report that the upload is blocked rather than claiming a doc was created.
-
-## Flow overview
-
-| Section | Work | Completion gate |
-|---|---|---|
-| **1 · Inputs & Framing** | Gather the 5-question intake → run the mandatory Transcript Quality Audit / PII scrub on the raw data → orient the researcher to the 4-section flow → select the analysis mode (pop-up) | Inputs read, data anonymized, mode locked |
-| **2 · Methodology & Style** | Propose the mode-specific methodology, then approve each applicable parameter in its own labeled pop-up (methodology, orientation, theme level, IRR, scope, output style) — conditional steps skipped when the mode doesn't need them | Every applicable parameter approved |
-| **3 · Synthesis** | Draft → approve → lock one unit at a time: per cluster (Mode A) / per theme (Mode B) / per codebook tag group (Mode C), each showing quotes + prevalence + Observation → Insight → Recommendation before locking. Whole-draft override available | Every unit locked (or the whole draft approved via override) |
-| **4 · Quality Gate & Deliverable** | Announce the gate → run the 12-item self-critique (critique half) → run `/multi-agent-check` → fold fixes → confirm Drive destination → produce/upload via the portable Step 5 | Both checks run, fixes folded, deliverable returned |
-
-## Guiding Philosophy — H.E.A.R.T. (AIxUXR Playbook)
-
-Per Instacart's AIxUXR Playbook, all AI-assisted analysis must be governed by H.E.A.R.T.:
-
-| Letter | Principle | What this skill enforces |
-|--------|-----------|--------------------------|
-| **H** | **Human-centered** — prioritize the needs, context, and well-being of customers, shoppers, retailers, and colleagues | Every theme/cluster/tag is grounded in participant quotes; observations are separated from interpretation |
-| **E** | **Experience-focused** — every interaction (researcher or participant) must be intuitive, respectful, positive | Structured outputs with clear visual hierarchy (2-column tables, RACI headers); no clunky AI-ese |
-| **A** | **Amplifying** — AI augments researcher skill, it does not automate the job away | "Lead the dance" — the researcher remains the final authority on themes, insights, recommendations. AI handles repetitive extraction, clustering, formatting |
-| **R** | **Responsible** — proactive ethics, privacy, bias mitigation | Zero PII policy; verify quotes against source; flag primacy bias and nuance deafness; surface contradictions |
-| **T** | **Transparent** — attribute the assist; maintain participant/stakeholder trust | "Method notes" appendix documents AI's role; all outputs are drafts requiring rigorous human validation |
-
-**The dance metaphor:** AI is a powerful but clumsy dance partner. It has no strategy, intuition, or soul. The researcher leads — setting the rhythm, guiding the steps, owning the final performance. If the AI leads, you get generic outputs and stepped-on toes.
-
-**The golden rule (AIxUXR System Prompt):** If the output could end up in a research deliverable, treat AI as a specialized research engine — data-centric, objective, grounded. The researcher is always the final authority.
-
-## External validation — how this skill's rigor maps to the field (Sept 2026 research pass)
-
-The Playbook's ladder and critique criteria above aren't Instacart-only conventions — they match how the wider UX research field defines rigorous analysis. Named explicitly so the mapping is auditable, not assumed:
-
-| Field standard | Source | How this skill enforces it |
-|---|---|---|
-| **Data → Findings → Insights hierarchy** ("the gold-standard framework" for structuring analysis) | Nielsen Norman Group, "Data vs. Findings vs. Insights" | This skill's Observation → Insight → Recommendation ladder (Sharon) is the same hierarchy under different labels: Observation = Findings (a pattern across data points), Insight = the actionable "why + so what" layer. Never present a Finding/Observation as if it were already an Insight — see CONTENT GENERATION RULE 4 |
-| **"What Happened + Why + So What"** insight-writing structure | Nikki Anderson (User Research Academy), Findings → Insights Cheatsheet | Cross-check every crafted insight (Section 2's Truth + Unmet Need + Opportunity) against this structure: What Happened = the finding/observation, Why = participant beliefs/expectations/triggers, So What = business/product impact. If an insight can't answer "so what," it's still a finding — demote it |
-| **Document the analysis/synthesis process itself, not just its output** | Nikki Anderson, "Create and present an impactful user research case study" — flags that most researchers skip this and treat synthesis as "mysterious" | Every output template's Appendix requires an **Analysis & Synthesis Process** row (see Step 4.5) naming the method used and whether/why debriefs happened between sessions |
-| **A strong insight is observed, not felt, and answers the stated research question** | Google UX Research Certificate, "Analyze and Synthesize" stage | Mirrors this skill's Rule 3 (separate observation from interpretation) and the requirement that every output template states the Research Question up front — insights are graded against it, not against general interestingness |
-| **Insights should be prioritized by reach/impact, not listed flat** | Cross-corroborated (Torresburriel Estudio, Smashing Magazine, dscout) | Formalized as Self-Critique check #11 below — applies across all 3 modes, not just Mode A's existing Insight → Recommendation Map |
-| **Researchers should narrate their analysis method, not just present conclusions** | Meta Research (Medium), John Hu — "Comparing UX Research Methods" | Reflected in this skill's Theoretical Memo (Mode B) and the new Analysis & Synthesis Process row (all modes) |
-
-## When to use this skill
-
-Use this skill when the researcher needs to:
-- Move from raw qualitative data (5-30 transcripts, 50-500 survey opens) to structured findings
-- Run a Braun & Clarke-style thematic analysis with defensible themes
-- Apply a tagging schema across a transcript corpus (deductive, inductive, or hybrid)
-- Produce a synthesis doc, theme report, or codebook for stakeholders
-
-### When NOT to use this skill
-
-- Large structured datasets with 50+ rows → use `/batch-analysis` (that skill is for scorecards, HITL reviews, pipeline audits — not qual synthesis)
-- Moderating a session → use `/mod-guide`
-- Writing up findings as a stakeholder deliverable → use `/report`
-
-## Three Modes
-
-| Mode | Use When | Output |
-|------|----------|--------|
-| **General Affinity Synthesis** | Fast turnaround, smaller corpus (5-10 sessions), need to brief stakeholders on what was heard | Synthesis doc: clusters → observations → insights → recommendations |
-| **Thematic Analysis** | Rigorous analysis, publishable quality, 10-30 interviews, theme development required | Theme report: themes, definitions, illustrative quotes, theoretical memos, prevalence |
-| **Tagging** | Large corpus (30+ transcripts, or 200+ survey opens), need to count/filter, multi-coder team | Tagged transcript + codebook + tag frequency table |
-
----
-
-## Interaction contract
-
-Use native `AskUserQuestion` checklist pop-ups when available.
-
-- Ask one decision per pop-up.
-- **Use `multiSelect: true` where multiple items legitimately apply** — synthesis units and their contents (which quotes, findings, and recommendations to keep), tags/themes, and stakeholder lists. **Keep single-select for genuinely exclusive choices** — analysis mode, methodology approval, orientation, theme level, IRR approach, scope, and output-style variant. Do not force single-select onto a decision where the researcher should be able to keep several items, and do not offer multiSelect on a truly either/or choice.
-- **In any multiSelect approval pop-up, option 1 is "Keep everything as drafted (Recommended)"**, with individual items after it. If the researcher selects only some items, read back what will be dropped and confirm before advancing — never drop content on a single click.
-- Number the options. Mark a **Recommended** option based on the data and the discovered evidence.
-- Preserve the built-in **Other / comments** field so researchers can add, correct, or rewrite.
-- Show the proposed content before asking for approval.
-- **The last option in every pop-up must be "Brainstorm with me"** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. Never bury it mid-list.
-- Label every pop-up with its section and step: **"Section 2 > Step 3 of 5: Theme Level"**. The researcher must always know exactly where they are.
-- Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Section 3.
-
-If native pop-ups are unavailable, state **"Inline fallback — native checklist unavailable in this environment"** and reproduce the same numbered options and selection instructions in chat. Do not silently substitute an unlabeled prose question.
-
-**Connect-when-needed (connections).** Check a connector at the moment a step needs it — Glean to read a Google Doc input, the people directory to verify a RACI name, Google Docs/Drive to create the deliverable, `/multi-agent-check`'s sources for the review. If it isn't connected or asks for sign-in, stop at that step and tell the researcher right then: which connection, what it's for, and how to connect it (`/mcp` in Claude Code, or the connector's settings on claude.ai). Wait while they connect it, then continue. Offer **"Skip this source"** only as an explicit choice the researcher makes, and name the skipped source in Method Notes / Limitations. Never quietly work around a missing connection and mention it in the wrap-up.
-
-The number of options per pop-up should match the content — no fixed cap. Show all relevant items; if there are many, show the most important ones first and include an "Other / see more" slot.
-
----
-
-## Section 1 — Inputs & Framing
-
-Gather the intake, anonymize the data, orient the researcher, then select the mode. This section has three steps: **Step 1 · Gather inputs** (plain-text intake), **Step 2 · Transcript Quality Audit / PII scrub** (mandatory pre-processing, no pop-up), and **Step 3 · Select analysis mode** (pop-up, single-select).
-
-**If AskUserQuestion isn't available in the current environment** (it isn't wired into every context this skill can run in), ask the same question as plain text in the conversation and wait for the researcher's reply before proceeding — every gate across Sections 1–4 that says "use AskUserQuestion" degrades to this (state the inline-fallback line from the Interaction contract). Never guess an answer or skip a gate just because the tool is missing.
-
-### 1.1 Gather data — Step 1
-
-Ask what data is being analyzed:
-
-> "Before we pick a methodology, tell me what you have:
-> 1. **Data type** — interview transcripts, session notes, open-ended survey responses, diary entries, or a mix?
-> 2. **Volume** — how many sessions/responses?
-> 3. **Source** — local files, Google Drive, Dovetail/Dscout export, pasted text?
-> 4. **Research question** — what were you trying to learn? (1-2 sentences)
-> 5. **Stakeholder audience** — who is the output for? (engineer, PM, VP)"
-
-Use answer 5 to shape the final output, not just to file away: a PM/VP-facing doc should lead harder with the Executive Summary and push methodology detail into the Appendix; an engineer-facing doc can carry more method/technical detail inline. It also decides how the Self-Critique Summary is handled (see Step 4.5's "Audience-based placement").
-
-**Format is itself a decision, not a default.** Per Nikki Anderson (User Research Academy), don't reflexively produce a full written doc just because that's this skill's default output — if the stakeholder audience was closely involved throughout data collection and synthesis (e.g., sat in on sessions, co-built the affinity clusters), a shorter artifact (a synthesis summary, a shared board link, a Slack recap) may serve them better than a maximal report. If it's ambiguous which the researcher wants, ask before defaulting to the full template.
-
-If the research question is being applied retroactively to data that was collected for a different original purpose (a secondary/opportunistic read), note that now — it changes how confidence gets framed later and must be disclosed in Method Notes/Limitations, not left implicit.
-
-Accept any format: pasted text, Google Doc URLs, local file paths, Dovetail/Dscout exports.
-
-If Google Doc URLs are provided, read them via Glean's document-read tool (e.g. `mcp__glean__read_document` — confirm the exact connected tool name in your environment, server prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available. If none is connected, ask the researcher to connect it now (Connect-when-needed) before going on — don't skip the doc or guess its contents.
-
-### 1.2 Transcript Quality Audit / PII scrub — Step 2 (mandatory, before the mode branch)
-
-**Before processing any pasted or uploaded data — regardless of which mode you'll end up in:** run the Transcript Quality Audit (PII scrub, speaker-label normalization, consent/provenance check — the "Pre-summarization: Transcript Quality Audit" table under Mode A in Section 2, Step 2.1). Don't wait until a mode-specific methodology step to anonymize; raw names/emails shouldn't sit in the conversation any longer than it takes to redact them. This applies to Thematic and Tagging data just as much as General Synthesis. This is a processing step, not a pop-up — no approval gate, but it must complete before Step 3.
-
-### Orient the researcher (say this in chat before the mode pop-up)
-
-Once inputs are read and the data is anonymized, tell the researcher how the whole run works and that we advance only on approval:
-
-> Thanks — I have your data and context, and I've scrubbed PII from the raw data. Here's how we'll work: I'll recommend a methodology, then we'll build the analysis together, one step at a time.
->
-> **We'll work in four sections:**
->
-> **Section 1 — Inputs & Framing** *(what we have)*
-> Gather inputs · Transcript Quality Audit / PII scrub · Select analysis mode
->
-> **Section 2 — Methodology & Style** *(how we'll analyze)*
-> Methodology · Orientation · Theme level · IRR · Scope · Output style *(only the steps your mode needs)*
->
-> **Section 3 — Synthesis** *(the findings)*
-> One unit at a time — each cluster / theme / tag group drafted, reviewed, and locked before the next
->
-> **Section 4 — Quality Gate & Deliverable** *(checks, then hand-off)*
-> Self-critique · Multi-agent review · Fold fixes · Confirm Drive · Produce/upload
->
-> For each step I'll show you what I've drafted — you can accept it, pick what to keep, or brainstorm with me to refine it. We move to the next step only after you approve the current one.
->
-> Starting with **Section 1 > Step 3 — Select analysis mode.**
-
-### 1.3 Select mode — Step 3
-
-Use **AskUserQuestion** with one question. Pop-up label: **"Section 1 > Step 3 of 3: Select Analysis Mode"**. Single-select (the mode is an exclusive choice). Last option: **"Brainstorm with me"**.
-
-**Question — Which analysis mode?**
-
-Options:
-1. **General Affinity Synthesis (Recommended for fast turnaround)** — "Cluster observations into patterns, extract insights, write recommendations. Best for 5-10 sessions, <1 week timeline."
-2. **Thematic Analysis (Braun & Clarke)** — "Rigorous 6-phase process producing defensible themes with illustrative quotes and theoretical memos. Best for 10-30 interviews, academic or high-stakes findings."
-3. **Tagging** — "Apply a tag schema (deductive, inductive, or hybrid) across a large corpus. Produces a codebook and frequency table. Best for 30+ transcripts or 200+ survey opens."
-4. **Brainstorm with me**
-
-If the researcher is unsure, recommend based on volume: ≤10 sessions → General; 10-30 interviews → Thematic; 30+ or survey opens at scale → Tagging.
-
-After the mode is locked, say: *"Mode locked. Section 1 — Inputs & Framing is complete. Moving on to Section 2 — Methodology & Style."*
-
----
-
-## Section 2 — Methodology & Style
-
-### Step 2.1 · Propose the methodology
-
-Branch based on the mode selected. Each branch proposes a concrete methodology tailored to the data, then presents it in a structured summary.
-
-### Mode A: General Affinity Synthesis
-
-**Methodology foundations:** NN/G affinity diagramming (Moran), synthesis ladder (Sharon), 1/3 prevalence rule (Anderson), AND the AIxUXR Playbook's **Transcript Summarizer** workflow (Loosbrock, Rothschild-Keita, Franicevic, Oct 2025) for session-level summarization patterns.
-
-Propose:
-
-| Parameter | Proposal | Why |
-|-----------|----------|-----|
-| **Unit of analysis** | [Quotes, observations, or behavioral moments from transcripts] | Per NN/G (Rosala), smallest meaningful unit is a single observation or verbatim quote |
-| **Clustering approach** | [Bottom-up from observations → clusters → insights] | Affinity diagramming: Kate Moran at NN/G describes this as "collaboratively sort findings into themed groups" |
-| **Insight ladder** | Notes → Observations → Insights → Recommendations | Sharon's synthesis ladder — each step increases abstraction; insights are interpretive claims, recommendations are actionable |
-| **Prevalence rule** | [1/3 threshold: if ~33% of participants mention similar, it's a pattern. Does NOT apply to safety/severity-flagged findings — see below] | Per Nikki Anderson (User Research Academy) |
-| **Output format** | 2-column synthesis doc (Label \| Content) with cluster tables + insight/rec table | Matches the researcher's established design system |
-
-#### Session summarization patterns (AIxUXR Playbook — Transcript Summarizer)
-
-When the General mode includes producing a **per-session summary** (not just cross-session synthesis), apply the Playbook's structured Session Summary template in addition to the cross-session affinity clusters:
-
-| Section | What it contains | Why it matters |
-|---------|------------------|----------------|
-| **High-Level Summary** | 2-3 sentence overview: participant context, primary behavior/channel, single most significant challenge or unmet need | Defeats "blank page syndrome"; gives stakeholders the gist in one glance |
-| **Key Quotes (2-3)** | Verbatim quotes with participant attribution + timestamp, e.g., `— Alex (00:08)`. Italicize quotes | Grounds summary in primary evidence; timestamps enable auditability |
-| **Participant Context** | Relevant background (role, segment, constraints), assistive tech if applicable, domain familiarity | Readers without session access need this to calibrate the findings |
-| **Key Insights & Highlights** | Bucket into 3 categories: (1) **Barriers** — things that prevent task completion, (2) **Usability Issues** — things that cause friction, (3) **Unmet Needs/Goals** — what users wish they could do | Per Playbook, this triage drives actionability — not all friction is equal |
-| **Implications for Key Decisions** | Per-summary section: "Based on this participant's feedback, what is the single most important implication for [project X]?" Frame as direct input to a decision | Every summary must connect to a business/product decision, not just describe |
-| **Executive Summary** | Copy High-Level Summary + Key Quotes + 3-4 Actionable Takeaways (decision-framed bullets) | Slack/email-ready; socializes findings to XFN partners |
-
-#### Pre-summarization: Transcript Quality Audit (AIxUXR Playbook, Step 0)
-
-Before running Mode A on a transcript corpus, verify transcript hygiene. Garbage in, garbage out.
-
-| Issue | Action | Example |
-|-------|--------|---------|
-| **PII present** | Anonymize before processing. Replace names with pseudonyms like `[Participant Name]`; remove emails entirely | "John Smith at `00:02:15`" → "[Participant Name]" |
-| **Inconsistent speaker labels** | Standardize to `Interviewer` / `Participant` or single consistent pseudonym | "Speaker 2" and "John" used interchangeably → normalize to "Participant" |
-| **Unintelligible sections** | Listen to source audio to correct; if unfixable, leave explicit note `[Audio unclear at HH:MM]` | |
-| **Noisy timestamps** | Optional — remove line-by-line timestamps if they confuse structure, but preserve quote-level timestamps for attribution | |
-| **Consent / data-reuse scope** | If this corpus was collected for a different research question than the one being answered now (a secondary/opportunistic read), or under a consent scope that didn't anticipate this use, don't treat it as automatically fair game — flag it now and disclose it in Method Notes/Limitations. Previously-collected data isn't free of ethical scope just because it's already on hand | Transcripts from a "Weekly Meal Planning" study repurposed to analyze substitution reactions → disclose as a secondary read, not a purpose-built study |
-
-#### Bias flags to embed in every session summary
-
-Per the AIxUXR Playbook, flag these explicitly in your Method Notes appendix:
-
-| Bias | What to do |
-|------|-----------|
-| **Primacy bias** | Scan the full transcript — the AI over-emphasizes information from the beginning. Verify that themes from later sections aren't missed |
-| **Nuance deafness** | AI cannot reliably detect sarcasm, humor, emotional undertones. If the session had notable affect (long pauses, sighs, laughter), the human researcher must add this context via `[Note: ...]` inline |
-| **Hallucination risk** | Every quote must be verifiable in the source transcript. If paraphrasing, mark `[paraphrased]`. If you cannot find a quote, remove it |
-| **Confidence labeling** | Per AIxUXR System Prompt, label confidence as **High / Medium / Low**. Low = data insufficient/contradictory/ambiguous — signal for more research or cautious treatment |
-
-### Mode B: Thematic Analysis (Braun & Clarke 2022)
-
-**Methodology foundations:** Braun & Clarke's reflexive TA (2022) — the gold-standard academic framework — supplemented by the AIxUXR Playbook's **AI-Assisted Thematic Analysis** workflow (Silverman, Venkatraman, Loosbrock, Oct 2025) for AI-specific execution patterns, codebook development, and insight-crafting. The Playbook complements Braun & Clarke; it does not replace the 6-phase rigor.
-
-Propose:
-
-| Parameter | Proposal | Why |
-|-----------|----------|-----|
-| **TA variant** | **Reflexive TA** (default) | Per Braun & Clarke 2022, reflexive TA treats themes as *constructed through researcher engagement*, not discovered. The alternatives (coding reliability TA, codebook TA) assume themes "exist" in data and are better for multi-coder teams requiring IRR. Use those only if requested. |
-| **Orientation** | Inductive vs deductive (ask) | Inductive = codes emerge from data (grounded-theory style). Deductive = start with framework (e.g., JTBD, usability heuristics). Hybrid is common — start inductive, refine with framework |
-| **Theme level** | Semantic vs latent (ask) | Semantic = surface-level, what participants explicitly say. Latent = interpretive, underlying assumptions/ideologies. Choose based on research question |
-| **Theme type** | Fully-realized themes (patterns of shared meaning), NOT topic summaries | Per Braun & Clarke 2022: the #1 pitfall in reflexive TA is reporting topic summaries ("Participants talked about X") instead of patterns of shared meaning with a central organizing concept. Themes must tell an interpretive story |
-| **Phases** | All 6: Familiarization → Coding → Generating initial themes → Reviewing themes → Defining & naming themes → Writing up | Per Braun & Clarke. Each phase has concrete deliverables — see `references/analysis-methodology.md` |
-| **Output format** | Theme report: H2 per theme, 2-col table (Definition \| Illustrative quotes \| Memo \| Prevalence) | Matches the researcher's established design system |
-
-#### AI-Assisted Thematic Analysis workflow (AIxUXR Playbook)
-
-The Playbook reimagines thematic analysis as a convergent, 5-step AI-assisted pipeline. Use this sequence INSIDE Braun & Clarke's 6 phases — it accelerates Phases 2-4 (coding, initial theme generation, theme review) while the researcher remains accountable for Phases 1, 5, and 6.
-
-| Playbook Step | What it does | Maps to B&C Phase | Recommended model |
-|---------------|--------------|-------------------|-------------------|
-| **1. Generate Codebook** | Produce a deductive codebook from the RPP + discussion guide + pre-defined codes. Output: Category \| Code \| Definition \| Example | Informs Phase 2 (Coding) | Gemini 2.5 Pro (advanced reasoning) |
-| **2. Process Structured Data** | Apply codebook to each anonymized transcript one-by-one, extract verbatim quotes into pipe-separated structured data: `Participant \| Segment \| Theme \| Quote`. Use a **"gold standard"** manually-coded transcript as a style anchor | Phase 2 (Coding) | Gemini 2.5 Pro |
-| **3. (Optional) EOD Slack Summary** | Draft stakeholder-ready XFN update from top-of-mind takeaways | Informs Phase 6 (Writing) | Claude Opus 4.1 (writing) |
-| **4a. Deductive Synthesis** | For each code in the codebook, analyze ALL tagged quotes together to extract granular sub-themes + segment patterns + recommendations | Phase 3 (Generating initial themes) | Gemini 2.5 Pro |
-| **4b. Inductive Synthesis** | Cluster all quotes (including `Other`-tagged ones) into emergent cross-code themes. Finds patterns AMONG and BETWEEN the granular codes | Phase 3 + 4 (Generating & Reviewing themes) | Gemini 2.5 Pro |
-| **5a. Craft Insight** | Transform each theme into an insight statement. Insight = **Truth + (Unmet) Need + Opportunity**. Single-sentence bold statement + 2-4 supporting points + 1-2 opportunity statements | Phase 5 (Defining & naming themes) | Claude Opus 4.1 |
-| **5b. Craft Tagline** | Distill insight into 3+ headline options, 3-10 words, 80-100 chars, informative + intriguing | Phase 6 (Writing up) | GPT 4.1 (taglines) |
-| **6. Devil's Advocate** | Systematic peer review against 7 quality criteria (see Self-Critique below) | Phase 4 (Reviewing themes) | Gemini 2.5 Pro |
-
-#### Playbook coding heuristics
-
-Per the AIxUXR Playbook's Prompt 2 (Individual Transcript Structured Data), the AI's extraction must follow these rules:
-
-| Rule | Plain English |
-|------|---------------|
-| **Exhaustive extraction, not curation** | If a participant repeats the same idea three times, create three separate rows. Redundancy > missing evidence |
-| **Capture the complete thought** | A multi-sentence explanation of one idea = one row. Don't fragment coherent thoughts |
-| **Include moderator question for context** | If the participant's response is meaningless without the prompt, include the moderator's verbatim question in the row |
-| **Handle uncoded themes** | If a meaningful quote doesn't fit the codebook, still capture it and tag as `Other`. These seed inductive (4b) synthesis |
-| **Emulate the gold standard** | A manually-coded "golden" transcript from the same project guides style, granularity, and volume |
-| **Structured data > raw transcripts at scale** | Playbook learning: synthesizing from pipe-separated quotes is "far more reliable, token-efficient, and powerful" than re-feeding raw transcripts each pass |
-
-#### Theme-granularity heuristic (Playbook Prompt 4a)
-
-The Playbook warns against over-aggregation. Prefer SPECIFIC themes over few BROAD ones:
-
-- ❌ Broad (avoid): one theme called "Navigation Issues"
-- ✅ Specific (prefer): three themes — "Unreadable Aisle Signage" / "Unpredictable Store Layouts" / "Physical Obstructions in Aisles"
-
-This aligns with Braun & Clarke's "central organizing concept" test — each theme must express a distinct pattern of shared meaning.
-
-#### Theme-validation checks (Playbook Prompt 6 "Devil's Advocate" — 7 criteria)
-
-Before finalizing themes/insights, run the Playbook's structured critique. Grade each (A / A- / B+ etc.) with justification:
-
-| # | Criterion | Check |
-|---|-----------|-------|
-| 1 | **Novelty** | Is the insight net-new, non-obvious, surprising? Compare against past research |
-| 2 | **Actionability** | Clear XFN-friendly implication? |
-| 3 | **Memorability** | Punchy, memorable headline/tagline? |
-| 4 | **Rationale** | Clear "back-pocket" reason why this matters to the business? |
-| 5 | **Simplicity** | Communicated in the simplest way without losing nuance? |
-| 6 | **Language safety** | XFN-friendly, research-lead-friendly, avoids alarmist/dissonant terms and sensitive terminology? |
-| 7 | **Methodological soundness** | Framed as a true insight, not just a finding? Passes the **Truth + (Unmet) Need + Opportunity** test? |
-
-**Critical caveat (Playbook):** The AI is "nuance-deaf" and subject to **primacy bias** (over-weighting early transcript content). After AI-assisted theme generation, the researcher must manually scan for outlier themes and use the Devil's Advocate prompt to challenge findings.
-
-Critical caveat to state explicitly:
-
-> "Per Braun & Clarke 2022, reflexive TA rejects the language of themes 'emerging' from data — themes are **constructed** through your engagement. I will use language like 'I developed the theme...' or 'The theme was generated from...' rather than 'The theme emerged.' This is methodological, not stylistic."
-
-### Mode C: Tagging
-
-**Methodology foundations:** Dscout/NN/G tagging practice (Anderson, Eisenhauer), Cohen's κ for IRR, AND the AIxUXR Playbook's **AI-Assisted Open-Ends Analyzer** workflow (Mamyan, Zheng) for survey open-end coding at scale — especially codebook construction, disambiguation rules, and human-in-the-loop validation.
-
-Propose:
-
-| Parameter | Proposal | Why |
-|-----------|----------|-----|
-| **Tag approach** | Deductive, Inductive, or Hybrid (ask) | Deductive: schema designed up front (faster, needs domain framework). Inductive: tags grow from data (slower, more exploratory). Hybrid: start with seed tags, let new ones emerge. Per Dscout/Nikki Anderson, hybrid is most common in practice |
-| **Tag hierarchy** | Parent → child (e.g., `friction > pricing > sticker-shock`) | Recommended when corpus is 200+ items. Flat tag lists become unwieldy at scale |
-| **Tag types** | Descriptive (what was said) + Analytical (what it means) | Per Dscout: start with descriptive to stay close to participant language, then layer analytical codes once patterns are visible |
-| **Codebook** | Tag name, definition, inclusion criteria, exclusion criteria, example quote | This is the single most important artifact for multi-coder consistency |
-| **IRR (inter-rater reliability)** | Ask: single coder or multi-coder? If multi, compute Cohen's κ on 10-20% double-coded sample, target κ ≥ 0.70 | Only matters for multi-coder projects. See `references/analysis-methodology.md` |
-| **Output format** | Tagged corpus + codebook (2-col table) + frequency table | Frequency table surfaces prevalence for stakeholder briefings |
-
-#### Open-Ends Analyzer workflow (AIxUXR Playbook, 4 steps)
-
-For survey open-ends specifically, follow the Playbook's Open-Ends Analyzer pipeline. Each step has a clear human-vs-AI role:
-
-| Step | Human Role ("Driver") | AI Role ("Co-Pilot") | Output |
-|------|----------------------|----------------------|--------|
-| **1. Prepare & Anonymize** | Strip PII (names, emails, identifying details), consolidate into a single clean document | N/A | Clean, anonymized dataset |
-| **2. Generate Initial Thematic Clusters** | Craft precise prompt from approved blueprint; feed prepared data | Analyze text, identify 5-7 thematic clusters with supporting quotes | Structured tag list + associated quotes |
-| **3. Validate, Refine & Synthesize** *(critical HITL)* | Apply expert judgment to merge/split/rename/discard tags; verify all quotes against source; look for what AI missed; counter confirmation bias by asking "what's missing?" before "is this right?" | N/A — AI's job is done for this step | Final human-validated codebook + tagged excerpts |
-| **4. Create Summary for Reporting** *(optional)* | Prompt AI to summarize the human-validated themes into a reporting format | Reformat and summarize refined themes | Draft summary paragraph or bulleted list |
-
-**Playbook guardrail:** Only use themes you have personally validated in Step 3. Never ship AI output directly to stakeholders without human-in-the-loop review.
-
-#### Codebook construction rules (AIxUXR Open-Ends Playbook)
-
-When the AI generates tags, enforce these three rules on the codebook:
-
-| Rule | Definition | Example |
-|------|------------|---------|
-| **Granularity** | Specific enough to be actionable, broad enough to capture multiple related comments. Avoid tags that are too similar or overlap significantly | ❌ `Bad experience` (too broad) → ✅ `Shopper refunding instead of substituting` (specific, actionable) |
-| **Mutual exclusivity** | Strive to make tags as MECE as possible. If a response could fit two tags, choose the **primary** (most prominent) one | A response about "wrong item + late delivery" should be coded for the PRIMARY frustration, not both |
-| **Actionability** | Prioritize tags that represent distinct customer pain points (not catch-alls) | `Vague` is a legitimate tag for low-confidence responses — use it honestly rather than force-fitting |
-
-#### Disambiguation rules (Playbook Prompts 1 & 2)
-
-Use a **seed set of hand-coded examples** to anchor the AI's tagging logic. The Playbook provides this pattern:
-
-```
-Response → Code
-"none" → None
-"The zip code changes before I place the order" → Zip code changing inconsistently
-"Driver don't match profile picture" → Driver identity
-"It takes time to add a new address" → Address management usability
-```
-
-Feeding the AI 10-20 correctly-coded examples first dramatically improves consistency. This is a **one-shot / few-shot** prompting pattern.
-
-#### Edge-case handling
-
-| Edge case | How to handle |
-|-----------|---------------|
-| **Null/dismissive responses** (`None`, `N/A`, `nothing much`) | Tag with a dedicated `None` code. Do NOT treat as "no data" — the prevalence of null responses is itself informative |
-| **Multi-code responses** | Each user can have multiple codes if multiple challenges are described, but each distinct challenge corresponds to one code. Use binary (1/blank) marker columns for spreadsheet-friendly output |
-| **Low-confidence responses** | Tag as `Vague` rather than force-fitting. Report the `Vague` frequency as a data-quality signal |
-| **Uncoded themes** (don't fit existing codebook) | Tag as `Other` and flag for human review. These feed the inductive pass |
-| **Consistent sentiment** (per Playbook scope) | Open-Ends Analyzer works best on questions expected to have consistent sentiment (e.g., a "challenges" question expected to be negative). Mixed-sentiment opens may need sentiment tagging as a separate axis |
-
-#### Reliability checks
-
-For tagging at scale, layer these on top of standard IRR (Cohen's κ):
-
-| Check | How |
-|-------|-----|
-| **Golden set validation** | Hand-code 10-20% of the corpus first; compare AI output against the gold set. Target ≥ 80% agreement |
-| **Disagreement reconciliation** | Where coder disagreements arise, document WHY (ambiguity, tag overlap, participant phrasing) and refine inclusion/exclusion criteria in the codebook |
-| **Tag-evolution log** | For inductive/hybrid runs, log every tag added, merged, dropped during analysis. This is an auditable artifact |
-| **Primacy-bias scan** | Per AIxUXR guidance: AI over-weights early responses. Sample from the middle and end of the corpus to verify coverage |
-| **Hallucination spot-check** | Verify 10% of tagged quotes against source — did the AI misattribute or invent any? |
-
----
-
-### Step 2.2 · Approve each methodology parameter — one decision per pop-up
-
-Present the proposed methodology as a structured summary first, then approve it parameter by parameter — **one decision per pop-up**, each with its own section/step label. These are exclusive choices, so each is **single-select** with **"Brainstorm with me"** as the last option.
-
-**Determine M before the first pop-up.** Count only the steps that apply to the selected mode, and use that count as M in every label. Skip an inapplicable step entirely — never show an empty pop-up. The applicable steps by mode:
-
-| Step | Pop-up | Applies to | M contribution |
-|---|---|---|---|
-| Methodology approval | *Approve as proposed / Adjust one parameter / Start over with a different mode* | All modes | always |
-| Orientation | *Inductive / Deductive / Hybrid* (mark the recommendation) | Thematic or Tagging | conditional |
-| Theme level | *Semantic (surface-level) / Latent (interpretive) / Both* | Thematic only | conditional |
-| IRR | *Single coder (no IRR) / Multi-coder with Cohen's κ / Multi-coder with % agreement only* | Tagging + multi-coder | conditional |
-| Scope | *Analyze all data (Recommended) / Sample N transcripts first / Pilot with 2-3 then review* | All modes | always |
-| Output style | *see Step 2.3* | All modes | always |
-
-So M is **3 for Mode A** (Methodology, Scope, Output style), **5 for Mode B** (Methodology, Orientation, Theme level, Scope, Output style), and **4–5 for Mode C** (Methodology, Orientation, [IRR if multi-coder], Scope, Output style).
-
-Label each pop-up accordingly, e.g. **"Section 2 > Step 1 of 5: Methodology"**, **"Section 2 > Step 2 of 5: Orientation"**, **"Section 2 > Step 3 of 5: Theme Level"**, then Scope, then Output style. Announce each transition after a step locks (e.g. *"Orientation locked. Moving on to Theme Level."*). Do not advance until the current parameter is approved.
-
-Each pop-up's options are numbered, with a **Recommended** marker and **"Brainstorm with me"** last. Preserve the Other / comments field so the researcher can adjust a single parameter without starting over.
-
-### Step 2.3 · Style reference (REQUIRED before generating) — last step of Section 2
-
-After every methodology parameter is approved, ask for an output style reference. Use **AskUserQuestion**. Pop-up label: **"Section 2 > Step [M] of [M]: Output Style"**. Single-select (the style variant is an exclusive choice). Last option: **"Brainstorm with me"**.
-
-**Question — Output Style**
-
-> "One last thing before I generate your analysis — I want to make sure the output matches your preferred style and format."
-
-Options:
-1. **"I'll share a reference doc"** — "I have a previous synthesis doc, theme report, or codebook I'd like you to match."
-2. **"Use the default 2-column template" (Recommended)** — "Use the standard 2-column layout with section bars, RACI header, and structured tables (the OUTPUT TEMPLATE for your mode below)."
-3. **"Just give me a clean outline"** — "Simple headers and bullets, no tables or heavy formatting."
-4. **"Brainstorm with me"**
-
-After output style is locked, say: *"Output style locked. Section 2 — Methodology & Style is complete. Moving on to Section 3 — Synthesis."*
-
-**If the researcher shares a reference doc:**
-
-1. Accept any format: Google Doc URL, pasted text, uploaded file, or screenshot
-2. If Google Doc URL: read via Glean's document-read tool (confirm the exact connected tool/server name in your environment — prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available. If none is connected, ask the researcher to connect it now (Connect-when-needed)
-3. Analyze the reference doc's style patterns. Extract:
-   - **Document structure:** section ordering, header hierarchy, table usage
-   - **Theme/cluster/tag presentation:** how are themes/tags introduced? (H2 per theme, table row per theme, numbered list)
-   - **Quote formatting:** block quotes, italicized inline, labeled with participant ID
-   - **Prevalence reporting:** percentages, N of N, "most participants", qualitative language
-   - **Memo/rationale style:** inline, separate section, moderator-note-style callouts
-4. Confirm the style read-back with the researcher:
-
-   > "Here's what I picked up from your reference doc:
-   > - **Structure:** [e.g., One H2 per theme with 2-col table inside]
-   > - **Quotes:** [e.g., Italicized block quotes with `— P07` attribution]
-   > - **Prevalence:** [e.g., 'X of Y participants' + qualitative band]
-   > - **Memos:** [e.g., Inline under 'Interpretation' label]
-   >
-   > Does that capture your style? Anything to adjust?"
-
-5. Apply their style when you generate the synthesis in Section 3.
-
-**If the researcher picks the default template:**
-- Use the appropriate OUTPUT TEMPLATE below (one per mode) when generating in Section 3
-
-**If the researcher picks "clean outline":**
-- Use simple markdown: H2 per theme/cluster/tag, bullet lists, blockquote quotes. No tables.
-
----
-
-## Section 3 — Synthesis
-
-Build the analysis based on mode + approved methodology + chosen style — but **do not generate the whole deliverable in one shot.** Draft, approve, and lock **one synthesis unit at a time**, so the researcher stays the author of every finding (H.E.A.R.T. "Amplifying" — lead the dance).
-
-**Methodology reference:** For detailed execution of each mode, load `references/analysis-methodology.md`:
-- Braun & Clarke's 6-phase walkthrough with worked example
-- Tag schema patterns and hierarchy design
-- Inter-rater reliability (Cohen's κ) formula and interpretation
-- Theme vs topic summary pitfall with corrected examples
-- Ladder of inference for General Synthesis
-
-### Step-by-step synthesis: draft → approve → lock, one unit at a time
-
-The **unit** depends on the mode:
-
-| Mode | Synthesis unit (one pop-up each) |
-|------|----------------------------------|
-| **A · General Affinity Synthesis** | one **cluster** |
-| **B · Thematic Analysis** | one **theme** |
-| **C · Tagging** | one **codebook tag group** (a parent tag and its children) |
-
-First do the analytical work internally (cluster / develop themes / build the codebook against the approved methodology). Then, once you know how many units there are, set **M = number of units** and walk them one at a time:
-
-1. **Show the draft first.** For each unit, show its illustrative quotes + prevalence (`X of Y participants`) + the **Observation → Insight → Recommendation** ladder (Mode A/B) or the tag's definition + inclusion/exclusion + example + frequency (Mode C) — before asking for approval.
-2. **Approve / pick / brainstorm.** Pop-up label: **"Section 3 > Step N of M: Cluster/Theme/Tag group — [name]"**. Use **`multiSelect: true`** — within a unit, multiple quotes, sub-findings, and recommendations legitimately apply, so the researcher can keep several. **Option 1 is always "Keep everything as drafted (Recommended)"** — one click approves the whole unit with nothing dropped. The individual quotes / sub-findings / recommendations follow as separate options, for a researcher who wants to keep only some. Number the options; keep the Other / comments field. Last option: **"Brainstorm with me"** — refine that unit in chat, then re-show the revised draft for approval before locking.
-   - **A single click must never silently drop part of a unit.** If the researcher picks individual parts instead of option 1, read back what will be dropped before locking — *"Keeping Quote 1 and the recommendation; dropping Quote 2 and sub-finding B. Lock it?"* — and lock only after they confirm.
-3. **Lock, then announce the transition.** After approval, say e.g. *"Cluster 2 locked. Moving on to Cluster 3."*
-4. **Keep a visible approved/pending checklist** so the researcher always sees which units are locked and which remain.
-
-After the last unit locks, say: *"All units locked. Section 3 — Synthesis is complete. Moving on to Section 4 — Quality Gate & Deliverable."*
-
-**Whole-draft override:** if the researcher explicitly asks for the entire synthesis at once (e.g. *"just draft the whole thing and I'll review it"*), skip the unit-by-unit pop-ups — but still show the complete draft for a single approval before advancing, then run every Section 4 step (self-critique, multi-agent review, Drive confirmation, deliverable).
-
-### Stakeholder / RACI verification (before writing any name)
-
-Every output template carries a RACI-style header (Responsible / Consulted / Informed), and recommendations name owners. Before writing any person's name into that header or an owner field, verify the name is current using the directory / people-search tool. Stored context and project files go stale (someone may have left or changed roles). If there is any doubt about who belongs in a role, ask the researcher directly: *"I have [Name] as [Role] — is that still right?"* Never carry a name forward from memory or a stale file without a live check.
-
-*Connections:* the people-directory and Glean MCPs may require sign-in. If people-search isn't connected when you reach this step, ask the researcher to connect it now (Connect-when-needed). If they choose to skip it, do not guess — mark the role `[TBD — verify]` and ask them to confirm the name.
-
-### Mock / test-artifact warning
-
-If the inputs are invented, simulated, or a demo, place this line directly under the RACI header of the output. Treat any invocation described as a test, pressure scenario, regression, example, fixture, mock, or demo as simulated even when the data sounds realistic; omit the warning only when the researcher confirms it is a real study.
-
-> ⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.
-
-Keep it prominent in every rendered option. A mock/test analysis still ends as a Google Doc (see the Completion contract): prefix the title with `[TEST]`, keep this warning under the masthead, and confirm the destination in Step 4.7 like any other run.
-
-### Execution principles (all modes)
-
-1. **Ground every claim in data.** Every theme, cluster, or tag gets at least 2-3 illustrative quotes with participant attribution (e.g., `— P07`).
-2. **Report prevalence honestly.** Use "X of Y participants" format. Avoid "most" or "many" without a number. Per Anderson, use ~1/3 as the pattern threshold. At small sample sizes (e.g., n<10), that threshold is a low bar — sanity-check that a claimed "pattern" isn't just 2-3 participants before treating it as strong evidence, especially in a self-initiated or hypothesis-driven analysis where confirmation bias is a live risk.
-   - **Safety/severity exception:** Never gate a safety- or severity-relevant finding (an allergen risk, a financial-harm or data-loss scenario, anything with real downside if ignored) on hitting the 1/3 threshold. Report it in a dedicated **Safety Flag** callout — outside the normal cluster/theme/tag structure, explicitly labeled low-N/high-severity — and route it to the relevant specialist team (Trust & Safety, legal, etc.) rather than folding it into or dropping it from the standard prevalence-based findings.
-3. **Separate observation from interpretation.** A quote is an observation; the theme definition is interpretation. Never conflate.
-4. **Use reflexive language** (Thematic mode): "I developed..." not "The theme emerged...". Per Braun & Clarke 2022.
-5. **Avoid topic summaries** (Thematic mode): "Participants talked about pricing" is a topic, not a theme. A theme has a central organizing concept: "Pricing transparency builds trust — hidden fees feel like betrayal."
-6. **Do not fabricate quotes.** If a quote is paraphrased, mark it clearly: `[paraphrased]`.
-
----
-
-#### OUTPUT TEMPLATE — Mode A: General Affinity Synthesis
-
-```
-*UX Research | Synthesis | [Quarter Year]*
-
-# [Study Title] — Synthesis
-
-Last updated: [Month Year]
-
-- **Responsible:** [Researcher name] (UX Researcher)
-- **Consulted:** [Names with roles]
-- **Informed:** [Names with roles]
-
-| Parameter | Detail |
-|-----------|--------|
-| **Data** | [N sessions / N transcripts / N survey responses] |
-| **Method** | General Affinity Synthesis |
-| **Research question** | [1-2 sentence RQ] |
-| **Analysis window** | [Dates] |
-
-## Executive Summary
-
-| Label | Detail |
-|-------|--------|
-| **Top insight** | [1 sentence — the single most important finding] |
-| **Top recommendation** | [1 sentence — the single most actionable ask] |
-| **Confidence** | [High / Medium / Low + rationale based on sample + pattern strength] |
-
-## Clusters
-
-### Cluster 1: [Cluster name]
-
-| Label | Detail |
-|-------|--------|
-| **Description** | [2-3 sentence description of what this cluster captures] |
-| **Prevalence** | [X of Y participants — ~Z%] |
-| **Illustrative quotes** | *"[Quote 1]"*<br><br>— P04<br><br>*"[Quote 2]"*<br><br>— P11<br><br>*"[Quote 3]"*<br><br>— P17 |
-| **Observation** | [Factual summary of what was heard — close to participant language] |
-| **Insight** | [Interpretive claim — what this MEANS, not just what was said] |
-| **Recommendation** | [Actionable ask — who does what, by when, measured how] |
-
-[Repeat per cluster — typically 4-7 clusters]
-
-## Insight → Recommendation Map
-
-| Insight | Recommendation | Owner | Effort | Priority |
-|---------|----------------|-------|--------|----------|
-| [Insight 1] | [Rec 1] | [Name/team] | S/M/L | P0/P1/P2 |
-| [Insight 2] | [Rec 2] | [Name/team] | S/M/L | P0/P1/P2 |
-
-## Appendix
-
-| Label | Detail |
-|-------|--------|
-| **Participants** | [P01-P08 profile table] |
-| **Method notes** | [Coding approach, prevalence rule, analyst(s), analysis dates] |
-| **Analysis & Synthesis Process** | [2-4 sentences: notetaking/recording → coding → clustering passes actually run; whether a debrief happened after each session and why/why not; what changed between passes. Per Nikki Anderson — name the process, don't let it stay implicit] |
-| **Limitations** | [Sample size, selection bias, temporal scope] |
-| **Self-Critique Summary** | [Step 4.5's mandatory QA table: Check \| Grade + Note. Internal/researcher audience: full table. PM/VP/exec audience: omit this row and fold the confidence label + real limitations into the row above instead — see Step 4.5 "Audience-based placement"] |
-```
-
----
-
-#### OUTPUT TEMPLATE — Mode B: Thematic Analysis (Braun & Clarke)
-
-```
-*UX Research | Thematic Analysis | [Quarter Year]*
-
-# [Study Title] — Theme Report
-
-Last updated: [Month Year]
-
-- **Responsible:** [Researcher name] (UX Researcher)
-- **Consulted:** [Names with roles]
-- **Informed:** [Names with roles]
-
-| Parameter | Detail |
-|-----------|--------|
-| **Data** | [N interviews / N hours of transcript] |
-| **Method** | Reflexive Thematic Analysis (Braun & Clarke, 2022) |
-| **Orientation** | [Inductive / Deductive / Hybrid] |
-| **Theme level** | [Semantic / Latent / Both] |
-| **Research question** | [1-2 sentence RQ] |
-
-## Researcher Reflexivity Statement
-
-| Label | Detail |
-|-------|--------|
-| **Analyst** | [Name, role, relevant context] |
-| **Positionality** | [2-3 sentences: what perspectives, assumptions, or domain familiarity you bring to the data. Per Braun & Clarke, subjectivity is a resource, not a bias to eliminate] |
-| **Theoretical framework** | [If deductive: what framework guided coding. If inductive: state "none a priori"] |
-
-## Theme Overview
-
-| Theme | Central Concept | Prevalence |
-|-------|-----------------|------------|
-| 1. [Theme name] | [1-sentence central organizing concept] | [N of N] |
-| 2. [Theme name] | [1-sentence central organizing concept] | [N of N] |
-| 3. [Theme name] | [1-sentence central organizing concept] | [N of N] |
-
-## Theme 1: [Theme Name]
-
-| Label | Detail |
-|-------|--------|
-| **Definition** | [Central organizing concept — NOT a topic summary. Must express a pattern of shared meaning. Example: "Trust is built through pricing transparency — hidden fees feel like betrayal, not inconvenience"] |
-| **Prevalence** | [X of Y participants — Z%] |
-| **Illustrative quotes** | *"[Quote 1 — best single expression of the theme]"*<br><br>— P04<br><br>*"[Quote 2 — shows a different facet]"*<br><br>— P11<br><br>*"[Quote 3 — shows boundary or contrast]"*<br><br>— P17 |
-| **Sub-themes** | - **[Sub-theme 1]:** [1-sentence description]<br><br>- **[Sub-theme 2]:** [1-sentence description] |
-| **Theoretical memo** | [2-4 sentences: how I constructed this theme, what codes fed into it, what was considered and rejected. Use reflexive language: "I developed this theme from codes X, Y, Z..." NOT "This theme emerged..."] |
-| **Contradictions / boundary cases** | [Any participants or quotes that complicate or contradict the theme. Name them explicitly — per Braun & Clarke, honoring complexity is a rigor criterion] |
-
-[Repeat per theme — typically 3-6 themes. More than 6 often signals topic summaries.]
-
-## Theme Relationships
-
-| Label | Detail |
-|-------|--------|
-| **Narrative** | [2-3 paragraphs: how do the themes relate? Do they form a story? Are they parallel or hierarchical?] |
-| **Thematic map** | [Optional: a text-based diagram or description of theme relationships] |
-
-## Recommendations
-
-| Recommendation | Grounding Theme | Owner | Priority |
-|----------------|-----------------|-------|----------|
-| [Rec 1] | Theme X | [Name/team] | P0/P1/P2 |
-
-## Appendix
-
-| Label | Detail |
-|-------|--------|
-| **Codebook** | [Link or inline: code name, definition, example quote per code] |
-| **Coding process** | [Tool used, analyst(s), coding passes, timeline] |
-| **Analysis & Synthesis Process** | [2-4 sentences: which of the 6 B&C phases ran as distinct passes, whether a debrief happened after each interview and why/why not, what codes were merged/split/dropped between passes. Per Nikki Anderson — name the process, don't let it stay implicit] |
-| **Trustworthiness** | [Per Lincoln & Guba: credibility, transferability, dependability, confirmability — how addressed] |
-| **Limitations** | [Sample scope, analyst positionality limits, what this analysis cannot tell us] |
-| **Self-Critique Summary** | [Step 4.5's mandatory QA table: Check \| Grade + Note. Internal/researcher audience: full table. PM/VP/exec audience: omit this row and fold the confidence label + real limitations into the row above instead — see Step 4.5 "Audience-based placement"] |
-```
-
----
-
-#### OUTPUT TEMPLATE — Mode C: Tagging
-
-```
-*UX Research | Tagged Corpus | [Quarter Year]*
-
-# [Study Title] — Codebook & Tag Report
-
-Last updated: [Month Year]
-
-- **Responsible:** [Researcher name] (UX Researcher)
-- **Consulted:** [Names with roles]
-- **Informed:** [Names with roles]
-
-| Parameter | Detail |
-|-----------|--------|
-| **Data** | [N transcripts / N survey responses — total excerpts tagged: N] |
-| **Method** | Tagging ([Deductive / Inductive / Hybrid]) |
-| **Coders** | [N analysts — names] |
-| **IRR (if multi-coder)** | Cohen's κ = [X] on [N]% double-coded sample (target ≥ 0.70) |
-
-## Codebook
-
-| Tag | Parent | Definition | Inclusion criteria | Exclusion criteria | Example quote |
-|-----|--------|------------|-------------------|-------------------|---------------|
-| `pricing.sticker-shock` | `friction` | Strong negative reaction to displayed price before considering value | Reaction expressed at moment of seeing price; strong affect | Complaints about billing errors; post-purchase regret | *"I saw the total and just closed the tab."* — P07 |
-| `trust.transparency` | `trust` | Positive response to clear disclosure of fees/process | Explicit appreciation of clear pricing/disclosure | General satisfaction with product | *"They showed me every fee up front — I actually trusted them."* — P12 |
-
-[Repeat per tag — organize by parent tag. Typical corpus has 15-40 tags.]
-
-## Tag Frequency
-
-| Tag | Count | % of excerpts | % of participants | Priority |
-|-----|-------|--------------|-------------------|----------|
-| `friction.pricing.sticker-shock` | 23 | 18% | 71% (10/14) | P0 |
-| `trust.transparency` | 17 | 13% | 64% (9/14) | P1 |
-
-## Tag Co-Occurrence (Optional)
-
-| Tag A | Tag B | Co-occurrence count | Interpretation |
-|-------|-------|---------------------|----------------|
-| `friction.pricing.sticker-shock` | `trust.transparency` | 11 | Strong: transparency consistently named as antidote to sticker shock |
-
-## Key Patterns
-
-| Label | Detail |
-|-------|--------|
-| **Top friction tags** | [Top 3 friction tags by participant prevalence] |
-| **Top positive tags** | [Top 3 positive tags by participant prevalence] |
-| **Surprising tags** | [Tags that appeared unexpectedly or broke the schema] |
-| **Cold tags** | [Tags in original schema with 0-2 hits — candidates to drop or merge] |
-
-## Appendix
-
-| Label | Detail |
-|-------|--------|
-| **Tag evolution** | [If inductive/hybrid: tags added, merged, dropped during analysis] |
-| **IRR details** | [Kappa formula, double-coded sample size, disagreements reconciliation] |
-| **Analysis & Synthesis Process** | [2-4 sentences: coding pass sequence, whether a debrief/calibration happened between coders and how often, how golden-set validation and disagreement reconciliation were actually run. Per Nikki Anderson — name the process, don't let it stay implicit] |
-| **Tool** | [Dovetail / Dscout / Airtable / Google Sheet — link] |
-| **Limitations** | [What the tag frequencies do and do not tell us] |
-| **Self-Critique Summary** | [Step 4.5's mandatory QA table: Check \| Grade + Note. Internal/researcher audience: full table. PM/VP/exec audience: omit this row and fold the confidence label + real limitations into the row above instead — see Step 4.5 "Audience-based placement"] |
-```
-
----
-
-### CONTENT GENERATION RULES (all modes)
-
-1. **Quote authenticity** — Use verbatim quotes when possible. Mark paraphrases as `[paraphrased]`. Never invent a quote. **Quotation marks anywhere mean verbatim** — in titles, the Executive Summary, tables, and Analysis/Insight text as well as Quote lines. Never put your own wording of what a participant meant inside quotation marks; state it plainly as your read (e.g. "Our read: P01 wants to know whether it feeds the family").
-2. **Participant attribution** — Every quote gets a participant ID (`— P07`). If anonymization requires, use role-based IDs (`— Shopper-A`).
-3. **Prevalence precision** — Report "X of Y participants" or exact percentages. Avoid "most" or "some" alone.
-4. **Insight vs observation** — Observations describe what was heard. Insights interpret what it means. Recommendations propose what to do. Never skip the ladder.
-5. **Reflexive language (Thematic mode)** — Use "I developed...", "I constructed...", "I generated..." — never "The theme emerged..." Per Braun & Clarke 2022.
-6. **Theme tests (Thematic mode)** — Each proposed theme must pass 3 tests: (1) central organizing concept expressible in 1 sentence, (2) supported by quotes from 2+ participants, (3) coherent across its supporting codes. If any fails, it's likely a topic summary — demote to sub-theme or drop.
-7. **Tag discipline (Tagging mode)** — Every tag has a definition, inclusion criteria, exclusion criteria, and example. If you can't write inclusion/exclusion, the tag is too vague.
-8. **Contradictions** — Actively seek and report quotes that complicate your synthesis. Per NN/G, credibility requires acknowledging disconfirming evidence.
-9. **Prioritize insights, don't just list them** — Every insight/theme/tag-pattern gets a priority (P0/P1/P2, or equivalent) based on how many participants/users it touches and how much of the product or business it affects. An undifferentiated flat list of insights is incomplete — per cross-industry UXR practice (Torresburriel Estudio, dscout, Smashing Magazine), stakeholders need to know where to look first.
-10. **Name the finding-vs-insight line explicitly** — Never let a Finding/Observation stand in a spot that presents it as if it were already an Insight. A Finding states what happened; an Insight adds why it happened and the so-what. If you can't articulate the "so what," it's still a Finding — leave it there rather than inflating it. Per NN/G's Data → Findings → Insights hierarchy.
-
----
-
-## Section 4 — Quality Gate & Deliverable
-
-Once every synthesis unit is locked (end of Section 3), set expectations before running the gate. Say in chat:
-
-> All units are approved — I now have everything I need. Here's what I'll do before I hand you the final analysis:
->
-> 1. **Run a critique pass** — the AIxUXR Devil's Advocate self-critique that pressure-tests the analysis for gaps, weak evidence, and unsupported claims.
-> 2. **Run the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel.
-> 3. **Then I'll produce your [synthesis doc / theme report / codebook]** — as a Google Doc in your approved style, in the Drive folder you confirm.
->
-> Running the critique and multi-agent checks now — I'll fold in any fixes before the deliverable is produced.
-
-The deliverable is produced **last**, after both checks. The order is **locked units → self-critique (Step 4.5) → multi-agent review → fold fixes → confirm Drive → produce/upload (Step 5)**. Never call the analysis final before both checks have run.
-
-### Step 4.5: Playbook-Specific Self-Critique (the critique half — MANDATORY before delivery)
-
-This is the **critique half** of the quality gate — run the AIxUXR Playbook's Devil's Advocate critique on your own output. Use the existing 12-item checklist below as-is; do not rebuild it. This is the internal QA gate — a systematic pass against methodological, evidentiary, and communicative criteria. It is not optional. Per the AIxUXR System Prompt, the AI must label confidence (High / Medium / Low) and flag any findings it cannot support.
-
-### Analysis-output self-critique checklist
-
-Run through every item. For each, grade (A / A- / B+ / B / below-B) and justify briefly. If any item grades below A, revise before delivering.
-
-| # | Check | Question | Fail signal |
-|---|-------|----------|-------------|
-| 1 | **Theme/cluster/tag exhaustiveness** | Have I captured every distinct idea in the data, or am I summarizing to the top N most obvious ones? | Participant quotes in the raw data don't map to any theme/cluster/tag. Primacy bias (early-transcript over-weighting). Cold tags in original schema with 0-2 hits haven't been flagged |
-| 2 | **Quote representativeness** | Do the illustrative quotes span the range of the theme, including boundary cases? Are they drawn from multiple participants (not all from P04)? | All 3 quotes for a theme are from one participant. All quotes express the strongest version — no softer or ambivalent voices |
-| 3 | **Bias flagged** | Have I explicitly surfaced primacy bias, nuance deafness, hallucination risk, and sample/selection bias in Method Notes? | Limitations section missing. No mention that AI was used. No confidence label on key findings |
-| 4 | **Participant attribution correct** | Does every quote trace back to the correct participant in the source? Are pseudonyms consistent? Are timestamps accurate where cited? | Attribution mismatches source. "Participant 7" and "P07" used inconsistently. Timestamps not verified |
-| 5 | **Hallucination scan — every quote-marked string** | Is every phrase inside quotation marks, **anywhere** in the output (titles, Executive Summary, table cells, Analysis / Insight / Recommendation text — not just Quote lines), verbatim in the source? No invented quotes, paraphrases dressed up as quotes, plausible-sounding but fabricated details, or hallucinated codes? **Run it mechanically:** list every quote-marked string, text-search the source for each, and write the list with found / not found before grading | Any quote-marked phrase not found verbatim by text-search — including a researcher's paraphrase in quote marks inside Analysis text (fix: use the participant's real words, or drop the quote marks and label it as the researcher's read). Grading A without producing the full list. Any factual claim about participants not in the data |
-| 6 | **Observation vs. interpretation separated** | Are observations (what was heard) visually/structurally distinct from insights (what it means) and recommendations (what to do)? | "Participants struggled with checkout" appears in the Insight column (that's an observation). Recommendations buried inside quote interpretation |
-| 7 | **Thematic-mode only — Topic-summary pitfall** | Does each theme express a central organizing concept (a pattern of shared meaning), NOT just a topic label? | Theme titled "Pricing" (topic). Rename to "Hidden fees feel like betrayal, not inconvenience" (pattern of shared meaning) |
-| 8 | **Tagging-mode only — Codebook rigor** | Does every tag have definition + inclusion + exclusion + example? Are tags MECE as much as possible? | Tag exists without inclusion/exclusion criteria. Two tags overlap semantically |
-| 9 | **Confidence labeled** | Is each major finding labeled High / Medium / Low confidence with rationale? | Unlabeled claims. Over-confident language ("clearly", "obviously") without data to back it |
-| 10 | **H.E.A.R.T. honored** | Human-centered (grounded in participant voice)? Experience-focused (scannable, clear)? Amplifying (researcher remains the final authority)? Responsible (PII scrubbed, bias flagged)? Transparent (AI role attributed)? | Any H.E.A.R.T. dimension missing — block delivery until addressed |
-| 11 | **Insights prioritized** | Does every insight/theme/pattern carry a priority (reach × impact), not just a flat list? | Insights presented in discovery order with no P0/P1/P2 or equivalent ranking |
-| 12 | **Analysis & Synthesis Process documented** | Does the Appendix state which passes were run, what tool/method was used, and whether debriefs happened between sessions (and why/why not)? Per Nikki Anderson, this is the part most researchers skip | Appendix jumps straight from raw data to conclusions with no account of how one became the other |
-
-### If any critique item grades below A
-
-1. Revise the specific section before delivering.
-2. If revision isn't possible (e.g., evidence genuinely thin), explicitly state the limitation in Method Notes and lower the confidence label.
-3. If the researcher asks for delivery anyway, honor the request but include a **Critique Summary** section at the top of the output flagging unresolved issues.
-
-### Surface the critique in the output
-
-Per H.E.A.R.T. Transparency, include a brief **Self-Critique Summary** section in the Appendix of every analysis output (a 2-col table: Check | Grade + Note) — each OUTPUT TEMPLATE below has an Appendix row for it. This gives the researcher a running QA signal and models responsible AI practice.
-
-**Audience-based placement (per Step 1.1's stakeholder-audience answer):** For an internal/researcher-facing output, include the full graded table inline. For a PM/VP/exec-facing deliverable, don't ship a letter-graded table of the AI's own performance (hallucination-scan grades, exhaustiveness grades, etc.) to that audience — it reads as an internal QA artifact, not a finding, and can undermine confidence in the doc for the wrong reasons. Instead: keep the full graded table in an internal note for your own records, and fold only the *substance* the audience actually needs — the overall confidence label and any real limitation behind it (e.g., "draft not yet human-validated," "small N," "secondary read") — into the Limitations row and the Executive Summary's Confidence line.
-
-### Step 4.6: Multi-agent review (the second half of the gate — automatic, before the deliverable)
-
-Run the multi-agent review on the fixed analysis content — before the deliverable is produced. This is automatic; do not ask permission. The researcher was already told this is coming (the gate announcement at the top of Section 4).
-
-- Say in chat: *"Running the multi-agent review now — several independent reviewers check the analysis for inconsistencies and problems in parallel."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate. Hand it the source transcripts/data as local files (`sourcePaths`) so its fact-check reviewer can audit every quote-marked string against the source.
-- If the review returns `blocked_sources` (a reviewer couldn't reach a connector), raise it right away per Connect-when-needed and offer to re-run that reviewer once connected — don't carry it to the wrap-up.
-- If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass (Step 4.5).
-- Fold any confirmed fixes into the analysis before producing the deliverable.
-
-The expected sequence is **locked units → self-critique → multi-agent → fixes → produce/upload the deliverable → share**. Never describe the analysis as final before both checks have run.
-
-### Step 4.7: Confirm the Drive destination (before any document is created)
-
-Every analysis ends as a Google Doc, so always confirm the destination **before** creating the doc (see the Portable deliverable contract). Ask only *where* it goes — never *whether* to create it:
-
-1. Infer the exact Drive folder from the supplied project context when possible.
-2. Confirm it plainly: **"I'm going to create the analysis in [folder/link]. Is that the right destination?"**
-3. If no destination is known, ask: **"Which Google Drive folder should this analysis live in?"**
-4. Write only to the confirmed folder. Never use a hardcoded personal folder ID.
-5. For a mock or demo, still create the doc — with a `[TEST]` title prefix and the TEST ARTIFACT warning. Don't assume the project folder is off-limits; ask, and write where the researcher picks.
-
-### Step 5: Produce the deliverable as a Google Doc
-
-Produce the analysis in the approved output template/style, then create it as a Google Doc in the folder confirmed in Step 4.7 — **native Google Docs is the default path** (use the Google Docs tools connected in the current session). The personal `gws`/Gohan pipeline is the **optional Instacart / Jedida variant**, used only when it is actually available and the researcher wants it.
-
-**Default deliverable styling + structure — Instacart Green.** In Jedida's environment, **the final deliverable is ALWAYS a Google Doc** produced in the **Instacart Green** house style AND the fixed section structure — automatically, for every analysis, including mock/test runs (add the TEST ARTIFACT warning then) and runs where the checks are skipped. Never hand back Markdown as the final artifact. Do not ask which style, and do not use the Mode A/B/C 2-column templates or Option 4 Leadership for an analysis unless she explicitly asks. Full contract, palette, the fixed structure, and reproduction steps are in [`references/instacart-green-analysis-style.md`](references/instacart-green-analysis-style.md); generate the markdown from [`references/instacart-green-analysis-skeleton.md`](references/instacart-green-analysis-skeleton.md) and apply styling with [`scripts/style_instacart_green.py`](scripts/style_instacart_green.py) via the native Google Docs MCP tools (`import_to_google_doc` → `inspect_doc_structure` → `debug_table_structure` → `batch_update_doc`). Fixed structure: masthead (no RACI) → **Executive Summary first** (2-line brief + Priority-at-a-Glance table, the only place P0/P1/P2 appear) → **Findings** band → each finding a `###` sub-heading + tightly-stacked **Analysis / Recommendation / Quote** (ochre `#B45F06` labels, no blank between them) → **Appendix** (Method · Links · Limitations). No Bottom line, no per-finding Guardrail, no Turmeric. Band `line_spacing` MUST be `1` (the tool ×100s it; 100 → giant block); band `space_above/below` = 0. DM Sans throughout; Kale title/bands. Confirmed default by Jedida 2026-09-28.
-
-Don't ask whether to create the doc — say:
-
-> "Your analysis is ready — creating the Google Doc in [confirmed folder] now."
-
-Then:
-1. **Check what's actually available before assuming a tool works.** Prefer the session's connected native Google Docs tools. Different researchers have different upload tooling configured (native Docs tools, a `md2doc`/`gws-docs` skill, a CLI on PATH, or nothing at all). Confirm the tool exists and is callable in this environment (e.g. `command -v gws`, or check the installed skill list) rather than invoking it blind. If nothing usable is connected, stop right there and ask the researcher to connect it now (Connect-when-needed — e.g. `/mcp` in Claude Code, or the Google Docs connector in claude.ai settings), then continue once it's connected. Only if they can't connect, offer the fallback (they paste the markdown into a blank Google Doc themselves) — don't silently fail or claim a successful upload that didn't happen.
-2. **Fix subscript formatting (MANDATORY, if the upload path renders markdown via `<br>` tags)** — this pattern is known to turn `<br>`-separated content into SUBSCRIPT formatting that makes text tiny. After upload, scan the doc via the Google Docs API for all `baselineOffset == 'SUBSCRIPT'` ranges and reset them to `'NONE'`. Do this BEFORE styling.
-3. **Apply the styling.** In Jedida's environment that is the **Instacart Green (Tables as Needed)** style above — apply it automatically via `scripts/style_instacart_green.py` (see `references/instacart-green-analysis-style.md`). For any other researcher, apply their own documented convention (check their CLAUDE.md, a team wiki, or ask), and only fall back to a generic clean default (clear headers, consistent table formatting) if none is documented — never assume a single hardcoded template fits every researcher.
-4. **Place in the confirmed Google Drive folder (from Step 4.7), using the researcher's own routing convention** if they have one. Don't hardcode a fixed list of project numbers/names here — folder structures vary by researcher and team and go stale fast.
-5. Share the Google Doc link, and state verification status (content complete, formatting checked, links checked).
-
-Markdown is never the final deliverable. If the Docs path is still blocked after asking the researcher to connect it, return the verified markdown labeled **"upload blocked — not the final deliverable"**, state that it passed both quality checks, and say exactly what's needed to finish the Google Doc.
-
----
-
-## Tool usage
-
-- **AskUserQuestion** — mode selection (Section 1), methodology approvals (Section 2), style reference (Section 2), per-unit synthesis approvals (Section 3). If unavailable in this environment, degrade to plain-text questions per the Interaction contract's inline-fallback line
-- **Directory / people-search tool** — verify current stakeholder identities before writing any name into a RACI header or owner field (Section 3). May require sign-in; if it isn't connected, ask the researcher to connect it then (Connect-when-needed). If they skip it, mark `[TBD — verify]` and ask them rather than guessing
-- **`/multi-agent-check`** — the parallel review half of the quality gate (Step 4.6). Check the live skill list; invoke when installed, disclose and continue on the critique-only pass when not
-- **Native Google Docs tools (default deliverable path)** — create the doc in the confirmed Drive folder, apply native styles, read it back to verify. Prefer these over any personal CLI
-- **Glean's document-read tool** (e.g. `mcp__glean__read_document` — confirm the exact connected tool/server name in your environment; prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available — reading Google Doc inputs (transcripts, reference docs). If not connected when needed, ask the researcher to connect it at that step
-- **Read tool** — reading local transcript files
-- **Optional personal upload path (Instacart / Jedida variant), if the researcher has one configured** (e.g., a `md2doc`/`gws-docs` skill, the `gws`/Gohan CLI) — only when the native path isn't preferred and the tool is actually available. Confirm it's callable (on PATH, or as an installed skill) before relying on it; don't assume a specific tool name works in every environment
-- **references/analysis-methodology.md** — load on demand for Braun & Clarke 6-phase walkthrough, tag schema patterns, IRR calculation
-
-## Complementary skills
-
-| Skill | Relationship |
-|-------|--------------|
-| `/batch-analysis` | **Complementary, not overlapping.** Use `/batch-analysis` for 50+ row structured datasets (scorecards, HITL reviews). Use `/analysis` for qualitative synthesis from transcripts/opens. If a study has both, run `/batch-analysis` on the structured data and `/analysis` on the qual portion |
-| `/mod-guide` | Upstream — generates the session guide whose transcripts feed `/analysis` |
-| `/report` | Downstream — takes `/analysis` output and packages as stakeholder deliverable |
-| `/research-plan` | Upstream — defines the research question that `/analysis` answers |
-
-## Sources cited in this skill
-
-### Academic & industry foundations
-
-- **Braun, V., & Clarke, V. (2022).** *Thematic Analysis: A Practical Guide.* Sage. [thematicanalysis.net](https://www.thematicanalysis.net/)
-- **Braun & Clarke (2022)** "Toward good practice in thematic analysis" — the topic-summary pitfall
-- **Rosala, M. (NN/G)** "How to Analyze Qualitative Data from UX Research: Thematic Analysis" [nngroup.com/articles/thematic-analysis](https://www.nngroup.com/articles/thematic-analysis/)
-- **Moran, K. (NN/G)** "Affinity Diagramming" [nngroup.com/articles/affinity-diagram](https://www.nngroup.com/articles/affinity-diagram/)
-- **Budiu, R. (NN/G)** "Data Is More than Numbers: Why Qualitative Data Isn't Just Opinions" — rigor criteria
-- **Anderson, N. (User Research Academy / Dscout)** — coding/tagging workflow, global tags framework, 1/3 prevalence rule
-- **Eisenhauer, K. (Dscout)** — three tagging approaches (organizational, descriptive, thematic)
-- **Young, I.** "Listening Deeply" — emergent affinity technique via mental attention focus
-- **Sharon, T.** *Validating Product Ideas* — synthesis ladder (notes → observations → insights → recommendations)
-
-### External validation, added Sept 2026 (independent of the AIxUXR Playbook — sourced via live web search, not from model pretraining)
-
-- **Nielsen Norman Group** — "Data vs. Findings vs. Insights" (video/article, 2023-12-27) — the Data → Findings → Insights hierarchy this skill's Observation/Insight/Recommendation ladder implements
-- **Nielsen Norman Group** — "Analyzing Qualitative UX Data" course — thematic-analysis skill breakdown, bias-mitigation and stakeholder-communication techniques
-- **Anderson, N. (User Research Academy / The User Research Strategist)** — "Create and present an impactful user research case study" (documenting the analysis/synthesis process itself) and "Activate Your Insights" (audience- and length-driven report format decisions); Findings → Insights Cheatsheet ("What Happened + Why + So What"), cited via Smashing Magazine (2025-05-27)
-- **Google UX Research Certificate** (Coursera) — 4-stage process (Plan → Conduct → Analyze & Synthesize → Share & Promote); definition of a strong insight as observed-not-felt and answering the stated research question
-- **Hu, J. (Meta Research, Medium)** — "Comparing UX Research Methods" — researchers narrating analysis method (not just conclusions) as a literacy-building practice with XFN partners
-- **Torresburriel Estudio, Smashing Magazine, dscout** (cross-corroborated) — insights must be prioritized by reach/impact, not presented as a flat list; a Finding presented as an Insight is the single most common UXR reporting mistake
-
-### Instacart AIxUXR Playbook (internal)
-
-- **Loosbrock, K.** "Playbook: The AI Research Engine System Prompt" (Sep 30, 2025) — core persona, H.E.A.R.T. philosophy, operating principles (objectivity, data-centric grounding, substance, efficiency), default 5-part report structure, analytical toolbox (thematic, sentiment, JTBD, quantitative summary, lit review)
-- **Loosbrock, K., Venkatraman, S.** "AIxUXR Playbook" (Sep 30, 2025) — H.E.A.R.T. framework (Human-centered, Experience-focused, Amplifying, Responsible, Transparent); the dance metaphor for human–AI collaboration; Hub & Spoke model
-- **Silverman, M., Venkatraman, S., Loosbrock, K.** "AI-Assisted Thematic Analysis of Interview Transcripts & Insights Framing" (Oct 31, 2025) — 5-step workflow (Codebook → Structured Data → Synthesis → Insights → QA), granularity heuristic, Devil's Advocate 7-point critique, Truth + Unmet Need + Opportunity insight framework
-- **Loosbrock, K., Rothschild-Keita, A., Franicevic, L.** "AI-Assisted Transcript Summaries" (Oct 9, 2025) — Transcript Quality Audit (Step 0), Session Summary / Executive Summary templates, Barriers / Usability Issues / Unmet Needs triage, Implications-for-Decisions section, Responsible AI principles mapping
-- **Mamyan, M., Zheng, X.** "AI-Assisted Open-Ends Analyzer" — 4-step Open-Ends workflow (Prepare → Cluster → Validate → Summarize), codebook construction rules (granularity, mutual exclusivity, actionability), seed-set / few-shot coding pattern, edge-case handling for null and vague responses
+A run is complete only when:
+
+1. pre-ingestion authorization, reuse, and deidentification were confirmed before the source was opened;
+2. source quality, provenance, and exact scope were recorded;
+3. the researcher approved the framing, method, and scope;
+4. the evidence ledger supports every retained claim;
+5. early evidence QA ran before findings approval;
+6. the researcher approved the QA-checked analysis;
+7. final mode-aware QA ran, material fixes were reapproved, and no applicable check failed;
+8. the selected artifact was created and verified according to the authoritative delivery route.
+
+If a required step could not run, say so precisely. Never report a blocked or skipped step as complete.
+
+## Boundaries and handoffs
+
+- Use `/research-plan` upstream when the research question or study design is not yet defined.
+- Use `/mod-guide` for a discussion or usability-session guide.
+- Use `/report` after the analysis is approved when the task is stakeholder storytelling rather than evidence synthesis.
+- Use a structured-data analysis workflow for large quantitative tables; this skill is for qualitative evidence.

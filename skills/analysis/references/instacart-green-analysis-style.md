@@ -1,91 +1,145 @@
-# Instacart Green — Analysis Deliverable Style (DEFAULT)
+# Instacart Green — Analysis Deliverable Style
 
-**This is the default visual style AND structure for every `/analysis` deliverable in Jedida's environment.** Confirmed by Jedida on 2026-09-28 (structure finalized in the same session). Apply it automatically — do not ask which style to use, and do not fall back to the Mode A/B/C 2-column templates or Option 4 Leadership for an analysis unless the researcher explicitly asks.
+Use this reference only after selecting the output type and destination with
+[`delivery-routing.md`](delivery-routing.md). A visual preference never grants permission to create an external artifact.
 
-Reference doc (the approved v2 look + structure): `Frozen Foods — Single-Session Read (Restructured v2)` →
+## When this style applies
+
+- **Jedida's environment:** Instacart Green is the locked analysis style. Apply it automatically; do not ask Jedida to choose a style. When the routed output is a Google Doc, use this guide and the matching skeleton variant.
+- **Other researchers:** do not assume Instacart Green. Use the style they request, or offer a concise choice between this style and a neutral accessible document style when the choice matters.
+- **Any environment without Google Docs tooling:** preserve this structure in Markdown or another supported format. Do not install or mandate a particular connector merely to reproduce the styling.
+
+Approved reference document: `Frozen Foods — Single-Session Read (Restructured v2)`
+
 https://docs.google.com/document/d/1epz6xfDE7TTa-3o66KQcpx-4Mp03rAl_-k_ZuBlqw_4/edit
 
-Colors come from the `anthropic-skills:instacart-brand` skill; typography is DM Sans throughout.
+Colors come from the Instacart brand palette. Use DM Sans throughout when the target format supports it.
 
----
+## Select exactly one structural variant
 
-## Palette (roles)
+The variants share the visual system but not the decision language. Do not mix them.
 
-| Token | Hex | Role in an analysis doc |
-|---|---|---|
-| **Kale** | `#003D29` | Title; **section bands** (fill, white text on it); table-header text; breadcrumb; subtitle; finding sub-headings; appendix labels; footer |
-| **Lime** | `#0AAD0A` | Author/date line; **positive status** ("Reliable", "Strong") |
-| **Ochre** | `#B45F06` | **finding run-in labels** — `Analysis` / `Recommendation` / `Quote` (bold) |
-| **Carrot** | `#FF7009` | **P1** priority flag; caution status |
-| **Cashew** | `#FAF1E5` | **Table header row** fill |
-| **Pomegranate** | `#BA0239` | **P0** priority flag; **negative status** ("At risk") |
-| **White** | `#FFFFFF` | Text on Kale bands; table body cells |
-| Body text | `#000000` | Default body; quote text uses `#333333` italic |
+### Variant A — single-session or n=1 evidence memo
 
-Keep to Kale + Lime + White as the dominant trio; Ochre / Carrot / Cashew / Pomegranate are accents used only where noted. **Turmeric `#ECAA01` is no longer used** (the old "Bottom line" callout was retired 2026-09-28). Do not introduce blues, grays-as-a-palette, or off-brand colors.
+Use for one participant/session. This is a directional evidence read, not a cross-participant synthesis.
 
-## Typography — DM Sans everywhere
+1. **Applicable status label** — use the label rules in `delivery-routing.md`.
+2. **Masthead** — breadcrumb → title → question/subtitle → author and date. No RACI.
+3. **`## Executive Summary`** — a two-line brief, a clearly labelled participant-context block that is not a finding, then `Validation at a glance` and this table:
+
+   | Validation priority | Research question / next step | Rationale | Evidence status |
+   | --- | --- | --- | --- |
+   | High / Medium / Low | [what to learn or test next] | [decision consequence, uncertainty, and feasibility] | [Participant-reported / Observed / Ambiguous / Not tested] |
+
+4. **`## Findings`** — use the smallest defensible finding set; one narrow question normally produces one integrated finding rather than separate findings for each cue or quote. Each finding is a participant-bounded claim followed by four lines:
+   - **`Analysis` —** what the evidence supports and what remains interpretive;
+   - **`Confidence` —** the reasoned source-integrity, attribution, directness, within-case, cross-case, and transferability ratings;
+   - **`Next research step` —** the question or activity that would validate or challenge it;
+   - **`Quote` —** an exact quote attributed as `Participant P01`.
+5. **`## Appendix`** — Method · Links · Limitations.
+6. **Footer** — one italic provenance/status line.
+
+Do **not** use P0/P1/P2, `Priority`, or `Recommendation` in this variant. Do not imply prevalence, saturation, or product prioritization from one session.
+
+### Variant B — multi-session synthesis
+
+Use only when evidence supports cross-participant synthesis and action prioritization.
+
+1. **Applicable status label** — use the label rules in `delivery-routing.md`.
+2. **Masthead** — breadcrumb → title → question/subtitle → author and date. No RACI.
+3. **`## Executive Summary`** — a two-line brief, then `Priority at a glance` and this table:
+
+   | Priority | Action | Confidence basis |
+   | --- | --- | --- |
+   | P0 | [highest-priority action] | [material confidence dimensions and limiting rationale] |
+   | P1 | [next action] | [dimensions and rationale] |
+   | P2 | [later action] | [dimensions and rationale] |
+   | Guardrail | [optional hard do-not action] | — |
+
+4. **`## Findings`** — each finding is a plain claim followed by four lines:
+   - **`Analysis` —** why it was inferred;
+   - **`Confidence` —** the reasoned confidence dimensions and the material constraint on the claim;
+   - **`Recommendation` —** what to do;
+   - **`Quote` —** an exact quote attributed as `Participant P##`.
+5. **`## Appendix`** — Method · Links · Limitations.
+6. **Footer** — one italic provenance/status line.
+
+P0/P1/P2 appear only in the priority table. Do not scatter priority codes through findings.
+
+### Participant identifiers are not priority codes
+
+- Participant IDs are zero-padded and always written with a noun in prose or quote attribution: `Participant P01`, `Participant P02`.
+- Priority codes are not zero-padded: `P0`, `P1`, `P2`. They appear only in the multi-session Priority column.
+- `P01` means a participant; it never means priority one. `P1` means priority one; it never identifies a participant.
+
+## Visual system
+
+### Palette
+
+| Token | Hex | Role |
+| --- | --- | --- |
+| **Kale** | `#003D29` | Title, section bands, table-header text, breadcrumb, subtitle, finding headings, appendix labels, footer |
+| **Lime** | `#0AAD0A` | Author/date and positive status |
+| **Ochre** | `#B45F06` | Finding run-in labels: `Analysis`, `Confidence`, `Next research step` or `Recommendation`, and `Quote` |
+| **Carrot** | `#FF7009` | P1 flag and caution status in multi-session documents only |
+| **Cashew** | `#FAF1E5` | Table-header fill |
+| **Pomegranate** | `#BA0239` | P0 flag and negative status in multi-session documents only |
+| **White** | `#FFFFFF` | Text on Kale bands and table body cells |
+| **Body** | `#000000` | Default body text; quote text is italic `#333333` |
+
+Keep Kale, Lime, and White dominant. Use accent colors only for the stated roles. Do not use Turmeric `#ECAA01`, blue, or gray as a decorative palette.
+
+### Typography
 
 | Element | Font | Size | Weight | Color |
-|---|---|---|---|---|
-| Breadcrumb (line 1) | DM Sans | 8 | italic | Kale |
-| Title | DM Sans | 18 | bold | Kale |
-| Subtitle | DM Sans | 10 | regular | Kale |
-| Author · date | DM Sans | 12 | bold | Lime |
-| Section band (H2) | DM Sans | 12 | bold | White (on Kale) |
-| Body | DM Sans | 10 | regular | Black |
-| Table header | DM Sans | 10 | bold | Kale (on Cashew) |
-| Footer | DM Sans | 9 | italic | Kale |
+| --- | --- | --- | --- | --- |
+| Status label | DM Sans | 9 pt | bold | Pomegranate for `TEST RUN`/`SIMULATED DATA`; Carrot for `DRAFT REAL STUDY` |
+| Breadcrumb | DM Sans | 8 pt | italic | Kale |
+| Title | DM Sans | 18 pt | bold | Kale |
+| Subtitle | DM Sans | 10 pt | regular | Kale |
+| Author · date | DM Sans | 12 pt | bold | Lime |
+| Section band | DM Sans | 12 pt | bold | White on Kale |
+| Finding heading | DM Sans | 13 pt | bold | Kale |
+| Body | DM Sans | 10 pt | regular | Black |
+| Table header | DM Sans | 10 pt | bold | Kale on Cashew |
+| Footer | DM Sans | 9 pt | italic | Kale |
 
-## Structure (top → bottom) — this order is fixed
+## Fixed layout rules
 
-1. **Masthead** (four short paragraphs, no RACI): breadcrumb → title → subtitle (the question) → author·date. **No RACI block.**
-2. **`## Executive Summary`** (thin Kale band) — comes FIRST. Inside it:
-   - a **2-line brief** (what was done + the single headline read);
-   - a `Priority at a glance` bold-Kale sub-label (give it `space_above ~12` so it's clearly separated from the brief);
-   - the **Priority-at-a-Glance table** — `Priority · Action · Confidence`. This is the **only** place P0/P1/P2 appear.
-3. **A white gap after the priority table** (insert a blank paragraph — the table butts against the next band otherwise).
-4. **`## Findings`** (thin Kale band) — a section header exactly like Executive Summary, so it's obvious the findings have started.
-5. **Each finding** = a `### ` sub-heading (Kale bold ~13pt, `space_above ~10`, NOT a shaded band) stating the finding as a plain claim, followed by **three tightly-stacked lines with NO blank line between them**:
-   - **`Analysis` —** why we inferred it   (label Ochre `#B45F06` bold)
-   - **`Recommendation` —** what to do   (label Ochre bold)
-   - **`Quote` —** "verbatim" — P##   (label Ochre bold; quote text italic `#333333`)
-   A blank line separates one finding from the next. **No P-codes in findings. No per-finding "Guardrail" line** (put a hard "do not" as a row in the priority table; fold genuine safety/severity caveats into Limitations, or a labelled Safety Flag if severity-relevant).
-6. **`## Appendix`** (thin Kale band): `**Method**` (plain bold-Kale run-in, **no highlight box**) · `**Links**` (small DM Sans 9 italic Kale, "Links" bold — real hyperlinks where available, else `[bracketed]` placeholders) · `**Limitations**` (bold-Kale run-in).
-7. **Footer** — one italic Kale line (provenance / status marker).
+- Executive Summary comes before Findings.
+- Only `##` section headings receive Kale shading. Finding `###` headings remain unshaded.
+- Add one white blank paragraph after the summary table so it does not touch the Findings band.
+- Inside a finding, stack the four run-in lines tightly with no blank paragraph between them. Leave one blank paragraph between findings.
+- The Appendix uses plain bold-Kale run-ins for Method, Links, and Limitations. Links are real hyperlinks when available; otherwise use explicit bracketed placeholders.
+- Do not add a Bottom line section, per-finding Guardrail lines, shaded finding boxes, or a RACI block.
+- Add comparison tables only for genuinely quantified, scannable evidence.
 
-**No "Bottom line" section** — it was removed 2026-09-28.
+### Table styling
 
-## Tables
+Use Cashew `#FAF1E5` with bold Kale text in the header row and white body cells. Keep the first column snug (about 80 pt) and content columns wider; target about 468 pt total width on portrait US Letter with 1-inch margins.
 
-The **Priority-at-a-Glance table** is standard. Add another table only for a genuinely quantified, scannable comparison; otherwise findings are prose (Analysis/Recommendation/Quote), never tables.
-- Table styling: header row fill **Cashew `#FAF1E5`** + **Kale bold** text; body cells white; label column snug (~80pt for a Priority column), content columns wider; total width ≈ 468pt (portrait letter, 1in margins).
-- Priority column codes are colored: **P0 Pomegranate**, **P1 Carrot**, **P2 gray `#666666`**, **Guardrail Kale**. Any status cells: Lime (positive) / Pomegranate (at risk).
+For the multi-session Priority table only: color P0 Pomegranate, P1 Carrot, P2 `#666666`, and Guardrail Kale. Use Lime for positive status and Pomegranate for at-risk status. The n=1 validation table uses no priority colors or priority codes.
 
-## CRITICAL — the section band (this is where it goes wrong)
+## Thin section bands and line-spacing adapters
 
-A section band is an `## ` (HEADING_2) paragraph with **paragraph shading = Kale**, **white 12pt bold DM Sans** text. To keep it a **thin strip right behind the text** (not a tall block):
+A section band is a Heading 2 paragraph with Kale shading and white, 12 pt, bold DM Sans text. Set spacing above and below to zero; Google Docs includes paragraph spacing in the shaded area.
 
-- `line_spacing: 1`  ← **NOT 100.** The connected `batch_update_doc` MCP tool multiplies this value by 100 to get the Google Docs API percentage. Passing `100` stores `10000` (100× line height) and inflates the band into a huge block. Pass **`1`** for normal single spacing.
-- `space_above: 0`, `space_below: 0` — Google Docs paints paragraph shading **over the space above/below too**, so any spacing there becomes green padding. Zero it. (If you want a gap around the band, add `space_below` to the *preceding* non-shaded paragraph instead.)
-- shading_color: `#003D29`; text: white `#FFFFFF`, DM Sans 12 bold.
+The two supported adapters use different units for the same single-spacing result:
 
-**Finding-block spacing:** within a finding, the `Analysis` / `Recommendation` / `Quote` lines are consecutive paragraphs with **no blank line between them** (tight block); a blank line separates one finding from the next. Finding `### ` sub-headings are plain (not shaded), so give them `space_above ~10` for separation — that spacing is white, not green.
+- **Custom MCP `batch_update_doc` adapter:** pass `line_spacing: 1`. That wrapper multiplies the value by 100 before calling Google Docs.
+- **Raw Google Docs API or `gws` batchUpdate:** set `paragraphStyle.lineSpacing: 100`. The raw API expects a percentage.
 
-## How to produce it (native Google Docs MCP path — no gws, no CLI)
+Never pass `100` to the custom MCP wrapper—it can become stored `lineSpacing: 10000`. Never pass `1` to the raw API—it represents 1%, not single spacing. In the stored Google Doc JSON, successful single spacing is approximately `lineSpacing: 100`.
 
-1. Generate the analysis markdown from the skeleton (`instacart-green-analysis-skeleton.md`).
-2. `import_to_google_doc` (content lands in tab **`t.0`**).
-3. `inspect_doc_structure(document_id, tab_id="t.0", detailed=true)` → paragraph indices + table positions.
-4. `debug_table_structure(document_id, table_index=N)` for each table → per-cell ranges (cell text = `[cell_start+1, cell_end-1]`).
-5. Build the batch with `scripts/style_instacart_green.py` (palette + op-builders, `line_spacing=1` baked in), or hand-build following the tables above.
-6. `batch_update_doc` — one atomic batch. Styling only changes no text length, so all indices stay valid across the batch.
-7. Verify: re-read a band paragraph's JSON (`readDocument format=json`) and confirm `lineSpacing` is ~100 (normal), not 10000; confirm shading + white text.
+## Production workflow and interchangeable adapters
 
-**Finding-block rule (critical — this broke once).** In Markdown, `Analysis` / `Recommendation` / `Quote` written on consecutive lines with no blank between them **merge into one paragraph** (they render as one run-on line with clipped bold). So write them with a blank line between each (the skeleton does), which imports them as separate paragraphs *plus* blank paragraphs. Then **delete the in-finding blank paragraphs** — the blank between the sub-heading and Analysis, between Analysis and Recommendation, and between Recommendation and Quote — so the three lines stack tightly. **Keep** the blank line between one finding and the next. Do the deletes highest-index-first (each delete shifts later indices down). Order that works cleanly: apply all styling first (with the blanks present), then delete the blanks in a second call — the styling follows the paragraphs.
+1. Route the deliverable and obtain any required external-write authorization with `delivery-routing.md`.
+2. Copy only the appropriate variant from `instacart-green-analysis-skeleton.md` and replace every placeholder.
+3. Preserve separate paragraphs for the four finding lines. Some Markdown importers merge consecutive non-blank lines; use blank source lines when needed, then remove only the resulting in-finding blank paragraphs after import.
+4. Use whichever supported Docs adapter is actually available:
+   - **Native Google Docs MCP:** import or create the document, inspect paragraphs/tables, apply one formatting batch where practical, and re-read the result. Where the MCP exposes the custom `batch_update_doc` wrapper, use its wrapper units.
+   - **`gws` or raw Google Docs API:** create/insert content, send equivalent `documents.batchUpdate` requests, then read the document back. Use raw API units, including `lineSpacing: 100`.
+5. Confirm the document is in the routed folder, then verify content and formatting: status label, title, table variant, hyperlinks, thin Kale bands, no stray shading, no RACI, and stored line spacing near 100.
+6. Return the Google Doc link. If no Docs adapter is available, return the routed Markdown/local artifact and state that Google Docs formatting and placement were not verified.
 
-**Only `## ` bands get green shading.** Finding `### ` sub-headings, Analysis/Recommendation/Quote lines, and everything else must have **no** `shading_color`. If a stray green highlight lands behind a finding, an op targeted the wrong index — re-check. The `## Findings` band is styled identically to `## Executive Summary` (thin: `line_spacing 1`, `space_above`/`space_below` 0). Never leave two blank paragraphs stacked before a band.
-
-**Final deliverable is ALWAYS the Google Doc** in this style — even for a mock/test run (add the TEST ARTIFACT warning then), even when the self-critique/multi-agent checks are skipped. Never hand back Markdown as the final artifact; only the Drive destination is still confirmed.
-
-**Environment gotchas:** `open`/`osascript` are blocked in the sandbox — give the researcher the doc link, don't auto-open. Confirm the Drive destination before creating the doc. For a mock/test run, still create it: prefix the title with `[TEST]`, keep the TEST ARTIFACT warning, and write to whichever folder the researcher confirms (the project folder is fine if they pick it).
+Neither adapter is mandatory. Do not install tools, claim verification, or block the analysis because the preferred adapter is unavailable.

@@ -1,66 +1,139 @@
 <!--
-SKELETON for an /analysis deliverable in the Instacart Green style (v2 — confirmed by Jedida 2026-09-28).
-Fill [BRACKETS] with real content. Keep this exact shape and order:
-- masthead = 4 plain lines (breadcrumb, title, subtitle, author) — NO RACI
-- ## Executive Summary FIRST: a 2-line brief, then the "Priority at a glance" table INSIDE it
-- ## Findings band (a section header like Executive Summary), then each finding as a ### sub-heading
-- each finding = sub-heading + THREE lines, each its OWN paragraph: Analysis / Recommendation / Quote.
-  In THIS markdown they are written with a blank line between them (below) — Markdown MERGES consecutive
-  non-blank lines into one paragraph, which is wrong. The produce step then DELETES the in-finding blank
-  paragraphs so the three lines stack tightly (see the contract's "How to produce it"). Labels render
-  ochre #B45F06 bold; a blank line stays only BETWEEN findings.
-- P-codes (P0/P1/P2) live ONLY in the Priority-at-a-glance table — never scatter them through the findings.
-- NO "Bottom line" section. NO per-finding "Guardrail" line (a hard "do not" can be one row in the
-  priority table; genuine safety/severity caveats go in Limitations or a labelled Safety Flag).
-- ## Appendix: Method (plain, no highlight box) · Links · Limitations · italic footer.
-Then style via scripts/style_instacart_green.py (see instacart-green-analysis-style.md).
+Instacart Green analysis skeleton.
+
+Copy ONE variant only, remove these instructions, and replace every bracketed placeholder.
+Choose delivery and status labels with delivery-routing.md, then style with
+instacart-green-analysis-style.md.
+
+Shared rules:
+- Masthead has four plain lines and no RACI.
+- Executive Summary precedes Findings.
+- Only ## headings become Kale section bands; ### finding headings are unshaded.
+- Keep participant IDs zero-padded and explicit: Participant P01.
+- Use only applicable status labels. TEST RUN, SIMULATED DATA, and DRAFT REAL STUDY
+  are not synonyms; do not substitute one for another.
 -->
 
-Research  |  [Study name] · [Deliverable type]  |  [Quarter Year]
+<!-- VARIANT A: single-session / n=1 evidence memo. Do not include this comment in the deliverable. -->
 
-[Study Title] ([N / method])
+[APPLICABLE STATUS LABEL — TEST RUN, SIMULATED DATA, or DRAFT REAL STUDY; omit if none]
 
-[One-line subtitle — the question this synthesis answers]
+Research  |  [Study name] · Single-session evidence memo  |  [Quarter Year]
+
+[Study title] (n=1 · [method])
+
+[One-line question this evidence memo addresses]
 
 [Researcher name]  ·  [Month Year]
 
 ## Executive Summary
 
-[Two lines: what was done + the single headline read.]
+[Two lines: what was reviewed and the participant-bounded headline read. Do not imply prevalence or prioritization.]
+
+Participant context (not a finding)
+
+[Only the task-elicited context needed to interpret the finding: apps/category experience, household context, or other relevant facts.]
+
+Validation at a glance
+
+| Validation priority | Research question / next step | Rationale | Evidence status |
+| --- | --- | --- | --- |
+| High / Medium / Low | [highest-value question or next activity] | [decision consequence, uncertainty, and feasibility] | [Participant-reported / Observed / Ambiguous / Not tested] |
+| High / Medium / Low | [next question or activity] | [rationale] | [evidence status] |
+
+## Findings
+
+### 1 · [Finding stated as a participant-bounded claim]
+
+**Analysis** — [What the evidence supports, separated from interpretation.]
+
+**Confidence** — [Source integrity: High/Medium/Low; attribution: High/Medium/Low; evidence directness: High/Medium/Low; within-case coherence: High/Medium/Low; cross-case support: N/A; transferability: Not assessable. Give a brief rationale for each material rating.]
+
+**Next research step** — [What would validate, challenge, or clarify this read.]
+
+**Quote** — "[verbatim]" — Participant P01
+
+<!-- Repeat the finding block only when another claim answers a materially different
+subquestion and combining it would hide a real distinction. Do not create separate
+findings for supporting cues, examples, or quotes. Remove this comment in delivery. -->
+
+## Appendix
+
+**Method** — [Method and scope; state whether behavior was observed or participant-reported.]
+
+**Links** — [Project folder] · [Session / transcript] · [Research plan]
+
+**Limitations** — [n=1, task/sample scope, missing provenance or consent evidence, ambiguity, and transferability limits.]
+
+*[Provenance and review status.]*
+
+<!-- Stop Variant A here. -->
+
+<!-- VARIANT B: multi-session synthesis. Do not include this comment in the deliverable. -->
+
+[APPLICABLE STATUS LABEL — TEST RUN, SIMULATED DATA, or DRAFT REAL STUDY; omit if none]
+
+Research  |  [Study name] · Analysis synthesis  |  [Quarter Year]
+
+[Study title] ([N] participants · [method])
+
+[One-line question this synthesis addresses]
+
+[Researcher name]  ·  [Month Year]
+
+## Executive Summary
+
+[Two lines: what was analyzed and the headline cross-participant read.]
 
 Priority at a glance
 
-| Priority | Action | Confidence |
+| Priority | Action | Confidence basis |
 | --- | --- | --- |
-| P0 | [highest-priority action] | [High / Medium / Low] |
-| P1 | [action] | [confidence] |
-| P2 | [action] | [confidence] |
-| Guardrail | [an optional hard "do NOT" row] | — |
+| P0 | [highest-priority action] | [material confidence dimensions and limiting rationale] |
+| P1 | [next action] | [dimensions and rationale] |
+| P2 | [later action] | [dimensions and rationale] |
+| Guardrail | [optional hard do-not action] | — |
 
 ## Findings
 
 ### 1 · [Finding stated as a plain claim]
 
-**Analysis** — [why we inferred it — the evidence/logic]
+**Analysis** — [Why it was inferred, including evidence and uncertainty.]
 
-**Recommendation** — [what to do about it]
+**Confidence** — [Reasoned dimension ratings and the material constraint on this claim.]
 
-**Quote** — "[verbatim]" — [P##]
+**Recommendation** — [What to do about it.]
+
+**Quote** — "[verbatim]" — Participant P01
 
 ### 2 · [Next finding as a plain claim]
 
-**Analysis** — […]
+**Analysis** — [Analysis.]
 
-**Recommendation** — […]
+**Confidence** — [Reasoned dimension ratings and constraint.]
 
-**Quote** — "[verbatim]" — [P##]
+**Recommendation** — [Recommendation.]
+
+**Quote** — "[verbatim]" — Participant P02
 
 ## Appendix
 
-**Method** — [the methodology used for this analysis].
+**Method** — [Method used for this synthesis.]
 
-**Links** — [Project folder] · [Session / transcript] · [Screener]
+**Links** — [Project folder] · [Sessions / transcripts] · [Research plan]
 
-**Limitations** — [N, scope, biases; fold any safety/severity scope caveat here].
+**Limitations** — [N, sample and task scope, biases, uncertainty, and evidence gaps.]
 
-[Provenance / status line — italic footer.]
+*[Provenance and review status.]*
+
+<!--
+Participant IDs versus priority codes:
+- Participant P01 / P02 = people; always zero-padded and written with "Participant".
+- P0 / P1 / P2 = action priority; never zero-padded and used only in Variant B's table.
+
+Formatting note:
+The blank source lines between Analysis / Confidence / Next research step or Recommendation / Quote
+prevent Markdown importers from merging them. After import, remove only the resulting blank
+paragraphs inside each finding so the four lines stack tightly. Keep one blank paragraph
+between findings.
+-->
