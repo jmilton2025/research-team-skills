@@ -1,12 +1,13 @@
 # Instacart Green — Analysis Deliverable Style
 
-Use this reference only after selecting the output type and destination with
-[`delivery-routing.md`](delivery-routing.md). A visual preference never grants permission to create an external artifact.
+Use this reference whenever [`delivery-routing.md`](delivery-routing.md) selects
+Instacart Green, including the Markdown fallback. Create a Google Doc only after
+the analysis is approved, final QA has passed, and the destination is known.
 
 ## When this style applies
 
-- **Jedida's environment:** Instacart Green is the locked analysis style. Apply it automatically; do not ask Jedida to choose a style. When the routed output is a Google Doc, use this guide and the matching skeleton variant.
-- **Other researchers:** do not assume Instacart Green. Use the style they request, or offer a concise choice between this style and a neutral accessible document style when the choice matters.
+- **All researchers:** Instacart Green is the default analysis style. Apply it automatically and use the matching skeleton variant; do not ask the researcher to choose a style.
+- **Explicit style override:** if the researcher asks for another supported style, use it instead. A format-only override retains Instacart Green structure and semantics.
 - **Any environment without Google Docs tooling:** preserve this structure in Markdown or another supported format. Do not install or mandate a particular connector merely to reproduce the styling.
 
 Approved reference document: `Frozen Foods — Single-Session Read (Restructured v2)`

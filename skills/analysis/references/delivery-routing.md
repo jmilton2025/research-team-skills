@@ -1,17 +1,17 @@
 # Analysis Delivery Routing
 
-Use this decision contract before creating, uploading, or styling an analysis artifact. Delivery authorization, evidence status, and visual style are separate decisions.
+Use this decision contract before creating, uploading, or styling an analysis artifact. Requesting analysis with this skill selects the team default below; Google Doc creation still waits for analytic approval, final QA, and a confirmed destination.
 
 ## Decision matrix
 
-| Scenario | Default working deliverable | When an external Google Doc may be created | Style rule | If Google Docs is unavailable |
+| Scenario | Default completed deliverable | Google Doc creation rule | Style rule | If Google Docs is unavailable |
 | --- | --- | --- | --- | --- |
-| **Jedida · real study** | Draft in chat/Markdown until the requested delivery is clear. | Create a Google Doc when Jedida explicitly requests it or the current project context explicitly requires a Google Doc. Use the confirmed project folder; if the destination is ambiguous, confirm it before creation. | Instacart Green is auto-locked; do not ask for a style choice. | Return a complete Markdown/local artifact and say that Docs placement and visual formatting remain unverified. |
-| **Jedida · skill test or mock run** | A clearly labelled test artifact in chat/Markdown. Keep it out of shared Drive by default. | **Only after both** (1) Jedida explicitly requests a Google Doc for the test and (2) the destination folder is confirmed in the current task. | If a Doc is authorized, Instacart Green is auto-locked. | Keep the test local/in chat; do not treat missing Docs tooling as a test failure unless Docs delivery is what the test is evaluating. |
-| **Other researcher · real study or test** | Use the requested format; otherwise provide a neutral accessible chat/Markdown draft and ask once only if output format materially affects the result. | Create a Google Doc only when the researcher requests one and its destination is confirmed. | Use the researcher's requested style. If none is stated and style matters, offer a concise choice; do not assume Instacart Green. | Return the complete content in a supported format and identify only the missing Docs-specific verification. |
-| **Any user · Docs requested but unavailable** | Produce the complete, correctly labelled analysis in Markdown or another available format. | Do not claim a Doc was created. Do not install or mandate a connector without separate authorization. | Preserve the selected structure and style semantics as far as the available format allows. | Provide the artifact plus a short statement of what remains: Drive placement, native Docs formatting, and link verification. |
+| **Any researcher · real study** | One Instacart Green Google Doc. | After analysis approval and final QA, create and verify one Doc in the confirmed project folder. If the destination is unknown or ambiguous, ask once for it and wait. Do not ask for output-format or style confirmation. | Apply Instacart Green automatically. | Return the complete analysis in Markdown, preserve the Instacart Green structure as far as Markdown allows, and state that Drive placement, native Docs formatting, and link verification remain incomplete. |
+| **Any researcher · skill test or mock run** | One clearly labelled Instacart Green Google Doc. | After analysis approval and final QA, create and verify one test Doc only in a confirmed test/project folder. If the destination is unknown or ambiguous, ask once for it and wait; do not choose a Drive location. | Apply Instacart Green automatically and retain the required test/provenance label. | Return the complete, correctly labelled test artifact in Markdown and state the Docs-specific limitation. Missing Docs tooling is a delivery limitation, not an analysis failure. |
+| **Explicit researcher override** | Change only the requested dimension: a format-only override keeps Instacart Green; a style-only override keeps one Google Doc. If both are specified, change both. | Follow the requested format. For any external write, ask once for a destination that is unknown or ambiguous, then wait. | Use an explicitly requested style; otherwise retain Instacart Green. | Return the complete content in an available format and identify only the unavailable format-specific verification. |
+| **Google Docs or GWS unavailable** | A complete Markdown artifact, not a partial preview. | Do not claim a Doc was created. Do not install or mandate a connector without separate authorization. | Preserve the selected structure and style semantics as far as Markdown allows. | Provide the artifact plus a short statement of what remains: Drive placement, native Docs formatting, and link verification. |
 
-An explicit style preference does not authorize an external write. A known folder does not by itself authorize creating a test document. For a test run, both the request and folder confirmation are required.
+The default route authorizes one completed Google Doc after the analysis and final-QA gates pass; it does not authorize early drafts, extra copies, or writing to an inferred destination. Before retrying after an ambiguous creation result, check the confirmed folder for the Doc to avoid duplicates. An explicit researcher request for a different format or style overrides the default.
 
 ## Status labels are distinct
 
@@ -35,7 +35,7 @@ Participant IDs such as `Participant P01` are evidence-source identifiers. Prior
 
 ## Adapter routing
 
-After Google Doc creation is authorized, use the available supported adapter:
+After the route's approval, QA, and destination requirements are met, use the available supported adapter:
 
 - native Google Docs MCP; or
 - `gws`/raw Google Docs API.
