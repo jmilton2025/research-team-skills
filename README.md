@@ -12,6 +12,7 @@ Each skill is grounded in methodology from the most trusted voices in UX researc
 | `/mod-guide` | Moderation Guide | Generates moderation guides for in-depth interviews, usability tests, and diary studies |
 | `/analysis` | Analysis | Thematic analysis, tagging, and pattern recognition for qualitative and quantitative data |
 | `/report` | Research Report | Research reports with executive summaries, findings, recommendations, and next steps |
+| `/multi-agent-check` | Multi-Agent Check | Before anything is shared, two researcher reviewers check the finished deliverable in parallel — an Evidence checker (quotes, numbers, claim strength) and a Stakeholder reader (clarity, actionability) — and return one fix list with a Ready / Fix-first verdict |
 | `/usertesting-plan` | UserTesting Plan | Designs the study-level structure for an unmoderated UserTesting study — task count, ordering, coverage levels, stimulus type per task, synthesis tail |
 | `/usertesting-script` | UserTesting Script | Writes the question-level script handed to the UserTesting programmer — 4-way platform tagging, action ladders, choice-order rules, warm closing card |
 | `/usertesting-html` | UserTesting HTML | Builds the visual stimuli HTML — dual-phone / two-cart / single-row card patterns, design tokens, image labels, subtotal audit, image-quality QA |

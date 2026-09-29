@@ -17,19 +17,19 @@ cd ~/research-team-skills
 
 ```bash
 # From the cloned repo directory:
-for skill in research-plan mod-guide analysis report usertesting-plan usertesting-script usertesting-html usertesting-orchestrator; do
+for skill in research-plan mod-guide analysis report multi-agent-check usertesting-plan usertesting-script usertesting-html usertesting-orchestrator; do
   ln -sf "$(pwd)/skills/$skill" "$HOME/.claude/skills/$skill"
 done
 ```
 
 ## Verify
 
-Open Claude Code and type `/` — you should see `/research-plan`, `/mod-guide`, `/analysis`, `/report`, and the 4 `/usertesting-*` skills in the skill list.
+Open Claude Code and type `/` — you should see `/research-plan`, `/mod-guide`, `/analysis`, `/report`, `/multi-agent-check`, and the 4 `/usertesting-*` skills in the skill list.
 
 ## Uninstall
 
 ```bash
-for skill in research-plan mod-guide analysis report usertesting-plan usertesting-script usertesting-html usertesting-orchestrator; do
+for skill in research-plan mod-guide analysis report multi-agent-check usertesting-plan usertesting-script usertesting-html usertesting-orchestrator; do
   rm "$HOME/.claude/skills/$skill"
 done
 ```
