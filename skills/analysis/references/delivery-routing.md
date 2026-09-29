@@ -1,6 +1,6 @@
 # Analysis Delivery Routing
 
-Use this decision contract before creating, uploading, or styling an analysis artifact. Requesting analysis with this skill selects the team default below; Google Doc creation still waits for analytic approval, final QA, and a confirmed destination.
+These are the default delivery rules for the `analysis` skill only. They do not set delivery defaults for `research-plan`, `mod-guide`, `report`, or any other skill; each skill owns its own delivery default. Requesting analysis with this skill selects the analysis delivery default below. Google Doc creation still waits for analytic approval, final QA, and a confirmed destination.
 
 ## Decision matrix
 

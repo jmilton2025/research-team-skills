@@ -6,7 +6,7 @@ the analysis is approved, final QA has passed, and the destination is known.
 
 ## When this style applies
 
-- **All researchers:** Instacart Green is the default analysis style. Apply it automatically and use the matching skeleton variant; do not ask the researcher to choose a style.
+- **All researchers using the analysis skill:** Instacart Green is the analysis-specific default style. Apply it automatically and use the matching skeleton variant; do not ask the researcher to choose a style.
 - **Explicit style override:** if the researcher asks for another supported style, use it instead. A format-only override retains Instacart Green structure and semantics.
 - **Any environment without Google Docs tooling:** preserve this structure in Markdown or another supported format. Do not install or mandate a particular connector merely to reproduce the styling.
 
