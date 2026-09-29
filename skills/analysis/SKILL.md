@@ -18,13 +18,13 @@ A run is complete only when all of the following are true:
 1. The Transcript Quality Audit / PII scrub has run on the raw data **before** any mode-specific analysis.
 2. The researcher has approved the methodology, the output style, and every synthesis unit (each cluster in Mode A, theme in Mode B, or codebook tag group in Mode C).
 3. The self-critique pass (Step 4.5's 12-item Devil's Advocate) and the multi-agent review have both run, with fixes folded in.
-4. When the analysis is being uploaded, the Google Drive destination has been confirmed before the document is created.
-5. The analysis has been produced in the approved output template/style, and — when upload is requested — created through the portable Google Docs path.
-6. A working deliverable has been returned: the verified markdown analysis, or a Google Doc link with verification status.
+4. The Google Drive destination has been confirmed before the document is created.
+5. The analysis has been produced in the approved output template/style and created as a Google Doc through the portable Google Docs path.
+6. The Google Doc link has been returned with verification status.
 
 Both quality checks run before the final deliverable is produced. Drive-destination confirmation must happen before document creation.
 
-Markdown is the completed deliverable only when the researcher does not request an upload; when an upload is requested, markdown is an intermediate representation and the verified Google Doc is the deliverable. A mock or demo stays out of Drive unless the tester explicitly requests a test document.
+**The final deliverable is always a Google Doc — including mock, test, and demo runs**, so the researcher can see the output exactly as it will look. Markdown is only an intermediate representation; never offer or recommend "markdown only" as the finish. For a mock/test/demo run, still create the doc: prefix the title with `[TEST]`, keep the TEST ARTIFACT warning under the masthead, and confirm the Drive destination like any other run. Markdown is returned only when no write-capable Docs path exists even after asking the researcher to connect one (see Connect-when-needed in the Interaction contract) — and then it's labeled "upload blocked", never reported as done.
 
 ## Portable deliverable contract
 
@@ -34,7 +34,7 @@ This skill must work for any researcher, not only in one person's configured env
 - Confirm the Google Drive destination with the researcher before creating any document. Never write to a hardcoded personal folder ID.
 - Do not depend on a personal template, custom font, custom palette, private reference document, hardcoded folder, local styling script, command-line utility, or researcher-specific authentication setup for the default path.
 - **Optional Instacart / Jedida variant:** a personal pipeline (e.g. the `gws`/Gohan CLI, `style-gdoc-full.py` / `apply_jedida_reporting.py`, project-specific Drive folder IDs, or CLAUDE.md folder-routing) may be used *only* when it is actually available in the environment and the researcher wants it. It is a clearly-labeled alternative, never the assumed path. Step 5 already gates on this correctly (`command -v gws`, the researcher's own convention, refuses a false success) — preserve that behavior.
-- If no write-capable Docs integration is available, preserve the approved markdown analysis and report that the upload is blocked rather than claiming a doc was created.
+- If no write-capable Docs integration is available, first ask the researcher to connect one at that moment (Connect-when-needed). Only if they can't, preserve the approved markdown analysis and report that the upload is blocked rather than claiming a doc was created.
 
 ## Flow overview
 
@@ -104,6 +104,7 @@ Use native `AskUserQuestion` checklist pop-ups when available.
 
 - Ask one decision per pop-up.
 - **Use `multiSelect: true` where multiple items legitimately apply** — synthesis units and their contents (which quotes, findings, and recommendations to keep), tags/themes, and stakeholder lists. **Keep single-select for genuinely exclusive choices** — analysis mode, methodology approval, orientation, theme level, IRR approach, scope, and output-style variant. Do not force single-select onto a decision where the researcher should be able to keep several items, and do not offer multiSelect on a truly either/or choice.
+- **In any multiSelect approval pop-up, option 1 is "Keep everything as drafted (Recommended)"**, with individual items after it. If the researcher selects only some items, read back what will be dropped and confirm before advancing — never drop content on a single click.
 - Number the options. Mark a **Recommended** option based on the data and the discovered evidence.
 - Preserve the built-in **Other / comments** field so researchers can add, correct, or rewrite.
 - Show the proposed content before asking for approval.
@@ -112,6 +113,8 @@ Use native `AskUserQuestion` checklist pop-ups when available.
 - Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Section 3.
 
 If native pop-ups are unavailable, state **"Inline fallback — native checklist unavailable in this environment"** and reproduce the same numbered options and selection instructions in chat. Do not silently substitute an unlabeled prose question.
+
+**Connect-when-needed (connections).** Check a connector at the moment a step needs it — Glean to read a Google Doc input, the people directory to verify a RACI name, Google Docs/Drive to create the deliverable, `/multi-agent-check`'s sources for the review. If it isn't connected or asks for sign-in, stop at that step and tell the researcher right then: which connection, what it's for, and how to connect it (`/mcp` in Claude Code, or the connector's settings on claude.ai). Wait while they connect it, then continue. Offer **"Skip this source"** only as an explicit choice the researcher makes, and name the skipped source in Method Notes / Limitations. Never quietly work around a missing connection and mention it in the wrap-up.
 
 The number of options per pop-up should match the content — no fixed cap. Show all relevant items; if there are many, show the most important ones first and include an "Other / see more" slot.
 
@@ -142,7 +145,7 @@ If the research question is being applied retroactively to data that was collect
 
 Accept any format: pasted text, Google Doc URLs, local file paths, Dovetail/Dscout exports.
 
-If Google Doc URLs are provided, read them via Glean's document-read tool (e.g. `mcp__glean__read_document` — confirm the exact connected tool name in your environment, server prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available.
+If Google Doc URLs are provided, read them via Glean's document-read tool (e.g. `mcp__glean__read_document` — confirm the exact connected tool name in your environment, server prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available. If none is connected, ask the researcher to connect it now (Connect-when-needed) before going on — don't skip the doc or guess its contents.
 
 ### 1.2 Transcript Quality Audit / PII scrub — Step 2 (mandatory, before the mode branch)
 
@@ -434,7 +437,7 @@ After output style is locked, say: *"Output style locked. Section 2 — Methodol
 **If the researcher shares a reference doc:**
 
 1. Accept any format: Google Doc URL, pasted text, uploaded file, or screenshot
-2. If Google Doc URL: read via Glean's document-read tool (confirm the exact connected tool/server name in your environment — prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available
+2. If Google Doc URL: read via Glean's document-read tool (confirm the exact connected tool/server name in your environment — prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available. If none is connected, ask the researcher to connect it now (Connect-when-needed)
 3. Analyze the reference doc's style patterns. Extract:
    - **Document structure:** section ordering, header hierarchy, table usage
    - **Theme/cluster/tag presentation:** how are themes/tags introduced? (H2 per theme, table row per theme, numbered list)
@@ -485,7 +488,8 @@ The **unit** depends on the mode:
 First do the analytical work internally (cluster / develop themes / build the codebook against the approved methodology). Then, once you know how many units there are, set **M = number of units** and walk them one at a time:
 
 1. **Show the draft first.** For each unit, show its illustrative quotes + prevalence (`X of Y participants`) + the **Observation → Insight → Recommendation** ladder (Mode A/B) or the tag's definition + inclusion/exclusion + example + frequency (Mode C) — before asking for approval.
-2. **Approve / pick / brainstorm.** Pop-up label: **"Section 3 > Step N of M: Cluster/Theme/Tag group — [name]"**. Use **`multiSelect: true`** — within a unit, multiple quotes, sub-findings, and recommendations legitimately apply, so the researcher can keep several. Number the options; mark a **Recommended** set; keep the Other / comments field. Last option: **"Brainstorm with me"** — refine that unit in chat, then re-show the revised draft for approval before locking.
+2. **Approve / pick / brainstorm.** Pop-up label: **"Section 3 > Step N of M: Cluster/Theme/Tag group — [name]"**. Use **`multiSelect: true`** — within a unit, multiple quotes, sub-findings, and recommendations legitimately apply, so the researcher can keep several. **Option 1 is always "Keep everything as drafted (Recommended)"** — one click approves the whole unit with nothing dropped. The individual quotes / sub-findings / recommendations follow as separate options, for a researcher who wants to keep only some. Number the options; keep the Other / comments field. Last option: **"Brainstorm with me"** — refine that unit in chat, then re-show the revised draft for approval before locking.
+   - **A single click must never silently drop part of a unit.** If the researcher picks individual parts instead of option 1, read back what will be dropped before locking — *"Keeping Quote 1 and the recommendation; dropping Quote 2 and sub-finding B. Lock it?"* — and lock only after they confirm.
 3. **Lock, then announce the transition.** After approval, say e.g. *"Cluster 2 locked. Moving on to Cluster 3."*
 4. **Keep a visible approved/pending checklist** so the researcher always sees which units are locked and which remain.
 
@@ -497,7 +501,7 @@ After the last unit locks, say: *"All units locked. Section 3 — Synthesis is c
 
 Every output template carries a RACI-style header (Responsible / Consulted / Informed), and recommendations name owners. Before writing any person's name into that header or an owner field, verify the name is current using the directory / people-search tool. Stored context and project files go stale (someone may have left or changed roles). If there is any doubt about who belongs in a role, ask the researcher directly: *"I have [Name] as [Role] — is that still right?"* Never carry a name forward from memory or a stale file without a live check.
 
-*Current-session caveat:* the people-directory and Glean MCPs may require auth in this environment. If people-search is unavailable, do not guess — mark the role `[TBD — verify]` and ask the researcher to confirm the name.
+*Connections:* the people-directory and Glean MCPs may require sign-in. If people-search isn't connected when you reach this step, ask the researcher to connect it now (Connect-when-needed). If they choose to skip it, do not guess — mark the role `[TBD — verify]` and ask them to confirm the name.
 
 ### Mock / test-artifact warning
 
@@ -505,7 +509,7 @@ If the inputs are invented, simulated, or a demo, place this line directly under
 
 > ⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.
 
-Keep it prominent in every rendered option, and keep any mock/test analysis out of Google Drive unless the tester explicitly asks for a test document.
+Keep it prominent in every rendered option. A mock/test analysis still ends as a Google Doc (see the Completion contract): prefix the title with `[TEST]`, keep this warning under the masthead, and confirm the destination in Step 4.7 like any other run.
 
 ### Execution principles (all modes)
 
@@ -726,7 +730,7 @@ Last updated: [Month Year]
 
 ### CONTENT GENERATION RULES (all modes)
 
-1. **Quote authenticity** — Use verbatim quotes when possible. Mark paraphrases as `[paraphrased]`. Never invent a quote.
+1. **Quote authenticity** — Use verbatim quotes when possible. Mark paraphrases as `[paraphrased]`. Never invent a quote. **Quotation marks anywhere mean verbatim** — in titles, the Executive Summary, tables, and Analysis/Insight text as well as Quote lines. Never put your own wording of what a participant meant inside quotation marks; state it plainly as your read (e.g. "Our read: P01 wants to know whether it feeds the family").
 2. **Participant attribution** — Every quote gets a participant ID (`— P07`). If anonymization requires, use role-based IDs (`— Shopper-A`).
 3. **Prevalence precision** — Report "X of Y participants" or exact percentages. Avoid "most" or "some" alone.
 4. **Insight vs observation** — Observations describe what was heard. Insights interpret what it means. Recommendations propose what to do. Never skip the ladder.
@@ -747,7 +751,7 @@ Once every synthesis unit is locked (end of Section 3), set expectations before 
 >
 > 1. **Run a critique pass** — the AIxUXR Devil's Advocate self-critique that pressure-tests the analysis for gaps, weak evidence, and unsupported claims.
 > 2. **Run the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel.
-> 3. **Then I'll produce your [synthesis doc / theme report / codebook]** — formatted in your approved style, and uploaded to your confirmed Drive folder if you want it there.
+> 3. **Then I'll produce your [synthesis doc / theme report / codebook]** — as a Google Doc in your approved style, in the Drive folder you confirm.
 >
 > Running the critique and multi-agent checks now — I'll fold in any fixes before the deliverable is produced.
 
@@ -767,7 +771,7 @@ Run through every item. For each, grade (A / A- / B+ / B / below-B) and justify 
 | 2 | **Quote representativeness** | Do the illustrative quotes span the range of the theme, including boundary cases? Are they drawn from multiple participants (not all from P04)? | All 3 quotes for a theme are from one participant. All quotes express the strongest version — no softer or ambivalent voices |
 | 3 | **Bias flagged** | Have I explicitly surfaced primacy bias, nuance deafness, hallucination risk, and sample/selection bias in Method Notes? | Limitations section missing. No mention that AI was used. No confidence label on key findings |
 | 4 | **Participant attribution correct** | Does every quote trace back to the correct participant in the source? Are pseudonyms consistent? Are timestamps accurate where cited? | Attribution mismatches source. "Participant 7" and "P07" used inconsistently. Timestamps not verified |
-| 5 | **Hallucination scan** | Are all quotes verifiable in the source transcripts? No invented quotes, plausible-sounding but fabricated details, or hallucinated codes? | Any quote that cannot be found by text-search in the source. Any factual claim about participants not in the data |
+| 5 | **Hallucination scan — every quote-marked string** | Is every phrase inside quotation marks, **anywhere** in the output (titles, Executive Summary, table cells, Analysis / Insight / Recommendation text — not just Quote lines), verbatim in the source? No invented quotes, paraphrases dressed up as quotes, plausible-sounding but fabricated details, or hallucinated codes? **Run it mechanically:** list every quote-marked string, text-search the source for each, and write the list with found / not found before grading | Any quote-marked phrase not found verbatim by text-search — including a researcher's paraphrase in quote marks inside Analysis text (fix: use the participant's real words, or drop the quote marks and label it as the researcher's read). Grading A without producing the full list. Any factual claim about participants not in the data |
 | 6 | **Observation vs. interpretation separated** | Are observations (what was heard) visually/structurally distinct from insights (what it means) and recommendations (what to do)? | "Participants struggled with checkout" appears in the Insight column (that's an observation). Recommendations buried inside quote interpretation |
 | 7 | **Thematic-mode only — Topic-summary pitfall** | Does each theme express a central organizing concept (a pattern of shared meaning), NOT just a topic label? | Theme titled "Pricing" (topic). Rename to "Hidden fees feel like betrayal, not inconvenience" (pattern of shared meaning) |
 | 8 | **Tagging-mode only — Codebook rigor** | Does every tag have definition + inclusion + exclusion + example? Are tags MECE as much as possible? | Tag exists without inclusion/exclusion criteria. Two tags overlap semantically |
@@ -793,7 +797,8 @@ Per H.E.A.R.T. Transparency, include a brief **Self-Critique Summary** section i
 Run the multi-agent review on the fixed analysis content — before the deliverable is produced. This is automatic; do not ask permission. The researcher was already told this is coming (the gate announcement at the top of Section 4).
 
 - Say in chat: *"Running the multi-agent review now — several independent reviewers check the analysis for inconsistencies and problems in parallel."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate.
+- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate. Hand it the source transcripts/data as local files (`sourcePaths`) so its fact-check reviewer can audit every quote-marked string against the source.
+- If the review returns `blocked_sources` (a reviewer couldn't reach a connector), raise it right away per Connect-when-needed and offer to re-run that reviewer once connected — don't carry it to the wrap-up.
 - If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass (Step 4.5).
 - Fold any confirmed fixes into the analysis before producing the deliverable.
 
@@ -801,40 +806,42 @@ The expected sequence is **locked units → self-critique → multi-agent → fi
 
 ### Step 4.7: Confirm the Drive destination (before any document is created)
 
-If the analysis will be uploaded, confirm the destination **before** creating the doc (see the Portable deliverable contract):
+Every analysis ends as a Google Doc, so always confirm the destination **before** creating the doc (see the Portable deliverable contract). Ask only *where* it goes — never *whether* to create it:
 
 1. Infer the exact Drive folder from the supplied project context when possible.
 2. Confirm it plainly: **"I'm going to create the analysis in [folder/link]. Is that the right destination?"**
 3. If no destination is known, ask: **"Which Google Drive folder should this analysis live in?"**
 4. Write only to the confirmed folder. Never use a hardcoded personal folder ID.
-5. For a mock or demo, do not create a Drive artifact unless the tester explicitly asks for one.
+5. For a mock or demo, still create the doc — with a `[TEST]` title prefix and the TEST ARTIFACT warning. Don't assume the project folder is off-limits; ask, and write where the researcher picks.
 
-### Step 5: Produce & (optionally) upload the deliverable
+### Step 5: Produce the deliverable as a Google Doc
 
-Produce the analysis in the approved output template/style. Then offer the upload — **native Google Docs is the default path** (use the Google Docs tools connected in the current session). The personal `gws`/Gohan pipeline is the **optional Instacart / Jedida variant**, used only when it is actually available and the researcher wants it.
+Produce the analysis in the approved output template/style, then create it as a Google Doc in the folder confirmed in Step 4.7 — **native Google Docs is the default path** (use the Google Docs tools connected in the current session). The personal `gws`/Gohan pipeline is the **optional Instacart / Jedida variant**, used only when it is actually available and the researcher wants it.
 
-Ask:
+**Default deliverable styling + structure — Instacart Green.** In Jedida's environment, **the final deliverable is ALWAYS a Google Doc** produced in the **Instacart Green** house style AND the fixed section structure — automatically, for every analysis, including mock/test runs (add the TEST ARTIFACT warning then) and runs where the checks are skipped. Never hand back Markdown as the final artifact. Do not ask which style, and do not use the Mode A/B/C 2-column templates or Option 4 Leadership for an analysis unless she explicitly asks. Full contract, palette, the fixed structure, and reproduction steps are in [`references/instacart-green-analysis-style.md`](references/instacart-green-analysis-style.md); generate the markdown from [`references/instacart-green-analysis-skeleton.md`](references/instacart-green-analysis-skeleton.md) and apply styling with [`scripts/style_instacart_green.py`](scripts/style_instacart_green.py) via the native Google Docs MCP tools (`import_to_google_doc` → `inspect_doc_structure` → `debug_table_structure` → `batch_update_doc`). Fixed structure: masthead (no RACI) → **Executive Summary first** (2-line brief + Priority-at-a-Glance table, the only place P0/P1/P2 appear) → **Findings** band → each finding a `###` sub-heading + tightly-stacked **Analysis / Recommendation / Quote** (ochre `#B45F06` labels, no blank between them) → **Appendix** (Method · Links · Limitations). No Bottom line, no per-finding Guardrail, no Turmeric. Band `line_spacing` MUST be `1` (the tool ×100s it; 100 → giant block); band `space_above/below` = 0. DM Sans throughout; Kale title/bands. Confirmed default by Jedida 2026-09-28.
 
-> "Your analysis is ready! Would you like me to upload it to Google Docs?"
+Don't ask whether to create the doc — say:
 
-If yes:
-1. **Check what's actually available before assuming a tool works.** Prefer the session's connected native Google Docs tools. Different researchers have different upload tooling configured (native Docs tools, a `md2doc`/`gws-docs` skill, a CLI on PATH, or nothing at all). Confirm the tool exists and is callable in this environment (e.g. `command -v gws`, or check the installed skill list) rather than invoking it blind. If nothing usable is found, say so plainly and ask the researcher how they'd like to proceed (e.g., paste the markdown into a blank Google Doc themselves, or fix the tooling first) — don't silently fail or claim a successful upload that didn't happen.
+> "Your analysis is ready — creating the Google Doc in [confirmed folder] now."
+
+Then:
+1. **Check what's actually available before assuming a tool works.** Prefer the session's connected native Google Docs tools. Different researchers have different upload tooling configured (native Docs tools, a `md2doc`/`gws-docs` skill, a CLI on PATH, or nothing at all). Confirm the tool exists and is callable in this environment (e.g. `command -v gws`, or check the installed skill list) rather than invoking it blind. If nothing usable is connected, stop right there and ask the researcher to connect it now (Connect-when-needed — e.g. `/mcp` in Claude Code, or the Google Docs connector in claude.ai settings), then continue once it's connected. Only if they can't connect, offer the fallback (they paste the markdown into a blank Google Doc themselves) — don't silently fail or claim a successful upload that didn't happen.
 2. **Fix subscript formatting (MANDATORY, if the upload path renders markdown via `<br>` tags)** — this pattern is known to turn `<br>`-separated content into SUBSCRIPT formatting that makes text tiny. After upload, scan the doc via the Google Docs API for all `baselineOffset == 'SUBSCRIPT'` ranges and reset them to `'NONE'`. Do this BEFORE styling.
-3. **Apply styling per the researcher's own convention, if they have one** (many researchers maintain a personal or team doc-styling system — check their CLAUDE.md, a team wiki, or ask). Only fall back to a generic clean default (clear headers, consistent table formatting) if no such convention is documented — never assume a single hardcoded "default template" script is the right one for every researcher on the team.
+3. **Apply the styling.** In Jedida's environment that is the **Instacart Green (Tables as Needed)** style above — apply it automatically via `scripts/style_instacart_green.py` (see `references/instacart-green-analysis-style.md`). For any other researcher, apply their own documented convention (check their CLAUDE.md, a team wiki, or ask), and only fall back to a generic clean default (clear headers, consistent table formatting) if none is documented — never assume a single hardcoded template fits every researcher.
 4. **Place in the confirmed Google Drive folder (from Step 4.7), using the researcher's own routing convention** if they have one. Don't hardcode a fixed list of project numbers/names here — folder structures vary by researcher and team and go stale fast.
 5. Share the Google Doc link, and state verification status (content complete, formatting checked, links checked).
 
-If the analysis is not being uploaded, the verified markdown analysis is the deliverable — return it and state that it passed both quality checks.
+Markdown is never the final deliverable. If the Docs path is still blocked after asking the researcher to connect it, return the verified markdown labeled **"upload blocked — not the final deliverable"**, state that it passed both quality checks, and say exactly what's needed to finish the Google Doc.
 
 ---
 
 ## Tool usage
 
 - **AskUserQuestion** — mode selection (Section 1), methodology approvals (Section 2), style reference (Section 2), per-unit synthesis approvals (Section 3). If unavailable in this environment, degrade to plain-text questions per the Interaction contract's inline-fallback line
-- **Directory / people-search tool** — verify current stakeholder identities before writing any name into a RACI header or owner field (Section 3). May require auth in this session; if unavailable, mark `[TBD — verify]` and ask the researcher rather than guessing
+- **Directory / people-search tool** — verify current stakeholder identities before writing any name into a RACI header or owner field (Section 3). May require sign-in; if it isn't connected, ask the researcher to connect it then (Connect-when-needed). If they skip it, mark `[TBD — verify]` and ask them rather than guessing
 - **`/multi-agent-check`** — the parallel review half of the quality gate (Step 4.6). Check the live skill list; invoke when installed, disclose and continue on the critique-only pass when not
 - **Native Google Docs tools (default deliverable path)** — create the doc in the confirmed Drive folder, apply native styles, read it back to verify. Prefer these over any personal CLI
-- **Glean's document-read tool** (e.g. `mcp__glean__read_document` — confirm the exact connected tool/server name in your environment; prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available — reading Google Doc inputs (transcripts, reference docs)
+- **Glean's document-read tool** (e.g. `mcp__glean__read_document` — confirm the exact connected tool/server name in your environment; prefixes vary) or a dedicated Google Docs fetch tool/skill if one is available — reading Google Doc inputs (transcripts, reference docs). If not connected when needed, ask the researcher to connect it at that step
 - **Read tool** — reading local transcript files
 - **Optional personal upload path (Instacart / Jedida variant), if the researcher has one configured** (e.g., a `md2doc`/`gws-docs` skill, the `gws`/Gohan CLI) — only when the native path isn't preferred and the tool is actually available. Confirm it's callable (on PATH, or as an installed skill) before relying on it; don't assume a specific tool name works in every environment
 - **references/analysis-methodology.md** — load on demand for Braun & Clarke 6-phase walkthrough, tag schema patterns, IRR calculation
