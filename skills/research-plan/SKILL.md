@@ -283,7 +283,7 @@ After all three sections are locked, tell the researcher exactly what happens ne
 > All three sections are approved — I now have everything I need. Here's what I'll do before I hand you the final plan:
 >
 > 1. **Run it through a critique agent** — a pressure-test that checks the plan for gaps, weak logic, and unsupported claims.
-> 2. **Run it through the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel. This one can take up to an hour.
+> 2. **Run it through the multi-agent review** — two researchers review it in parallel: an Evidence checker (is every claim true to the sources?) and a Stakeholder reader (can your audience understand it and act on it?). This takes a few minutes.
 > 3. **Then I'll draft your Google Doc** — the formatted, verified plan in your confirmed Drive folder.
 >
 > Running the critique and multi-agent checks now — I'll fold in any fixes before the Doc is created.
@@ -399,11 +399,11 @@ Do not append this internal critique to the stakeholder plan unless the research
 
 Run the multi-agent review on the fixed plan content — before the Google Doc is created. This is automatic; do not ask permission. The researcher was already told this is coming (the end-of-Step-3 announcement).
 
-- Say in chat: *"Running the multi-agent review now — several independent reviewers check the plan for inconsistencies and problems in parallel."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate.
+- Say in chat: *"Running the multi-agent review now — two researchers read the plan in parallel: an Evidence checker against the sources, and a Stakeholder reader reading it as [audience]."*
+- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Pass it the fixed plan, the discovered source files, and the audience; called from here, it doesn't ask the researcher anything.
 - If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass. This is a complete run, not a blocked one; say “critique-only” when you return the Doc.
-- **Runtime:** budget up to an hour. The one timed run (5 reviewers, an 8-page plan, 4 source files) took about 56 minutes. Never promise minutes.
-- **Live demo:** don't run the panel on stage. Walk through the saved run in `examples/multi-agent-review-example.md` instead, and say it's a saved run.
+- **Runtime:** a few minutes. In the timed run (a plan of about 2,300 words, 4 source files), each reviewer took about 3 minutes; they run at the same time, and the merge adds a little. Longer drafts and more sources take longer.
+- **Live demo:** the check is short enough to run live. If you'd rather not, walk through the saved run in `examples/multi-agent-review-example.md` and say it's a saved run.
 - Fold any confirmed fixes into the assembled plan before creating the Doc. **Check each fix's wording against the sources before applying it.** Apply only what the source supports: if a fix adds a fact, count, attribution, study detail, or quote the source doesn't support, apply the supported part and tell the researcher what you left out and why.
 
 The expected sequence is **approved plan → critique → multi-agent (or disclosed critique-only) → fixes → copyedit → exact Option 4 Google Doc → verify/render → share**. Never describe the plan as stakeholder-final before the quality checks and the final visual gate have run.
@@ -502,7 +502,7 @@ This is the final step. The plan has already passed the critique (Step 4.5) and 
 - **Slack:** read supplied kickoff threads.
 - **Drive / Google Docs (connector or `gws`):** create the document in the confirmed folder, expose raw document structure, apply native batch updates, read it back as text, inspect its structure, export/render it, and return the link only after the Option 4 gate passes.
 - **`multi-agent-check` (optional skill):** the Step 5 parallel review; without it, the run is critique-only and says so.
-- **`examples/multi-agent-review-example.md`:** a saved Step 5 run to show in demos instead of running the panel live.
+- **`examples/multi-agent-review-example.md`:** a saved Step 5 run of the two-reviewer check — what it returns and how the fixes were handled. Use it in demos when you'd rather not run the check live.
 - **Directory / people search:** validate current stakeholder identities before carrying names forward.
 - **Approved data tooling or data-science partner:** obtain behavioral evidence when needed; report unavailable data rather than estimating it.
 - **`references/content-rules.md`:** exact row order, writing rules, adaptive fields, and bullet rules.

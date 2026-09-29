@@ -350,7 +350,7 @@ After Section 4 is locked, tell the researcher exactly what happens next so they
 > Everything's approved — I now have all the content I need. Here's what I'll do before I hand you the final report:
 >
 > 1. **Run it through the critique pass** — the Report Critic self-review (three personas: Staff Sparring Partner → PM → Senior Leadership) pressure-tests it for weak logic, unsupported claims, and audience-fit gaps.
-> 2. **Run it through the multi-agent review** — several independent reviewers check for inconsistencies and problems in parallel.
+> 2. **Run it through the multi-agent review** — two researchers review it in parallel: an Evidence checker (is every claim true to the data?) and a Stakeholder reader (can your audience understand it and act on it?).
 > 3. **Then I'll produce your report** — the polished markdown, and (if you want it) a formatted Google Doc in your confirmed Drive folder.
 >
 > Running the critique and multi-agent checks now — I'll fold in any fixes before I produce the report.
@@ -666,8 +666,8 @@ Do not append this internal critique to the stakeholder report. Once fixes are f
 
 Run the multi-agent review on the fixed report content — before the final deliverable is produced. This is automatic; do not ask permission. The researcher was already told this is coming (the end-of-Section-4 announcement).
 
-- Say in chat: *"Running the multi-agent review now — several independent reviewers check the report for inconsistencies and problems in parallel."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate.
+- Say in chat: *"Running the multi-agent review now — two researchers read the report in parallel: an Evidence checker against the data, and a Stakeholder reader reading it as [audience]."*
+- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Pass it the fixed report, the source data, and the audience; called from here, it doesn't ask the researcher anything.
 - If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass.
 - Fold any confirmed fixes into the assembled draft before producing the deliverable.
 

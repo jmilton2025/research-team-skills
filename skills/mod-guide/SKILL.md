@@ -337,7 +337,7 @@ Once all content blocks are approved, **ask the researcher** whether they want t
 
 > "All blocks are approved! Before I create the Google Doc, I can run two optional quality checks:
 > 1. **Critique pass** — I self-audit for methodology gaps, biased phrasing, and weak probes.
-> 2. **Multi-agent review** — independent reviewers check in parallel.
+> 2. **Multi-agent review** — two researchers review it in parallel: an Evidence checker (rigor and consistency) and a Stakeholder reader (clear and usable for its audience).
 > 
 > Would you like to run these before the final guide?"
 
@@ -613,8 +613,8 @@ Applies especially when the guide includes structured rating questions or quant-
 
 Run the multi-agent review on the fixed guide content — before the Google Doc is created. This is the second half of the quality gate. It is automatic; do not ask permission. The researcher was already told this is coming (the end-of-Step-4 announcement).
 
-- Say in chat: *"Running the multi-agent review now — several independent reviewers check the guide for inconsistencies and problems in parallel."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Let that skill run its own questions and approval gate.
+- Say in chat: *"Running the multi-agent review now — two researchers read the guide in parallel: an Evidence checker for rigor and consistency, and a Stakeholder reader reading it as [audience]."*
+- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Pass it the fixed guide, any source files, and the audience; called from here, it doesn't ask the researcher anything.
 - If `multi-agent-check` is not installed in this environment, disclose that the parallel review cannot run and proceed on the critique-only pass (Step 4.5).
 - Fold any confirmed fixes into the assembled guide before creating the Doc.
 
@@ -624,7 +624,7 @@ The expected sequence is **approved blocks → self-critique → multi-agent →
 
 ## Step 6 — Upload, Style, Verify + Share (NO researcher QUESTIONS — execute the delivery silently)
 
-🚫 **Step 6 runs with zero `AskUserQuestion` calls to the researcher.** The upload-yes/no question is gone; the styling-choice and destination were already decided in Section 1; the read-back confirmation is gone. (Note: `/multi-agent-check` in Step 5 may run its own gate — that is that skill's, not this delivery step's.) If a fact is missing, pick a sensible default and proceed.
+🚫 **Step 6 runs with zero `AskUserQuestion` calls to the researcher.** The upload-yes/no question is gone; the styling-choice and destination were already decided in Section 1; the read-back confirmation is gone. (`/multi-agent-check` in Step 5 doesn't ask the researcher anything either when this skill calls it.) If a fact is missing, pick a sensible default and proceed.
 
 Status updates are welcome (a one-line "Creating the doc… Applying [style]…" message). What's not fine: any question, any "want me to…?" Treat Step 6 like a deterministic script.
 
