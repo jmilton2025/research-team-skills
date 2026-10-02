@@ -52,13 +52,14 @@ Inline highlighting is not equivalent to full-paragraph shading.
 - Exactly two columns and five rows: one header plus four milestones.
 - Fixed widths: **144pt / 554.4pt**; 5pt cell padding on all sides.
 - The widths intentionally total 698.4pt—50.4pt wider than the 648pt paragraph text area. Google Docs lets the approved tables extend into the print margins; do not shrink them to 648pt.
-- Header row: dark green `#003D29`, white bold DM Sans 10pt, pinned as a repeating table header.
+- Header row: dark green `#003D29`, white bold DM Sans 10pt, pinned as a repeating table header. The header text is exactly `Timing | Leadership milestone`.
 - Left milestone column: gray `#D9D9D9`, bold DM Sans 10pt.
 - Right column: white, DM Sans 10pt.
-- Each left-hand label is no more than 32 characters. Each right-hand milestone is one concise sentence, no more than 160 characters. Put detailed dates, contingencies, and dependencies in the plan's Timeline row.
+- Each left-hand label starts with its timing, then a short name, such as `Week 1: Setup & rubric` or `Weeks 2–3: Calibration`. Use `Day N:` or `Month N:` only for studies measured in days or months.
+- Each left-hand label is no more than 24 characters, so it renders on one line in the 144pt column. In the 2026-10-02 mock, a 26-character label wrapped and split the timeline across pages. Each right-hand milestone is one concise sentence, no more than 160 characters. Put detailed dates, contingencies, and dependencies in the plan's Timeline row.
 - The four milestones adapt to the study. Do not copy an old study's week labels or schedule.
 
-If the leadership timeline spills awkwardly onto another page, tighten only the timeline summary; preserve the approved detailed Timeline row.
+If the leadership timeline spills onto another page, shorten any wrapped label or tighten only the timeline summary; preserve the approved detailed Timeline row.
 
 ## Project Plan Overview table
 
@@ -83,7 +84,7 @@ Use `scripts/option4_layout.py`:
 5. `format` — generate the exact Option 4 Google Docs batch operations.
 6. Apply those operations and re-fetch the document.
 7. `verify` — validate content and all machine-checkable visual invariants.
-8. Export/render the Doc and visually inspect the opening page, a dense middle page, and the last page.
+8. Export/render the Doc and visually inspect every page. The verifier cannot see page breaks, so a timeline split or an orphaned section band shows up only in the render.
 
 The command accepts `--help` for exact arguments.
 

@@ -173,7 +173,7 @@ Walk the researcher through three sequential pop-ups. Announce each one in chat 
 
 Say in chat: *“Let's start with background and context — here's what I found from your PRD and prior research.”*
 
-Show concise source-backed facts in chat, numbered. Pop-up label: **“Section 1 > Step 1 of 3: Background & Context”**. The researcher picks which facts to keep, so use multi-select (grouped when there are more than 3 facts), with **“Brainstorm with me”** last. Lock before advancing.
+Show concise source-backed facts in chat, numbered. Lead with a **Why now** fact and a **Strategic fit** line; use `[TBD — fill in]` for strategic fit when no source names the priority. Pop-up label: **“Section 1 > Step 1 of 3: Background & Context”**. The researcher picks which facts to keep, so use multi-select (grouped when there are more than 3 facts), with **“Brainstorm with me”** last. Lock before advancing.
 
 After approval, say: *“Background & Context locked. Moving on to Existing Insights.”*
 
@@ -189,7 +189,7 @@ After approval, say: *“Existing Insights locked. Moving on to Hypotheses.”*
 
 **Section 1 > Step 3 of 3: Hypotheses**
 
-Show proposed, falsifiable beliefs grounded in evidence or explicit stakeholder assumptions. If none are grounded yet, propose the explicit empty state: *“No hypotheses confirmed at planning time.”* Pop-up label: **“Section 1 > Step 3 of 3: Hypotheses”**. Multi-select for which hypotheses to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
+Show proposed, falsifiable beliefs grounded in evidence or explicit stakeholder assumptions. Label each one's origin: a researcher hypothesis inferred from a named source, or a stakeholder assumption only when a stakeholder actually stated it. If none are grounded yet, propose the explicit empty state: *“No hypotheses confirmed at planning time.”* Pop-up label: **“Section 1 > Step 3 of 3: Hypotheses”**. Multi-select for which hypotheses to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
 
 After approval, say: *“Hypotheses locked. Section 1 — Context & Foundation is complete. Next I’ll confirm the opening details, then we’ll move into Section 2 — Research Design.”*
 
@@ -270,7 +270,7 @@ Approve in this order:
 
 1. **Objectives** — Pop-up label: **“Section 2 > Step 1 of 4: Objectives”**. After lock: *“Objectives locked. Moving on to Key Research Questions.”*
 2. **Key research questions** — Pop-up label: **“Section 2 > Step 2 of 4: Key Research Questions”**. After lock: *“Research Questions locked. Moving on to Decisions.”*
-3. **What decisions will be made with this research?** — multi-select; each decision fork is its own option (grouped when there are more than 3). Pop-up label: **“Section 2 > Step 3 of 4: What Decisions”**. After lock: *“Decisions locked. Moving on to Method & Approach.”*
+3. **What decisions will be made with this research?** — multi-select; each decision fork is its own option (grouped when there are more than 3). Define each outcome once (for example, go / narrow / no-go) as proposed definitions to confirm with the decision owner, then reuse those exact terms in every later row. Pop-up label: **“Section 2 > Step 3 of 4: What Decisions”**. After lock: *“Decisions locked. Moving on to Method & Approach.”*
 4. **Method & approach** + applicable conditional rows — Pop-up label: **“Section 2 > Step 4 of 4: Method & Approach”**. After lock: *“Method locked. Section 2 — Research Design is complete. Moving on to Section 3 — Outputs.”*
 
 Use **Hypotheses** only. Keep Key research questions broad and project-level; interview probes belong in the downstream moderation guide. The Project Details fields are adaptive — include only the rows the study actually needs.
@@ -335,17 +335,17 @@ The opening order is:
 4. RACI bullet list.
 5. Mock warning, when applicable.
 
-Then add the separate Option 4 leadership timeline and the Project Plan Overview. The leadership timeline has one header plus four study-specific milestones derived from the approved detailed Timeline row. Each left-hand label is no more than 32 characters; each right-hand summary is one sentence and no more than 160 characters. The old reference study's four-week schedule is never reused.
+Then add the separate Option 4 leadership timeline and the Project Plan Overview. The leadership timeline has the header `Timing | Leadership milestone` plus four study-specific milestones derived from the approved detailed Timeline row. Each left-hand label starts with its timing, then a short name: `Week 1: Setup & rubric`. Use `Weeks 2–3:` for a span, and `Day N:` or `Month N:` only when the study runs in days or months. Two milestones may share a week. Keep each label to 24 characters or fewer so it stays on one line; a wrapped label can split the timeline across pages. Each right-hand summary is one sentence and no more than 160 characters. The old reference study's four-week schedule is never reused.
 
 ```markdown
 # Research Timeline
 
-| Milestone | Leadership milestone |
+| Timing | Leadership milestone |
 |---|---|
-| [Milestone 1] | [Concise study-specific summary.] |
-| [Milestone 2] | [Concise study-specific summary.] |
-| [Milestone 3] | [Concise study-specific summary.] |
-| [Milestone 4] | [Concise study-specific summary.] |
+| Week [N]: [Short name] | [Concise study-specific summary.] |
+| Week [N]: [Short name] | [Concise study-specific summary.] |
+| Week [N]: [Short name] | [Concise study-specific summary.] |
+| Week [N]: [Short name] | [Concise study-specific summary.] |
 
 *[One-sentence timing dependency or decision-point note.]*
 
@@ -430,7 +430,7 @@ Copyedit the approved Markdown for clarity, grammar, complete sentences, consist
 python3 scripts/option4_layout.py manifest APPROVED.md manifest.json
 ```
 
-The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, or a leadership-timeline summary is too long.
+The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, its header is not `Timing | Leadership milestone`, a label does not start with its timing or exceeds 24 characters, or a leadership-timeline summary is too long.
 
 #### Full capability preflight — before creation
 
@@ -478,12 +478,13 @@ The script emits native Google Docs API requests. An equivalent connected integr
 python3 scripts/option4_layout.py verify final-doc.json manifest.json
 ```
 
-4. Export or render the Google Doc and inspect all three:
-   - the opening page;
-   - at least one dense middle table page; and
-   - the final Appendix page.
-5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. If the leadership timeline splits, tighten only its at-a-glance summaries; preserve the approved detailed Timeline row.
-6. Correct every issue with the same fresh-fetch, revision-bound, regenerate-on-conflict sequence; then re-fetch, rerun the verifier, and re-render. Repeat until all checks pass.
+4. Export or render the Google Doc and inspect **every page**, not a sample. The verifier cannot see page breaks: in the 2026-10-02 mock it passed while the render showed the timeline split onto a second page and a section band orphaned at the foot of a later page.
+5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. Every leadership-timeline label must sit on one line; a wrapped label is the usual cause of a timeline split, which then pushes a section band to the foot of a later page with its rows on the next. Shorten any wrapped label, or tighten only the at-a-glance summaries; preserve the approved detailed Timeline row. Re-render to confirm the band rejoined its rows.
+6. Correct every issue with the same fresh-fetch, revision-bound, regenerate-on-conflict sequence; then re-fetch, rerun the verifier, and re-render. Repeat until all checks pass. For a text correction after formatting (for example, shortening a timeline label):
+   1. Edit `APPROVED.md` first and regenerate `manifest.json`, so the verifier checks the new text. A material content change needs researcher reapproval.
+   2. Fetch fresh raw JSON and its revision. For each change, build a `deleteContentRange` for the old text, then an `insertText` of the new text at the same start index; both carry the active `tabId`.
+   3. Order the pairs from the highest index to the lowest so no edit shifts another's indices, bind the batch to the fresh revision ID, and apply it through a protected request body.
+   4. Re-fetch, rerun the verifier (it confirms the inserted text kept the cell's typography), and re-render every page.
 
 A structural-only pass is insufficient. If raw verification or rendering is unavailable, **block completion** rather than returning an approximate document.
 

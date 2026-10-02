@@ -44,7 +44,7 @@ Before releasing changes to the visual pipeline, run the fixture through the con
 2. confirm raw output contains two top-level tables and one native horizontal rule;
 3. generate and apply normalization, re-fetch, generate and apply formatting;
 4. run the hard verifier on newly fetched raw JSON;
-5. export PDF and confirm 792 × 612pt landscape pages; inspect the opening, a dense middle page, and the Appendix page; and
+5. export PDF and confirm 792 × 612pt landscape pages; inspect every page, including that each timeline label sits on one line and no section band is orphaned at the foot of a page; and
 6. trash the disposable Doc.
 
 The 2026-09-23 release gate passed this full path. It also confirmed that `useCustomHeaderFooterMargins` is an output-only Docs field: setting 36pt header/footer margins derives it as `true`; sending it in `updateDocumentStyle` is rejected.

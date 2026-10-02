@@ -15,12 +15,12 @@ Last updated: September 2026
 
 # Research Timeline
 
-| Milestone | Leadership milestone |
+| Timing | Leadership milestone |
 |---|---|
-| Before fieldwork | Confirm the decision, rubric, sample, evaluator guidance, and study operations. |
-| Calibration | Complete independent human and system scoring on the development set; refine only evidence-supported gaps. |
-| Validation | Freeze the system and run separate blind validation with adjudication and documented uncertainty. |
-| Decision | Deliver the evidence package and record the adopt, refine, or reject decision with next-step owners. |
+| Week 1: Setup & rubric | Confirm the decision, rubric, sample, evaluator guidance, and study operations. |
+| Weeks 2–3: Calibration | Complete independent human and system scoring on the development set; refine only evidence-supported gaps. |
+| Week 4: Blind validation | Freeze the system and run separate blind validation with adjudication and documented uncertainty. |
+| Week 4: Decision readout | Deliver the evidence package and record the adopt, refine, or reject decision with next-step owners. |
 
 *Timing depends on finalized inputs, evaluator capacity, and decision-owner availability.*
 
@@ -33,12 +33,12 @@ Last updated: September 2026
 | **Topic** | Define whether the evaluation system produces evidence that is reliable enough to guide an adoption decision. |
 | **TL;DR summary of findings** | *To be filled out at the end of the study.* |
 | **KEY INFORMATION** | |
-| **Background** | - **Evidence gap** — Existing model scores have not yet been calibrated against independent human judgment.<br>- **Decision need** — The team needs defensible evidence before adopting the system for ongoing measurement. |
+| **Background** | - **Why now** — The team needs defensible evidence before adopting the system for ongoing measurement. **Strategic fit:** [TBD — fill in] (the H2 / OKR priority this supports).<br>- **Evidence gap** — Existing model scores have not yet been calibrated against independent human judgment. |
 | **Existing insights** | - **Prior analysis found recurring disagreement patterns.** “Verbatim evidence from the source.” — [Prior UXR study](https://example.com/uxr-study)<br>- **The current framework has documented implementation constraints.** — [Technical brief](https://example.com/technical-brief) |
 | **Objectives** | - **Establish a human-grounded evaluation standard.** This will define the evidence needed for the adoption decision.<br>- **Identify material disagreement patterns.** This will show where refinement is necessary. |
 | **Key research questions** | - **How closely does the system align with independent human judgment?** Examine both overall alignment and consequential disagreement patterns.<br>- **Which failures would make the system unsuitable for ongoing measurement?** Distinguish correctable gaps from adoption blockers. |
-| **Hypotheses** | - **H1 —** The system will meet the agreed alignment standard after targeted refinement.<br>- **H2 —** Most consequential disagreements will cluster in a small number of guideline gaps. |
-| **What decisions will be made with this research?** | - Decide whether the system is reliable enough to become the ongoing measurement approach.<br>- Decide which refinements are required before adoption. |
+| **Hypotheses** | - **H1 —** The system will meet the agreed alignment standard after targeted refinement. *(Stakeholder assumption, stated by the decision owner in the product requirements document.)*<br>- **H2 —** Most consequential disagreements will cluster in a small number of guideline gaps. *(Researcher hypothesis, inferred from the recurring disagreement patterns in the prior UXR study.)* |
+| **What decisions will be made with this research?** | - Decide adopt, refine, or reject for the system as the ongoing measurement approach.<br>- **Proposed definitions, to confirm with the decision owner in Week 1:** adopt = use the system for ongoing measurement; refine = fix the named gaps, then re-validate; reject = keep the current measurement approach. |
 | **PROJECT DETAILS** | |
 | **Method & approach** | - Calibrate the rubric with an initial human-review round.<br>- Diagnose disagreements and refine only evidence-supported gaps.<br>- Run a separate blind validation before the adoption decision. |
 | **Sample & evaluators** | - Use a representative sample across the known quality and content dimensions.<br>- Include independent evaluators who were not involved in system development. |
@@ -47,7 +47,7 @@ Last updated: September 2026
 | **Dependencies & guardrails** | - Finalize the evaluation rubric before blind validation.<br>- Keep validation cases separate from calibration cases.<br>- Do not treat ambiguous cases as evidence of either human or model correctness without adjudication. |
 | **DELIVERABLES & NEXT STEPS** | |
 | **Deliverables** | - Topline findings document for the adoption decision.<br>- Detailed scorecard showing alignment and disagreement patterns. |
-| **Timeline** | - **Week 1 —** Calibration and rubric confirmation.<br>- **Weeks 2–3 —** Evaluation, adjudication, and evidence-based refinement.<br>- **Week 4 —** Blind validation, synthesis, and decision readout. |
+| **Timeline** | - **Week 1 —** Rubric confirmation and study setup.<br>- **Weeks 2–3 —** Calibration, adjudication, and evidence-based refinement.<br>- **Week 4 —** Blind validation, synthesis, and decision readout. |
 | **Next steps** | - Confirm the decision owner and evaluation rubric.<br>- Prepare the sample and evaluator instructions.<br>- Schedule the adoption readout. |
 | **APPENDIX** | |
 | **Additional UXR documents** | - [Prior UXR study](https://example.com/uxr-study)<br>- Moderation guide — to be created only if the approved method requires one. |

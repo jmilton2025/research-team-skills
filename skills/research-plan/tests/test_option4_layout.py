@@ -453,7 +453,8 @@ class Option4ContractTest(unittest.TestCase):
         self.assertEqual(contract["tables"]["intentional_text_area_overflow_pt"], 50.4)
         self.assertEqual(contract["tables"]["cell_padding_pt"], 5)
         self.assertEqual(contract["tables"]["timeline_rows"], 5)
-        self.assertEqual(contract["tables"]["timeline_left_cell_max_characters"], 32)
+        self.assertEqual(contract["tables"]["timeline_header"], ["Timing", "Leadership milestone"])
+        self.assertEqual(contract["tables"]["timeline_left_cell_max_characters"], 24)
         self.assertEqual(contract["tables"]["timeline_right_cell_max_characters"], 160)
         self.assertEqual(
             contract["tables"]["overview_section_rows"],
@@ -463,6 +464,11 @@ class Option4ContractTest(unittest.TestCase):
     def test_fixture_parses_into_option4_manifest(self) -> None:
         self.assertEqual(self.manifest["contract"], "Option 4 — Leadership")
         self.assertEqual(len(self.manifest["timeline"]), 5)
+        self.assertEqual(
+            [cell["text"] for cell in self.manifest["timeline"][0]],
+            ["Timing", "Leadership milestone"],
+        )
+        self.assertEqual(max(len(row[0]["text"]) for row in self.manifest["timeline"][1:]), 24)
         self.assertEqual(len(self.manifest["rows"]), 22)
         self.assertEqual(
             [row["label"] for row in self.manifest["rows"] if row["section"]],
@@ -505,11 +511,29 @@ class Option4ContractTest(unittest.TestCase):
 
     def test_manifest_rejects_oversized_leadership_label(self) -> None:
         source = FIXTURE_PATH.read_text(encoding="utf-8").replace(
-            "Before fieldwork",
-            "Before fieldwork and every possible preparation dependency",
+            "Week 1: Setup & rubric",
+            "Week 1: Setup, rubric & sample",
             1,
         )
-        with self.assertRaises(self.module.ContractError):
+        with self.assertRaisesRegex(self.module.ContractError, "exceeds 24 characters"):
+            self.module.parse_markdown(source)
+
+    def test_manifest_rejects_leadership_label_without_timing(self) -> None:
+        source = FIXTURE_PATH.read_text(encoding="utf-8").replace(
+            "Week 1: Setup & rubric",
+            "Before fieldwork",
+            1,
+        )
+        with self.assertRaisesRegex(self.module.ContractError, "must start with its timing"):
+            self.module.parse_markdown(source)
+
+    def test_manifest_rejects_noncanonical_timeline_header(self) -> None:
+        source = FIXTURE_PATH.read_text(encoding="utf-8").replace(
+            "| Timing | Leadership milestone |",
+            "| Milestone | Leadership milestone |",
+            1,
+        )
+        with self.assertRaisesRegex(self.module.ContractError, "header must be"):
             self.module.parse_markdown(source)
 
     def test_inline_parser_decodes_entities_before_ranges_and_balances_url_parentheses(self) -> None:

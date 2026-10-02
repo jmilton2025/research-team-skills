@@ -426,8 +426,12 @@ try:
         failures.append("style_json: table cell padding must be 5pt")
     if visual["tables"]["timeline_rows"] != 5:
         failures.append("style_json: timeline must have five rows")
-    if visual["tables"]["timeline_left_cell_max_characters"] != 32:
-        failures.append("style_json: leadership timeline labels must be capped at 32 characters")
+    if visual["tables"]["timeline_header"] != ["Timing", "Leadership milestone"]:
+        failures.append("style_json: leadership timeline header must be Timing | Leadership milestone")
+    if not re.match(visual["tables"]["timeline_left_label_pattern"], "Week 1: Setup & rubric"):
+        failures.append("style_json: leadership timeline label pattern must accept 'Week N: Name'")
+    if visual["tables"]["timeline_left_cell_max_characters"] != 24:
+        failures.append("style_json: leadership timeline labels must be capped at 24 characters")
     if visual["tables"]["timeline_right_cell_max_characters"] != 160:
         failures.append("style_json: leadership timeline summaries must be capped at 160 characters")
 except (json.JSONDecodeError, KeyError, TypeError) as error:
@@ -449,7 +453,7 @@ require_order(
     (
         "TEST ARTIFACT",
         "# Research Timeline",
-        "| Milestone | Leadership milestone |",
+        "| Timing | Leadership milestone |",
         "# Project Plan Overview",
         "| Section / element | Approved content |",
         "| **KEY INFORMATION** |",
@@ -461,7 +465,7 @@ require_order(
 )
 
 timeline_match = re.search(
-    r"# Research Timeline\s+\| Milestone \| Leadership milestone \|\s+\|---\|---\|\s+(.*?)\n\s*\*",
+    r"# Research Timeline\s+\| Timing \| Leadership milestone \|\s+\|---\|---\|\s+(.*?)\n\s*\*",
     texts["fixture"],
     flags=re.DOTALL,
 )

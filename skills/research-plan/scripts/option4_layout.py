@@ -325,9 +325,20 @@ def parse_markdown(markdown: str) -> dict[str, Any]:
         raise ContractError("Research Timeline must contain one header plus four milestone rows")
     timeline = [[parse_inline(cell) for cell in row] for row in timeline_rows]
     table_contract = load_contract()["tables"]
+    expected_header = table_contract["timeline_header"]
+    if [cell["text"] for cell in timeline[0]] != expected_header:
+        raise ContractError(
+            f"Research Timeline header must be {' | '.join(expected_header)!r}"
+        )
+    label_pattern = re.compile(table_contract["timeline_left_label_pattern"])
     left_maximum = table_contract["timeline_left_cell_max_characters"]
     right_maximum = table_contract["timeline_right_cell_max_characters"]
     for row in timeline[1:]:
+        if not label_pattern.match(row[0]["text"]):
+            raise ContractError(
+                "Leadership timeline label must start with its timing, as in "
+                f"'Week 1: Setup & rubric': {row[0]['text']!r}"
+            )
         if len(row[0]["text"]) > left_maximum:
             raise ContractError(
                 f"Leadership timeline label exceeds {left_maximum} characters: {row[0]['text']!r}"

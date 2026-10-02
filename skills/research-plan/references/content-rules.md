@@ -71,9 +71,10 @@ Do not ask the researcher to predict findings before the study.
 
 Every plan includes a separate at-a-glance timeline above Project Plan Overview:
 
-- exactly two columns and five rows: one header plus four study-specific milestones;
-- concise left labels no longer than 32 characters and one-sentence leadership summaries no longer than 160 characters in the right column;
-- milestones derived from the approved detailed Timeline row, never copied from a reference study;
+- exactly two columns and five rows: the header `Timing | Leadership milestone` plus four study-specific milestones;
+- left labels that start with their timing, then a short name (`Week 1: Setup & rubric`, `Weeks 2–3: Calibration`, `Week 4: Decision readout`), no longer than 24 characters so each stays on one line; use `Day N:` or `Month N:` only when the study runs in days or months;
+- one-sentence leadership summaries no longer than 160 characters in the right column;
+- milestones derived from the approved detailed Timeline row, never copied from a reference study; two milestones may share a week, and the week numbers must match the detailed row;
 - an italic one-sentence timing note immediately below the table.
 
 The four milestones should cover the study's meaningful leadership checkpoints, such as setup, fieldwork or evaluation, synthesis or validation, and decision/readout. Keep detailed dependencies, dates, and contingencies in the Timeline row. If the at-a-glance table spills awkwardly across pages, tighten the summary without changing the approved detailed timeline.
@@ -93,15 +94,19 @@ Use these rows in this order:
 
 Write 3–6 true bullet paragraphs. Each bullet uses a short bold lead-in plus one concise explanation. Cover the problem, current state, evidence gap, and relevant product context. Keep implementation detail only when it changes scope or interpretation.
 
-Every material claim must link to its source. If a background statement is an interpretation rather than a direct fact, label it as such.
+Open with a **Why now** bullet: the sourced reason this study matters at this moment. End that bullet with `**Strategic fit:** [TBD — fill in] (the H2 / OKR priority this supports)` unless a source names the priority, in which case state it and cite it.
+
+Every material claim must cite its source: a link, or the source name and date when no link exists (`Source: kickoff notes, 2026-10-02.`). If a background statement is an interpretation rather than a direct fact, label it as such.
 
 ### Existing insights
 
 Include up to five findings that materially shape this study; include fewer when fewer relevant findings exist. Each item must contain:
 
-- one plainly stated insight;
-- a clickable source link; and
+- one plainly stated insight, with its scope and caveats in the bold heading itself (for example, “(preliminary, one week)” or “(denominator assumed to be all tagged orders)”);
+- a clickable source link, or the source name and date when no link exists; and
 - a verbatim supporting quote when the finding rests on a specific line.
+
+A reader who sees only the bold headings should still know which figures are preliminary and what each figure is a share of.
 
 Do not treat an in-flight adjacent project as a completed insight. Put it in Background or Dependencies & guardrails as coordination context. If no relevant prior research exists, state: *“No prior user research on [topic] — this is net-new territory.”*
 
@@ -122,13 +127,18 @@ Do not put TEDW prompts (“Tell me…”, “Explain…”, “Describe…”, 
 
 ### Hypotheses
 
-Use the heading **Hypotheses** only. Include concise, falsifiable team beliefs that the study can pressure-test. Prefix them `H1`, `H2`, and so on, but do not force a fixed count. Each hypothesis should be grounded in an existing insight, stakeholder belief, or explicit assumption; label the source type.
+Use the heading **Hypotheses** only. Include concise, falsifiable team beliefs that the study can pressure-test. Prefix them `H1`, `H2`, and so on, but do not force a fixed count. Each hypothesis should be grounded in an existing insight, stakeholder belief, or explicit assumption. Label its origin in italics after the statement:
+
+- *(Researcher hypothesis, inferred from [source and the specific evidence].)* when the researcher derived it from a source;
+- *(Stakeholder assumption, stated by [role] in [source].)* only when a stakeholder actually stated the belief. Never label a researcher inference as a stakeholder assumption.
 
 Do not combine hypotheses with a second category of stakeholder questions. If no hypothesis is grounded in evidence or an explicit stakeholder assumption, keep the row and state: *“No hypotheses confirmed at planning time.”* Do not invent one to fill the space.
 
 ### What decisions will be made with this research?
 
 Use true bullet paragraphs. Each item must be a real fork: a different finding produces a different action. Name the owner or affected decision when useful. If the answer cannot change behavior, sharpen or remove the item.
+
+Define each decision outcome once, in this row, as a bold-led bullet: `**Proposed definitions, to confirm with the decision owner in Week 1:** go = …; narrow = …; no-go = …`. Use the study's own outcome names when they differ. Reuse those exact terms, unchanged, in Topic, Key research questions, What does success look like?, Deliverables, the Timeline, and Next steps; do not introduce synonyms such as “fund” or “drop” elsewhere.
 
 Do not add a research-priorities or themes row.
 
@@ -142,14 +152,14 @@ Do not add a research-priorities or themes row.
 |---|---|
 | **Method & approach** | Always include. Lead with the minimum valid evidence needed to move the decision. Put each method, phase, or procedure in its own true Google Docs bullet paragraph. Offer a faster/lower-confidence or slower/higher-confidence alternative during approval, but include only the chosen approach in the plan. |
 | **What does success look like?** | Always include. Define success in the context of the product requirements document (PRD), research question, and decision. A numeric threshold is appropriate only when the evidence supports one; otherwise define the credible evidence or decision-readiness outcome. |
-| **Dependencies & guardrails** | Always include. Use true bullet paragraphs for dependencies, sequencing constraints, ethics, privacy, accessibility, decision boundaries, and known interpretation risks. Attach an owner or date when one exists. |
+| **Dependencies & guardrails** | Always include. Use true bullet paragraphs for dependencies, sequencing constraints, ethics, privacy, accessibility, decision boundaries, and known interpretation risks. Attach an owner or date when one exists. Add a guardrail that names every preliminary figure the plan cites and states that each is a starting point, not a result. |
 
 ### Conditional rows
 
 | Row | Include when |
 |---|---|
-| **Sample & evaluators** | Include only when relevant: the study recruits participants, uses human evaluators, requires sampling strata, or needs defensible coverage. State behavioral criteria before demographics, sample rationale, exclusions, and evaluator independence where applicable. |
-| **Measures & analysis** | Include only when relevant: the decision depends on metrics, scoring, comparison, statistical precision, coding, adjudication, or a defined analysis approach. Put every measure and analysis step in its own true Google Docs bullet paragraph. |
+| **Sample & evaluators** | Include only when relevant: the study recruits participants, uses human evaluators, requires sampling strata, or needs defensible coverage. State behavioral criteria before demographics, sample rationale, exclusions, and evaluator independence where applicable. State precision for the allocation actually planned (proportional, or equal strata re-weighted, which is wider), and say that per-stratum estimates are wider. Mark strata provisional when the source does not define them all, and report very small strata descriptively rather than as rates. |
+| **Measures & analysis** | Include only when relevant: the decision depends on metrics, scoring, comparison, statistical precision, coding, adjudication, or a defined analysis approach. Put every measure and analysis step in its own true Google Docs bullet paragraph. When the decision is an investment call, include an absolute-impact measure (the rate gap × volume, in affected units per week or month), not rates alone. |
 | **Stimuli & protocol** | The study evaluates concepts, designs, tasks, scenarios, content, or benchmark cases. Name counterbalancing or blinding when needed. |
 | **Recruitment & incentives** | Operational recruiting details materially affect feasibility or ethics. |
 | **Data sources & coverage** | Behavioral, log, corpus, benchmark, or secondary-data work requires explicit source and coverage definitions. |
@@ -209,7 +219,7 @@ Include prior studies and research-owned artifacts such as the research brief, m
 
 “XFN” means cross-functional partners. Include partner-owned inputs such as the product requirements document, design files, technical framework, scorecard, experiment plan, requirements, and kickoff notes.
 
-Auto-carry every relevant document surfaced in the kickoff inputs into one of these two rows. Existing documents use real clickable links. Future artifacts may be plain text marked “to be created”; do not create fake links.
+Auto-carry every relevant document surfaced in the kickoff inputs into one of these two rows. Existing documents use real clickable links. A source with no link, such as a pasted draft, is listed once here with its date and “(pasted; no link exists)”. Future artifacts may be plain text marked “to be created”; do not create fake links.
 
 Nothing follows these two Appendix rows.
 
@@ -220,7 +230,9 @@ Nothing follows these two Appendix rows.
 - Methods, phases, sample criteria, measures, analysis steps, dependencies, guardrails, deliverables, timeline phases, and next steps each receive separate bullets when there is more than one item.
 - Every bullet must make sense on its own.
 - Use bold lead-ins sparingly to support scanning. Bold the decision-driving words, not every label or full paragraph.
-- Preserve clickable source links. If a link is unavailable, state that it is unavailable rather than inventing one.
+- Preserve clickable source links. Never invent one. When a source has no link, cite it by name and date on each bullet (`Source: kickoff notes, 2026-10-02.`) and note that no link exists only once, in Resources from XFN; don't repeat “link unavailable” tags through the plan.
+- Write for the stakeholder, not the pipeline. Leave out internal workflow terms (for example, “source gate”). Define an internal tool or system name in plain English on first use; when you don't know what it does, write `[TBD — fill in] plain-English description` instead of guessing.
+- State past decisions only when a source records them. Without a source, write “out of scope for this plan” rather than “was descoped” or “was decided.”
 
 ## 9. Study-type adaptation
 
@@ -242,7 +254,7 @@ Every final Google Doc must match [`option4-leadership-style.md`](option4-leader
 - pageless editing mode with landscape-letter export geometry and one-inch print margins;
 - DM Serif Display breadcrumb, title, headings, and section bands;
 - DM Sans body, RACI, labels, timeline, and table content;
-- a separate five-row Research Timeline and a Project Plan Overview table, both with fixed 144pt / 554.4pt columns;
+- a separate five-row Research Timeline headed `Timing | Leadership milestone` and a Project Plan Overview table, both with fixed 144pt / 554.4pt columns;
 - pale-yellow full-paragraph test warning when applicable;
 - white ordinary cells and dark-green `#003D29` two-cell section bands;
 - Topic as the first visible overview row, with no generic conversion header;
@@ -257,3 +269,4 @@ Use `scripts/option4_layout.py` to parse, normalize, format, and verify the docu
 - 2026-09-23: approved Leadership structure adopted after an end-to-end mock test; fields made adaptive; Deliverables & Next Steps separated; Appendix restricted.
 - 2026-09-23: the mock exposed visual drift in the portable fallback; the exact Option 4 — Leadership timeline, typography, colors, geometry, formatter, and hard verification gate became mandatory for every final Doc.
 - 2026-09-29: source authorization, minimization, provenance, destination ACL, reviewer-handoff, idempotent-write, revision-binding, and partial-document safety gates added.
+- 2026-10-02: an end-to-end mock produced the approved standard deliverable. Adopted from it: the `Timing | Leadership milestone` header with `Week N: Short name` labels of 24 characters or fewer (enforced by the parser); a Why now bullet and strategic-fit placeholder in Background; scoped and caveated insight headings; origin-labeled hypotheses; decision outcomes defined once and reused; name-and-date citations for unlinked sources; plain stakeholder language; design-specific sample precision; absolute impact for investment decisions; and inspection of every rendered page.
