@@ -23,7 +23,7 @@ This is a final check, not a rewrite. The researcher owns the deliverable and de
 ### 1. Gather what the reviewers need
 
 - **The draft** — the final version, after any self-critique. Accept a local file, pasted text, or a Google Doc link (read it with the connected Google Docs tool). Save it as a local file so both reviewers read the same text.
-- **The sources** — transcripts, data, the brief or PRD, prior research: whatever the draft's claims rest on. For `/analysis`, also pass the approved scope and evidence ledger. If there are no source files (for example, a moderation guide), the Evidence checker checks internal consistency and rigor instead.
+- **The sources** — transcripts, data, the brief or PRD, prior research: whatever the draft's claims rest on. For `/analysis`, also pass the approved scope and evidence ledger. For research instruments (moderation guides, discussion guides, surveys, or screeners), pass the approved study plan and applicable consent/privacy protocol. If no sources are available, the Evidence checker checks internal consistency and rigor and discloses that source-dependent claims could not be verified.
 - **The audience** — who will read it.
 
 When another skill calls this one at its quality step (`/research-plan`, `/mod-guide`, `/analysis`, `/report`), take these from that skill's context. Don't re-ask.
@@ -50,8 +50,9 @@ Send two Agent tool calls in one message so they run in parallel and neither see
 You are a senior UX researcher doing a final evidence check on a draft before it is shared. Your only question: is every claim true to the data?
 
 Read the draft at [DRAFT] and the sources at [SOURCES]. Check:
-- Every string in quotation marks appears word-for-word in a source. Search for it. A paraphrase in quotation marks is a must-fix.
-- Every number, count (N of M), name, and date matches the source.
+- Classify quotation purpose before checking it. Participant quotations and wording attributed to a source must appear word-for-word in that source; search for them. A paraphrase presented as an evidence quotation is a must-fix.
+- Research instruments contain newly drafted moderator scripts, questions, probes, hypothetical scenarios, and response options. These are authored content, not evidence quotations; do not flag their absence from a source as invented participant evidence. Quoted feature names and terms are not participant quotations either. An attributed participant quotation inside a script still requires verbatim checking.
+- This is not a factual-check exemption: verify numbers, counts (N of M), names, dates, and factual claims embedded in scripts, including recording, privacy, access, retention/deletion, and incentive promises, against the supplied plan or approved protocol.
 - Each finding has enough evidence behind it, and nothing is claimed more strongly than the sample supports (e.g., "users" from 3 sessions).
 - Inferences are not presented as something participants said.
 - Evidence that contradicts a finding is not left out.
@@ -80,7 +81,7 @@ If the Agent tool isn't available, say so and run the two briefs yourself, one a
 ### 4. Merge into one list
 
 - Combine duplicates: when both reviewers flag the same thing, keep one item and name both.
-- Before listing an Evidence checker must-fix, confirm it against the source yourself. Drop any you can't confirm, and say you dropped it.
+- Before listing an Evidence checker must-fix, confirm it against the source yourself. Refute quote-mismatch findings about newly authored instrument scripts, questions, probes, scenarios, response options, or feature-name labels; still verify their factual claims and any attributed participant quotations. Drop findings you can't confirm and say why; source-dependent claims that remain unverifiable belong under **Couldn't check**, not a claim of readiness.
 - Order: must-fix first, then should-fix.
 - Verdict: **READY ✅** when there are no must-fixes; **FIX FIRST — N must-fixes** otherwise.
 

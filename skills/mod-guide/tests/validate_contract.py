@@ -88,6 +88,18 @@ class ModGuideCrossFileContractTest(unittest.TestCase):
         ):
             self.assertTrue(path.is_file(), path)
 
+    def test_shared_review_distinguishes_instruments_from_evidence_quotations(self) -> None:
+        shared_review = (
+            SKILL_DIR.parent / "multi-agent-check" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("Two other researchers", shared_review)
+        self.assertIn("Classify quotation purpose", shared_review)
+        self.assertIn("authored content, not evidence quotations", shared_review)
+        self.assertIn("not a factual-check exemption", shared_review)
+        self.assertIn("approved study plan and applicable consent/privacy protocol", shared_review)
+        self.assertIn("Refute quote-mismatch findings", shared_review)
+        self.assertNotIn("Every string in quotation marks appears word-for-word", shared_review)
+
     def test_option4_is_the_only_documented_default(self) -> None:
         self.assertIn("Option 4 — Leadership is the default deliverable look", self.skill)
         self.assertIn("This is the default deliverable look", self.style_md)

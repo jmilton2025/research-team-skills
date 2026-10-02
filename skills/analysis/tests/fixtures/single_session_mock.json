@@ -1,41 +1,31 @@
 {
   "schema_version": 1,
   "mode": "single_session",
-  "title": "[TEST] Frozen Foods — Single-Session Evidence Memo",
+  "title": "[TEST] Pantry Example — Single-Session Evidence Memo",
   "test_artifact": true,
-  "status_labels": [
-    "TEST RUN"
-  ],
+  "status_labels": ["TEST RUN", "SIMULATED DATA"],
   "test_artifact_warning": "⚠️ TEST RUN — generated to test the analysis skill and workflow, not as an approved research deliverable. Input may be authorized real data or simulated data; see Method for provenance. Do not file or share as approved research.",
-  "research_question": "How does this participant find and evaluate prepared or frozen foods online, including portion fit and product information?",
-  "audience": [
-    "Research",
-    "Product",
-    "Design",
-    "Content and taxonomy",
-    "Category"
-  ],
+  "research_question": "How does a fictional participant assess pantry-pack sizes online?",
+  "audience": ["Research", "Product", "Design"],
   "method": {
     "name": "Single-Session Evidence Memo",
-    "scope": "Tasks 1–5 from one authorized transcript excerpt",
-    "input_provenance": "authorized_real_data",
-    "participant_ids": [
-      "P01"
-    ]
+    "scope": "Tasks 1–5 in a fully invented transcript fixture; not an actual session",
+    "input_provenance": "simulated_data",
+    "participant_ids": ["P01"]
   },
   "links": [],
-  "links_note": "Local TEST RUN; no external links or artifacts were created.",
+  "links_note": "Local TEST RUN using fully simulated input; no external links or artifacts were created.",
   "context_items": [
     {
       "id": "C1",
-      "label": "Context — task-elicited shopping and category experience",
-      "claim": "P01 reports using several grocery apps, shopping for a household with children, buying frozen pizza, using frozen foods more often than prepared-food sandwiches, and rarely buying meal kits.",
+      "label": "Context — simulated task-elicited pantry shopping",
+      "claim": "Fictional P01 describes using two invented grocery apps, shopping for two adults, buying rice pouches and canned beans, and not buying meal bundles.",
       "evidence": [
         {
           "id": "E1",
           "task": "Task 1",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 1",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -43,13 +33,13 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "So I usually use Walmart plus Instacart and HEB grocery."
+          "evidence_text": "For this example, I shop with Market One and Pantry Two."
         },
         {
           "id": "E2",
           "task": "Task 2",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 2",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -57,13 +47,13 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "So I have a spouse and three children under 18 years old."
+          "evidence_text": "My fictional household has two adults."
         },
         {
           "id": "E3",
           "task": "Task 3",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 3",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -71,13 +61,13 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "So I usually buy frozen pizza."
+          "evidence_text": "I buy rice pouches in this scenario."
         },
         {
           "id": "E4",
           "task": "Task 3",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 3",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -85,13 +75,13 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "So I usually use the frozen foods, but I have also done the sandwiches in the prepared foods and that's about it."
+          "evidence_text": "Canned beans are another example item in my pantry order."
         },
         {
           "id": "E5",
           "task": "Task 3",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 3",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -99,49 +89,31 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "I usually don't buy meal kit or the, yeah, meal kits."
+          "evidence_text": "I do not buy meal bundles in this invented scenario."
         }
       ],
       "confidence": {
-        "source_integrity": {
-          "rating": "medium",
-          "basis": "The excerpt is legible but lacks original speaker labels."
-        },
-        "attribution_certainty": {
-          "rating": "medium",
-          "basis": "The turns are distinguishable, but source speaker labels were absent."
-        },
-        "evidence_directness": {
-          "rating": "high",
-          "basis": "The context restates P01's direct task-elicited reports."
-        },
-        "within_case_coherence": {
-          "rating": "high",
-          "basis": "The scoped statements consistently describe P01's shopping context."
-        },
-        "cross_case_support": {
-          "rating": "N/A",
-          "basis": "Cross-case support does not apply to one participant."
-        },
-        "transferability": {
-          "rating": "not_assessable",
-          "basis": "The scoped excerpt contains one participant."
-        }
+        "source_integrity": {"rating": "medium", "basis": "This synthetic excerpt is designed to exercise incomplete speaker metadata."},
+        "attribution_certainty": {"rating": "medium", "basis": "Fictional turns are distinguishable but model missing original speaker labels."},
+        "evidence_directness": {"rating": "high", "basis": "The context restates direct statements within the invented excerpt."},
+        "within_case_coherence": {"rating": "high", "basis": "The fictional statements agree within the scoped example."},
+        "cross_case_support": {"rating": "N/A", "basis": "The fixture models one fictional participant."},
+        "transferability": {"rating": "not_assessable", "basis": "Simulated input cannot establish real shopper behavior."}
       }
     }
   ],
   "findings": [
     {
       "id": "F1",
-      "label": "Finding — prompted self-report",
-      "title": "P01 uses item-specific cues to judge portion fit and says this is difficult.",
-      "analysis": "P01 described switching among weight, visible format, and purchase history depending on the item. This supports a participant-specific read of uncertainty, not an observed product-page failure.",
+      "label": "Finding — simulated prompted self-report",
+      "title": "Fictional P01 describes uncertainty about pantry-pack size and relies on three item cues.",
+      "analysis": "Within this invented example, P01 describes checking pack weight, pouch count, and a prior order. This is a bounded synthetic self-report, not evidence of a real product-page failure.",
       "evidence": [
         {
           "id": "E6",
           "task": "Task 4",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 4",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -149,13 +121,13 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "That is very difficult for me."
+          "evidence_text": "In this example, I am unsure how big the pack is."
         },
         {
           "id": "E7",
           "task": "Task 4",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 4",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -163,13 +135,13 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "But I usually look at the pounds if it's um, a meat meal or um, or the sandwich."
+          "evidence_text": "I compare the pack weight in grams for the canned beans."
         },
         {
           "id": "E8",
           "task": "Task 4",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 4",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -177,13 +149,13 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "But usually sandwiches like you can see if it's a whole sandwich or half a sandwich."
+          "evidence_text": "For rice, I check the count of pouches in the box."
         },
         {
           "id": "E9",
           "task": "Task 4",
           "participant_id": "P01",
-          "source": "fixture transcript",
+          "source": "synthetic fixture transcript",
           "source_locator": "Task 4",
           "evidence_origin": "prompted",
           "evidence_kind": "self_report",
@@ -191,74 +163,36 @@
           "claim_status": "stated",
           "scope_status": "included: Tasks 1–5",
           "text_representation": "verbatim",
-          "evidence_text": "But the frozen pizza, um, I know that I've bought them before and so usually I just go based off what I have boughten in the past and how much I need of that."
+          "evidence_text": "For an item I know, I compare it with my last order."
         }
       ],
       "next_research_step": {
         "label": "Analyst-generated validation hypothesis",
         "kind": "validation_hypothesis",
-        "text": "Evaluate in later sessions whether category-appropriate size cues reduce uncertainty when shoppers judge household fit.",
+        "text": "In a separately authorized real study, test whether pack-size cues help participants assess household fit; this simulated fixture cannot justify product action.",
         "validation_priority": {
           "level": "High",
-          "rationale": "This is the memo's only substantive uncertainty and should be tested before any product action is considered."
+          "rationale": "The example models an unresolved sizing question that would need real evidence before any decision."
         },
-        "analyst_generated_cues": [
-          {
-            "cue": "serving count",
-            "label": "analyst_generated"
-          }
-        ]
+        "analyst_generated_cues": [{"cue": "serving count", "label": "analyst_generated"}]
       },
       "confidence": {
-        "source_integrity": {
-          "rating": "medium",
-          "basis": "Task 4 is legible but the excerpt lacks original speaker labels."
-        },
-        "attribution_certainty": {
-          "rating": "medium",
-          "basis": "The turn is distinguishable, but source speaker labels were absent."
-        },
-        "evidence_directness": {
-          "rating": "high",
-          "basis": "P01 directly described the difficulty and item-specific cues in Task 4."
-        },
-        "within_case_coherence": {
-          "rating": "high",
-          "basis": "The examples consistently show item-specific portion judgments."
-        },
-        "cross_case_support": {
-          "rating": "N/A",
-          "basis": "Cross-case support does not apply to one participant."
-        },
-        "transferability": {
-          "rating": "not_assessable",
-          "basis": "Transfer to other shoppers cannot be assessed from this excerpt."
-        }
+        "source_integrity": {"rating": "medium", "basis": "The synthetic excerpt intentionally models incomplete speaker metadata."},
+        "attribution_certainty": {"rating": "medium", "basis": "The fictional turn is distinguishable but models missing original speaker labels."},
+        "evidence_directness": {"rating": "high", "basis": "The simulated statements explicitly name uncertainty and each cue."},
+        "within_case_coherence": {"rating": "high", "basis": "The invented examples agree within the case."},
+        "cross_case_support": {"rating": "N/A", "basis": "The fixture models one fictional participant."},
+        "transferability": {"rating": "not_assessable", "basis": "No real-user inference can be made from simulated input."}
       }
     }
   ],
   "excluded_annotations": [
-    {
-      "value": "Dislike",
-      "reason": "platform_annotation"
-    },
-    {
-      "value": "Pain point",
-      "reason": "platform_annotation"
-    }
+    {"value": "Dislike", "reason": "platform_annotation"},
+    {"value": "Pain point", "reason": "platform_annotation"}
   ],
   "limitations": [
-    {
-      "type": "consent_provenance",
-      "text": "Consent and collection provenance were not present in the supplied excerpt; the researcher separately confirmed authorization for this analysis."
-    },
-    {
-      "type": "speaker_separation",
-      "text": "The excerpt did not include speaker labels; participant text was normalized to P01 only where the turn was distinguishable."
-    },
-    {
-      "type": "scope",
-      "text": "This memo covers Tasks 1–5 from one participant and does not support broader-user inference."
-    }
+    {"type": "consent_provenance", "text": "Fully invented test input; no actual participant data or consent records were used. Real-study authorization must be checked separately."},
+    {"type": "speaker_separation", "text": "The synthetic excerpt intentionally models missing speaker labels; P01 is a fictional identifier."},
+    {"type": "scope", "text": "This test covers Tasks 1–5 for one fictional participant and supports no real-world inference."}
   ]
 }

@@ -44,9 +44,10 @@ Neither is universally required. Follow `instacart-green-analysis-style.md` for 
 
 ## Offline content and render contract
 
-For a structured render or a skill regression test, serialize the approved content into a JSON packet using `../tests/fixtures/single_session_mock.json` as the n=1 example, then run the stdlib-only validator before any external creation:
+For a structured render or a skill regression test, serialize the approved content into a JSON packet using `../tests/fixtures/single_session_mock.json` as the n=1 example. That public fixture is fully simulated and carries both `TEST RUN` and `SIMULATED DATA`; it contains no actual participant evidence. Run the stdlib-only regression suite and validator before any external creation:
 
 ```bash
+python3 skills/analysis/tests/test_analysis_contract.py
 python3 skills/analysis/scripts/analysis_contract.py validate PACKET.json
 python3 skills/analysis/scripts/analysis_contract.py manifest PACKET.json --backend custom_mcp --tab-id t.0
 ```

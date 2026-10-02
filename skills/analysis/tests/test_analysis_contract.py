@@ -79,19 +79,27 @@ class SingleSessionRegressionTests(unittest.TestCase):
             ["Task 1", "Task 2", "Task 3", "Task 3", "Task 3"],
             [item["task"] for item in evidence],
         )
-        self.assertIn("Walmart plus Instacart", evidence[0]["evidence_text"])
-        self.assertIn("spouse and three children", evidence[1]["evidence_text"])
-        self.assertIn("buy frozen pizza", evidence[2]["evidence_text"])
-        self.assertIn("frozen foods", evidence[3]["evidence_text"])
-        self.assertIn("don't buy meal kit", evidence[4]["evidence_text"])
+        self.assertIn("Market One and Pantry Two", evidence[0]["evidence_text"])
+        self.assertIn("two adults", evidence[1]["evidence_text"])
+        self.assertIn("rice pouches", evidence[2]["evidence_text"])
+        self.assertIn("Canned beans", evidence[3]["evidence_text"])
+        self.assertIn("do not buy meal bundles", evidence[4]["evidence_text"])
+
+    def test_public_fixture_uses_only_explicitly_simulated_input(self) -> None:
+        self.assertEqual("simulated_data", self.packet["method"]["input_provenance"])
+        self.assertEqual(["TEST RUN", "SIMULATED DATA"], self.packet["status_labels"])
+        self.assertIn("fully invented", self.packet["method"]["scope"])
+        for item in self.packet["context_items"] + self.packet["findings"]:
+            for evidence in item["evidence"]:
+                self.assertEqual("synthetic fixture transcript", evidence["source"])
 
     def test_mock_finding_cites_all_three_portion_cues(self) -> None:
         evidence_text = " ".join(
             item["evidence_text"] for item in self.packet["findings"][0]["evidence"]
         )
-        self.assertIn("pounds", evidence_text)
-        self.assertIn("whole sandwich or half a sandwich", evidence_text)
-        self.assertIn("boughten in the past", evidence_text)
+        self.assertIn("pack weight in grams", evidence_text)
+        self.assertIn("count of pouches", evidence_text)
+        self.assertIn("my last order", evidence_text)
         self.assertNotIn("…", evidence_text)
         self.assertEqual(
             {"verbatim"},
@@ -175,7 +183,7 @@ class ContractValidationTests(unittest.TestCase):
         )
 
     def test_simulated_test_input_requires_simulated_data_label(self) -> None:
-        self.packet["method"]["input_provenance"] = "simulated_data"
+        self.packet["status_labels"].remove("SIMULATED DATA")
         result = analysis_contract.validate_packet(self.packet)
         self.assertIn(
             "simulated or mixed test input must include the SIMULATED DATA status label",
@@ -183,7 +191,7 @@ class ContractValidationTests(unittest.TestCase):
         )
 
     def test_real_test_input_rejects_simulated_data_label(self) -> None:
-        self.packet["status_labels"].append("SIMULATED DATA")
+        self.packet["method"]["input_provenance"] = "authorized_real_data"
         result = analysis_contract.validate_packet(self.packet)
         self.assertIn(
             "authorized real test input must not be labelled SIMULATED DATA",
@@ -465,7 +473,7 @@ class ManifestAndStyleTests(unittest.TestCase):
         self.assertEqual("custom-tab", custom["style"]["tab_id"])
         self.assertEqual("raw-tab", raw["style"]["tab_id"])
         self.assertEqual(["context", "finding"], [b["type"] for b in custom["content_blocks"]])
-        self.assertEqual(["TEST RUN"], custom["document"]["status_labels"])
+        self.assertEqual(["TEST RUN", "SIMULATED DATA"], custom["document"]["status_labels"])
         self.assertIn("analysis skill and workflow", custom["document"]["test_artifact_warning"])
         self.assertEqual(self.packet["links_note"], custom["document"]["links_note"])
 

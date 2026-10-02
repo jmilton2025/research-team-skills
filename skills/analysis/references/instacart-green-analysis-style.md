@@ -10,9 +10,7 @@ the analysis is approved, final QA has passed, and the destination is known.
 - **Explicit style override:** if the researcher asks for another supported style, use it instead. A format-only override retains Instacart Green structure and semantics.
 - **Any environment without Google Docs tooling:** preserve this structure in Markdown or another supported format. Do not install or mandate a particular connector merely to reproduce the styling.
 
-Approved reference document: `Frozen Foods — Single-Session Read (Restructured v2)`
-
-https://docs.google.com/document/d/1epz6xfDE7TTa-3o66KQcpx-4Mp03rAl_-k_ZuBlqw_4/edit
+The bundled style specification and skeleton are the portable reference; no access to a private study document is required.
 
 Colors come from the Instacart brand palette. Use DM Sans throughout when the target format supports it.
 
