@@ -1,10 +1,10 @@
-<!-- Structural fixture: a mock PROTOTYPE / USABILITY moderation guide (vendor-run). TEST ARTIFACT, never a real study. Single breadcrumb + bold subtitle + Last updated line, '#|Ask / Do' task tables under '### Flow' sub-headings, and a 3-col Timeline table in the vendor back-matter AFTER the Post-Session Debrief. No TEST ARTIFACT warning, to exercise the no-warning path. -->
+<!-- Structural fixture: a mock PROTOTYPE / USABILITY moderation guide (vendor-run). TEST ARTIFACT, never a real study. Canonical Moderation Guide + Study Title header, month breadcrumb + Last updated line, '#|Ask / Do' task tables under '### Flow' sub-headings, and a 3-col Timeline table in the vendor back-matter AFTER the Post-Session Debrief. No TEST ARTIFACT warning, to exercise the no-warning path. -->
 
-*UX Research | Discussion Guide | Round 4 · Q3 2026*
+# Moderation Guide
 
-# Mock Checkout Sprint Usability Test
+## Mock Checkout Confirmation Usability Test
 
-**Checkout flow prototype under test**
+*[September 2026]*
 
 Last updated: September 2026
 
@@ -27,12 +27,12 @@ Last updated: September 2026
 
 ## Session Flow Overview
 
-| Time | Phase |
-|------|-------|
-| 3 min | Introduction and consent |
-| 5 min | Background warm-up |
-| 40 min | Prototype tasks across both flows |
-| 2 min | Wrap-up and thank-you |
+| Phase | Time |
+|-------|------|
+| Introduction and consent | 3 min |
+| Background warm-up | 5 min |
+| Prototype tasks across both flows | 40 min |
+| Wrap-up and thank-you | 2 min |
 
 ---
 
@@ -43,8 +43,8 @@ This round follows a redesign of the checkout confirmation step.
 **Topic 1 — Confirmation clarity**
 
 - *Hypothesis:* Shoppers miss the new confirmation banner.
-- **[P0]** Determine whether the banner is noticed unaided.
-- **[P1]** Capture the language shoppers use for the banner.
+- **[Priority-1]** Determine whether the banner is noticed unaided.
+- **[Priority-2]** Capture the language shoppers use for the banner.
 
 ---
 

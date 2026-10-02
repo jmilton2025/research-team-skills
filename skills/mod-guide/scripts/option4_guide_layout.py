@@ -1,36 +1,36 @@
 #!/usr/bin/env python3
 """Build and verify the Option 4 — Leadership layout for a MODERATION GUIDE.
 
-This is the opt-in "leadership design" path for /mod-guide. The default
-mod-guide deliverable is native Google Docs; this formatter reproduces the same
-clean, edited "leadership" look that /research-plan's Option 4 pipeline produces.
+This is the DEFAULT delivery path for /mod-guide (plain-native Google Docs is
+a disclosed fallback or an explicit researcher pick). This formatter reproduces
+the clean, edited "leadership" look that /research-plan's Option 4 pipeline produces.
 
 The formatter is **STRUCTURE-AGNOSTIC**. mod-guide now produces two structurally
 different documents — an Interview / IDI guide and a Prototype / Usability guide —
 and this pass applies the Option 4 visual tokens by ELEMENT ROLE inferred
 generically, not by a fixed sequence of named semantic sections. It handles:
 
-  * a single italic breadcrumb line OR the interview two-tier header
-    (all-caps kicker above the title + an italic period line below it);
-  * an optional bold phase subtitle and an optional "Last updated:" line;
+  * the canonical ``# Moderation Guide`` title followed immediately by a
+    required ``## Study Title`` top-matter line;
+  * an optional "Last updated:" line;
   * an extended, variable RACI / ownership block (any "**Label:** …" bullets:
     Responsible / Accountable / Consulted / Contributor / External / Informed /
     Session Summaries / POC / …);
   * an optional TEST ARTIFACT warning paragraph;
-  * EVERY Heading-2 rendered as a dark-green full-width section band;
+  * EVERY section Heading-2 after Study Title rendered as a dark-green band;
   * EVERY Heading-3 rendered as a green-on-white sub-phase heading;
-  * EVERY table (2-col and 3-col+, e.g. a 3-col Participants Log or Timeline)
-    styled with Option 4 table tokens, including tables that appear AFTER the
-    Post-Session Debrief (interview Participants Log / Parking Lot, vendor
-    Communication & Deliverables back-matter);
+  * EVERY table styled with Option 4 tokens, including the wide-Phase /
+    narrow-Time Session Flow geometry;
   * EVERY list (bulleted or numbered, including indented probe sub-bullets),
     preserving nesting.
 
 Pipeline (same four stages as the research-plan formatter):
     option4_guide_layout.py manifest APPROVED.md manifest.json
-    option4_guide_layout.py normalize imported-doc.json manifest.json normalize-batch.json
+    option4_guide_layout.py normalize imported-doc.json manifest.json normalize-batch.json \
+        --required-revision-id IMPORTED_REVISION_ID
     # Apply the normalize batch and re-fetch the document.
-    option4_guide_layout.py format normalized-doc.json manifest.json format-batch.json
+    option4_guide_layout.py format normalized-doc.json manifest.json format-batch.json \
+        --required-revision-id NORMALIZED_REVISION_ID
     # Apply the format batch and re-fetch the document.
     option4_guide_layout.py verify final-doc.json manifest.json
 
@@ -38,13 +38,14 @@ The script only uses the Python standard library. Batch files use the native
 Google Docs API request schema and can be applied through any write-capable
 integration (the MCP batch_update_doc tool, gws, etc.). No live API call is made
 by this script; every stage operates on JSON, so the whole pipeline is testable
-offline against fixtures.
+offline against fixtures. Normalize and format inputs must carry the fresh
+document ``revisionId``; a supplied ``--required-revision-id`` must match it.
 
 The contract loaded here is skills/mod-guide/references/option4-guide-style.json.
 Its page/colors/typography/warning/spacing tokens are copied verbatim from
 research-plan's option4-style-contract.json so the finished look matches; the
 document structure is inferred generically and the table geometry is derived from
-each table's own column count and first header cell.
+each table's complete header.
 """
 
 from __future__ import annotations
@@ -53,8 +54,11 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import re
+import stat
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -104,21 +108,26 @@ def load_contract() -> dict[str, Any]:
     return contract
 
 
-def table_column_widths(contract: dict[str, Any], ncols: int, first_header_cell: str) -> list[float]:
-    """Distribute the shared 698.4pt total across ``ncols`` columns.
+def table_column_widths(contract: dict[str, Any], header: list[str]) -> list[float]:
+    """Distribute the shared 698.4pt total from a table's complete header.
 
-    The first column is narrow when the first header cell is the ``#`` trigger
-    (question / task tables), otherwise it uses the label width. The remaining
-    width is split evenly across the other columns so every table's outer edge
-    still aligns down the page.
+    ``Phase | Time`` reserves the narrow label width for Time so the phase
+    description remains scannable. Legacy ``#``-first tables retain the older
+    narrow-first-column rule. Other shapes reserve the label width for the first
+    column and split the remainder evenly.
     """
     tables = contract["tables"]
     total = tables["total_width_pt"]
+    ncols = len(header)
     if ncols < 1:
         raise ContractError("A table must have at least one column")
     if ncols == 1:
         return [total]
-    if first_header_cell.strip() == tables["narrow_first_column_trigger"]:
+    normalized = [cell.strip().casefold() for cell in header]
+    if normalized == ["phase", "time"]:
+        compact = tables["label_first_column_pt"]
+        return [round(total - compact, 3), compact]
+    if header[0].strip() == tables["narrow_first_column_trigger"]:
         first = tables["narrow_first_column_pt"]
     else:
         first = tables["label_first_column_pt"]
@@ -194,7 +203,26 @@ def parse_inline(markdown: str) -> dict[str, Any]:
                     i = end + 1
                     continue
             if value.startswith("[", i):
-                close = value.find("](", i + 1)
+                # Pair this opening bracket with its matching close before deciding
+                # whether it is a link. A plain placeholder followed later by a
+                # real link (``[TBD] · [Plan](url)``) must stay separate.
+                bracket_depth = 0
+                close = -1
+                scan = i
+                while scan < len(value):
+                    if value[scan] == "\\":
+                        scan += 2
+                        continue
+                    if value[scan] == "[":
+                        bracket_depth += 1
+                    elif value[scan] == "]":
+                        bracket_depth -= 1
+                        if bracket_depth == 0:
+                            close = scan
+                            break
+                    scan += 1
+                if close >= 0 and not value.startswith("](", close):
+                    close = -1
                 if close >= 0:
                     depth = 1
                     close_url = -1
@@ -473,7 +501,10 @@ def parse_markdown(markdown: str) -> dict[str, Any]:
 
     title_index = next((i for i in nonempty if lines[i].lstrip().startswith("# ")), None)
     if title_index is None:
-        raise ContractError("Missing moderation-guide title (a single '# ' heading)")
+        raise ContractError("Missing moderation-guide title (a single '# Moderation Guide' heading)")
+    title_text = parse_inline(lines[title_index].lstrip()[2:].strip())["text"]
+    if title_text != "Moderation Guide":
+        raise ContractError("The document title must be exactly '# Moderation Guide'")
 
     # Any short non-heading line(s) above the title are breadcrumb/kicker lines.
     pre_title = [parse_inline(lines[i].strip()) for i in nonempty if i < title_index]
@@ -481,9 +512,27 @@ def parse_markdown(markdown: str) -> dict[str, Any]:
     heading_indices = [i for i in range(len(lines)) if lines[i].strip().startswith("## ")]
     if not heading_indices:
         raise ContractError("A moderation guide must contain at least one '## ' section heading")
+    # Both canonical templates emit ``# Moderation Guide`` followed immediately
+    # by ``## Study Title``. Treat that first H2 as top matter rather than a band.
+    study_title_index = None
+    between = [i for i in nonempty if title_index < i < heading_indices[0]]
+    if not between and len(heading_indices) > 1:
+        study_title_index = heading_indices[0]
+        heading_indices = heading_indices[1:]
+    if study_title_index is None:
+        raise ContractError(
+            "Missing study-title top matter: put '## [Study Title]' immediately after '# Moderation Guide'"
+        )
     first_h2 = heading_indices[0]
 
-    top_items = _parse_top_matter(lines, title_index, first_h2)
+    top_items = _parse_top_matter(
+        lines, study_title_index if study_title_index is not None else title_index, first_h2
+    )
+    if study_title_index is not None:
+        top_items.insert(
+            0,
+            {"role": "phase_subtitle", "inline": parse_inline(lines[study_title_index].strip()[3:].strip())},
+        )
 
     sections: list[dict[str, Any]] = []
     for order, start in enumerate(heading_indices):
@@ -564,7 +613,11 @@ def _iter_block_paragraphs(block: dict[str, Any]) -> list[str]:
     return seq
 
 
-def expected_sequence(manifest: dict[str, Any]) -> list[str]:
+def expected_sequence(
+    manifest: dict[str, Any],
+    *,
+    section_label_key: str = "band_label",
+) -> list[str]:
     top = manifest["top"]
     seq: list[str] = [item["text"] for item in top["pre_title"]]
     seq.append(top["title"]["text"])
@@ -580,7 +633,7 @@ def expected_sequence(manifest: dict[str, Any]) -> list[str]:
         else:
             seq.append(item["inline"]["text"])
     for section in manifest["sections"]:
-        seq.append(section["band_label"])
+        seq.append(section[section_label_key])
         for block in section["blocks"]:
             seq.extend(_iter_block_paragraphs(block))
     return seq
@@ -614,6 +667,55 @@ def doc_tables(tab: dict[str, Any]) -> list[dict[str, Any]]:
     return [element for element in tab["body"]["content"] if "table" in element]
 
 
+def assert_document_hierarchy(
+    tab: dict[str, Any],
+    manifest: dict[str, Any],
+    *,
+    imported: bool | None,
+) -> None:
+    """Fail before mutation when the document is not the approved manifest.
+
+    A just-imported document may still contain native horizontal rules and the
+    source-case section labels. A normalized document may contain neither.
+    Empty paragraphs are ignored in both states, matching the final verifier.
+    """
+    actual: list[str] = []
+    for element in tab["body"]["content"]:
+        if "table" in element:
+            actual.append("<TABLE>")
+            continue
+        if "paragraph" not in element:
+            continue
+        has_rule = any(
+            "horizontalRule" in child
+            for child in element["paragraph"].get("elements", [])
+        )
+        if has_rule:
+            if imported is not False:
+                continue
+            raise ContractError(
+                "Document hierarchy does not match the approved mod-guide manifest: "
+                "normalized input still contains a horizontal rule"
+            )
+        text = paragraph_text(element["paragraph"]).strip()
+        if text:
+            actual.append(text)
+
+    label_keys = (
+        ("source_label", "band_label")
+        if imported is None
+        else (("source_label",) if imported else ("band_label",))
+    )
+    expected_options = [
+        expected_sequence(manifest, section_label_key=label_key)
+        for label_key in label_keys
+    ]
+    if actual not in expected_options:
+        raise ContractError(
+            "Document hierarchy does not match the approved mod-guide manifest"
+        )
+
+
 def find_paragraph(body: list[dict[str, Any]], exact: str) -> dict[str, Any]:
     for element in body:
         if "paragraph" in element and paragraph_text(element["paragraph"]).strip() == exact:
@@ -621,9 +723,156 @@ def find_paragraph(body: list[dict[str, Any]], exact: str) -> dict[str, Any]:
     raise ContractError(f"Paragraph not found: {exact!r}")
 
 
+class ParagraphBinder:
+    """Bind manifest paragraphs to top-level Docs paragraphs in document order."""
+
+    def __init__(self, body: list[dict[str, Any]]) -> None:
+        self.body = body
+        self.after = -1
+
+    def take(self, exact: str) -> dict[str, Any]:
+        match = next(
+            (
+                element
+                for element in self.body
+                if "paragraph" in element
+                and element["startIndex"] > self.after
+                and paragraph_text(element["paragraph"]).strip() == exact
+            ),
+            None,
+        )
+        if match is None:
+            raise ContractError(f"Paragraph not found in document order: {exact!r}")
+        self.after = match["startIndex"]
+        return match
+
+    def take_any(self, choices: tuple[str, ...]) -> tuple[dict[str, Any], str]:
+        matches = [
+            (element["startIndex"], element, text)
+            for element in self.body
+            if "paragraph" in element and element["startIndex"] > self.after
+            for text in choices
+            if paragraph_text(element["paragraph"]).strip() == text
+        ]
+        if not matches:
+            raise ContractError(f"Paragraph not found in document order: {choices!r}")
+        _, element, text = min(matches, key=lambda item: item[0])
+        self.after = element["startIndex"]
+        return element, text
+
+
 def utf16_offset(text: str, character_offset: int) -> int:
     """Convert a Python character offset to the UTF-16 units used by Docs indices."""
     return len(text[:character_offset].encode("utf-16-le")) // 2
+
+
+def _assert_inline_links_exact(
+    element: dict[str, Any],
+    item: dict[str, Any],
+    *,
+    allow_missing_approved: bool = False,
+) -> None:
+    """Reject hidden or moved link metadata before mutation and at final verify."""
+    text = item.get("text", "")
+    units = utf16_offset(text, len(text))
+    expected: list[str | None] = [None] * units
+    for link in item.get("links", []):
+        start = utf16_offset(text, link["start"])
+        end = utf16_offset(text, link["end"])
+        expected[start:end] = [link["url"]] * (end - start)
+
+    covered = [False] * units
+    base = element["startIndex"]
+    for child in element["paragraph"].get("elements", []):
+        run = child.get("textRun")
+        if run is None:
+            continue
+        start = max(0, child["startIndex"] - base)
+        end = min(units, child["endIndex"] - base)
+        if end <= start:
+            continue
+        link_metadata = run.get("textStyle", {}).get("link")
+        if not link_metadata:
+            actual: str | None = None
+        elif set(link_metadata) == {"url"} and isinstance(link_metadata.get("url"), str):
+            actual = link_metadata["url"]
+        else:
+            actual = f"<unapproved-link-metadata:{json.dumps(link_metadata, sort_keys=True)}>"
+        for offset in range(start, end):
+            if (
+                actual != expected[offset]
+                and not (allow_missing_approved and actual is None and expected[offset] is not None)
+            ):
+                raise ContractError(f"Inline link mismatch in {text!r}")
+            covered[offset] = True
+    if units and not all(covered):
+        raise ContractError(f"Inline link coverage is incomplete in {text!r}")
+
+
+def _iter_block_inlines(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    values: list[dict[str, Any]] = []
+    for block in blocks:
+        if block["type"] == "prose":
+            values.append(block["inline"])
+        elif block["type"] == "list":
+            values.extend(item["inline"] for item in block["items"])
+        elif block["type"] == "sub_phase":
+            values.append(block["heading"])
+            values.extend(_iter_block_inlines(block["blocks"]))
+    return values
+
+
+def assert_paragraph_link_fidelity(
+    tab: dict[str, Any],
+    manifest: dict[str, Any],
+    *,
+    imported: bool | None,
+    allow_missing_approved: bool = False,
+) -> None:
+    """Bind every non-table paragraph and require the approved link ranges."""
+    binder = ParagraphBinder(tab["body"]["content"])
+    top = manifest["top"]
+    for inline in top["pre_title"]:
+        _assert_inline_links_exact(
+            binder.take(inline["text"]), inline,
+            allow_missing_approved=allow_missing_approved,
+        )
+    _assert_inline_links_exact(
+        binder.take(top["title"]["text"]), top["title"],
+        allow_missing_approved=allow_missing_approved,
+    )
+    for item in top["items"]:
+        if item.get("type") == "table":
+            continue
+        if item.get("role") == "list":
+            for entry in item["items"]:
+                _assert_inline_links_exact(
+                    binder.take(entry["inline"]["text"]), entry["inline"],
+                    allow_missing_approved=allow_missing_approved,
+                )
+            continue
+        inline = item.get("inline", {"text": item.get("text", ""), "links": []})
+        _assert_inline_links_exact(
+            binder.take(inline["text"]), inline,
+            allow_missing_approved=allow_missing_approved,
+        )
+
+    for section in manifest["sections"]:
+        if imported is None:
+            heading, _ = binder.take_any((section["source_label"], section["band_label"]))
+        else:
+            label = section["source_label"] if imported else section["band_label"]
+            heading = binder.take(label)
+        _assert_inline_links_exact(
+            heading,
+            {"text": paragraph_text(heading["paragraph"]).strip(), "links": []},
+            allow_missing_approved=allow_missing_approved,
+        )
+        for inline in _iter_block_inlines(section["blocks"]):
+            _assert_inline_links_exact(
+                binder.take(inline["text"]), inline,
+                allow_missing_approved=allow_missing_approved,
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -843,7 +1092,142 @@ def _cell_visible_lines(cell: dict[str, Any]) -> list[str]:
     return values
 
 
-def build_normalize_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
+def _assert_cell_links_exact(
+    cell: dict[str, Any],
+    expected: dict[str, Any],
+    *,
+    allow_missing_approved: bool = False,
+) -> None:
+    paragraphs = [
+        element
+        for element in cell_paragraphs(cell)
+        if paragraph_text(element["paragraph"]).strip()
+    ]
+    if len(paragraphs) == 1:
+        _assert_inline_links_exact(
+            paragraphs[0], expected,
+            allow_missing_approved=allow_missing_approved,
+        )
+        return
+    if expected.get("links"):
+        raise ContractError(
+            f"Linked table cell {expected.get('text', '')!r} must remain one paragraph"
+        )
+    for element in paragraphs:
+        plain = {
+            "text": paragraph_text(element["paragraph"]).rstrip("\n"),
+            "links": [],
+        }
+        _assert_inline_links_exact(
+            element, plain,
+            allow_missing_approved=allow_missing_approved,
+        )
+
+
+def assert_table_content(
+    table_element: dict[str, Any],
+    spec: dict[str, Any],
+    *,
+    allow_conversion_header: bool,
+) -> bool:
+    """Bind every table cell before any destructive or styling request exists."""
+    rows = table_element["table"]["tableRows"]
+    expected_rows = spec["rows"]
+    ncols = spec["ncols"]
+    has_header = allow_conversion_header and len(rows) == len(expected_rows) + 1
+    valid_counts = (len(expected_rows), len(expected_rows) + 1) if allow_conversion_header else (len(expected_rows),)
+    if len(rows) not in valid_counts:
+        raise ContractError(
+            f"Imported table has {len(rows)} rows; expected {len(expected_rows)} content rows"
+        )
+
+    if has_header:
+        header = rows[0]
+        if len(header["tableCells"]) != ncols:
+            raise ContractError(
+                f"Imported table header has {len(header['tableCells'])} cells; expected {ncols}"
+            )
+        for cell, expected_header in zip(header["tableCells"], spec["header"]):
+            got = " ".join(_cell_visible_lines(cell))
+            want = re.sub(r"\s+", " ", expected_header.strip())
+            if got != want:
+                raise ContractError(
+                    f"Imported table header differs from approved manifest: {got!r} != {want!r}"
+                )
+            _assert_cell_links_exact(
+                cell,
+                {"text": expected_header.strip(), "links": []},
+                allow_missing_approved=True,
+            )
+
+    offset = 1 if has_header else 0
+    for row, source in zip(rows[offset:], expected_rows):
+        if len(row["tableCells"]) != ncols:
+            raise ContractError(
+                f"Imported table row has {len(row['tableCells'])} cells; expected {ncols}"
+            )
+        for cell, cell_inline in zip(row["tableCells"], source["cells"]):
+            got = " ".join(_cell_visible_lines(cell))
+            want = re.sub(r"\s+", " ", cell_inline["text"].strip())
+            if got != want:
+                raise ContractError(
+                    f"Imported table content differs from approved manifest: {got!r} != {want!r}"
+                )
+            _assert_cell_links_exact(
+                cell,
+                cell_inline,
+                allow_missing_approved=True,
+            )
+    return has_header
+
+
+def _batch_payload(
+    requests: list[dict[str, Any]],
+    required_revision_id: str | None = None,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {"requests": requests}
+    if required_revision_id is None:
+        return payload
+    if not isinstance(required_revision_id, str) or not required_revision_id.strip():
+        raise ContractError("Required revision ID must be a non-empty string")
+    payload["writeControl"] = {"requiredRevisionId": required_revision_id.strip()}
+    return payload
+
+
+def resolve_required_revision_id(
+    doc: dict[str, Any],
+    supplied_revision_id: str | None,
+    *,
+    require: bool = False,
+) -> str | None:
+    snapshot_revision_id = doc.get("revisionId")
+    if snapshot_revision_id is not None:
+        if not isinstance(snapshot_revision_id, str) or not snapshot_revision_id.strip():
+            raise ContractError("Document snapshot revision ID must be a non-empty string")
+        snapshot_revision_id = snapshot_revision_id.strip()
+    elif require:
+        raise ContractError(
+            "Document snapshot revision ID is missing; fetch a fresh document snapshot before generating a write batch"
+        )
+
+    if supplied_revision_id is not None:
+        if not isinstance(supplied_revision_id, str) or not supplied_revision_id.strip():
+            raise ContractError("Required revision ID must be a non-empty string")
+        resolved = supplied_revision_id.strip()
+        if snapshot_revision_id is not None and resolved != snapshot_revision_id:
+            raise ContractError("Supplied revision ID does not match the input document snapshot")
+    else:
+        resolved = snapshot_revision_id
+
+    return resolved
+
+
+def build_normalize_requests(
+    doc: dict[str, Any],
+    manifest: dict[str, Any],
+    *,
+    required_revision_id: str | None = None,
+) -> dict[str, Any]:
     """Bind imported content to the manifest and emit cleanup requests.
 
     Cleanup covers: uppercasing each ## band heading (length-preserving), dropping
@@ -854,8 +1238,17 @@ def build_normalize_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> d
     valid as later ones are applied. Table binding is column-count agnostic.
     """
     validate_manifest(manifest)
+    resolved_revision_id = resolve_required_revision_id(
+        doc,
+        required_revision_id,
+        require=True,
+    )
     tab_id, tab = get_tab(doc)
     body = tab["body"]["content"]
+    assert_document_hierarchy(tab, manifest, imported=None)
+    assert_paragraph_link_fidelity(
+        tab, manifest, imported=None, allow_missing_approved=True
+    )
     tables = doc_tables(tab)
     manifest_table_specs = manifest_tables(manifest)
 
@@ -870,9 +1263,12 @@ def build_normalize_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> d
     edits: list[tuple[int, list[dict[str, Any]]]] = []
 
     # 1. Uppercase every band heading paragraph (length-preserving replacement).
+    section_binder = ParagraphBinder(body)
     for section in manifest["sections"]:
-        element = find_paragraph(body, section["source_label"])
-        if section["source_label"] != section["band_label"]:
+        source_label = section["source_label"]
+        band_label = section["band_label"]
+        element, matched = section_binder.take_any((source_label, band_label))
+        if matched == source_label and source_label != band_label:
             start = element["startIndex"]
             end = element["endIndex"] - 1  # keep the trailing newline
             ops = [
@@ -898,25 +1294,11 @@ def build_normalize_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> d
     #    required — headers vary by table (Parameter/Detail, Cue/Read aloud,
     #    #/Ask, Time/Phase, Date & Time/Panelist Bio/Recording, …).
     for table_element, spec in zip(tables, manifest_table_specs):
-        rows = table_element["table"]["tableRows"]
-        expected = spec["rows"]
-        ncols = spec["ncols"]
-        has_header = len(rows) == len(expected) + 1
-        if len(rows) not in (len(expected), len(expected) + 1):
-            raise ContractError(
-                f"Imported table has {len(rows)} rows; expected {len(expected)} content rows"
-            )
-        offset = 1 if has_header else 0
-        for row, source in zip(rows[offset:], expected):
-            if len(row["tableCells"]) != ncols:
-                raise ContractError(f"Imported table row has {len(row['tableCells'])} cells; expected {ncols}")
-            for cell, cell_inline in zip(row["tableCells"], source["cells"]):
-                got = " ".join(_cell_visible_lines(cell))
-                want = re.sub(r"\s+", " ", cell_inline["text"].strip())
-                if got != want:
-                    raise ContractError(
-                        f"Imported table content differs from approved manifest: {got!r} != {want!r}"
-                    )
+        has_header = assert_table_content(
+            table_element,
+            spec,
+            allow_conversion_header=True,
+        )
         if has_header:
             edits.append(
                 (
@@ -938,7 +1320,7 @@ def build_normalize_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> d
     requests: list[dict[str, Any]] = []
     for _, ops in sorted(edits, key=lambda pair: pair[0], reverse=True):
         requests.extend(ops)
-    return {"requests": requests}
+    return _batch_payload(requests, resolved_revision_id)
 
 
 # ---------------------------------------------------------------------------
@@ -1023,14 +1405,14 @@ def _style_table(
                     line_spacing=line_spacing,
                 )
             apply_inline_styles(requests, tab_id, element, cell_inline, link_color=hex_color(content_style["color"]))
-    widths = table_column_widths(contract, ncols, spec["header"][0])
+    widths = table_column_widths(contract, spec["header"])
     requests.extend(column_widths_request(tab_id, table_start, widths))
 
 
 def _style_list(
     requests: list[dict[str, Any]],
     tab_id: str,
-    body: list[dict[str, Any]],
+    binder: ParagraphBinder,
     list_block: dict[str, Any],
     *,
     contract: dict[str, Any],
@@ -1041,7 +1423,7 @@ def _style_list(
     spacing = contract["spacing"]
     step = spacing.get("list_indent_level_step_pt", 18)
     items = list_block["items"]
-    elements = [find_paragraph(body, item["inline"]["text"]) for item in items]
+    elements = [binder.take(item["inline"]["text"]) for item in items]
 
     def item_indents(level: int) -> tuple[float, float]:
         return (
@@ -1084,22 +1466,43 @@ def _style_list(
         )
 
 
-def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
+def build_format_requests(
+    doc: dict[str, Any],
+    manifest: dict[str, Any],
+    *,
+    required_revision_id: str | None = None,
+) -> dict[str, Any]:
     """Generate exact Option 4 formatting requests for a normalized mod-guide doc."""
     validate_manifest(manifest)
+    resolved_revision_id = resolve_required_revision_id(
+        doc,
+        required_revision_id,
+        require=True,
+    )
     contract = load_contract()
     tab_id, tab = get_tab(doc)
     body = tab["body"]["content"]
+    assert_document_hierarchy(tab, manifest, imported=False)
+    assert_paragraph_link_fidelity(
+        tab, manifest, imported=False, allow_missing_approved=True
+    )
     tables = doc_tables(tab)
     manifest_table_specs = manifest_tables(manifest)
     if len(tables) != len(manifest_table_specs):
         raise ContractError(
             f"Normalize the document first: {len(tables)} tables vs {len(manifest_table_specs)} approved"
         )
+    for table_element, spec in zip(tables, manifest_table_specs):
+        assert_table_content(
+            table_element,
+            spec,
+            allow_conversion_header=False,
+        )
 
     colors = {name: hex_color(value) for name, value in contract["colors"].items()}
     spacing = contract["spacing"]
     requests: list[dict[str, Any]] = []
+    binder = ParagraphBinder(body)
 
     # 1. Document style (page geometry).
     page = contract["page"]
@@ -1133,7 +1536,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
     # 2. Pre-title breadcrumb / kicker line(s).
     bc_font, bc_size, bc_bold, bc_italic, bc_color = _text_style(contract, "breadcrumb")
     for pre in top["pre_title"]:
-        element = find_paragraph(body, pre["text"])
+        element = binder.take(pre["text"])
         style_paragraph(
             requests, tab_id, element, font=bc_font, size=bc_size, bold=bc_bold, italic=bc_italic,
             color=bc_color, named_style="SUBTITLE", space_below=spacing["breadcrumb_space_below_pt"],
@@ -1142,7 +1545,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
         apply_inline_styles(requests, tab_id, element, pre, link_color=bc_color)
 
     # 3. Title (first Heading-1).
-    title = find_paragraph(body, top["title"]["text"])
+    title = binder.take(top["title"]["text"])
     t_font, t_size, t_bold, t_italic, t_color = _text_style(contract, "title")
     style_paragraph(
         requests, tab_id, title, font=t_font, size=t_size, bold=t_bold, italic=t_italic, color=t_color,
@@ -1167,7 +1570,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
             while i < len(items) and items[i].get("role") == "raci":
                 run.append(items[i])
                 i += 1
-            elements = [find_paragraph(body, entry["inline"]["text"]) for entry in run]
+            elements = [binder.take(entry["inline"]["text"]) for entry in run]
             for element, entry in zip(elements, run):
                 style_paragraph(
                     requests, tab_id, element, font=body_font, size=body_size, color=body_color,
@@ -1196,13 +1599,13 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
             continue
         if role == "list":
             _style_list(
-                requests, tab_id, body, item,
+                requests, tab_id, binder, item,
                 contract=contract, body_font=body_font, body_size=body_size, body_color=body_color,
             )
             i += 1
             continue
         if role == "warning":
-            warning = find_paragraph(body, item["text"])
+            warning = binder.take(item["text"])
             style_paragraph(
                 requests, tab_id, warning,
                 font=contract["warning"]["font"], size=contract["warning"]["size_pt"],
@@ -1213,7 +1616,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
             i += 1
             continue
         if role == "phase_subtitle":
-            element = find_paragraph(body, item["inline"]["text"])
+            element = binder.take(item["inline"]["text"])
             font, size, bold, italic, color = _text_style(contract, "phase_subtitle")
             style_paragraph(
                 requests, tab_id, element, font=font, size=size, bold=bold, italic=italic, color=color,
@@ -1223,7 +1626,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
             i += 1
             continue
         if role == "breadcrumb":
-            element = find_paragraph(body, item["inline"]["text"])
+            element = binder.take(item["inline"]["text"])
             style_paragraph(
                 requests, tab_id, element, font=bc_font, size=bc_size, bold=bc_bold, italic=bc_italic,
                 color=bc_color, space_below=spacing["breadcrumb_space_below_pt"], keep_next=True,
@@ -1232,7 +1635,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
             i += 1
             continue
         if role == "context_note":
-            element = find_paragraph(body, item["inline"]["text"])
+            element = binder.take(item["inline"]["text"])
             font, size, bold, italic, color = _text_style(contract, "context_note")
             style_paragraph(
                 requests, tab_id, element, font=font, size=size, bold=bold, italic=italic, color=color,
@@ -1242,7 +1645,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
             i += 1
             continue
         # Plain body paragraph (e.g. a "Links:" run-in line).
-        element = find_paragraph(body, item["inline"]["text"])
+        element = binder.take(item["inline"]["text"])
         style_paragraph(requests, tab_id, element, font=body_font, size=body_size, color=body_color)
         apply_inline_styles(requests, tab_id, element, item["inline"], link_color=body_color)
         i += 1
@@ -1255,19 +1658,19 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
         nonlocal table_cursor
         for block in blocks:
             if block["type"] == "prose":
-                element = find_paragraph(body, block["inline"]["text"])
+                element = binder.take(block["inline"]["text"])
                 style_paragraph(requests, tab_id, element, font=body_font, size=body_size, color=body_color)
                 apply_inline_styles(requests, tab_id, element, block["inline"], link_color=body_color)
             elif block["type"] == "list":
                 _style_list(
-                    requests, tab_id, body, block,
+                    requests, tab_id, binder, block,
                     contract=contract, body_font=body_font, body_size=body_size, body_color=body_color,
                 )
             elif block["type"] == "table":
                 _style_table(requests, tab_id, tables[table_cursor], block, contract, colors)
                 table_cursor += 1
             elif block["type"] == "sub_phase":
-                heading = find_paragraph(body, block["heading"]["text"])
+                heading = binder.take(block["heading"]["text"])
                 style_paragraph(
                     requests, tab_id, heading, font=sub_font, size=sub_size,
                     bold=sub_bold, italic=sub_italic, color=sub_color,
@@ -1279,7 +1682,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
                 style_blocks(block["blocks"])
 
     for section in manifest["sections"]:
-        band = find_paragraph(body, section["band_label"])
+        band = binder.take(section["band_label"])
         style_paragraph(
             requests, tab_id, band, font=section_font, size=section_size,
             bold=section_bold, italic=section_italic, color=section_color,
@@ -1289,7 +1692,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
         )
         style_blocks(section["blocks"])
 
-    return {"requests": requests}
+    return _batch_payload(requests, resolved_revision_id)
 
 
 # ---------------------------------------------------------------------------
@@ -1456,7 +1859,7 @@ def _verify_table(
     rows = table_element["table"]["tableRows"]
     if len(rows) != len(spec["rows"]):
         raise ContractError(f"Table has {len(rows)} rows; expected {len(spec['rows'])}")
-    widths = table_column_widths(contract, ncols, spec["header"][0])
+    widths = table_column_widths(contract, spec["header"])
     properties = table_element["table"].get("tableStyle", {}).get("tableColumnProperties", [])
     actual_widths = [item.get("width", {}).get("magnitude") for item in properties]
     if actual_widths != widths:
@@ -1489,9 +1892,9 @@ def _verify_table(
 def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
     """Validate content fidelity and every machine-checkable VISUAL invariant.
 
-    Visual-only: page geometry + margins; title / breadcrumb / H2-band / H3 /
-    body font+size+color; warning shading when a warning is present; every H2
-    shaded dark-green with white DM Serif 14pt; every table's padding, white body
+    Visual-only: page geometry + margins; document title / Study Title / H2-band /
+    H3 / body font+size+color; warning shading when present; every section H2
+    after Study Title shaded dark-green with white DM Serif 14pt; every table's padding, white body
     cells, DM Sans 10pt text, and column-count-appropriate widths. It does NOT
     enforce a terminal section, does NOT reject a table after the debrief, and
     does NOT enforce 'tables contain only questions' (those content rules live in
@@ -1531,6 +1934,7 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
                 actual.append(text)
     if actual != expected:
         raise ContractError("Document hierarchy does not match the approved mod-guide manifest")
+    assert_paragraph_link_fidelity(tab, manifest, imported=False)
 
     # 2. Document style.
     document_style = tab.get("documentStyle", {})
@@ -1557,17 +1961,18 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
         raise ContractError(f"Page is not landscape letter: {(width, height)}")
 
     top = manifest["top"]
+    binder = ParagraphBinder(body)
 
     # 3. Pre-title breadcrumb / kicker.
     for pre in top["pre_title"]:
-        element = find_paragraph(body, pre["text"])
+        element = binder.take(pre["text"])
         _assert_base_text_style(element, named, contract["typography"]["breadcrumb"])
         _assert_paragraph_metrics(
             element, line_spacing=115, space_below=contract["spacing"]["breadcrumb_space_below_pt"], keep_next=True
         )
 
     # 4. Title.
-    title = find_paragraph(body, top["title"]["text"])
+    title = binder.take(top["title"]["text"])
     _assert_text_style(title, named, contract["typography"]["title"])
     _assert_paragraph_metrics(
         title, line_spacing=115, space_below=contract["spacing"]["title_space_below_pt"], keep_next=True
@@ -1579,7 +1984,7 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
         if item.get("type") == "table":
             continue  # tables verified in document order below
         if role == "raci":
-            element = find_paragraph(body, item["inline"]["text"])
+            element = binder.take(item["inline"]["text"])
             if "bullet" not in element["paragraph"]:
                 raise ContractError(f"RACI item is not a native bullet: {item.get('label')}")
             _assert_base_text_style(element, named, contract["typography"]["body"])
@@ -1590,9 +1995,9 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
                 indent_first=contract["spacing"]["raci_indent_first_line_pt"],
             )
         elif role == "list":
-            _verify_list(item, body, named, contract)
+            _verify_list(item, binder, named, contract)
         elif role == "warning":
-            warning = find_paragraph(body, item["text"])
+            warning = binder.take(item["text"])
             expected_warning = {
                 "font": contract["warning"]["font"],
                 "size_pt": contract["warning"]["size_pt"],
@@ -1605,17 +2010,17 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
             if _rgb(shading) != _hex_tuple(contract["warning"]["background"]):
                 raise ContractError("TEST ARTIFACT warning does not use full-paragraph pale-yellow shading")
         elif role == "phase_subtitle":
-            element = find_paragraph(body, item["inline"]["text"])
+            element = binder.take(item["inline"]["text"])
             _assert_text_style(element, named, contract["typography"]["phase_subtitle"])
             _assert_base_text_style(element, named, contract["typography"]["phase_subtitle"])
         elif role == "breadcrumb":
-            element = find_paragraph(body, item["inline"]["text"])
+            element = binder.take(item["inline"]["text"])
             _assert_base_text_style(element, named, contract["typography"]["breadcrumb"])
         elif role == "context_note":
-            element = find_paragraph(body, item["inline"]["text"])
+            element = binder.take(item["inline"]["text"])
             _assert_text_style(element, named, contract["typography"]["context_note"])
         else:  # body
-            element = find_paragraph(body, item["inline"]["text"])
+            element = binder.take(item["inline"]["text"])
             if "bullet" in element["paragraph"]:
                 raise ContractError(f"Top-matter body line rendered as a bullet: {item['inline']['text']!r}")
             _assert_base_text_style(element, named, contract["typography"]["body"])
@@ -1625,16 +2030,16 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
     def verify_blocks(blocks: list[dict[str, Any]]) -> None:
         for block in blocks:
             if block["type"] == "prose":
-                element = find_paragraph(body, block["inline"]["text"])
+                element = binder.take(block["inline"]["text"])
                 if "bullet" in element["paragraph"]:
                     raise ContractError(f"Prose line rendered as a bullet: {block['inline']['text']!r}")
                 _assert_base_text_style(element, named, contract["typography"]["body"])
                 _assert_inline_exact(element, block["inline"], named)
                 _assert_paragraph_metrics(element, line_spacing=115)
             elif block["type"] == "list":
-                _verify_list(block, body, named, contract)
+                _verify_list(block, binder, named, contract)
             elif block["type"] == "sub_phase":
-                heading = find_paragraph(body, block["heading"]["text"])
+                heading = binder.take(block["heading"]["text"])
                 _assert_text_style(heading, named, contract["typography"]["sub_phase_heading"])
                 _assert_paragraph_metrics(
                     heading, line_spacing=115,
@@ -1645,7 +2050,7 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
             # table blocks are verified separately, in document order, below.
 
     for section in manifest["sections"]:
-        band = find_paragraph(body, section["band_label"])
+        band = binder.take(section["band_label"])
         _assert_text_style(band, named, contract["typography"]["section_band"])
         _assert_base_text_style(band, named, contract["typography"]["section_band"])
         _assert_paragraph_metrics(
@@ -1664,7 +2069,7 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
 
     return [
         "Option 4 page geometry, opening typography, and RACI/ownership bullets",
-        "dark-green section bands with white DM Serif labels for every H2",
+        "dark-green section bands with white DM Serif labels for every section H2 after Study Title",
         "green-on-white sub-phase (H3) headings and nested lists",
         "every table styled with Option 4 tokens (any column count, any position)",
         "warning shading when a TEST ARTIFACT warning is present, and zero horizontal rules",
@@ -1672,13 +2077,13 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
 
 
 def _verify_list(
-    list_block: dict[str, Any], body: list[dict[str, Any]], named: dict[str, dict[str, Any]],
+    list_block: dict[str, Any], binder: ParagraphBinder, named: dict[str, dict[str, Any]],
     contract: dict[str, Any],
 ) -> None:
     spacing = contract["spacing"]
     step = spacing.get("list_indent_level_step_pt", 18)
-    for item in list_block["items"]:
-        element = find_paragraph(body, item["inline"]["text"])
+    elements = [binder.take(item["inline"]["text"]) for item in list_block["items"]]
+    for item, element in zip(list_block["items"], elements):
         if "bullet" not in element["paragraph"]:
             raise ContractError(f"List item is not a native list paragraph: {item['inline']['text']!r}")
         _assert_base_text_style(element, named, contract["typography"]["body"])
@@ -1696,7 +2101,51 @@ def _verify_list(
 
 
 def write_json(path: str | Path, value: dict[str, Any]) -> None:
-    Path(path).write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
+    requested = Path(path).expanduser()
+    parent = requested.parent.resolve()
+    target = parent / requested.name
+    if target.exists():
+        raise ContractError(f"Refusing to overwrite existing output file: {target}")
+    if not parent.is_dir():
+        raise ContractError(f"Output directory does not exist: {parent}")
+    repository = next(
+        (candidate for candidate in (parent, *parent.parents) if (candidate / ".git").exists()),
+        None,
+    )
+    if repository is not None:
+        raise ContractError(
+            f"Output must use a private non-repository working directory; found repository {repository}"
+        )
+    if stat.S_IMODE(parent.stat().st_mode) & 0o077:
+        raise ContractError(
+            f"Output directory must be owner-only (mode 0700 or stricter): {parent}"
+        )
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{target.name}.",
+        suffix=".tmp",
+        dir=target.parent,
+    )
+    temporary = Path(temporary_name)
+    try:
+        os.fchmod(descriptor, 0o600)
+        stream = os.fdopen(descriptor, "w", encoding="utf-8")
+        descriptor = -1
+        with stream:
+            json.dump(value, stream, ensure_ascii=False, indent=2)
+            stream.flush()
+            os.fsync(stream.fileno())
+        try:
+            os.link(temporary, target)
+        except FileExistsError as error:
+            raise ContractError(
+                f"Refusing to overwrite existing output file: {target}"
+            ) from error
+        os.chmod(target, 0o600)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        temporary.unlink(missing_ok=True)
 
 
 def cli() -> argparse.ArgumentParser:
@@ -1711,11 +2160,19 @@ def cli() -> argparse.ArgumentParser:
     normalize.add_argument("document_json")
     normalize.add_argument("manifest_json")
     normalize.add_argument("output")
+    normalize.add_argument(
+        "--required-revision-id",
+        help="bind the batch to the freshly fetched Google Docs revision",
+    )
 
     format_parser = subparsers.add_parser("format", help="Generate exact Option 4 formatting requests")
     format_parser.add_argument("document_json")
     format_parser.add_argument("manifest_json")
     format_parser.add_argument("output")
+    format_parser.add_argument(
+        "--required-revision-id",
+        help="bind the batch to the freshly fetched Google Docs revision",
+    )
 
     verify = subparsers.add_parser("verify", help="Verify final content and machine-checkable styling")
     verify.add_argument("document_json")
@@ -1738,12 +2195,30 @@ def main(argv: list[str] | None = None) -> int:
     doc = json.loads(Path(args.document_json).read_text(encoding="utf-8"))
     manifest = json.loads(Path(args.manifest_json).read_text(encoding="utf-8"))
     if args.command == "normalize":
-        payload = build_normalize_requests(doc, manifest)
+        required_revision_id = resolve_required_revision_id(
+            doc,
+            args.required_revision_id,
+            require=True,
+        )
+        payload = build_normalize_requests(
+            doc,
+            manifest,
+            required_revision_id=required_revision_id,
+        )
         write_json(args.output, payload)
         print(f"PASS: generated {len(payload['requests'])} normalization requests")
         return 0
     if args.command == "format":
-        payload = build_format_requests(doc, manifest)
+        required_revision_id = resolve_required_revision_id(
+            doc,
+            args.required_revision_id,
+            require=True,
+        )
+        payload = build_format_requests(
+            doc,
+            manifest,
+            required_revision_id=required_revision_id,
+        )
         write_json(args.output, payload)
         print(f"PASS: generated {len(payload['requests'])} Option 4 formatting requests")
         return 0

@@ -1,8 +1,8 @@
 # Option 4 — Leadership Visual Contract (Moderation Guide)
 
-This is the visual source of truth for the **optional "leadership design" path** of `/mod-guide`. The machine-readable values live in [`option4-guide-style.json`](option4-guide-style.json); the formatter and verifier ([`../scripts/option4_guide_layout.py`](../scripts/option4_guide_layout.py)) consume that contract.
+This is the visual source of truth for the default **Option 4 — Leadership** path of `/mod-guide`. The machine-readable values live in [`option4-guide-style.json`](option4-guide-style.json); the formatter and verifier ([`../scripts/option4_guide_layout.py`](../scripts/option4_guide_layout.py)) consume that contract.
 
-**This is not the default.** Per the mod-guide "Portable Google Docs contract," native Google Docs styling is the default deliverable, and this Option 4 leadership look is an opt-in variant a researcher chooses in Section 1. When chosen, it makes a finished moderation guide open in the same clean, edited leadership style that `/research-plan`'s Option 4 pipeline produces — so any researcher who opens the document sees one consistent visual system, not a raw import.
+**This is the default deliverable look.** It is applied by the bundled `option4_guide_layout.py` with no personal environment or private reference Doc. Plain-native Google Docs is an explicit choice or a pre-approved, disclosed fallback. The finished moderation guide uses the same clean leadership visual system as `/research-plan`, not a raw import.
 
 The visual language is shared with `/research-plan` Option 4. The `page`, `colors`, `typography`, `warning`, and `spacing` tokens are copied verbatim from that skill's contract; `derived_from` in the JSON points at the canonical origin. No private reference document is a runtime dependency.
 
@@ -12,22 +12,21 @@ The critical property of this contract: it is **structure-agnostic.** mod-guide 
 
 The two guide shapes it supports today:
 
-- **Interview / IDI** — a **two-tier header** (an all-caps study kicker line above the title, then `# Discussion Guide`, then an italic period line `*[Q1 · Month Year]*` below it); an **extended RACI / ownership block** (any `**Label:** …` bullets — Responsible, Accountable, Consulted, Contributor, External, Informed, Session Summaries, POC, …); Research Objectives; a body of **prose bullets with indented probes** (no question tables); and a guide that ends at a **Participants Log** (a 3-col table) or a Parking Lot — i.e. **a table can appear after Post-Session Debrief.**
-- **Prototype / Usability** — a single breadcrumb `*UX Research | [Research Plan | Discussion Guide] | [Round N · Quarter Year]*`; a `# Study Title`; an optional bold subtitle; Session Flow Overview; Objectives & Research Questions; a Consent + Recording + Think-Aloud script; `#|Ask` and `#|Ask / Do` task tables under `### Flow N` sub-headings; optional Comparisons / Cross-Flow Recap; and vendor back-matter **Communication & Deliverables (+ Timeline)** after Post-Session Debrief for vendor runs.
+- **Interview / IDI** — `# Moderation Guide`, then `## [Study Title]`; RACI/ownership; Parameter and Consent tables; Research Objectives; and thematic **prose bullets with indented probes**. It ends at Post-Session Debrief or an optional Parking Lot.
+- **Prototype / Usability** — the same canonical title/top matter; Parameter and Session Flow tables; Introduction, task phases, comparisons, and recap as **bold-label read/do lists**; and optional vendor **Communication & Deliverables** back-matter.
 
-Both shapes share a Parameter|Detail table, a Pre-Session Checklist (bullets), a Consent (Cue|Read-aloud) table, and a Post-Session Debrief (numbered list) — but the formatter recognizes those by their generic element role (a top-matter 2-col table, a bulleted list, a table, a numbered list), not by name.
+Both shapes share a Parameter|Detail table, a Pre-Session Checklist, and a Post-Session Debrief. Consent appears once per format: an interview Cue|Read aloud table or the prototype Introduction list. The formatter recognizes element roles, not study-specific section names.
 
 ## How roles are inferred
 
 | Element role | How it is recognized | Styled as |
 |---|---|---|
-| **Title** | the first `# ` (Heading-1) in the document | DM Serif Display 26pt bold, dark green `#003D29` |
-| **Breadcrumb / kicker** | a short non-heading line ABOVE the title (single breadcrumb or all-caps kicker) AND an italic period line immediately after the title (interview two-tier) | DM Serif Display 16pt gray `#666666` |
-| **Phase subtitle** | a top-matter line that is fully bold (`**…**`) | DM Serif Display 14pt bold, dark green `#003D29` |
+| **Document title** | the required first heading `# Moderation Guide` | DM Serif Display 26pt bold, dark green `#003D29` |
+| **Study title** | the immediately following `## [Study Title]`, treated as top matter rather than a section band | DM Serif Display 14pt bold, dark green `#003D29` |
 | **`Last updated` line** | a top-matter line beginning `Last updated:` | DM Sans 9pt italic gray `#666666` (`context_note`) |
 | **RACI / ownership** | consecutive top-matter bullets `- **Label:** …` (any label set) | DM Sans 10pt native bullets |
 | **TEST ARTIFACT warning** | a paragraph whose text is the exact warning copy | full-paragraph pale-yellow `#FFF2CC` shading, DM Sans 10pt bold `#6F4A00` |
-| **Section band** | EVERY `## ` (Heading-2) | dark-green `#003D29` full-width band, white DM Serif Display 14pt bold, UPPERCASE |
+| **Section band** | every `## ` after the required Study Title top-matter line | dark-green `#003D29` full-width band, white DM Serif Display 14pt bold, UPPERCASE |
 | **Sub-phase heading** | EVERY `### ` (Heading-3, e.g. "Flow 1", "2.1") | DM Serif Display 12pt bold, dark green `#003D29` |
 | **Table** | EVERY Markdown table, any column count, any position | Option 4 table styling (see below) |
 | **List** | EVERY bulleted / numbered block, including indented probe sub-bullets | DM Sans 10pt native list, nesting preserved |
@@ -45,13 +44,13 @@ Apply named paragraph styles before direct text styles — Google Docs clears di
 ## Warning treatment (mock/demo only)
 
 - Shade the entire warning paragraph pale yellow `#FFF2CC` (full-paragraph shading, not inline highlight); DM Sans 10pt bold text in `#6F4A00`.
-- Use the exact copy from [`../../references/output-status-and-labeling-conventions.md`](../../references/output-status-and-labeling-conventions.md): `⚠️ TEST ARTIFACT — generated for a mock-run / demo, not a real deliverable. Do not file or share as real research.`
+- Use the exact copy from [`../../../references/output-status-and-labeling-conventions.md`](../../../references/output-status-and-labeling-conventions.md): `⚠️ TEST ARTIFACT — generated for a mock-run / demo, not a real deliverable. Do not file or share as real research.`
 
 ## Section bands — the key difference from research-plan
 
-Research-plan puts its section bands as rows *inside* one big overview table. A moderation guide has no single spine table — it has several small tables interleaved with headings — so the band treatment moves onto the **`##` heading paragraphs themselves**, for **every** `##` heading generically.
+Research-plan puts its section bands as rows *inside* one big overview table. A moderation guide has no single spine table, so the band treatment moves onto each **section `##` heading after the required Study Title top-matter line**.
 
-- Every `##` heading becomes a dark-green full-width band: DM Serif Display 14pt bold, white text, paragraph background `#003D29`, 20pt above / 6pt below, UPPERCASE label.
+- Every section `##` after Study Title becomes a dark-green full-width band: DM Serif Display 14pt bold, white text, paragraph background `#003D29`, 20pt above / 6pt below, UPPERCASE label.
 - **Primary render (this contract): a shaded native Heading 2 paragraph.** This preserves the document outline so a moderator can jump between sections mid-session. The band spans the 648pt paragraph text area — ~50pt narrower than the tables beneath it, because paragraph shading cannot overflow into the print margins the way the tables do. This is expected and acceptable.
 - **Documented alternative (`band_render_alt`): a single-row two-cell 698.4pt table** — matches research-plan's exact band width but loses the outline. Recommended against for a facilitation guide.
 - Dividers: the markdown `---` separators are dropped during normalize (target `native_horizontal_rules: 0`). The bands do the sectioning.
@@ -60,20 +59,20 @@ Research-plan puts its section bands as rows *inside* one big overview table. A 
 
 Every table — whatever its columns, wherever it sits — shares: 5pt cell padding, white body cells, DM Sans 10pt cell text, 100% table line spacing, and **total width 698.4pt** (every table's outer edge aligns down the page, with the intentional 50.4pt overflow into the print margins). The Markdown header row is a conversion header and is dropped on import (the first content row becomes the first visible row); header presence is detected per table by row count, so a table may or may not arrive with the header attached.
 
-Geometry is inferred, not fixed per named kind:
+Geometry is inferred from each table's complete header:
 
-- **Column widths** — the first column is narrow (90pt) when the first header cell is `#` (question / task tables), otherwise it uses the label width (144pt). The remaining width is split evenly across the other columns. Examples: `#|Ask` → `[90, 608.4]`; `Parameter|Detail` / `Cue|Read aloud` / `Time|Phase` → `[144, 554.4]`; a 3-col `Date & Time|Panelist Bio|Recording` → `[144, 277.2, 277.2]`.
-- **Label-column background** — a 2-col table in the **top matter** (the Parameter|Detail dashboard) gets the gray `#D9D9D9` label column so it reads as an at-a-glance dashboard; **every in-section table** (consent, question/task, Session Flow Overview, Participants Log, Timeline, …) uses a white `#FFFFFF` label column.
-- **First-column bold** — the first column renders bold when EVERY first cell in the source Markdown is fully bold (`**Study Type**`, `**Open**`, `**Q1**`); a table whose first column is not uniformly bold (e.g. a Participants Log's `Date & Time` values) renders it at normal weight. Inline emphasis from the source is honored either way.
-- **N columns** — 2-col and 3-col+ tables are all supported (a 3-col Participants Log or a 3-col `Description | Owner | Date` Timeline).
+- **Column widths** — `Phase|Time` → `[554.4, 144]`; `Parameter|Detail` and `Cue|Read aloud` → `[144, 554.4]`; a legacy first header cell of `#` → `[90, 608.4]`. For 3+ columns, the first label column is 144pt and the remainder is split evenly.
+- **Label-column background** — the top-matter Parameter dashboard gets the gray `#D9D9D9` label column; in-section Consent and Session Flow tables use white body cells.
+- **First-column bold** — the first column is bold only when every first-cell value is fully bold in the approved Markdown. Inline emphasis is otherwise preserved exactly.
+- **N columns** — the formatter remains column-count agnostic even though the current templates use two-column tables.
 
-**Borders** are the one value the base Option 4 contract does not define. Do not invent one — mirror whatever `../../research-plan/scripts/option4_layout.py` applies, using a single consistent thin neutral border across every table.
+**Borders** use the Google Docs default — the pipeline sends no border request at all (mirroring `/research-plan`'s Option 4 pipeline, which also sends none). Do not invent a border value. (Settled 2026-10-02 after two live builds: both verified clean with Docs-default borders.)
 
 ## What the verifier checks (VISUAL invariants only)
 
-The verifier is a **visual gate**, not a semantic-structure gate. It checks: page geometry + margins; title / breadcrumb / phase-subtitle / H2-band / H3 / body / context-note font+size+color; RACI and lists rendered as native bullets; warning shading when a warning is present; **every** H2 shaded dark-green with white DM Serif 14pt; **every** table's cell padding, white body cells, DM Sans 10pt text, and column-count-appropriate widths; content fidelity against the manifest; and zero surviving horizontal rules.
+The verifier is a **visual gate**, not a semantic-structure gate. It checks: page geometry + margins; document title / study title / H2-band / H3 / body / context-note font+size+color; RACI and lists rendered as native bullets; warning shading when a warning is present; **every section** H2 shaded dark-green with white DM Serif 14pt; **every** table's cell padding, white body cells, DM Sans 10pt text, and header-appropriate widths; content fidelity against the manifest; and zero surviving horizontal rules.
 
-It deliberately does **not**: require the guide to end at Post-Session Debrief, reject a table after the debrief, or enforce "tables contain only questions." Those content rules live in SKILL.md and the two template references, not in this visual pass. The verifier keeps only the general structural sanity checks that the document has a title, at least one H2 band, and styled tables.
+It deliberately does **not** enforce guide semantics such as task/objective coverage, consent wording, or the correct terminal section. Those content rules live in SKILL.md, the template references, and the contract validator. The visual verifier keeps the structural sanity checks that the document has the canonical title/top matter, at least one section band, and styled tables.
 
 ## Required build pipeline
 
@@ -92,12 +91,23 @@ The batch files use the native Google Docs API request schema, so they apply thr
 
 ## Hard completion gate
 
-When the researcher has opted into this leadership variant, the guide is not complete when the formatting is approximate. Block completion instead of returning a downgraded layout when any of these are unavailable:
+An approximate Option 4 is never a completed deliverable.
+
+- **Strict Option 4 — Leadership:** block before creation when any required capability below is unavailable.
+- **Option 4 — Leadership with pre-approved plain-native fallback (default):** when an Option 4-only capability is unavailable, switch before creation to plain native Google Docs, disclose the fallback, and never claim that Option 4 passed.
+
+**Required on every delivery path:**
 
 - a write-capable Google Docs integration;
-- raw document structure or equivalent indices;
-- native batch formatting needed to apply the contract;
-- the bundled verifier;
-- a PDF/thumbnail/render for visual inspection.
+- content, parent-folder, and effective-permission readback; and
+- a PDF, thumbnail, or equivalent render for visual inspection.
 
-Do not substitute a non-DM font, drop the section bands, or return after a structural-only check and still call the result final. (This gate applies only to the opt-in leadership path; the portable native-Google-Docs default remains the mod-guide default and is unaffected.)
+If any shared capability is unavailable, block delivery on every path.
+
+**Required only to claim Option 4:**
+
+- raw document structure or equivalent indices;
+- native batch formatting needed to apply the contract; and
+- the bundled verifier.
+
+Do not substitute a non-DM font, drop the section bands, or return after a structural-only check and call the result Option 4. A plain-native fallback is a distinct, labeled delivery path—not a downgraded Option 4 result.

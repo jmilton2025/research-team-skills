@@ -1,97 +1,143 @@
-# Mod-guide Option 4 (leadership design) tests
+# Moderation-guide release tests
 
-These tests protect the **optional "leadership design" path** for `/mod-guide` — the
-STRUCTURE-AGNOSTIC formatter + verifier in
-[`../scripts/option4_guide_layout.py`](../scripts/option4_guide_layout.py) that
-reproduces `/research-plan`'s clean, edited Option 4 look for a moderation guide.
-They are fully offline: no Google Docs API call is made. Every test builds a
-synthetic raw-Docs JSON tree in Python and runs the same
-parse / normalize / format / verify code paths the live pipeline uses.
+These offline tests protect the default **Option 4 — Leadership** Google Docs
+delivery path and the cross-file `/mod-guide` contract. They use only the Python
+standard library and make no Google API calls.
 
-## Run them
+## Run the release gate
 
-From the repository root, either:
+From the repository root:
 
 ```bash
+python3 skills/mod-guide/tests/validate_contract.py
 python3 skills/mod-guide/tests/test_option4_guide_layout.py
 ```
 
-or with pytest (optional — the file is runnable directly with `unittest`, so pytest
-may be absent):
+The layout file also runs under pytest when pytest is available:
 
 ```bash
 python3 -m pytest skills/mod-guide/tests/test_option4_guide_layout.py
 ```
 
-Both run with only the Python standard library (Python 3). No network, no
-credentials, no `gws`/gohan.
+## What each gate protects
 
-## Two fixtures — two guide shapes
+### `validate_contract.py`
 
-mod-guide produces two structurally different documents, and the formatter must
-handle both, so there are two fixtures. Each is an intentional **TEST ARTIFACT**,
-never a real study, and every paragraph text is unique so the offline harness can
-bind styling by exact text.
+The deterministic cross-file gate verifies:
 
-- [`fixtures/mock-interview-guide.md`](fixtures/mock-interview-guide.md) — an
-  Interview / IDI guide. Exercises the **two-tier header** (all-caps kicker + `#`
-  title + italic period line), the **extended RACI** block (Responsible /
-  Accountable / Consulted / Contributor / External / Informed / Session
-  Summaries), the `⚠️ TEST ARTIFACT` warning, a gray Parameter|Detail dashboard
-  table, prose-bullet themes with **indented probe sub-bullets** (a nested list), a
-  numbered Post-Session Debrief, and a **3-col Participants Log table AFTER the
-  debrief** plus a Parking Lot.
-- [`fixtures/mock-prototype-guide.md`](fixtures/mock-prototype-guide.md) — a
-  vendor-run Prototype / Usability guide. Exercises a single breadcrumb, a bold
-  phase subtitle, a `Last updated` line, a `Links:` run-in body line, **no**
-  warning (the no-warning path), a Session Flow Overview `Time|Phase` table,
-  `#|Ask / Do` task tables under `### Flow` **sub-phase** headings, and a **3-col
-  `Description | Owner | Date` Timeline table in the vendor back-matter AFTER the
-  debrief**.
+- valid skill metadata and the required formatter, template, style, and safety
+  assets;
+- Option 4 is the single documented default, with plain native Docs only as an
+  explicit or pre-approved disclosed fallback;
+- the formatter resolves its contract package-relatively and contains no
+  user-specific absolute path;
+- the source-and-delivery safety reference is wired into the skill and contains
+  authorization, minimization, consent, ACL, capability, idempotency,
+  revision-reconciliation, and partial-artifact gates;
+- both current OUTPUT TEMPLATE fences parse to the canonical `# Moderation Guide`
+  plus `## Study Title` schema;
+- interview and prototype templates retain their format-correct Objectives section,
+  use a neutral incident gate before incident-specific follow-ups, and contain no
+  unsafe `internal research only`, unconditional `Recording armed`, or Participant
+  Grid defaults;
+- the interview template keeps only Parameter and Consent tables, while the
+  prototype template keeps only Parameter and `Phase | Time` tables;
+- participant-grid/log content stays outside the broadly shared guide; and
+- the machine-readable visual contract describes the current template shapes
+  and the wide-Phase/compact-Time geometry.
 
-## What the suite covers
+### `test_option4_guide_layout.py`
 
-- **Contract exactness** — `option4-guide-style.json` name, `structure_agnostic`
-  flag, page geometry, colors, and the generic table tokens (total width,
-  narrow-vs-label first-column widths, the `#` trigger, gray-vs-white label
-  backgrounds). Confirms the old per-kind `tables.kinds` block is gone.
-- **Generic column-width inference** — `table_column_widths()` returns
-  `[90, 608.4]` for a `#` table, `[144, 554.4]` for a 2-col label table, and
-  `[144, 277.2, 277.2]` for a 3-col table, each summing to 698.4.
-- **Parsing both shapes** — the interview manifest (10 sections, 3 tables, two-tier
-  header, seven RACI labels, nested probe list, study type) and the prototype
-  manifest (8 sections, 7 tables, phase subtitle + context note + `Links:` body
-  line, two `### Flow` sub-phases, a 3-col timeline).
-- **No terminal / forbidden-section gate** — the parser now accepts a guide that
-  does NOT end at Post-Session Debrief and one that carries a `Master Probe Bank`
-  trailing section (those content rules moved to SKILL.md / the templates).
-- **Manifest integrity** — a stale contract version or tampered content is rejected
-  before normalize/format run, for both fixtures.
-- **Inline parsing** — HTML-entity decoding, balanced link-URL parentheses, and
-  UTF-16 offset math (needed for ☐ and en-dashes).
-- **Normalize** — uppercases the band headings, deletes each table's conversion
-  header row (one `deleteTableRow` per table, for a variable table count), drops
-  native horizontal rules, and binds imported N-col cell content to the manifest (a
-  tampered 3-col timeline cell is rejected).
-- **Format request shape** — the batch includes every required operation family,
-  uses PAGELESS 792×612, never sends `useCustomHeaderFooterMargins`, shades **every**
-  H2 band dark green, and uses both the bullet and numbered list presets.
-- **Verifier (visual only)** — accepts both fully styled docs (5 checks each) and
-  the whole point of the rework: **it accepts a table AFTER the Post-Session
-  Debrief** in both fixtures. It still rejects visual drift — a band that lost its
-  shading, a label cell turned red, wrong table column widths, a debrief rendered
-  as a non-list, and a surviving horizontal rule.
-- **Pipeline surface** — `parse_markdown`, `build_normalize_requests`,
-  `build_format_requests`, and `verify_document` are all callable.
+The formatter suite constructs synthetic raw Google Docs JSON and exercises the
+real parse, normalize, format, and verify functions. Coverage includes:
 
-## Known limitation
+- the canonical title/study-title top matter, RACI, warning, parameter dashboard,
+  sections, lists, tables, and links;
+- rejection of a noncanonical H1 or a missing immediate Study Title H2;
+- both current OUTPUT TEMPLATE fences through the complete offline pipeline;
+- literal placeholders before links (`[TBD — fill in] · [Research plan](...)`),
+  balanced brackets/parentheses, entities, and UTF-16 indices;
+- ordered binding for exact duplicate prompts across separate phase lists, so the
+  second occurrence cannot silently reuse the first paragraph;
+- nested bullet geometry (36/18pt top level, 54/36pt first nested level) and
+  verifier rejection when a nested probe is flattened;
+- revision-bound normalize and format payloads, including rejection of missing,
+  blank, stale, or mismatched revisions;
+- a repeat normalize pass as an empty, revision-bound no-op;
+- imported-header and horizontal-rule cleanup, exact pre-write hierarchy/header/
+  cell/link binding, hidden-link rejection at normalize/format/final verify, and
+  stale/tampered manifest rejection before any batch exists;
+- private atomic JSON outputs that refuse overwrite, reject repository paths,
+  and require an owner-only working directory;
+- table geometry for `# | Ask`, Parameter, Consent, 3-column tables, and the
+  `Phase | Time` exception (`[554.4, 144]`);
+- every required formatting operation family, page geometry, section-band
+  styling, bullet/numbered presets, and visual-drift rejection; and
+- tables after the debrief, variable section names, and variable table counts.
 
-These tests validate the batch operations and the verifier against synthetic and
-hand-styled Docs JSON. A real end-to-end run — importing a fixture to a live Google
-Doc, applying the normalize and format batches through a write-capable Docs
-integration, re-fetching, and running `verify` on the returned JSON, plus a PDF
-render inspection — is still required before releasing changes to the live visual
-pipeline, exactly as the research-plan suite's "Live Google Docs integration gate"
-describes. The one value to confirm against the research-plan builder on that live
-run is the table border color/weight (the base Option 4 contract does not define
-it; mirror `../../research-plan/scripts/option4_layout.py`).
+## Fixtures
+
+- `fixtures/mock-interview-guide.md` uses the canonical Moderation Guide + Study
+  Title header, a mock warning, extended ownership, nested interview probes, and
+  additional table shapes used to pressure-test the structure-agnostic formatter.
+- `fixtures/mock-prototype-guide.md` uses the same canonical header, a
+  `Phase | Time` Session Flow, H3 flow headings, task tables, and vendor
+  back-matter. It intentionally omits the mock-warning paragraph to exercise the
+  no-warning path.
+
+Every fixture is a **TEST ARTIFACT**, never a real study.
+
+## Behavioral subtype scenarios
+
+Run these as isolated no-Drive dry runs after changing the router, either output
+template, or the methodology. The run must read the current `SKILL.md`, safety
+reference, selected format template, and methodology reference; return only
+labeled Markdown; and make no external write.
+
+### Diary check-in behavioral scenario
+
+Use a 40-minute moderated remote check-in whose approved plan supplies five
+de-identified diary entries and authorizes review of three during the session,
+but does not authorize any new upload or photo request. The output passes only
+when it renders a diary check-in (not an IDI label swap), allocates consent,
+reconnect, entry review, and wrap-up to exactly 40 minutes, references only the
+approved minimum-necessary entries, and does not request or retain new artifacts.
+
+### Focus group behavioral scenario
+
+Use a 75-minute moderated in-person focus group with six participants, approved
+group ground rules, divergent discussion, and one approved prioritization
+activity. The output passes only when it renders a focus-group flow (not a 1:1
+IDI), totals exactly 75 minutes, includes turn-taking and dominant-voice
+management, states only approved group-privacy limits, and does not promise
+participant-to-participant confidentiality.
+
+### Concept reaction behavioral scenario
+
+Use a concept test with reaction/desirability hypotheses and no behavioral-use
+objective. Approve P8 Include for the named first exposure. The output passes
+only when it uses the 5-second hide-and-recall sequence, follows with neutral
+comprehension/reaction/desirability prompts, maps every construct to a required
+evidence-producing prompt, and contains zero invented `Task` rows.
+
+### Usability Task-only behavioral scenario
+
+Use a usability test with one task-completion hypothesis and no initial-reaction
+objective. Approve P8 Task-only. The output passes only when each phase keeps
+Scenario → Expectation → Task → Alignment, maps the completion hypothesis to an
+observable task and cue, and contains zero First impression rows or placeholders.
+
+## Live integration gate
+
+Offline success does not prove Google Docs behavior. Before relying on the live delivery path,
+run both current template shapes through a write-capable integration:
+
+1. import Markdown into the confirmed permission-checked folder;
+2. fetch raw tab content and a fresh revision;
+3. apply the revision-bound normalize batch and re-fetch;
+4. apply the revision-bound format batch and re-fetch;
+5. run the verifier;
+6. repeat normalize to confirm it is a no-op;
+7. export/render and inspect the opening, dense interior, and final pages; and
+8. confirm parent folder, effective permissions, content, links, and duplicate
+   prevention before returning the Doc.

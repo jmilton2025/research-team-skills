@@ -1,12 +1,12 @@
 {
   "name": "Option 4 — Leadership (Moderation Guide)",
-  "version": "2026-09-23b",
+  "version": "2026-10-02",
   "derived_from": "skills/research-plan/references/option4-style-contract.json",
-  "reference_usage": "Visual language shared with /research-plan Option 4; the runtime does not require access to any private reference document. page/colors/typography/warning/spacing tokens are copied verbatim from the research-plan contract so the finished look matches. The document structure is inferred generically (structure-agnostic) and each table's geometry is derived from its own column count and first header cell.",
+  "reference_usage": "Visual language shared with /research-plan Option 4; the runtime does not require access to any private reference document. page/colors/typography/warning/spacing tokens are copied verbatim from the research-plan contract so the finished look matches. The document structure is inferred generically (structure-agnostic) and each table's geometry is derived from its complete header.",
   "structure_agnostic": true,
   "supported_guide_shapes": [
-    "Interview / IDI (two-tier header, extended RACI, prose-bullet themes with indented probes, Participants Log / Parking Lot table after the debrief)",
-    "Prototype / Usability (single breadcrumb, Session Flow Overview, '#|Ask' & '#|Ask / Do' task tables under '### Flow N', vendor Communication & Deliverables back-matter after the debrief)"
+    "Interview / IDI (# Moderation Guide plus study-title top matter, RACI, Parameter and Consent tables, prose-bullet themes with indented probes, optional Parking Lot)",
+    "Prototype / Usability (# Moderation Guide plus study-title top matter, RACI, Parameter and Session Flow tables, bold-label read/do lists, optional vendor Communication & Deliverables back-matter)"
   ],
   "page": {
     "document_mode": "PAGELESS",
@@ -38,7 +38,7 @@
       "size_pt": 16,
       "bold": true,
       "color": "#666666",
-      "_note": "Styles a single breadcrumb line AND the interview two-tier header (all-caps kicker above the title + the italic period line below it). Any short pre-title line and the interview period line render at this breadcrumb level."
+      "_note": "Retained for backward-compatible parsing only. The canonical schema starts with # Moderation Guide and has no breadcrumb or kicker."
     },
     "title": {
       "font": "DM Serif Display",
@@ -51,7 +51,7 @@
       "size_pt": 14,
       "bold": true,
       "color": "#003D29",
-      "_note": "Optional bold subtitle line under the title (dark-green-on-white, distinct from the white-on-green band)."
+      "_note": "Styles the required ## Study Title top-matter line (dark-green-on-white, distinct from white-on-green section bands)."
     },
     "heading": {
       "font": "DM Serif Display",
@@ -65,7 +65,7 @@
       "size_pt": 14,
       "bold": true,
       "color": "#FFFFFF",
-      "_note": "Applied to EVERY Heading-2, generically (Research Objectives, Prototype Tasks, Wrap-Up, Post-Session Debrief, Participants Log, Parking Lot, Communication & Deliverables, …)."
+      "_note": "Applied to every section Heading-2 after the required Study Title top-matter line."
     },
     "sub_phase_heading": {
       "font": "DM Serif Display",
@@ -94,13 +94,13 @@
     "foreground": "#6F4A00",
     "background": "#FFF2CC",
     "full_paragraph_shading": true,
-    "copy_source": "../../references/output-status-and-labeling-conventions.md"
+    "copy_source": "../../../references/output-status-and-labeling-conventions.md"
   },
   "structure": {
     "native_horizontal_rules": 0,
     "band_render": "shaded_h2_paragraph",
     "band_render_alt": "single_row_two_cell_table_698pt",
-    "role_inference": "generic — title = first H1; breadcrumb/kicker = short pre-title line(s) or the italic period line after the title; RACI = consecutive '**Label:** …' bullets (any label set); warning = the TEST ARTIFACT paragraph; every H2 = band; every H3 = sub-phase; every table = Option 4 table styling; every list preserves nesting; all other paragraphs = body.",
+    "role_inference": "canonical — first H1 must be 'Moderation Guide'; the immediately following H2 is the Study Title top-matter line; RACI = consecutive '**Label:** …' bullets; warning = the TEST ARTIFACT paragraph; every later H2 = band; every H3 = sub-phase; every table = Option 4 table styling; every list preserves nesting; all other paragraphs = body.",
     "no_terminal_section": "The guide may end anywhere (a table may appear after Post-Session Debrief). The formatter does NOT enforce a terminal section — that content rule lives in SKILL.md / the templates.",
     "variable_table_count": true,
     "variable_columns": true,
@@ -118,7 +118,7 @@
     "label_case": "UPPER",
     "width_pt_paragraph_mode": 648,
     "width_pt_table_alt_mode": 698.4,
-    "applies_to": "every ## heading in the document, generically; labels adapt to the study, do not copy an old study's wording"
+    "applies_to": "every section ## heading after the required Study Title top-matter line; labels adapt to the study, do not copy an old study's wording"
   },
   "tables": {
     "cell_padding_pt": 5,
@@ -127,15 +127,15 @@
     "table_line_spacing_percent": 100,
     "intentional_text_area_overflow_pt": 50.4,
     "total_width_pt": 698.4,
-    "border": "MIRROR research-plan option4_layout.py; single thin neutral border, consistent across all tables; the base Option 4 contract defines no border color/weight, so this is the sole value to confirm against the research-plan builder rather than invent.",
+    "border": "Google Docs default; the pipeline sends NO border request (mirrors research-plan's Option 4 pipeline). Settled 2026-10-02 after two live builds verified clean with default borders — do not invent a border value.",
     "narrow_first_column_trigger": "#",
     "narrow_first_column_pt": 90,
     "label_first_column_pt": 144,
-    "column_width_rule": "The first column is narrow (90pt) when the first header cell is '#' (question/task tables), otherwise it uses the label width (144pt). The remaining width is split evenly across the other columns so every table's outer edge aligns at total_width_pt. Examples: 2-col '#|Ask' -> [90, 608.4]; 2-col Parameter|Detail / Cue|Read aloud / Time|Phase -> [144, 554.4]; 3-col Date & Time|Panelist Bio|Recording -> [144, 277.2, 277.2].",
+    "column_width_rule": "Derive widths from the complete header. Phase|Time uses [554.4, 144] so the agenda phase stays wide. A first header cell of '#' uses [90, remaining]. Other two-column label/content tables such as Parameter|Detail and Cue|Read aloud use [144, 554.4]. For 3+ columns, reserve 144pt for the first label column and split the remainder evenly.",
     "top_matter_label_background": "#D9D9D9",
     "section_label_background": "#FFFFFF",
-    "label_background_rule": "A two-column table in the top matter (the Parameter|Detail dashboard) gets the gray label column so it reads as an at-a-glance dashboard; every in-section table (consent, question/task, Session Flow Overview, Participants Log, Timeline, …) uses a white label column.",
-    "first_column_bold_rule": "The first (label) column renders bold when EVERY first cell in the source Markdown is fully bold (Parameter|Detail, Cue|Read aloud, #|Ask). Tables whose first column is not uniformly bold (e.g. a Participants Log's Date & Time values) render the first column at normal weight; inline emphasis from the source is honored either way.",
+    "label_background_rule": "The two-column Parameter|Detail dashboard in top matter gets the gray label column. In-section Consent and Session Flow tables use white body cells.",
+    "first_column_bold_rule": "The first column renders bold when every first cell in the source Markdown is fully bold, as in Parameter|Detail and Cue|Read aloud. Session Flow phases remain normal weight unless the approved Markdown explicitly emphasizes them.",
     "label_column_text": {
       "font": "DM Sans",
       "size_pt": 10,

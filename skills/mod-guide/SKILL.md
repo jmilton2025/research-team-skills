@@ -1,16 +1,16 @@
 ---
 name: mod-guide
-description: Use when a UX researcher is about to conduct user interviews, usability tests, or diary study check-ins and needs a moderation guide with warm-up, discussion sections, probing techniques, and closing. Triggers on "write a moderation guide", "interview guide", "discussion guide", "facilitation script", "/mod-guide", or natural asks like "help me write interview questions for this study", "I need a script for my usability test", "prep questions for these sessions", or "build a discussion guide for [study]".
+description: Use when a UX researcher needs a moderation guide for a moderated user interview, usability test, concept test, diary-study check-in, or focus group. Triggers on "write a moderation guide", "interview guide", "discussion guide", "facilitation script", "/mod-guide", or natural asks like "help me write interview questions", "I need a script for my usability test", "prep questions for these sessions", or "build a discussion guide for this study".
 ---
 
 # Moderation Guide Builder
 
 Generate a ready-to-facilitate moderation guide for an Instacart UX research session. The skill builds **two structurally distinct guide formats** (chosen first, in Step 2a / Section 1):
 
-- **Prototype / Usability** — task-and-scenario tables tied to prototype screens, think-aloud, observation cues, ease ratings, experimental design, optional vendor (agency) back-matter. Covers usability tests and concept tests. Template: `references/template-prototype-usability.md`.
+- **Prototype / Usability** — bold-label reaction or read/do lists tied to approved stimuli, think-aloud, observation cues, optional ratings, experimental design, and optional vendor back-matter. Covers usability tests and concept tests without forcing a concept-reaction construct into a behavioral task. Template: `references/template-prototype-usability.md`.
 - **Interview (IDI-style)** — open questions as nested prose probes in timed thematic blocks, no artifact. Covers in-depth interviews, diary check-ins, and focus groups. Template: `references/template-interview.md`.
 
-Both share one spine (stakeholder header, parameter table, pre-session checklist, verbatim consent, post-session debrief) and one delivery pipeline. Grounded in Steve Portigal's *Interviewing Users* (2nd ed.), Indi Young's *Listening Deeply*, Nielsen Norman Group (Rosala, Pernice, Moran, Fessenden), Erika Hall's *Just Enough Research*, Nikki Anderson's *User Research Academy*, Instacart's internal **AIxUXR Playbook** (Loosbrock & Venkatraman, 2025) — the *Discussion Guide Drafter & Critic* spoke — and four finished Instacart discussion guides (IC4B, Caper RR3, Bad Addresses, Checkout Sprint) plus the AI Expert Interviews guide.
+Both share one spine (stakeholder header, parameter table, pre-session checklist, post-session debrief) and one delivery pipeline. Consent is format-specific and appears once: a Consent table for interviews, or a read-aloud Introduction list for prototype studies. The methodology is grounded in Steve Portigal, Indi Young, Nielsen Norman Group, Erika Hall, Nikki Anderson, and de-identified lessons from completed team studies.
 
 ### Guiding Philosophy — H.E.A.R.T. (from Instacart's AIxUXR Playbook)
 
@@ -22,9 +22,9 @@ Every guide this skill produces — and every session it supports — must uphol
 | **E — Experience-focused** | Every interaction in the session (consent, warm-up, probes, close) must feel intuitive, respectful, and positive. A clunky moderator moment is bad research. |
 | **A — Amplifying** | AI drafts the protocol; the human researcher drives strategy, synthesis, and empathy. The guide is a starting point, not a script cage. |
 | **R — Responsible** | Proactive about ethics, PII, consent, and bias mitigation — not a box-check. Scrub PRDs/RPPs of PII before pasting. |
-| **T — Transparent** | Disclose AI-assisted drafting to stakeholders. Disclose recording and purpose to participants. Trust is the currency. |
+| **T — Transparent** | Disclose AI-assisted drafting to stakeholders. Disclose the approved study purpose and any planned recording/observation to participants. Trust is the currency. |
 
-**Source:** AIxUXR Playbook §1.2 "The H.E.A.R.T. of AI in Research" (Instacart internal, Pilot, Sep 30, 2025).
+**Source note:** H.E.A.R.T. is the team's responsible AI-assisted research framework. Internal source identifiers are intentionally omitted from this public package.
 
 The researcher is the final authority. Recommend clearly, but never silently lock a study parameter, question, probe, or delivery choice. Ground every parameter and question in the supplied inputs; if a fact is not in the inputs, mark it `[TBD — fill in]` rather than inventing it ("grounded in data, never assumed").
 
@@ -32,40 +32,41 @@ The researcher is the final authority. Recommend clearly, but never silently loc
 
 ## Completion contract
 
-A run is complete only when all of the following are true:
+For a real-study run, completion requires all gates 0–6:
 
 0. **The guide format has been chosen** — **Prototype / Usability** or **Interview (IDI-style)** — and the matching template reference has been loaded (`references/template-prototype-usability.md` or `references/template-interview.md`). This is the first Section 1 decision and it forks every downstream step (Section 1 parameters, Section 2 blocks, OUTPUT TEMPLATE). See Step 2a.
-1. Study inputs have been read and the study parameters proposed from them.
-2. The researcher has approved every applicable **Section 1** parameter (the upfront setup batch) **and** every **Section 2** guide-content block — the block sequence depends on the chosen format (interview: Objectives → Introduction & Rapport → Thematic deep-dive blocks → Wrap-Up → optional Parking Lot; prototype: Objectives → Intro → Background → Task Flows → optional Comparisons/Recap → Wrap-Up → optional vendor back-matter).
-3. The self-critique pass and the multi-agent review have both run, with fixes folded in.
-4. The Google Drive destination has been confirmed.
-5. The guide has gone through the **create → format → verify** pipeline — the **Option 4 — Leadership** visual contract by default (native Google Docs; plain-native or a Jedida variant only when the researcher picks it or as a disclosed fallback).
+1. Non-public sources are authorized for AI processing before access, participant-level data is excluded, and the minimum necessary de-identified inputs have been read. Follow `references/source-and-delivery-safety.md`.
+2. The researcher has approved every applicable **Section 1** parameter and every decision-bearing **Section 2** core block. Template-driven surrounding blocks are source-grounded, shown in the assembled draft, and included in the final review — the sequence depends on the chosen format (interview: Objectives → Introduction & Rapport → thematic deep-dives → Wrap-Up → optional Parking Lot; prototype: Objectives → Intro → Background → construct-matched stimulus/task phases → optional Comparisons/Recap → Wrap-Up → optional vendor back-matter).
+3. The mandatory baseline safety/method audit has passed. The enhanced multi-agent review has also run when the researcher opted in, with confirmed fixes folded in.
+4. The exact Google Drive destination, intended audience, effective permissions, and one authorized partial-artifact recovery path have been confirmed before creation.
+5. The guide has gone through the idempotent **create → revision-bound normalize → revision-bound format → readback → render → verify** pipeline. **Option 4 — Leadership** is the default; plain native Google Docs is only an approved and disclosed fallback.
 6. A working Google Doc link has been returned with a one-line pilot reminder and verification status.
 
-Both quality checks run before the final Google Doc is drafted. Drive destination confirmation must happen before document creation.
+For a demo, mock, sample, fixture, or pressure test, gates 0–3 apply, followed by a prominent `⚠️ TEST ARTIFACT` Markdown result and no Drive, tracker, or project-folder write. Gates 4–6 are skipped unless the tester explicitly requests a test Doc; then gates 4–6 apply with a confirmed safe destination, permission readback, and the same delivery verification as a real study.
 
-Markdown is an intermediate representation, not the completed deliverable. A mock or demo stays out of Drive and the tracker unless the tester explicitly requests a test document.
+The mandatory baseline audit and any selected enhanced review run before the final Google Doc is drafted. Drive destination confirmation must happen before document creation.
+
+For a real study, Markdown is an intermediate representation, not the completed deliverable. The demo branch above returns labeled Markdown by design.
 
 ## Flow overview
 
 | Step | Work | Completion gate |
 |---|---|---|
-| **1** | Gather PRD, brief, kickoff notes, Slack thread, or free-form description → announce the 3-section structure to the researcher | Inputs received; researcher understands the full workflow |
-| **2** | Analyze inputs; propose the study-parameters table (read-only context); run the Say-Do Gap risk check | Parameters and risk flag proposed |
-| **3** | **Section 1 — Study Setup & Parameters:** the consolidated upfront batch of labeled pop-ups. **First question = guide format (Prototype/Usability vs Interview)**, then the shared rows (moderation, duration, participants, profile, topics/tasks/flows, Say-Do, RACI [multi]) + the **truly format-specific rows from the matching template reference** (prototype: prototype links/backup, device, experimental design, rating style, delivery model; interview: recruit source, blinded?, conditional blocks, horizon framing) + Drive-destination & delivery-variant confirmation folded in last | Format chosen; all applicable parameters approved; destination confirmed; researcher says "Section 1 locked" |
-| **4** | **Section 2 — Guide Content:** draft-first approval, one block at a time, using the **block sequence from the matching template reference** (interview: Objectives → Introduction & Rapport → Thematic deep-dive blocks → Wrap-Up → optional Parking Lot; prototype: Objectives → Intro → Background → Task Flows → optional Comparisons/Recap → Wrap-Up → optional vendor back-matter), each locked before the next, transition announced after each lock | All content blocks approved |
-| **4.5** | **Section 3 —** auto-run the 5-part self-critique (announced at end of Step 4) as the critique half | Gaps fixed or explicitly accepted |
-| **5** | Auto-run the multi-agent review on the fixed content — before the Doc | Review complete; confirmed fixes folded in |
-| **6** | Draft the Google Doc last: confirm destination, create the doc, style (**Option 4 — Leadership default** via `option4_guide_layout.py`; plain-native fallback; optional Jedida variant), read back, verify the visual contract, correct, return with pilot reminder | Content, structure, tables, links, location, and Option 4 visual contract pass |
+| **1** | Establish source authorization/minimization, then gather the de-identified plan, brief, approved notes, or free-form description → announce the 3-section structure | Inputs authorized and received; researcher understands the workflow |
+| **2** | Analyze inputs; prepare source-grounded Recommended options for Section 1; run the Say-Do Gap risk check | Recommendations and risk flag prepared for approval |
+| **3** | **Section 1 — Study Setup & Parameters:** the consolidated upfront batch of labeled pop-ups. **First question = guide format (Prototype/Usability vs Interview)**, then study title and the shared rows (moderation, duration, participants, profile, topics/tasks/flows, Say-Do, RACI [single confirm/revise]) + the **truly format-specific rows from the matching template reference** (prototype: prototype links/backup, device, experimental design, rating style, delivery model; interview: recruit source, blinded?, conditional blocks, horizon framing). Add Drive destination/audience, partial-artifact recovery, and delivery style only for real runs or explicitly requested test Docs. | Format and title chosen; all applicable parameters approved; real/test-Doc destination and recovery path confirmed or no-Drive demo branch locked; researcher says "Section 1 locked" |
+| **4** | **Section 2 — Guide Content:** show the template-driven surrounding content and obtain draft-first approval for each decision-bearing core block, using the matching template sequence | Core blocks approved; required template blocks present in the assembled draft |
+| **4.5** | **Section 3 —** always run the baseline safety/method audit; offer the enhanced two-reviewer panel; route meaning-changing fixes through the planned approval gate | Material fixes approved; affected audit rows pass; panel result folded in when selected |
+| **5** | Run the enhanced multi-agent review only when selected and authorized | Review complete or disclosed as skipped/unavailable; change control complete |
+| **6** | For a real study or requested test Doc, preflight capabilities and Drive ACL; create once; apply revision-bound Option 4 batches; read back content, parent, and permissions; render and verify. For a no-Drive demo, return labeled Markdown after Section 3. | Selected delivery branch passes its completion contract |
 
 ## Portable Google Docs contract
 
 The skill must work for any researcher with a write-capable Google Docs integration.
 
-- **Option 4 — Leadership is the default deliverable look**, applied by the bundled `scripts/option4_guide_layout.py` formatter against `references/option4-guide-style.json` using the session's connected Google Docs / Drive tools only — the same clean, edited leadership design `/research-plan` produces. Plain native Google Docs is a fallback (disclosed) or an explicit researcher pick; a personal Jedida variant applies only when the researcher opts in.
+- **Option 4 — Leadership is the default deliverable look**, applied by the bundled `scripts/option4_guide_layout.py` formatter against `references/option4-guide-style.json` using connected Google Docs / Drive tools. Plain native Google Docs is an explicit choice or a pre-approved, disclosed fallback.
 - Do not depend on a personal template, custom font beyond the bundled Option 4 contract, private reference document, hardcoded folder ID, personal styling script, command-line utility (gws/gohan), or researcher-specific authentication setup for a real run to succeed. The Option 4 formatter is bundled with the skill and portable; it is not a personal dependency.
-- **Optional "Instacart / Jedida variant":** the personal pipeline (`md2doc`/`upload-gdoc.py`, `apply_jedida_reporting.py`, `apply_canonical_template.py`, `apply_custom_template.py`, CLAUDE.md folder-routing, hardcoded project-folder IDs) is preserved as an *optional* path the researcher can choose in Section 1. It is never the default and is never required.
-- Confirm the exact Drive destination before creating any doc. Never write to a hardcoded personal folder without confirmation.
+- Confirm the exact Drive destination, intended audience, effective permissions, and authorized partial-artifact recovery path before creating any doc. Never write to a hardcoded personal folder or broaden sharing silently. Follow `references/source-and-delivery-safety.md`.
 - If no write-capable Docs integration is available, preserve the approved markdown draft and report that the required deliverable is blocked. Do not call the markdown output final.
 
 ## Interaction contract
@@ -73,13 +74,13 @@ The skill must work for any researcher with a write-capable Google Docs integrat
 Use native `AskUserQuestion` checklist pop-ups when available.
 
 - Ask one decision per pop-up. (Section 1's upfront setup may still batch up to 4 of these decisions per `AskUserQuestion` call — each decision is still labeled and answered individually within the batch.)
-- **Use `multiSelect: true` selectively — on decisions where more than one item legitimately applies:** key topics/tasks, stakeholders/RACI, and any multi-item quote/finding/recommendation/tag/theme decision. **Keep single-select for genuinely exclusive choices:** session duration, study type, moderation style, Say-Do module, stimuli handling, phase/scope, and the delivery/styling variant.
-- Number the options. Mark a **Recommended** option based on the inputs and discovered evidence — it is exactly what the Step 2 parameters table already proposed.
-- Preserve the built-in **Other / comments** field so researchers can add, correct, or rewrite (including custom durations, participant counts, or a reference-doc URL).
+- **Use `multiSelect: true` only when 2–3 independent items can legitimately apply**, such as a short topics/tasks list. Use a single confirm/revise choice for longer sets and for RACI as one coherent assignment. Keep single-select for exclusive choices such as duration, study type, moderation style, Say-Do module, stimuli handling, phase/scope, destination confirmation, and styling.
+- Number the options. Mark a **Recommended** option based on the inputs and discovered evidence — it is the source-grounded choice prepared internally in Step 2.
+- Preserve the built-in **Other / comments** field so researchers can add, correct, or rewrite (including custom durations, participant counts, or a Drive folder URL).
 - Show the proposed content before asking for approval.
 - **The last option in every pop-up must be "Brainstorm with me"** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. Never bury it mid-list.
 - Label every pop-up with its section and step: **"Section 1 > Step 3 of 10: Duration"** / **"Section 2 > Step 2 of 5: Core — Task Flow"**. The researcher must always know exactly where they are.
-- No fixed option cap: show all relevant items; if there are many, show the most important first and include an "Other / see more" slot.
+- Native `AskUserQuestion` allows **at most 4 questions per call and 4 options per question**, including "Brainstorm with me," and cannot pre-select. Therefore each question has one Recommended option, at most two alternatives, then "Brainstorm with me." For more than three drafted items, use a single "Accept the drafted set" option plus revise/add alternatives; never drop items or imply they were pre-selected. Keep dependent rows in separate batches and order them after their prerequisites.
 - Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Step 4.
 
 If native pop-ups are unavailable, state **"Inline fallback — native checklist unavailable in this environment"** and reproduce the same numbered options, labels, and selection instructions in chat. Do not silently substitute an unlabeled prose question.
@@ -88,11 +89,13 @@ If native pop-ups are unavailable, state **"Inline fallback — native checklist
 
 ## Step 1 — Gather Study Inputs & Orient the Researcher
 
-Ask the researcher to paste or share the study inputs. Say:
+Before opening or using non-public material, apply `references/source-and-delivery-safety.md`: confirm the researcher's authority and approved AI processing, source audience, minimum necessary content, and redaction. Do not request participant-level data. Pasting or attaching content does not establish the requester's authority or approved AI-processing status; apply the same gate before using pasted non-public material.
 
-> "To build your moderation guide, share whatever you have — PRD, project brief, kickoff Slack thread, meeting notes, or a plain-English description. **If it's a usability/prototype test, include the prototype or Figma link.** I'll extract the study parameters, recommend whether this is a prototype/usability guide or an interview guide, and build from there. If you have a Google Doc link, paste it."
+Ask the researcher to paste or share the de-identified study inputs. Say:
 
-**Accept any format:** PRD, brief, Slack thread, Gemini meeting notes, or verbal description. If a Google Doc URL is shared, read it via `google-docs:fetch-google-doc` or Glean (`mcp__glean_default__read_document`) — whichever is available in this environment. If neither tool is connected, ask the researcher to paste the doc's content directly rather than stalling on a missing tool.
+> "To build your moderation guide, share the de-identified study plan, brief, approved notes, or a plain-English description. Please leave out participant names, contact details, schedules, and recording links. **For a usability/prototype test, include the approved prototype link or a description of the flows.** I'll extract the parameters, recommend the guide format, and build from there."
+
+**Accept any de-identified format:** plan, brief, approved notes, or verbal description. For a shared Google Doc URL, complete the source-authorization gate before reading it. If no authorized reader is connected, ask for the minimum necessary content to be pasted instead.
 
 ### Orientation announcement
 
@@ -103,13 +106,13 @@ Once the inputs are in hand, before asking any parameter questions, say in chat:
 > **We'll work in three sections:**
 >
 > **Section 1 — Study Setup & Parameters** *(the decisions that shape the guide)*
-> **Guide format (Prototype/Usability or Interview) — first** · Moderation style · Duration · Participants · Profile · Stakeholders (RACI) · then the parameters specific to your chosen format · Drive destination & delivery style
+> **Guide format (Prototype/Usability or Interview) — first** · Study title · Moderation style · Duration · Participants · Profile · Stakeholders (RACI) · then the parameters specific to your chosen format · for a real study or requested test Doc, Drive destination/audience · partial-artifact recovery · delivery style
 >
 > **Section 2 — Guide Content** *(what the moderator will actually read)*
 > Built from your format's template — an **interview** guide runs Objectives → Intro & Rapport → Themes → Wrap-Up; a **prototype/usability** guide runs Objectives → Intro → Background → Task Flows → Wrap-Up
 >
 > **Section 3 — Quality Gate & Delivery** *(check, then produce)*
-> Self-critique → multi-agent review → the formatted, verified Google Doc in your confirmed Drive folder
+> Mandatory safety/method audit → optional enhanced reviewer panel → either labeled no-Drive TEST ARTIFACT Markdown (demo/test) or the formatted, verified Google Doc in a permission-checked Drive folder
 >
 > For each step I'll show you what I've drafted — you can accept it, pick what to keep, or brainstorm with me to refine it. We move to the next step only after you approve the current one.
 >
@@ -121,7 +124,7 @@ This is the one planned questioning phase. There are no *unplanned* pop-ups: eve
 
 ## Step 2 — Analyze and Propose Structure
 
-Analyze the inputs, then present recommended study parameters as a table. Extract directly from the source material — do not invent details.
+Analyze the inputs and prepare Recommended options for Section 1. Extract directly from the source material; do not invent details or show a redundant recommendation table.
 
 ### 2a. Guide Format Selector (THE top-level fork — determines the whole template)
 
@@ -129,24 +132,26 @@ Analyze the inputs, then present recommended study parameters as a table. Extrac
 
 | Format | Load this reference | Body shape | Anchored to | Use when |
 |--------|--------------------|-----------|-------------|----------|
-| **Prototype / Usability** | `references/template-prototype-usability.md` | Task **tables** (`Task \| Scenario \| Directives/Probes \| Observation Cues`) tied to prototype screens | An artifact — Figma/live product/screens | The participant **does a task** with a design under test |
+| **Prototype / Usability** | `references/template-prototype-usability.md` | Bold-label reaction or read/do lists tied to approved stimuli; observation cues remain prose outside the lists | An artifact — Figma/live product/screens | The participant **reacts to, interprets, compares, or uses** a design under test |
 | **Interview (IDI-style)** | `references/template-interview.md` | Open questions as **nested prose bullets** in timed thematic blocks — no body tables | Nothing — the conversation *is* the session | The participant **talks** — recounts experience, opinion, mental model |
 
 **How the choice is made:** always **ask the researcher explicitly** (this is the first Section 1 question — see Step 3). Do *not* silently auto-select. You may still *recommend* a format from the input signals below, but the researcher confirms it.
 
 **Decision signals (to set the Recommended option):**
-- → **Prototype/Usability** when inputs include a prototype/Figma link, mockups, screens, or an on-device/on-cart stimulus; or words like *usability, task, flow, walkthrough, click, can they complete X, where do they get stuck*; or a design under evaluation (especially multiple variants); or counterbalancing is a concern.
-- → **Interview** when there is **no artifact** — just topics/themes to discuss; or goals phrased as *understand why / how they feel / their experience / their mental model / their vision*; or participants recruited to talk about a domain (e.g. external experts via GLG); or future/landscape/opinion studies.
-- **Tie-breaker:** a testable artifact **AND** a "can they do X" question → Prototype. Purely "learn what they think and why," no artifact → Interview. A short warm-up interview *inside* a prototype session does **not** make it an interview guide — tasks + a stimulus make the whole thing a prototype guide.
+- → **Prototype/Usability** when inputs include a prototype/Figma link, mockups, screens, or an on-device/on-cart stimulus; words like *usability, concept test, first impression, reaction, comprehension, task, flow, walkthrough, click, can they complete X, where do they get stuck*; a design under evaluation (especially multiple variants); or counterbalancing is a concern.
+- → **Interview** when there is **no artifact** — just topics/themes to discuss; or goals phrased as *understand why / how they feel / their experience / their mental model / their vision*; or participants recruited to talk about a domain; or future/landscape/opinion studies.
+- **Tie-breaker:** a testable artifact plus an approved reaction, comprehension, comparison, or "can they do X" construct → Prototype. Purely "learn what they think and why," no artifact → Interview. A short warm-up interview *inside* an artifact-based session does **not** make it an interview guide.
 
-**Where the old 5 study types land:** *Usability Test* and *Concept Test* (stimulus/task-driven) → **Prototype/Usability**. *In-Depth Interview (IDI)*, *Diary Study Check-in*, and *Focus Group* (conversation-driven) → **Interview**. Sub-shape nuances (diary entry-review, focus-group turn-taking, concept-test 5-second rule) live in `references/mod-guide-methodology.md` §3.
+> **⚠️ Interview requested for a prototype-shaped plan (live-test finding, 2026-10-02):** if the researcher asks for an interview guide but the source plan's *Method & approach / Stimuli & protocol* define artifact-based tasks (prototype sessions, order comparisons, think-aloud tasks), the plan's hypotheses **cannot be answered by a talk-only guide**. Name the mismatch explicitly and offer exactly two paths: **(a)** build the prototype guide the plan specifies (per the tie-breaker above), or **(b)** reframe the guide as a **separate pre-prototype discovery round** — its own goal ("ground the premises behind the plan's hypotheses"), its own timeline/dates in the parameter table (not the plan's session dates), an interpretation limit stating that testing the module itself needs the plan's prototype sessions, and a note that the plan's method/timeline rows need amending to match. Never silently ship a talk-only guide carrying the plan's session dates and hypotheses as if it could test them.
+
+**Where the old 5 study types land:** *Usability Test* and *Concept Test* (artifact-driven; task-led or reaction-led by construct) → **Prototype/Usability**. *In-Depth Interview (IDI)*, *Diary Study Check-in*, and *Focus Group* (conversation-driven) → **Interview**. Automatically load `references/mod-guide-methodology.md` §3 for concept tests, diary check-ins, and focus groups; those subtypes need their specific reveal, entry-review, or turn-taking rules.
 
 **Time split (applied to the confirmed duration):**
 
 | Format / study type | Time Split |
 |---------------------|-----------|
 | Prototype — Usability Test | 5% intro / 5% background / 75% tasks / 15% wrap (four buckets — the prototype parameter table wants intro/background/tasks/wrap separately) |
-| Prototype — Concept Test | 5% intro / 10% background / 70% tasks / 15% wrap |
+| Prototype — Concept Test | 5% intro / 10% background / 70% stimulus/reaction phases / 15% wrap |
 | Interview — IDI | 10% intro+warm-up / 80% core (themes) / 10% wrap |
 | Interview — Diary check-in | 15% / 70% / 15% |
 | Interview — Focus Group | 15% / 70% / 15% |
@@ -163,9 +168,13 @@ Rationale: time splits follow NN/g's qualitative usability testing study guide a
 
 Flag **High** if the study asks *only or mostly* about stated behavior, preferences, or intent rather than observable action — e.g., "how often do you cook at home?", "would you pay for this?", "do you read ingredient labels?" (see references/mod-guide-methodology.md §2a for the full signal list). Flag **Low** if the study is a usability test or otherwise observes actual behavior with a planned follow-up (§2a). Flag **Medium** for everything in between — e.g. a study that's mostly observational (usability, contextual inquiry) but includes a handful of stated-preference or frequency questions alongside the core task-based content.
 
-**Effect on the generated guide:** both **Medium and High** automatically include the **Say-Do Gap Module** (the §2b probes and §2c social-desirability counter-moves) — Medium studies just need it applied more selectively, to the specific stated-preference questions rather than throughout. Only **Low** skips the module entirely. This also sets the Recommended default for Row 8 (Say-Do Gap module) in Step 3: Medium/High → Recommended = Include; Low → Recommended = Skip.
+**Effect on the generated guide:** both **Medium and High** automatically include the **conversational** Say-Do Gap techniques (neutral incident gates, non-accusatory gap probes, and §2c social-desirability counter-moves) — Medium studies apply them only to the relevant stated-preference questions. Only **Low** skips the module entirely. This also sets the Recommended default for Row 8 in Step 3: Medium/High → Recommended = Include; Low → Recommended = Skip. **Diary/photo pre-work and participant artifact collection are off unless the approved plan and protocol explicitly define** the collection, participant permission/consent, transfer channel, audience/access, and retention/deletion.
 
 Source: NN/g "Why User Interviews Fail" — *"Interviews do not produce reliable data about user behavior."* Indi Young's listening sessions also warn: people reconstruct rather than report.
+
+### 2d. Build the internal source crosswalk
+
+Before drafting, map every approved plan objective, research question, and supplied hypothesis to at least one guide block. For prototype studies, every supplied objective, RQ, or hypothesis maps to a required, **construct-matched evidence-collection element**: completion, discoverability, navigation, and use → executable task plus observation cue; comprehension, reaction, recall, relevance, desirability, trust, preference, and comparison → required neutral prompt, plus a P8 first-impression prompt only at approved first exposures. Split mixed constructs. **Never convert a reaction, recall, comprehension, or desirability hypothesis into an invented behavioral task.** If no valid guide item can test the construct, flag a method mismatch and block coverage approval. For interviews, every objective maps to an open question. Preserve the plan's sample, timeline, cohorts, stimuli, recording/privacy commitments, and ownership exactly. Mark any requested deviation as a proposed plan amendment and obtain approval in the relevant Section 1 decision. The crosswalk is a working audit artifact, not a section in the delivered guide.
 
 ---
 
@@ -180,24 +189,24 @@ The old version of this skill forbade **all** questions after the parameter batc
 So the rule is: **zero *unplanned* questions.** That means:
 
 - Every pop-up must belong to one of the three announced sections (Section 1 parameters, Section 2 content approval, or the Section 3 gate). Do not invent an unannounced clarifying question.
-- If you discover a missing piece of information that is *not* one of the planned decisions, **resolve it with a sensible default** based on the inputs and the approved parameters — don't spawn a surprise pop-up. If the default turns out wrong, the researcher will correct it when they see that block's draft.
-- Section 3 (self-critique, multi-agent review, upload + style) still runs with **no** further researcher pop-ups — it is deterministic. Status updates are welcome; questions are not.
-- Re-asking the *same* decision, or asking something the researcher already answered, is the failure mode this skill prevents. Consolidate parameters here; walk content in Section 2; then execute Section 3 silently.
+- Resolve only non-material missing details with a safe default. Never default recording/privacy/incentive language, a source authorization, the destination, its audience/ACL, or a plan deviation; use `[TBD]` in the relevant planned decision or stop before the affected access/write.
+- Section 3 always runs the baseline safety/method audit. It has one optional enhanced-panel decision; if the panel is selected, that same decision serves as its preflight approval when it states the lenses, sources, audience, and expected runtime. When an audit or panel proposes a meaning-changing fix, Section 3 also has one planned change-approval gate before delivery.
+- Re-asking the *same* decision, or asking something the researcher already answered, is the failure mode this skill prevents. Consolidate parameters here; walk content in Section 2; then run the announced Section 3 review and any required change approval.
 
-**The researcher's interaction moments are:** (1) Step 1 — paste inputs, (2) Section 1 — answer the parameter batch, and (3) Section 2 — approve each content block. After Section 2 closes, the next thing they see is the finished, verified Google Doc.
+**The researcher's interaction moments are:** (1) Step 1 — authorize/share inputs, (2) Section 1 — answer the parameter batches, (3) Section 2 — approve the core content blocks, (4) choose whether to add the enhanced panel after the mandatory baseline audit, and (5) when needed, approve meaning-changing audit/panel fixes. Then delivery runs without new questions unless a safety boundary blocks the write.
 
 ---
 
 **Hard rule:** Ask the researcher about **every key moderation-guide parameter** through `AskUserQuestion` *before* drafting guide content in Section 2 — even the ones that look "obvious" from the inputs. The point is to give the researcher a chance to **confirm or override** every meaningful design choice in one place. They should walk away from Section 1 feeling like they directed the guide, not received it.
 
 **Guarantees the researcher gets in every popup:**
-1. **A Recommended option** — Claude's pick (extracted from the inputs or chosen by best practice) appears first, marked `(Recommended)`. It matches exactly what the Step 2 parameters table proposed.
-2. **2–3 alternatives** — real, plausible alternatives so the choice is meaningful, not rubber-stamped.
-3. **An editable "Other" field** — `AskUserQuestion` always offers an "Other" free-text input; the researcher can type any custom value (e.g. a custom duration like "75 min", a custom participant count like "N=18", a custom profile, or a reference-doc URL).
+1. **A Recommended option** — the source-grounded pick appears first, marked `(Recommended)`.
+2. **At most 2 alternatives** — real, plausible alternatives; the fourth slot is reserved for "Brainstorm with me."
+3. **An editable "Other" field** — the researcher can type a custom value such as "75 min," "N=18," or a Drive folder URL.
 4. **"Brainstorm with me" as the last option** — every pop-up ends with this; it opens a short chat exchange on that specific parameter, then re-shows the revised choice for approval before advancing.
 5. **A section/step label** — every pop-up is labeled **"Section 1 > Step N of M: <name>"**, where M is the number of applicable parameter questions actually being asked (conditional rows that are skipped don't count).
 
-**The very last item in Section 1 — across all batches — must always be the Drive-destination & delivery-variant confirmation** (see "The mandatory delivery question" below), so the destination is confirmed before any doc is created. The only exception: **demo/sample/test runs**, where the delivery question is skipped entirely, no Drive artifact is created, and styling auto-resolves per the demo rule (see "Demo-run auto-trigger" below).
+On real-study runs and explicitly requested test-Doc runs, the final three Section 1 decisions are **Drive destination + intended audience**, **partial-artifact recovery**, and **delivery style**. Keep them separate. Preauthorize exactly one partial-artifact recovery path (trash the verified Doc ID, or restrict and move/retitle it in an exact quarantine folder); if neither path is authorized and supported, block before creation. No-Drive demo/sample/test runs omit all three decisions and lock the labeled Markdown branch instead.
 
 ### Mandatory question set (ask ALL of these — even if extracted from inputs)
 
@@ -206,17 +215,21 @@ The **Select** column says whether the pop-up is `multiSelect: true` (more than 
 | # | Question | Select | Recommended (Claude's pick) | Alternatives |
 |---|----------|--------|------------------------------|--------------|
 | **0** | **Guide format** — Prototype/Usability vs Interview (**ALWAYS FIRST, always asked**) | single | The format the Step 2a signals point to (prototype if there's an artifact/task; interview if it's talk-only) | The other format · "Brainstorm with me" — on picking, **load the matching template reference** and pull its format-specific rows into Row 10 below |
+| **0A** | **Study title** — the title shown in the guide and used for the Doc | single confirm/revise | Exact source title, or a concise source-grounded draft when none exists | Revise title · Keep `[TBD — fill in]` |
 | 1 | **Phase/scope** — which phase or sub-study to build (only if multi-phase plan) | single | The earliest unbuilt phase | Other phases · Both phases |
 | 2 | **Study sub-type** (within the chosen format) | single | Interview → IDI / Diary / Focus; Prototype → Usability / Concept — best fit from inputs | The next-best sub-types (skip when only one plausibly fits) |
-| 3 | **Moderation style** | single | Moderated remote / Moderated in-person / Unmoderated | The two not picked |
-| 4 | **Duration** (session length — exclusive) | single | Extracted minutes or 60 min default | 30 / 45 / 60 / 90 (drop the recommended one from this list) |
+| 3 | **Moderation style** | single | Source-grounded choice: Moderated remote or Moderated in-person | The other moderated mode; use Other for a specific platform/location |
+| 4 | **Duration** (session length — exclusive) | single | Extracted minutes or method-appropriate default | The two method-appropriate alternatives that best fit the chosen subtype; use Other for a custom duration |
 | 5 | **Number of participants** | single | Extracted N or method-appropriate default (IDI N≈12, usability N≈5–8, concept/focus N≈8–12) | Smaller / larger options |
 | 6 | **Participant profile** | single | Extracted screen criterion | Looser / tighter alternatives |
-| 7 | **Key topics / tasks / flows** | **multi** | The 3–6 extracted topics (interview) or task flows (prototype), all pre-selected | "Add another" · individual items selectable so the researcher can drop any |
+| 7 | **Key topics / tasks / flows** | multi only for 2–3 items; otherwise single confirm/revise | The complete extracted set | Remove/reorder · Add/reframe |
 | 8 | **Say-Do Gap module** | single | Include / Skip / Let Claude decide — Recommended depends on Step 2c risk flag (usually **Include** for interviews on stated behavior; usually **Skip** for prototype tests, which observe behavior) | The other two |
-| 9 | **Stakeholders (RACI)** | **multi** | Researcher = Responsible; decision-owner/PM = Accountable; PM, EM, design lead = Consulted; skip-level and partners = Informed — extracted names where known, `[TBD — fill in]` elsewhere | "Edit names" · "Use TBD placeholders for all" — each named stakeholder is an individually selectable line |
-| 10 | **Format-specific rows** — pull from the loaded template reference (Row 7 above already captured the topics/tasks/flows; Row 8 the Say-Do module — don't re-ask them here) | varies | **Prototype** (`template-prototype-usability.md`, the truly-specific rows P1–P4, P6–P8): delivery model (internal/vendor) · prototype link(s) · backup · device · experimental design · rating style · feedback-then-task. **Interview** (`template-interview.md`, the truly-specific rows I1, I2, I4, I6): recruit source · blinded? · conditional blocks · horizon framing | Each row's own alternatives, per the reference |
-| **LAST** | **Drive destination & delivery style** (portable-first) | single | See "The mandatory delivery question" below | See below |
+| 9 | **Stakeholders (RACI)** | single confirm/revise | The complete source-grounded assignment; `[TBD — fill in]` where unknown | Edit assignment · Use TBD placeholders |
+| 10 | **Recording, observation, privacy, and incentive language** | single confirm/revise | Exact approved plan/ResOps protocol; `[TBD — confirm ResOps standard language]` for unknowns | No recording/observers · Revise approved protocol |
+| 11 | **Format-specific rows** — pull from the loaded template reference (Rows 7–10 are shared; don't re-ask them) | varies | **Prototype:** delivery model · prototype link(s) · backup · device · experimental design · rating style · feedback-then-task. **Interview:** recruit source · blinded? · conditional blocks · horizon framing | Each row's own alternatives, per the reference |
+| **FINAL-2** | **Drive destination + intended audience** | single confirm/revise | Exact authorized folder and audience | Choose another authorized folder · Brainstorm |
+| **FINAL-1** | **Partial-artifact recovery** | single | Source-authorized trash-by-ID or exact permission-checked quarantine folder | The other authorized path · Block creation until a path is authorized |
+| **LAST** | **Delivery style** | single | Option 4 — Leadership with pre-approved plain-native fallback | Strict Option 4 — Leadership (block if unavailable) · Plain native Docs |
 
 **Stakeholder identity verification (Row 9):** Before carrying any name into the RACI block, verify it is still current using the people/directory search tool (e.g. `mcp__glean_default__employee_search` or the connected directory search). Stored context and project files go stale — a named team member may have left or changed roles. If there is any doubt about who belongs in a role, ask the researcher directly *inside the RACI pop-up's "Other" field prompt or as part of this same Section 1 question* (e.g. "I see [Name] listed as [Role] — is that still accurate?"). Never carry a name forward from memory or a stale file without a live check. *(Current-session caveat: the people/Glean MCPs may require auth; if the directory search is unavailable, say so, keep the name only if the researcher confirms it live, and otherwise use `[TBD — fill in]`.)*
 
@@ -225,25 +238,27 @@ The **Select** column says whether the pop-up is `multiSelect: true` (more than 
 - **Terminology note (Row 1):** "Phase" here means a study *sub-phase* — e.g. a diagnostic wave followed by a validation wave within this one study — not the RPP's "Phase 1–5" process-stage grid (Plan/Recruit/Fieldwork/Synthesis/Readout) in the Research Timeline header. Same word, different meaning — don't conflate the two.
 - **Row 2 (Study sub-type)** — skip only when exactly one sub-type plausibly fits the chosen format (e.g. inputs unambiguously describe a standard IDI).
 - **Row 8 (Say-Do module)** — for a prototype/usability guide this is usually Skip (the session observes behavior); ask it only when the prototype study also collects meaningful stated-preference data.
-- **Row 10 (Format-specific rows)** — governed by the loaded template reference; ask every applicable row it defines, and skip only the ones the reference itself marks optional (e.g. prototype "backup stimulus" when there is no backup; interview "horizon framing" for non-future studies).
+- **Row 11 (Format-specific rows)** — governed by the loaded template reference; ask every applicable row it defines, and skip only the ones the reference marks optional.
 
-**Never fabricate a stakeholder name.** If a name isn't in the inputs, use `[TBD — fill in]` rather than guessing — this mirrors the `/research-plan` skill's RACI convention and Jedida's "grounded in data, never assumed" rule.
+**Never fabricate a stakeholder name.** If a name is absent or cannot be verified, use `[TBD — fill in]`.
 
-(The **LAST row — Drive destination & delivery style** — is also skipped on demo/sample/test runs, which create no Drive artifact and auto-resolve styling per the demo rule. See "Demo-run auto-trigger" below. On real runs it is always asked, so the destination is confirmed before any doc is created.)
+(The final destination, recovery, and style rows are skipped on demo/sample/test runs, which create no Drive artifact by default.)
 
 **Every other row must be asked**, even if the answer seems obvious from the inputs. The researcher confirming an extracted value is the whole point. Never skip a row just because you think you know the answer.
 
 ### Multi-cohort studies (comparison-cohort branching)
 
-When the research plan specifies more than one cohort (e.g. an "abandoner" cohort vs. a "non-abandoner" comparison cohort — the same contrastive-design pattern the upstream `/research-plan` skill supports), don't leave per-cohort differences to be improvised inline. Label any question-set row above, and any Ask-table row in Section 2 (Step 4), that diverges per cohort with an explicit `(Cohort A) / (Cohort B)` suffix (or however many cohorts exist) — e.g. "Q5 (Cohort A)" / "Q5 (Cohort B)".
+When the research plan specifies more than one cohort (e.g. an "abandoner" cohort vs. a "non-abandoner" comparison cohort — the same contrastive-design pattern the upstream `/research-plan` skill supports), don't leave per-cohort differences to be improvised inline. Label any Section 1 question or Section 2 theme/phase that diverges per cohort with an explicit `(Cohort A) / (Cohort B)` suffix (or however many cohorts exist) — e.g. "Theme 2 (Cohort A)" / "Theme 2 (Cohort B)".
 
 **For a prototype/usability guide the cohorts often see *different stimuli or task flows*, not just differently-worded questions** — a between-subjects design (Section 1 Row P6). In that case the `(Cohort A)/(Cohort B)` label goes on the **flow/stimulus assignment** itself (which prototype variant or flow each cohort runs), and the cohort labels must be the same structure as the P6 experimental design and its counterbalance grid — one coherent scheme, not two unrelated mechanisms. State the per-cohort stimulus/flow assignment once, up top, alongside the experimental-design note.
 
 ### Batching rules
 
-`AskUserQuestion` accepts up to 4 questions per call. Count the total number of rows you're actually asking (skipped rows don't count) — this is M, the denominator in every "Section 1 > Step N of M" label. Group them into the fewest batches of ≤4 each — that's `⌈N / 4⌉` batches for N questions. Fill every batch before the last to exactly 4; the final batch holds whatever remains (1–4 questions) with **the Drive destination & delivery question as its last item**. For example: 6 questions → batches of 4 + 2 (delivery is the 2nd item of batch 2); 9 questions → batches of 4 + 4 + 1 (delivery alone in batch 3).
+`AskUserQuestion` accepts up to 4 questions per call. Count applicable rows to set M in each "Section 1 > Step N of M" label. Batch up to four independent questions, but keep dependent rows in a later batch.
 
-Never split the delivery question across batches. Never put it anywhere but the very last position of the very last batch — the destination must be confirmed before Section 2 drafting begins.
+For a real study, or a demo/test run whose tester explicitly requested a test Doc, the final sequence is **Drive destination + audience**, **partial-artifact recovery**, then **delivery style**. Never combine these decisions; all three must be locked before Section 2 drafting begins.
+
+For a demo/test run on the default no-Drive path, omit all three decisions, end Section 1 with the last applicable study parameter, and lock the labeled Markdown delivery branch before Section 2. No destination, recovery, or style approval is required because no Doc will be created.
 
 ### How to phrase each question
 
@@ -252,55 +267,41 @@ For every question, structure the popup like this:
 - **Question text** — short, plain English, ends with a "?". Example: "How long should the session be?"
 - **Header chip** — ≤ 12 chars (`Duration`, `Participants`, `Study type`).
 - **Option 1** — `(Recommended)` label suffix, with the Claude-picked value plus a brief description of *why* it was picked.
-- **Options 2–3** — real alternatives with descriptions explaining the tradeoff.
-- **Option 4 (sometimes)** — a fourth alternative if useful, but keep it tight.
+- **Options 2–3** — at most two alternatives with brief tradeoffs.
+- **Final option** — "Brainstorm with me."
 - "Other" is auto-added — never include it manually. The researcher uses it to type custom values.
 
-### 🎬 Demo-run auto-trigger (skip the delivery question entirely)
+### 🎬 Demo-run auto-trigger (skip destination, recovery, and style)
 
-**If this is a demo / sample / test run, do NOT ask the Drive-destination & delivery question at all.** Auto-resolve to the native Google Docs default, create **no** Drive artifact, and proceed. The researcher never sees the delivery popup or its "Other" field on a demo run.
+**If this is a demo / sample / test run, do not ask destination, recovery, or style.** Create **no** Drive artifact and return the labeled Markdown test artifact. The only exception is an explicit request to create a test Doc; then confirm a safe destination, permissions, recovery path, and style before writing.
 
 **A run counts as a demo when** the invocation contains a clear demo/sample/test signal — e.g. "demo", "sample run", "test this skill", "show me how this works", "just demoing", "dry run", or an equivalent phrase indicating it's a walkthrough rather than a real study deliverable. (This is the same signal class as `feedback_sample_runs.md`, which also means: do NOT save the output to project folders, the tracker, or Drive.)
 
-**Effect on Section 1 batching:** drop the delivery row entirely. The delivery question is normally the very last question across all batches — on a demo run it simply isn't asked, so the last *real* parameter question becomes the final question, and M shrinks by one. All other parameter rows are still asked as normal (the demo still exercises the full questioning flow — only delivery is auto-resolved). Hold delivery = native Google Docs default (no Drive write) for Step 6.
+**Effect on Section 1 batching:** drop all three final rows and reduce M by three. All other parameter rows still run so the demo exercises the skill.
 
-**Real (non-demo) runs:** ask the delivery question normally, per below.
+**Real (non-demo) runs:** ask all three final questions.
 
-### The mandatory delivery question (always the last one asked — UNLESS this is a demo run, see above)
+### Final destination, recovery, and delivery questions
 
-This single Section 1 pop-up confirms **both** the Drive destination and the styling variant, so the destination is locked before any doc is created (portable Google Docs contract). Phrase it, e.g.:
+**Destination + audience (final-2):** state the exact proposed Drive folder and intended audience. The researcher confirms it or pastes another authorized folder URL in Other. This is destination intent only; Step 6 still performs a fresh effective-permissions read before creation.
 
-> "Where should the final guide live, and how should it be styled? (Confirm the Drive folder, or paste a reference-doc URL below to match its style.)"
+**Partial-artifact recovery (final-1):** show only source-authorized, capability-supported choices: trash the verified Doc ID, or restrict and move/retitle it in an exact permission-checked quarantine folder. If neither is available, the only valid choice is to block creation until one path is authorized.
 
-**Destination:** infer the exact Drive folder from the supplied project context when possible and state it plainly in the question (e.g. "I'll create it in [folder/link] — right destination?"). If no destination is known, the researcher supplies it here. Write only to the confirmed folder; never write to a hardcoded personal folder ID.
+**Delivery style (last):**
 
-**Delivery / styling variant** — single-select (this is the "report audience variant" style of exclusive choice). **Option 4 — Leadership is the default and Recommended path** (portable-first): the same clean, edited leadership look `/research-plan` produces, applied by the bundled formatter with no personal scripts or auth. The personal pipelines are optional, clearly-labeled Instacart / Jedida variants:
-
-- **"Option 4 — Leadership (portable default)" (Recommended)** — The clean leadership design: DM Serif Display / DM Sans typography, dark-green section bands on the phase/theme headings, pale-yellow mock-warning treatment, landscape letter, fixed table styling. Applied by the bundled `scripts/option4_guide_layout.py` against `references/option4-guide-style.json` — native Google Docs only, portable for any researcher with a write-capable Docs integration. This is the default whenever the researcher expresses no preference.
-- **"Plain native Google Docs"** — Standard Google Docs native Title/Heading/body styles and native tables, no Option 4 styling. The minimal fallback if the researcher wants an unstyled doc; not the default.
-- **"Instacart / Jedida variant — Jedida Reporting (navy/blue)"** *(optional personal pipeline)* — Jedida Reporting palette (navy NAV H1 nav bars, LBLUE label columns, alternating WHITE/LGRAY rows, DGRAY borders, Calibri typography). Styler: `~/.claude/skills/mod-guide/scripts/apply_jedida_reporting.py`. Requires Jedida's local scripts/auth.
-- **"Instacart / Jedida variant — forest-green mod-guide style"** *(optional personal pipeline)* — Original mod-guide template (DM Serif Display headings, DM Sans body, dark-green table headers, dark-green bold label columns). See `references/canonical-template-spec.md`. Source: `https://docs.google.com/document/d/18Q9V4th9BwwNtlLXSncmMpiN591XTV1RzCUAyxym7wI/edit`
-- **"Brainstorm with me"** — last option, as on every pop-up.
-
-**To match a custom reference doc instead** (also an optional Jedida-variant path), the researcher types the Google Doc URL directly into the auto-added "Other" field. Mention this in the question text so the researcher knows "Other" is live for this purpose.
-
-If the "Other" field comes back with a parseable Google Doc URL, treat it as: delivery = Custom Reference variant, ref_doc_id = parsed-from-URL. If "Other" comes back with something that is NOT a parseable Google Doc URL (a typo, or unrelated free-text feedback), fall back to the Recommended native default rather than blocking — don't re-prompt to clarify; flag the ambiguity to the researcher after the doc is delivered instead.
-
-> **Note on the 2026-09-08 global default:** Jedida's CLAUDE.md makes "Jedi's Template" the automatic default styling for *every* new Google Doc in her personal environment. This delivery question is a deliberate, mod-guide-specific, portable exception: for any researcher, the portable **Option 4 — Leadership** look is the default (applied by the bundled formatter, no personal environment needed); Jedida's personal templates (Jedida Reporting / forest-green / custom-match / Jedi's Template) are opt-in variants. Don't silently apply a personal template to a shared run; that would break portability and remove the researcher's choice this step exists to preserve.
-
-### Holding the delivery answer for Step 6
-
-- **Option 4 — Leadership (portable default)** → after creating the doc, run the bundled `scripts/option4_guide_layout.py` pipeline (see Step 6). This is the path for every researcher who does not opt into a personal variant — it produces the clean, edited leadership look with native Google Docs only.
-- **Plain native Google Docs (fallback)** → apply native Title/heading/body styles and native tables only, no Option 4 styling. Use only if the researcher explicitly picks it, or as the disclosed fallback when the Option 4 formatter/verifier cannot run in the environment (see Step 6's completion gate).
-- **Optional — Jedida Reporting (navy/blue)** → after upload, run `uv run --python 3.12 --with google-api-python-client --with google-auth --with google-auth-oauthlib --with google-auth-httplib2 --with requests --with python-dotenv python ~/.claude/skills/mod-guide/scripts/apply_jedida_reporting.py <DOC_ID>`. Requires Jedida's local environment.
-- **Optional — forest-green mod-guide style** → after upload, run `scripts/apply_canonical_template.py <DOC_ID>`. Requires Jedida's local environment.
-- **Optional — Custom Reference (URL came back via "Other")** → after upload, run `scripts/apply_custom_template.py <TARGET_DOC_ID> <REF_DOC_ID>`. **Apply silently — no read-back confirmation, no "apply these to your mod guide?" prompt.** If the styling looks wrong on the final doc, the researcher will say so post-delivery; that's a one-off correction, not a reason to spawn an unplanned question.
+- **Option 4 — Leadership with pre-approved plain-native fallback (Recommended):** apply and verify the bundled green leadership contract; if an Option 4-only capability is unavailable, use plain native Google Docs and disclose the fallback.
+- **Strict Option 4 — Leadership:** block before creation when any required capability is unavailable.
+- **Plain native Google Docs:** native styles and tables, no Option 4 styling.
+- **Brainstorm with me.**
 
 ---
 
 ## Step 4 — Section 2: Guide Content (DRAFT-FIRST, ONE BLOCK AT A TIME)
 
-With Section 1 locked, build the guide **content** collaboratively, one block at a time. Announce the section transition: *"Section 1 is locked — all parameters set and the destination confirmed. Now we'll build the guide content together, one block at a time. I'll show you each block's draft; you accept it, pick what to keep, or brainstorm with me, and we lock it before moving on."*
+With Section 1 locked, build the guide **content** collaboratively, one block at a time. Use the matching transition:
+
+- **Real study or explicitly requested test Doc:** *"Section 1 is locked — all parameters are set, and the destination, partial-artifact recovery path, and delivery style are confirmed. Now we'll build the guide content together, one block at a time. I'll show you each block's draft; you accept it, pick what to keep, or brainstorm with me, and we lock it before moving on."*
+- **No-Drive demo/test:** *"Section 1 is locked — all applicable study parameters are set, and this test will remain a labeled Markdown artifact with no Drive write. Now we'll build the guide content together, one block at a time. I'll show you each block's draft; you accept it, pick what to keep, or brainstorm with me, and we lock it before moving on."*
 
 ### Draft-first block-by-block approval
 
@@ -308,76 +309,76 @@ Show the proposed block content first, then ask the researcher to accept, brains
 
 Every content pop-up must be labeled with its section and step (e.g. **"Section 2 > Step 3 of 6: Core — Task Flow"**). Announce each transition in chat after a block is locked (e.g. *"Warm-Up locked. Moving on to Core — Motivations."*).
 
-**Select behavior in Section 2:** the questions/quotes/probes *within* a block are a multi-item set — when a pop-up asks the researcher which drafted questions to keep for a block, use `multiSelect: true` (each question is individually selectable). Use single-select only for a genuinely exclusive choice within a block (e.g. "accept this whole block as drafted / revise it / brainstorm"). "Brainstorm with me" is always the last option.
+**Select behavior in Section 2:** use `multiSelect: true` only when a block has 2–3 independently selectable prompts. For longer blocks, use a single "Accept this block as drafted" option plus revise/reframe alternatives; never exceed four options. "Brainstorm with me" is always last.
 
 **The blocks, in order — use the sequence from the loaded template reference (M = the number of blocks this study actually has):**
 
 **If the format is Interview** (`references/template-interview.md`):
-1. **Objectives** — plain goal bullets (no hypotheses / P0 labels). **No pop-up — auto-generated from inputs, shown for confirmation only.**
-2. **Introduction & Rapport** — verbatim 3-bullet welcome (recording/privacy · session overview · logistics). Auto-generated from template. **No pop-up, no approval gate.**
+1. **Objectives** — plain goal bullets (no hypotheses / priority labels). **No pop-up — source-grounded and shown for context.**
+2. **Introduction & Rapport** — welcome, session overview, participant control, and transition from the already-completed consent table. **No duplicate recording/privacy promise. No pop-up.**
 3. **Background Questions** — topic-adjacent icebreaker questions. Auto-generated from template (use grocery/in-store standard block for store-based studies). **No pop-up, no approval gate.**
 4. **Thematic deep-dive blocks** — **one block per theme** from the approved Row-7 list; open questions as nested prose probes; conditional themes flagged "if applicable." **Pop-up for each block.** **When the Say-Do Gap module is Included (Row 8), each affected block's draft carries the visible `**Say-Do Gap Probe:**` prose line** — this is what makes Include vs. Skip visibly different.
-5. **Wrap-Up** + optional **Parking Lot** — standard close. **No pop-up, no approval gate.**
+5. **Wrap-Up** + optional **Parking Lot** — standard three-question close plus a thank-you: neutral theme playback, open catch-all, and participant questions. **No pop-up, no approval gate.**
 
 **If the format is Prototype/Usability** (`references/template-prototype-usability.md`):
-1. **Objectives & Research Questions** — hypotheses + P0/P1 labels, kept separate from the script. **No pop-up — auto-generated.**
-2. **Session Flow** — simple phase list (Background & Warm-Up → Phase 1 → Phase 2 → Phase 3 → Wrap-Up). No minute-by-minute breakdown, no counterbalance grid here. **Auto-generated.**
+1. **Objectives & Research Questions** — preserve supplied hypotheses and priority labels; never invent them. Keep them separate from the script. **No pop-up — source-grounded.**
+2. **Session Flow** — a Phase/Time table whose minutes sum to the approved duration; no counterbalance grid here. **Auto-generated.**
 3. **Background & Warm-Up** *(no pop-up, no approval gate)* — simple numbered questions (Q1, Q2, Q3), no table format, no "Probes to use:" header. Observation cues at the end. Auto-generated from template.
-4. **Phases (the core)** — **one block per phase / stimulus** from the approved Row-7 list. Named Phase 1, Phase 2, Phase 3 — simple, consistent naming. Each: stimulus link, question prompts as a table (Cue | Ask/Do), observation cues in prose below. **Pop-up for each phase.**
-5. **Wrap-Up** *(no pop-up, no approval gate)* — standard 3-question numbered close. Auto-generated.
+4. **Phases (the core)** — **one block per phase / stimulus** from the approved Row-7 list, using the shape that matches the approved construct. A **usability phase** uses Scenario → P8-gated First impression → Expectation → executable Task → Alignment → approved rating. A **reaction-led concept phase** uses Stimulus reveal → P8-gated 5-second First impression → required neutral recall/comprehension prompt → reaction/relevance/desirability prompts → comparison/fit when applicable. Add a task to a concept phase only when an approved objective, RQ, or hypothesis measures observable behavior with the concept. Observation cues and probes stay in prose outside the bold-label list. **Pop-up for each phase.** Concept P8 = Task-only is invalid when an approved objective or hypothesis measures initial recall, comprehension, reaction, or desirability. Usability P8 = Task-only is invalid only when an approved objective or hypothesis measures unaided initial comprehension or reaction. When it is valid, P8 = Task-only means omit every First impression item and leave no placeholder. Never convert a reaction, recall, comprehension, or desirability hypothesis into an invented behavioral task.
+5. **Wrap-Up** *(no pop-up, no approval gate)* — standard three-question close plus a thank-you: one reflection, one open catch-all, and participant questions. Auto-generated.
 6. **Communication & Deliverables (+ Timeline)** — vendor-run only.
 
-The **shared scaffolding** — header (Moderation Guide title + study title), ownership block (RACI), parameter table, Pre-Session Checklist, and Post-Session Debrief — is standardized on **both** formats and assembled automatically around the approved blocks. The Consent + Recording script is **not included** in the guide — sessions start directly with Background & Warm-Up. Show the scaffolding alongside the first content block so the researcher sees the whole shape.
+The **shared scaffolding** — `# Moderation Guide`, study title, ownership/RACI, parameter table, Pre-Session Checklist, and Post-Session Debrief — is standardized on both formats. Consent appears once in the loaded template: interview Consent table or prototype Introduction list. Show the scaffolding alongside the first core block.
 
-**Whole-draft override:** if the researcher explicitly asks for the full guide at once instead of block-by-block, skip the per-block pop-ups but still show the complete assembled draft for a single approval, keep the confirmed destination, and perform every Section 3 and verification step. Default to block-by-block unless they ask.
+**Whole-draft override:** if the researcher explicitly asks for the full guide at once instead of block-by-block, skip the per-block pop-ups but still show the complete assembled draft for a single approval, preserve the selected delivery branch (and confirmed destination for real/test-Doc runs), and perform every applicable Section 3 and verification step. Default to block-by-block unless they ask.
 
 ### Quality-gate announcement (say this after the last content block is locked)
 
-Once all content blocks are approved, **ask the researcher** whether they want to run the two quality checks before the final doc. Use `AskUserQuestion`:
+Once all content blocks are approved, run the mandatory baseline audit in Step 4.5. Then ask whether to add the enhanced two-reviewer panel:
 
-> "All blocks are approved! Before I create the Google Doc, I can run two optional quality checks:
-> 1. **Critique pass** — I self-audit for methodology gaps, biased phrasing, and weak probes.
-> 2. **Multi-agent review** — two researchers review it in parallel: an Evidence checker (rigor and consistency) and a Stakeholder reader (clear and usable for its audience).
-> 
-> Would you like to run these before the final guide?"
+> "The required safety and methodology audit is complete. Would you also like the enhanced two-reviewer panel before I finalize the deliverable? It sends the minimum necessary de-identified guide and approved source excerpts to an Evidence checker and a Stakeholder reader."
 
-Options: "Yes — run both checks first" (Recommended) · "Skip — go straight to the Google Doc" · "Brainstorm with me"
+Options: "Yes — run the enhanced panel" (Recommended) · "No — baseline audit is enough" · "Brainstorm with me"
 
-**Only run the checks if the researcher says yes.** If they say skip, proceed directly to Step 6 (create the Google Doc). Never auto-run the checks without asking.
+The baseline audit is never skippable. Run the panel only when selected and reviewer access is authorized.
 
-The moderation guide (the final Google Doc) is drafted **last**. Expected sequence when checks are included: **approved blocks → self-critique → multi-agent → fixes → create Google Doc → share.** When checks are skipped: **approved blocks → create Google Doc → share.**
+The final sequence is **approved blocks → mandatory baseline audit/candidate fixes → optional panel/candidate fixes → material-change approval + affected-audit rerun → delivery**. A real/test-Doc branch then creates once and applies revision-bound style/verification; a no-Drive demo returns labeled Markdown.
 
 ### Assembly
 
-Apply the researcher's approved parameters and blocks. **Both OUTPUT TEMPLATES live in their references** (interview → `references/template-interview.md`, prototype/usability → `references/template-prototype-usability.md`); only the **shared scaffolding** is rendered inline below. Load the matching reference and follow its skeleton, table shapes, and generation rules; wrap it in the shared scaffolding. Both share the "tables hold only read-aloud/do lines" principle and the same delivery pipeline. Assemble the approved blocks into the markdown intermediate; the final formatted deliverable is the Google Doc created in Step 6.
+Apply the approved parameters and blocks using the selected OUTPUT TEMPLATE. Interview core questions are nested prose bullets; prototype phases are bold-label read/do lists. Tables are limited to the shapes each template explicitly allows. Assemble the approved Markdown intermediate. A real study or requested test Doc continues to the verified Google Doc in Step 6; a no-Drive demo completes as labeled Markdown after Section 3.
 
 **Test/demo/mock-run output:** add the shared `⚠️ TEST ARTIFACT` header line — see `../../references/output-status-and-labeling-conventions.md`. Treat any invocation described as a test, sample, demo, mock, fixture, or pressure scenario as simulated even when the brief sounds realistic; omit the label only when the researcher confirms it is a real study. Keep it prominent, and do not save a demo/mock to Drive, the tracker, or project folders.
 
 **Verbatim-sourcing discipline:** every question, name, and detail in the guide traces to the inputs or the researcher's Section 1/Section 2 answers. Quote source material verbatim where the guide reproduces it (e.g. the participant's own phrasing in a `[recall their phrasing]` placeholder, or a capture-verbatim flag). Do not invent stakeholder names, quotes, or details — mark unknowns `[TBD — fill in]`.
 
+**Study-period discipline:** Never substitute the current date or month for an unknown study period. Use only a source-approved study period; otherwise retain `[TBD — fill in]`.
+
 ### Shared scaffolding (both formats)
 
-Both guide types wrap the **same spine** — parameter table, Pre-Session Checklist, Consent script, Post-Session Debrief. Assemble it around the format-specific body (interview blocks or prototype task flows). The Consent script is read verbatim (confirm, don't re-draft); a **prototype** guide inserts three extra cues into it — "no right answers," think-aloud ("put your brain on speakerphone"), and the prototype-limitations caveat — per `references/template-prototype-usability.md`.
+Both guide types wrap the **same spine** — header, ownership, parameter table, Pre-Session Checklist, and Post-Session Debrief. Insert exactly one approved consent pass from the selected template.
 
-**The document header is always "Moderation Guide."** Both formats use `# Moderation Guide` as the document title, followed by `## [Study Title]` and `*[Month Year]*`. Do not use "UX Research | Research Plan | Q3/Q4 2026" or any breadcrumb format — the doc type is always "Moderation Guide." The ownership block is standardized as full RACI on both.
+**The document header is always "Moderation Guide."** Both formats use `# Moderation Guide` as the document title, followed by `## [Study Title]` and `*[Source-approved study period or TBD — fill in]*`. Do not use "UX Research | Research Plan | Q3/Q4 2026" or any breadcrumb format — the doc type is always "Moderation Guide." The ownership block is standardized as full RACI on both.
 
-> **Core principle (codified 2026-05-04 from Diet Personalization mod guide):** the moderator's eye should land on **only the words to read, ask, or do aloud**. Probes, watch-fors, observation cues, "don'ts," and methodology rationale all live in **prose around** those lines, never mixed in. Interview length target **~4–5 pages**; prototype guides run **~6–8 pages** (task lists + screens).
+Populate each RACI field only from the approved Row 9 assignment. For Responsible and Accountable, the first placeholder is the person's name and the parenthetical placeholder is that person's role; verify and fill them independently. Never infer a role from a supplied name, and leave either unknown as the exact `[TBD — fill in]` placeholder.
+
+> **Core principle:** the moderator's eye should land on **only the words to read, ask, or do aloud**. Probes, watch-fors, observation cues, "don'ts," and methodology rationale live in prose around those lines. Interview target **~4–5 pages**; prototype target **~6–8 pages**.
 >
-> **Prototype format update (Jedida, 2026-09-24):** in a **prototype/usability** guide the read-aloud Introduction and every phase/task, comparison, and recap block are **bold-label lists** (`- **Label:** "line"`), NOT Cue tables. The **only** two tables a prototype guide keeps are the top **Parameter dashboard** and the **Session Flow** agenda. (Interview guides are unchanged — they already use prose bullets, with a Cue table only for consent.) See `references/template-prototype-usability.md`.
+> In a **prototype/usability** guide the Introduction and every phase/task, comparison, and recap block are **bold-label lists** (`- **Label:** "line"`), not Cue tables. The only two prototype tables are the Parameter dashboard and Session Flow agenda. Interview guides use prose bullets, with tables only for parameters and consent.
 
 ```
 # Moderation Guide
 
 ## [Study Title — derived from research goal]
 
-*[Month Year]*
+*[Source-approved study period or TBD — fill in]*
 
-- **Responsible:** [Name] (Role) — `[TBD — fill in]` if not confirmed in Section 1
-- **Accountable:** [Name] (Role) — `[TBD — fill in]`
-- **Consulted:** [Names with roles] — `[TBD — fill in]`
-- **Informed:** [Names with roles] — `[TBD — fill in]`
+- **Responsible:** [TBD — fill in] ([TBD — fill in])
+- **Accountable:** [TBD — fill in] ([TBD — fill in])
+- **Consulted:** [TBD — fill in]
+- **Informed:** [TBD — fill in]
 
-[Prototype only — a Links row: **Links:** [Google Folder] · [Figma/Prototype] · [Participant Grid] · [Screener]]
+[Prototype only — a Links row containing only audience-approved study/prototype links; never participant grids, schedules, biographies, or recording links]
 
 | Parameter | Detail |
 |-----------|--------|
@@ -395,29 +396,11 @@ Both guide types wrap the **same spine** — parameter table, Pre-Session Checkl
 - ☐ Participant validated — [screening criterion confirmed]
 - ☐ [Prototype loaded & tested; backup ready — prototype only]
 - ☐ Device — [participant on their own device / remote-control handoff]
-- ☐ Recording armed · consent script ready · observers cameras-off [· Slack channel open — vendor prototype]
+- ☐ [Approved recording/observation setup confirmed; omit when not applicable]
 
 ---
 
-## Consent + Recording Script — READ VERBATIM (~60 sec interview / ~90 sec prototype)
-
-[2-col table. Col 1 = short cue label. Col 2 = exact words to read aloud — no annotations inside the table. A PROTOTYPE guide inserts "No right answers", "Think-aloud", and "Prototype caveat" cues here per its reference.]
-
-| Cue | Read aloud |
-|-----|------------|
-| **Open** | "Hi [name], thanks for joining. I'm [moderator], a researcher [at Instacart — or, for a vendor-run study, the independent-researcher framing: "I don't work for Instacart and didn't design what you'll see"]." |
-| **Purpose** | "I'm here to learn from your experience — no right or wrong answers, nothing being judged." |
-| **What we'll do** | "[Concrete description of what's about to happen.]" |
-| **Recording** | "With your permission, I'd like to record audio, video, and screen. It stays internal at Instacart. **Is that okay?**" |
-| **Confidentiality** | "Your name and any identifying details will be removed before anything is shared internally." |
-| **Control** | "About [X] minutes. You can skip any question or end at any time — and you'll still get the incentive." |
-| **Open floor** | "Any questions before we start?" |
-
-> Wait for explicit verbal **"yes"** before pressing record.
-
----
-
-## [FORMAT-SPECIFIC BODY — build from the matching reference; see below]
+[FORMAT-SPECIFIC CONSENT + BODY — build from the matching reference]
 
 ---
 
@@ -431,77 +414,59 @@ Both guide types wrap the **same spine** — parameter table, Pre-Session Checkl
 
 ### OUTPUT TEMPLATE — the format-specific body
 
-The body that sits **between the Consent script and the Post-Session Debrief** is format-specific — build it from the matching reference, following its skeleton, table shapes, and generation rules exactly:
+Build the consent and body from the matching reference:
 
-- **Interview** → `references/template-interview.md`: **Objectives** (plain goals — no hypotheses/P0) → **Introduction & Rapport** (+ screen-out script) → **Thematic deep-dive blocks** (open questions as nested prose probes; conditional "if applicable" blocks) → **Wrap-Up** → **Participants Log** → optional **Parking Lot**. When the Say-Do Gap module is Included, each affected theme block's draft carries a visible `**Say-Do Gap Probe:**` prose line (see that reference's Say-Do rule).
-- **Prototype/Usability** → `references/template-prototype-usability.md`: **Objectives** (hypotheses + P0) → **Test Stimuli & Session Flow Overview** → **Introduction** (read-aloud **bold-label list** — think-aloud + prototype caveat + consent) → **Background/Warm-Up** → **Task Flows** (each phase a **bold-label list**, not a table — with an observation-cue prose line below + reused ease rating) → optional **Comparisons/Recap** (lists) → **Wrap-Up** → **Communication & Deliverables (+ Timeline)** for vendor-run. Only the Parameter dashboard and Session Flow agenda are tables.
+- **Interview** → Consent table → Objectives (plain goals) → Introduction & Rapport → thematic deep-dive blocks → Wrap-Up → optional Parking Lot. Keep participant operations in a separate restricted artifact.
+- **Prototype/Usability** → Objectives/RQs (supplied hypotheses/priorities only) → Session Flow → Introduction with consent/think-aloud → Background → construct-matched stimulus/task phases → optional Comparisons/Recap → Wrap-Up → optional vendor back-matter. Only Parameter and Session Flow are tables.
 
 The shared scaffolding above wraps this body identically for both formats.
 
 **IMPORTANT:**
-- The guide MUST end at its last content section, which depends on format: the **(optional) Parking Lot, else the Participants Log**, for an **INTERVIEW** guide; the **Post-Session Debrief** for an **INTERNAL prototype** guide; or **Communication & Deliverables (+ Timeline)** for a **VENDOR-RUN prototype** guide. (The Post-Session Debrief is a shared element that sits near the end but is *not* the last section for interviews or vendor prototypes.) Do NOT add Master Probe Bank, Bias Mitigation Checklist, Self-Critique Audit, or a pilot reminder inside the guide document itself. Those live in `references/mod-guide-methodology.md` for the moderator to consult separately, or — for the pilot reminder specifically — get delivered as one line in the Step 6 chat summary alongside the doc link (see Step 4.5 Part 4 "Pilot reminder" and Step 6.3 item 1). Never inside the guide's own pages.
-- **Tables contain ONLY questions / read-aloud / do lines.** Probes, watch-fors, observation cues, tagging guidance, "don'ts," and methodology rationale ALWAYS live in prose above or below the table — never inside cells. (Prototype guides: phase/task content is a bold-label list — observation cues go in a prose line *below* the list.)
+- The guide ends at optional Parking Lot (or Post-Session Debrief) for interview; Post-Session Debrief for internal prototype; or vendor Communication & Deliverables for vendor prototype. Do not add participant logs, Master Probe Bank, Bias Checklist, audit output, or pilot reminder inside the guide.
+- **Read-aloud tables contain only participant-facing lines.** Parameter and Session Flow tables contain only their approved metadata. Probes, watch-fors, observation cues, tagging guidance, "don'ts," and methodology rationale always live in prose outside participant-facing tables and read/do lists.
 
 ---
 
 ### FORMATTING RULES (visual + structural)
 
 #### Structural
-- **Tables = questions only.** Col 1 = short label (`Q1`, `Q2`, `Setup`, `Open`, `Cue`). Col 2 = the exact words the moderator reads or asks aloud.
-- **Probes, watch-fors, "don'ts," tagging guidance, methodology rationale → prose ABOVE the table.** One sentence per concept where possible.
+- **Interview tables:** only the Parameter dashboard and Consent script. Core questions are nested prose bullets.
+- **Prototype tables:** only the Parameter dashboard and Session Flow. Every phase/task is a bold-label read/do list.
+- **Probes, watch-fors, "don'ts," tagging guidance, and rationale stay outside read/do lines.**
 - **Use `>` blockquotes** for one-line moderator reminders that follow a table (e.g. "Wait for explicit verbal 'yes' before pressing record.").
 - **No `<br><br>` line breaks inside table cells.** Each cell holds one short scannable line. If a question has multiple parts, split into separate rows (`Q12`, `Q12 follow-up`) or sub-questions (`Q6a`, `Q6b`, …).
 - **Pre-Session Checklist and Post-Session Debrief are bullets/numbered lists, NOT tables** (they aren't questions).
 - **Total target length is format-dependent: interview ~4–5 pages (max 7); prototype/usability ~6–8 pages** (task lists + screens push it longer). If a guide exceeds its ceiling, cut moderator-note paragraphs and redundant explanation — never the task/observation content.
-- **Comparison-cohort studies:** label any Ask-table row needing per-cohort variants with the `(Cohort A) / (Cohort B)` convention (see "Multi-cohort studies" in Step 3) rather than improvising inline labels.
+- **Comparison-cohort studies:** label each cohort's theme or flow/stimulus assignment consistently with the approved experimental design.
 
-#### Visual (portable-first — default vs. optional variants)
+#### Visual
 
-**Default — Native Google Docs (portable):** apply only native Google Docs styling with the session's connected Docs tools — the native Title style for the title, native Heading styles (H1/H2/H3) for phase headings, native body style for prose, and native tables for the question tables. Use a standard Docs font at a readable size. Keep the breadcrumb visually secondary and the title dominant. Keep RACI as real bullet paragraphs. Keep tables to two columns (short label / read-aloud line) with readable padding. No custom fonts, no custom palette, no local script, no CLI. This is what every researcher gets unless they opt into a variant in Section 1.
+**Default — Option 4 — Leadership:** use `scripts/option4_guide_layout.py` and `references/option4-guide-style.json`: landscape-letter export metadata, DM Serif Display/DM Sans, dark-green H2 bands, native lists, and aligned tables. Verify before delivery.
 
-**Optional — Instacart / Jedida variant (Jedida Reporting navy/blue):** only when the researcher explicitly picks it in Section 1.
-- **Body / table cells:** Calibri 10pt (`#000000`)
-- **Headings (H1/H2/H3):** Calibri bold, navy `#1F4E79`; H1 paragraphs get a full-width NAV background (navy fill + WHITE bold text) as a nav bar
-- **Title:** navy `#1F4E79`, bold, large
-- **Table header row:** WHITE text on navy `#1F4E79` background, bold
-- **Label column (col 1, 2-col tables):** LBLUE `#D6E4F0` fill, bold navy text, snug width (~130pt fixed per `feedback_two_col_table_label_snug.md`)
-- **Alternating body rows:** WHITE / LGRAY `#F5F5F5`
-- **Borders:** DGRAY `#D0D0D0`
-- **Page margins:** 45pt (~0.625")
-
-**Optional — Instacart / Jedida variant (forest-green mod-guide style):** only when the researcher explicitly picks it in Section 1.
-- DM Sans 10pt body · DM Serif Display 20/16/16pt headings in dark green `#2D4A3E` · dark-green table headers · dark-green bold label columns · col widths 115/350pt · light gray `#F6F7FA` alternating rows.
+**Plain-native fallback / explicit choice:** native Title/Heading/body styles and native tables only. Disclose that Option 4 was not applied.
 
 #### Styling pipeline
 
-**Default path (native Google Docs — no personal scripts):** create the doc in the confirmed Drive folder with the session's connected Google Docs tools, then apply native Title/Heading/body styles and native tables directly. This path has no dependency on `md2doc`, `gws`/`gohan`, or any local styling script, so it works for any researcher.
-
-**Optional Jedida-variant path (personal pipeline — only when the researcher opts in and Jedida's local environment is available):** run in order after upload:
-
-1. `md2doc upload-gdoc.py [file] --folder-id [confirmed folder]` → creates the doc and applies the HTML import (style-gdoc-full pass for base structure)
-2. **Jedida Reporting (navy/blue):** `~/.claude/skills/mod-guide/scripts/apply_jedida_reporting.py [doc-id]` → runs 4 passes (sanitize → document margins → named styles → H1 nav bars → tables with snug label column).
-3. **Forest-green mod-guide style:** `~/.claude/skills/mod-guide/scripts/apply_canonical_template.py [doc-id]` → applies the locked canonical spec (page setup, DM Sans body / DM Serif Display headings, dark-green table headers, dark-green bold label cols, 0.5pt #C7C7C7 borders, 8pt cell padding, BULLET_DISC_CIRCLE_SQUARE, clears SUBSCRIPT runs, H2 non-bold + 36pt above / 12pt below). See `references/canonical-template-spec.md`.
-4. **Custom — user-supplied reference doc:** `~/.claude/skills/mod-guide/scripts/apply_custom_template.py [target-doc-id] [ref-doc-id]` → extracts the ref doc's spec at runtime and applies the same phases.
-
-> The legacy 3-pass pipeline (`style-gdoc-full` → `font_and_widths.py` → `rebold_col1.py`) is **superseded** by the consolidated single-script approach above. The old scripts are still present in `scripts/` for backward compatibility but should not be used by new flows.
->
-> All Jedida-variant scripts use `uv run --python 3.12 --with google-api-python-client --with google-auth --with google-auth-oauthlib --with google-auth-httplib2 --with requests --with python-dotenv --with markdown --with pillow python [script]`, and require Jedida's local auth/environment. If any of these are unavailable, fall back to the native Google Docs default rather than blocking delivery.
+Run the bundled formatter in place; its visual contract resolves package-relatively. Store Markdown, manifests, fresh snapshots, and batch files in an owner-only private non-repository working directory (for example, a fresh `mktemp -d` directory). The formatter rejects repository paths and group/world-accessible output directories.
 
 ---
 
 ### CONTENT GENERATION RULES
 
-1. **No leading questions.** Every question open-ended, non-directional. Never assume the participant's opinion. (NN/g Rosala — 6 Mistakes)
+1. **No leading questions.** Every generative research question is open-ended and non-directional. Closed forms are limited to exact approved consent confirmation, eligibility screening, a one-fact clarifier after an open response, or an approved rating scale; they never elicit the participant's opinion or reasons. (NN/g Rosala — 6 Mistakes)
 2. **No interface terminology in tasks.** Describe goals, not UI ("find a way to…" not "click the button to…").
-3. **Funnel technique.** Within each topic: broad → specific → closed. Broad first avoids priming (NN/g).
-4. **Specific incidents over typical behavior.** "Tell me about the last time you…" beats "How often do you…" — closes the say-do gap (NN/g Critical Incident Technique).
-5. **No hypotheticals except as projective tools.** "If this could change anything…" is fine at the end; "Would you use this?" is not (NN/g).
-6. **No compound questions inside a single Ask cell.** If a question has 2-3 follow-ups that always go together (e.g. "What is it asking? What does '[word]' mean? How would you say this in your own words?"), they may share a cell. Otherwise split into Q + Q-follow-up rows.
-7. **Probes named in PROSE above the table, not in-line in cells.** Use a single `Probes to use:` line per phase.
-8. **Time-aware.** Allocate per study type (Step 2a). Core gets 70-80% of total.
+3. **Funnel technique.** Within each topic: broad → specific → optional factual clarifier. Broad first avoids priming; a clarifier confirms one fact and never replaces the open generative question (NN/g).
+4. **Specific incidents over typical behavior.** Start with "What is the most recent time, if any, that you…?" After the participant confirms an event, "Tell me about the last time…" beats "How often do you…" and closes the say-do gap (NN/g Critical Incident Technique).
+5. **No predicted personal future behavior.** Expert scenario/projective questions may be used late when the construct is future-landscape judgment; "Would you use this?" is not allowed.
+6. **No compound or presuppositional questions.** Split independent constructs, and never imply that an event, realization, problem, or opinion occurred.
+   - **Neutral incident recipe:** ask `What is the most recent time, if any, that you [behavior]?` If none, ask for the closest relevant experience. Use `Tell me about the last time...` only after the participant or an approved screener confirms that event occurred.
+7. **Probes and moderator notes stay outside read/do lines.** Interview probes are nested prose; prototype probes and observation cues are prose outside the bold-label list.
+8. **Time-aware.** Allocate per study type (Step 2a). Core gets 70-80% of total. For interviews, every timed heading, including Consent, must sum to the approved duration. Render Consent as its own 1-minute row/heading and Introduction as the remaining post-consent minutes only: a 3-minute opening is `Consent 1 + Introduction 2`, never `Consent 1 + Introduction 3`.
 9. **Participant-appropriate language.** Match vocabulary to the participant profile.
-10. **Watch-fors and "don'ts" go in prose**, not in [Watch For] or [Moderator Note] table rows. Keep them above the question table they apply to.
-11. **Capture-verbatim flags** (e.g. "Capture Q11 verbatim — feeds the survey wording") go in prose above the relevant table, not as a separate row.
+10. **Watch-fors and "don'ts" go in prose**, never inside a prototype read/do list or consent table.
+11. **Capture-verbatim flags** go in prose above the relevant block.
+12. **Traceability.** Every objective/RQ/supplied hypothesis maps to a guide block and, for prototype studies, to the required construct-matched evidence-collection element defined in Step 2d. Never invent a task solely to make the crosswalk look complete.
+13. **Protocol fidelity.** Never invent recording, observation, privacy, retention, deletion, clip-sharing, anonymity, or incentive commitments.
 
 ---
 
@@ -515,7 +480,7 @@ Reference `references/mod-guide-methodology.md` for the full taxonomy (definitio
 | **Silence** (Portigal, Hall) | Count 5-10. Let them fill the gap — don't rescue. |
 | **Tell-Me-More** (Anderson, NN/g) | "Tell me more about that." Evergreen. |
 | **Laddering / Why** (Portigal) | "Why was that important to you?" Climb from behavior to value. |
-| **Critical Incident** (Flanagan via NN/g) | "Tell me about the last time you…" Replaces typical-behavior questions. |
+| **Critical Incident** (Flanagan via NN/g) | Start with "What is the most recent time, if any, that you…?" After an event is confirmed, follow with "Tell me about the last time…" |
 | **Contrast** (Portigal) | "How did that compare to [prior experience]?" |
 | **Hypothetical / Projective** (Portigal — late only) | "If we came back in 5 years, what would be different?" |
 | **Boomerang** (NN/g Fessenden) | Return their question: "What would you normally do?" |
@@ -539,38 +504,61 @@ Embed these reminders in `[Moderator Note]` callouts through the guide. Full dis
 
 ---
 
-## Step 4.5 — Section 3: Self-Critique Checklist (the critique half of the quality gate)
+## Step 4.5 — Section 3: Mandatory Baseline Safety & Method Audit
 
-This is the **critique half** of the Section 3 quality gate announced at the end of Step 4. It runs automatically — no researcher pop-ups — before the multi-agent review (Step 5) and before the Google Doc is created (Step 6). Say in chat: *"Running the critique pass now — pressure-testing the guide for methodology gaps, biased phrasing, and weak probes."*
+This audit always runs before any optional panel and before document creation. It cannot be skipped. Say in chat: *"Running the required safety and methodology audit now — checking protocol fidelity, coverage, phrasing, and moderator usability."*
 
-Run the assembled guide through this self-audit (do not rebuild it — this is the skill's existing audit). Adapted from the AIxUXR Playbook's **Discussion Guide Critic** prompt (Loosbrock, Oct 2025), which positions the reviewer as a *methodological auditor + strategic sparring partner* grounded in the Systematic Literature Review of Best Practices for Qualitative Interview Guides.
+Run the assembled guide through this self-contained audit. It combines protocol fidelity, source grounding, methodological review, question safety, and moderator usability.
 
-**How to use:** Walk each dimension yourself, self-contained — the Parts below already internalize the AIxUXR Critic Prompt's checks, so there's no separate external prompt/doc to run. If any row fails, revise the guide and re-walk the checklist, up to 2 revision passes; on the 3rd pass, carry any still-unresolved rows forward flagged inline as `[Auditor Note: ...]` rather than looping indefinitely, so the researcher sees the caveat. Fold clear fixes into the assembled guide, then proceed to the multi-agent review (Step 5) before creating the Doc.
+**How to use:** walk every applicable row, revise, and re-run up to two times. Unresolved authorization, consent/privacy, plan-traceability, or objective/task-coverage failures block creation. Disclose other unresolved limitations in the delivery summary; do not place audit notes inside the guide.
+
+### Post-audit change control
+
+Classify every baseline-audit or reviewer-panel fix before applying it:
+
+- **Non-material:** spelling, grammar, punctuation, or formatting only, with meaning, links, source trace, and approved research behavior unchanged. These may be applied without another approval.
+- **Material:** any change to meaning or research behavior, including question/task intent or ordering, timing, scope, participant-facing protocol or consent, objective/hypothesis coverage, source interpretation, or another approved decision. Do not silently fold these changes into locked content.
+
+After the baseline audit and any selected panel, use one planned **Section 3 change-approval** step when material fixes exist. Show a concise before/after diff; show the full revised affected block when the diff lacks enough context. Obtain explicit researcher approval before Step 6, then re-run every affected audit row. If the researcher rejects a required safety, protocol, traceability, or coverage fix, restore the last approved wording and block delivery until the issue is resolved. This is a planned Section 3 gate, not an unplanned question.
 
 **🔀 FORMAT-AWARE — apply only the rows that fit the chosen format.** Each row is tagged **[Interview]**, **[Prototype]**, or **[Both]**. Skip a row tagged for the other format — do NOT flag a correctly-built prototype guide for "missing warm-up questions" or a correctly-built interview guide for "missing task success criteria." Read the **expected phase names and time split from the chosen format's Step 2a row**, not from a hardcoded interview shape: interview-IDI Core ≈ 80%, usability Core (tasks) ≈ 75%, concept ≈ 70%. A prototype guide's "Core" is the Task Flows block; its warm-up is the Background block.
+
+### Part 0 — Safety, protocol fidelity, and traceability
+
+| Check | What to verify |
+|-------|----------------|
+| **Source authorization/minimization** | Every non-public source was authorized before access; participant-level data is absent; reviewer packets are minimum necessary and de-identified. |
+| **Consent/privacy fidelity** | Exactly one format-correct consent pass; no invented recording modality, observer disclosure, anonymity, access scope, clips, retention/deletion, or incentive promise. Unknown language remains `[TBD — confirm ResOps standard language]`. |
+| **Plan fidelity** | Sample, timeline, cohorts, stimuli, RACI, and protocol match the approved plan. Any deviation is explicitly approved as a plan amendment. |
+| **Coverage crosswalk** | Every objective/RQ/supplied hypothesis maps to a guide block and a required construct-matched evidence-collection element. Behavioral constructs map to executable tasks; reaction/comprehension/desirability and other attitudinal constructs map to required neutral prompts. No optional wording makes required evidence skippable, and no invented task changes the construct. |
+| **Restricted operations data** | No participant schedule, biography, contact detail, recording link, or session-summary link appears in the guide. |
+| **Required section inventory** | The selected template's required sections are all physically present before phrasing review. Interview includes Research Objectives; prototype includes Objectives & Research Questions and Session Flow. Missing a required section blocks delivery; do not claim a source goal maps to a section that is absent. |
 
 ### Part 1 — Methodological Audit (Structure & Flow)
 
 | Dimension | Tag | What "Good" Looks Like |
 |-----------|-----|------------------------|
-| **Opening rapport & consent** | [Both] | Warm, non-clinical opening. Explicit recording consent before recorder starts. Participant knows purpose, duration, confidentiality, right to skip/stop. Prototype adds the think-aloud intro + prototype-limitations caveat. (AIxUXR §Prompt A "Introduction & Consent"; NN/g Fessenden) |
+| **Opening rapport & consent** | [Both] | Warm opening; explicit consent before any approved recording/observation begins; purpose, duration, and right to skip/stop. Privacy language is only what the plan/ResOps approves. Prototype adds think-aloud + prototype-limitations caveat. |
 | **Phase structure** | [Both] | Phases and times match the **chosen format's Step 2a row**, displayed per section. Interview: Intro → Warm-up → Core (themes) → Wrap-up. Prototype: Intro → Background → Task Flows → Wrap-up (+ vendor back-matter). Don't force interview phase names onto a prototype guide. (AIxUXR §Prompt A "Calculate and Allocate Time") |
-| **Funnel within Core** | [Interview] | Broad "Grand Tour" question first, then specific-incident probes, then closed clarifiers. (Prototype analog: tasks ordered simple → complex; unaided Feedback row before the directed Task row.) (AIxUXR §Prompt A.3; NN/g Rosala) |
-| **Time budgeting** | [Both] | Per-phase minutes allocated and summing to the session length; Core/Task-Flows gets the format's share (IDI ≈ 80%, usability ≈ 75%, concept ≈ 70%). Warm-up/Background not eating Core. Wrap-up protected. (AIxUXR §Prompt A.1) |
+| **Funnel within Core** | [Interview] | Broad "Grand Tour" question first, then specific-incident probes, then optional factual clarifiers. (Prototype analog: usability tasks ordered simple → complex; a reaction-led concept phase starts with the approved unaided exposure before deeper prompts. P8 = Task-only remains valid only when no approved construct depends on that unaided response.) (AIxUXR §Prompt A.3; NN/g Rosala) |
+| **Time budgeting** | [Both] | Per-phase minutes allocated and summing to the session length; Core/Task-Flows gets the format's share (IDI ≈ 80%, usability ≈ 75%, concept ≈ 70%). For interviews, count the separately timed 1-minute Consent heading and allocate only the post-consent remainder to Introduction (`Consent 1 + Introduction 2`, never `Consent 1 + Introduction 3`, for a 3-minute opening). Warm-up/Background not eating Core. Wrap-up protected. (AIxUXR §Prompt A.1) |
 | **Question / task sequencing** | [Both] | Each question or task builds on the last; no abrupt jumps without a bridge; transitions signposted. (AIxUXR §V2 Prompt B Part 2) |
 | **Wrap-up dual function** | [Both] | (a) Reflection — interview: "play back the themes"; prototype: most-important / most-confusing. (b) "Anything else?" open catch-all. (AIxUXR §Prompt B SRQ1.2) |
 
 ### Part 2 — Question Quality Audit (Phrasing & Bias)
 
+Before declaring this part passed, build an audit-only inventory of every participant-facing research question and probe, including conditional and fallback lines. Mark every item for closed yes/no and compound framing; classify any closed item as exact approved consent confirmation, eligibility screening, a one-fact clarifier after an open response, or an approved rating scale, and rewrite every other failure. Report the checked-item count in the audit summary. Keep the inventory outside the guide.
+
 | Check | Tag | Fail Pattern → Fix |
 |-------|-----|--------------------|
 | **Leading questions** | [Both] | ❌ "Don't you find the new checkout faster?" → ✅ "Describe your experience using the new checkout." (AIxUXR §Prompt B example row; NN/g 6 Mistakes) |
-| **Hypothetical / speculative** | [Both] | ❌ "Would you use this?" / "What would you do if…?" → ✅ "Tell me about the last time you…" Reserve hypotheticals for the end as projective tools only. (AIxUXR §Prompt A.4; Portigal) |
-| **Closed yes/no framing** | [Both] | ❌ "Did you like it?" → ✅ "How would you describe that experience?" — *except* the deliberate post-task 1–5 ease rating in a prototype guide, which is meant to be scaled. (AIxUXR §V2 Prompt B; Hall) |
+| **Hypothetical / speculative** | [Both] | ❌ "Would you use this?" / predicted personal behavior → ✅ "What is the most recent time, if any, that you…?" then probe after confirmation. Future expert-landscape questions are allowed only when future judgment is the construct. |
+| **Closed yes/no framing** | [Both] | ❌ "Did you like it?" → ✅ "How would you describe that experience?" Allowed closed forms are exact approved consent confirmation, eligibility screening, one-fact clarification after an open response, and an approved post-task scale; none may replace an open generative question. (AIxUXR §V2 Prompt B; Hall) |
 | **Compound / double-barrelled** | [Both] | ❌ "How easy and enjoyable was it?" → ✅ Split into two questions. (NN/g) |
+| **Presupposition** | [Both] | ❌ "When did you realize this was a problem?" → ✅ "What, if anything, made this feel like a problem?" Never imply an event or opinion occurred. |
 | **Jargon / insider terminology** | [Both] | ❌ UI labels, internal product names, acronyms the participant hasn't used → ✅ Plain language matched to participant vocabulary. (AIxUXR §Responsible AI — "Inclusivity of language") |
 | **Past-behavior anchoring** | [Interview] | Interview Core questions tied to a concrete, recent incident — not "typically"/"in general." *Do NOT apply to prototype task rows* (they are present-tense observed actions by design — check instead that the task's **scenario** grounds a realistic situation). (AIxUXR §Prompt A.4; NN/g CIT) |
-| **Goals-not-UI task framing** | [Prototype] | Tasks describe the goal, not the interface ("find a way to add these items", never "click the green Add button"). Every task has a scenario; first-impression screens use the Feedback-then-Task pattern. (AIxUXR §Use Case 2) |
+| **Construct-matched phase framing** | [Prototype] | Usability tasks describe the goal, not the interface ("find a way to add these items", never "click the green Add button") and carry a scenario. Concept prompts measure the approved reaction/comprehension/relevance construct without inventing a task. P8 follows the subtype-aware gate. (AIxUXR §Use Cases 2–3) |
 | **Inclusivity & cultural assumptions** | [Both] | Questions don't assume a household structure, income level, cooking frequency, dietary pattern, or tech proficiency. (AIxUXR §RAI "Equity and Fairness") |
 
 ### Part 3 — Probing & Moderator Guidance Audit
@@ -580,7 +568,7 @@ Run the assembled guide through this self-audit (do not rebuild it — this is t
 | **Probe quality per question** | [Interview] | Each interview Core question has 1-2 named probes attached (Echo, Tell-Me-More, Laddering, Silence, Critical Incident). No "naked" questions. (Prototype: think-aloud + observation cues play this role.) (See Probing Taxonomy.) |
 | **Moderator Notes / cues embedded** | [Both] | Interview: `[Moderator Note: ...]` at every transition + Core topic. Prototype: per-phase **observation cues** (yes/no + "if not, what instead?") in a prose line below each phase list, plus behavior forks / WoZ triggers. (AIxUXR §Prompt A.5) |
 | **Silence as a tool** | [Both] | Reminds moderator to count 5-10 seconds before filling gaps. (NN/g Fessenden; Portigal) |
-| **Observation cues present** | [Prototype] | Every task flow carries a success/observation cue (yes/no + "if not, what do they do instead?") and a reused post-task ease rating. No task flow without a cue. |
+| **Observation cues present** | [Prototype] | Every task flow carries a success/observation cue (yes/no + "if not, what do they do instead?"). When Row P7 selected a rating, reuse that exact scale per flow. No task flow without a cue. |
 | **Task framing: goal not UI** | [Prototype] | Tasks describe the goal, not the UI ("find a way to…" not "click the red button"). (AIxUXR §Use Case 2 Critical Rule) |
 | **Priming → Expectation → Action → Alignment** | [Prototype] | Each task includes the four-part sequence (set context → what do you expect → do it → did it match?). (AIxUXR §Use Case 4; NN/g) |
 | **Problem validation before reveal** | [Prototype — concept only] | Blind-need questions precede the concept reveal to avoid biasing desirability. (AIxUXR §Use Case 3 "The Reveal technique") |
@@ -589,7 +577,8 @@ Run the assembled guide through this self-audit (do not rebuild it — this is t
 
 | Check | What to Verify |
 |-------|----------------|
-| **Coverage of research objectives** | Every objective in the RPP maps to at least one Core question. No orphan objectives; no orphan questions without an objective. (AIxUXR §V2 Prompt B Part 1) |
+| **Coverage of research objectives** | Every objective/RQ/hypothesis maps to at least one required Core question, prompt, comparison, or executable task appropriate to its construct. No orphan objective, no orphan evidence-producing guide item, and no task invented to satisfy traceability. |
+| **Source-grounding check** | Walk every claim against the source plan: preserve denominators, hedges, surfaces, dates, sample, and method. A talk-only guide cannot inherit a prototype plan's hypotheses or session dates as though it tested the artifact. |
 | **Redundancy check** | Scan for questions that probe the same underlying construct twice. Consolidate to save session time. (AIxUXR §V2 Prompt B Part 4 "Redundancy & Efficiency Report") |
 | **Gaps / additional questions** | Are there adjacent insights the guide misses? Suggest 1-3 generative additions tied to objectives. (AIxUXR §V2 Prompt B Part 3) |
 | **Scope discipline** | Critique stays methodological/strategic. Do NOT suggest UI copy changes, design decisions, or product strategy. (AIxUXR §V2 Prompt B role: "NOT a UI/UX copywriter") |
@@ -603,85 +592,80 @@ Applies especially when the guide includes structured rating questions or quant-
 |-------|----------------|
 | **Construct validity** | For any rating/scale question, ensure the revised wording still measures the intended construct — not just a clearer-sounding variant. (AIxUXR §Questionnaire Critique "VALIDATE THE CONSTRUCT") |
 | **Automation-bias guardrail** | Researcher must sanity-check every AI-suggested revision against the original research intent, not blindly accept. (AIxUXR §Questionnaire Critique "Primary Risk: Automation Bias") |
-| **PII scrub** | Confirm the RPP/PRD pasted into any AI prompt has been stripped of real participant names, emails, phone numbers, addresses. (AIxUXR §Critical Guardrails "NO PII, EVER") |
+| **PII recheck** | Confirm the pre-access minimization gate held: no participant names, contacts, schedules, biographies, recording links, or other unnecessary participant-level data entered the draft or reviewer packet. |
 | **Attribution & disclosure** | When sharing the final guide with stakeholders, note that AI was used for the first-pass draft/critique. Transparency builds trust. (AIxUXR §6 "Attribute the Assist"; H.E.A.R.T. "Transparent") |
 | **Guide is a protocol, not a cage** | Remind researcher: in live session, deviate from the script when valuable emergent narratives appear. (AIxUXR §6 "The Guide is a Protocol, Not a Cage") |
 
 ---
 
-## Step 5 — Section 3: Multi-Agent Review (automatic, before the Doc)
+## Step 5 — Section 3: Multi-Agent Review (before the Doc)
 
-Run the multi-agent review on the fixed guide content — before the Google Doc is created. This is the second half of the quality gate. It is automatic; do not ask permission. The researcher was already told this is coming (the end-of-Step-4 announcement).
+Run the multi-agent review only when the researcher selected the enhanced panel and reviewer access is authorized. The mandatory baseline audit already passed.
 
-- Say in chat: *"Running the multi-agent review now — two researchers read the guide in parallel: an Evidence checker for rigor and consistency, and a Stakeholder reader reading it as [audience]."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Pass it the fixed guide, any source files, and the audience; called from here, it doesn't ask the researcher anything.
-- If `multi-agent-check` is not installed in this environment, disclose that the parallel review cannot run and proceed on the critique-only pass (Step 4.5).
-- Fold any confirmed fixes into the assembled guide before creating the Doc.
+- The panel decision must state its two lenses, minimum necessary sources, audience, and expected runtime. Use that as the single pre-flight approval; do not ask again per lens.
+- Say in chat: *"Running the multi-agent review now — researcher reviewers read the guide in parallel: an Evidence checker for rigor and consistency, and a Stakeholder reader reading it as [audience]."*
+- Check the live skill list, then invoke `/multi-agent-check` when installed. Pass the fixed guide and only approved de-identified excerpts—not complete source files by default.
+- If `multi-agent-check` is unavailable or reviewer access is not authorized, disclose that the enhanced panel did not run and proceed on the passed baseline audit.
+- Route panel fixes through Post-audit change control; never silently fold meaning-changing fixes into locked content.
 
-The expected sequence is **approved blocks → self-critique → multi-agent → fixes → create the Google Doc → share.** Never describe the guide as final before both checks have run.
+The sequence is **approved blocks → mandatory baseline audit/candidate fixes → optional panel/candidate fixes → material-change approval + affected-audit rerun → selected delivery branch.** Never claim the panel ran when it was skipped or unavailable.
 
 ---
 
 ## Step 6 — Upload, Style, Verify + Share (NO researcher QUESTIONS — execute the delivery silently)
 
-🚫 **Step 6 runs with zero `AskUserQuestion` calls to the researcher.** The upload-yes/no question is gone; the styling-choice and destination were already decided in Section 1; the read-back confirmation is gone. (`/multi-agent-check` in Step 5 doesn't ask the researcher anything either when this skill calls it.) If a fact is missing, pick a sensible default and proceed.
+🚫 **Step 6 normally runs with zero `AskUserQuestion` calls.** Destination, audience, recovery path, style, and protocol were already decided. Any material audit/panel change must already have completed the planned Section 3 approval and affected-audit rerun before Step 6 begins. If a required authorization, ACL, or capability is missing, stop before writing and report the blocker; never invent a safety-critical default.
 
 Status updates are welcome (a one-line "Creating the doc… Applying [style]…" message). What's not fine: any question, any "want me to…?" Treat Step 6 like a deterministic script.
 
-### 6.1 Confirm destination and create the doc
+### 6.1 Preflight destination, capabilities, and create once
 
-1. Use the Drive destination confirmed in Section 1. (Re-state it in the status line; do not re-ask.) If, for a real run, no destination was ever confirmed, that is a Section 1 gap — confirm it before writing, then proceed.
-2. **Default (portable) path — Option 4 — Leadership:** produce the clean, edited leadership look with the bundled formatter — native Google Docs only, no personal scripts or auth. Run the `scripts/option4_guide_layout.py` pipeline against `references/option4-guide-style.json` (load `references/option4-guide-style.md` first for the visual contract):
+1. Follow `references/source-and-delivery-safety.md`. Fresh-read the confirmed folder's effective permissions and verify the intended audience, inherited/group access when visible, link-sharing scope, and the preauthorized partial-artifact recovery path. Do not create if permissions are unreadable or broader than authorized; never change sharing silently. If recovery is not authorized and supported, block before creation.
+2. Preflight create/import, raw tab structure, revision-bound batch updates, readback, parent/permission readback, render/export, and the exact preauthorized partial-artifact recovery action. A connected tool name is not proof of capability.
+3. Record the exact folder, approved title, and attempt time. Create/import once. On timeout or ambiguous response, reconcile by returned ID or exact title + folder + attempt window; reuse one verified match and never blindly retry.
+4. **Default path — Option 4 — Leadership:** run the bundled formatter in place against `references/option4-guide-style.json` (load `references/option4-guide-style.md` first):
    - `manifest` — parse the approved guide markdown into a build manifest;
-   - import the markdown into the confirmed Drive folder;
-   - `normalize` — clean up conversion artifacts and rebuild cells;
-   - `format` — generate and apply the exact Option 4 Google Docs batch operations (DM Serif Display / DM Sans typography, dark-green section bands on the phase/theme headings, pale-yellow mock-warning shading, fixed table styling);
+   - import Markdown as `application/vnd.google-apps.document`; plain-text paste does not create real headings/tables. Fetch with `includeTabsContent: true` and a fresh `revisionId`;
+   - `normalize` — generate the cleanup batch against that snapshot and require the same `revisionId`; apply once, then re-fetch;
+   - `format` — generate the styling batch against the new snapshot and require its new `revisionId`; apply once, then re-fetch;
    - `verify` — validate the visual invariants (page geometry, fonts, colors, band styling, table widths/padding), then export/render and eyeball the opening page and a dense page.
-   - **Completion gate:** if the environment cannot apply or verify the contract (no write-capable Docs integration, no render), do NOT silently ship a half-styled doc — fall back to the plain-native path below and say so plainly in the chat summary (consistent with "never block delivery on a styling failure"). Note: the one contract value not yet defined is table border color/weight; mirror it from `research-plan/scripts/option4_layout.py` on a live run for a consistent thin neutral border.
-3. **Plain native Google Docs (fallback / explicit pick):** create the doc in the confirmed folder with the session's connected Google Docs tools, then apply native Title/Heading/body styles and native tables directly. No Option 4 styling, no CLI, no personal script. Use only when the researcher picks it or the Option 4 gate above falls back.
-4. **Optional Jedida-variant path (only when the researcher opted in and Jedida's local environment is available):** upload via `md2doc`'s `upload-gdoc.py` to the confirmed folder, then apply the chosen variant styler:
-   - **Jedida Reporting (navy/blue):** `~/.claude/skills/mod-guide/scripts/apply_jedida_reporting.py [doc-id]` — navy NAV H1 nav bars, LBLUE label columns, alternating WHITE/LGRAY rows, DGRAY borders, Calibri throughout, via 4 passes (sanitize → margins → named-style typography → H1 nav bars → tables with snug label column).
-   - **Forest-green mod-guide style:** `scripts/apply_canonical_template.py [doc-id]` — clears SUBSCRIPT runs, sets page size + margins, applies run-level typography, styles all 2-col tables (col widths 96/715.5pt, dark-green header with white bold, dark-green bold label col, #161416 content col, 0.5pt #C7C7C7 borders, 8pt padding), sets H2 non-bold with 36pt above / 12pt below, NORMAL_TEXT 4pt spaceBelow + 115% lineSpacing, BULLET_DISC_CIRCLE_SQUARE.
-   - **Custom — user-supplied reference doc:** `scripts/apply_custom_template.py [target-doc-id] [ref-doc-id]`. Apply silently — no read-back, no confirmation prompt.
-   - **If a variant script crashes or errors at runtime** (missing dependency, auth failure, bad doc ID): do not retry in a loop and do not ask the researcher what to do. Fall back to the Option 4 default styling (or plain native if Option 4 also can't run), and say so plainly in the chat summary (e.g. "Jedida-variant styling failed [reason] — sharing the doc with the Option 4 leadership styling instead; let me know if you want me to retry"). The doc and its content matter more than the variant; never block delivery on a styling failure.
-5. **Demo/mock runs:** do not create a Drive artifact at all (see Demo-run auto-trigger). Return the markdown draft in chat with the `⚠️ TEST ARTIFACT` label; do not save to Drive, the tracker, or project folders.
+   - **Completion gate:** if an Option 4-only capability is unavailable, block when Strict Option 4 — Leadership was selected. Otherwise use the pre-approved plain-native fallback and disclose it; never claim Option 4 passed. Missing write access, content/parent/permission readback, or render blocks delivery on every path.
+5. **Plain native Google Docs (explicit or approved fallback):** apply native Title/Heading/body styles and native tables, then read back and render. No Option 4 claim.
+6. **Demo/mock runs:** return labeled Markdown and create no Drive artifact. When the researcher explicitly requests a test Doc, repeat the destination/ACL gate, keep the warning in the Doc, and never track it.
+7. **Failure recovery:** on revision conflict or ambiguous update, never resend the old batch. Re-fetch the known Doc; if expected state already exists, record success, otherwise regenerate against the new revision. Execute only the preauthorized trash-by-ID or exact quarantine action before any new create attempt; if it cannot be performed, stop and report without improvising another mutation.
 
 ### 6.2 Verify and correct
 
-1. Read the created document back (e.g. `get_doc_as_markdown` or the connected Docs read tool).
-2. Compare it against every approved block and the parameter header — ownership block completeness (`[TBD — fill in]` where unconfirmed), the parameter table, Pre-Session Checklist and Post-Session Debrief as lists (not tables), the Consent script verbatim, and **tables containing only read-aloud/do lines** (probes/watch-fors/observation-cues/don'ts/rationale in prose, per the domain rule).
-3. **Confirm the guide ends at the format-correct last section** (per the "guide MUST end at…" rule): interview → optional Parking Lot, else Participants Log; internal prototype → Post-Session Debrief; vendor prototype → Communication & Deliverables (+ Timeline). No Master Probe Bank, Bias Mitigation Checklist, Self-Critique Audit, or pilot reminder inside the doc.
+1. Read back the created document, its parent folder, and effective permissions.
+2. Compare it against every approved block and the source crosswalk: ownership completeness, parameters, lists, links, one format-correct consent pass, and no restricted participant operations data.
+3. **Confirm the ending:** interview → optional Parking Lot, else Post-Session Debrief; internal prototype → Post-Session Debrief; vendor prototype → Communication & Deliverables. No participant log, Master Probe Bank, Bias Checklist, audit output, or pilot reminder inside the guide.
 4. **Confirm length against the format ceiling:** interview ~4–5 pages (max 7); prototype ~6–8 pages. If over ceiling, cut moderator-note paragraphs and redundant explanation — never task/observation content.
-5. **When the format is Prototype/Usability, additionally confirm the prototype must-haves:** primary + backup prototype links; the read-aloud Introduction and every phase/task, comparison, and recap block rendered as **bold-label lists, not Cue tables** (only the Parameter dashboard and Session Flow agenda are tables); a per-phase **observation-cue prose line below each phase list** (not inside list items); the reused post-task ease rating after every flow; the experimental-design/counterbalance prose note (if any); P0/P1 objectives kept out of the task lists; the top Links row; and (vendor-run) the Communication & Deliverables back-matter.
-6. Correct every issue, then read back again. If rendering (PDF/thumbnail) is unavailable, disclose that verification was structural rather than visual.
+5. **Prototype must-haves:** approved prototype/backup links only; two tables total; every phase a bold-label list using its approved construct-matched shape; P8-gated first impressions; observation cues/probes in prose; experimental-design note when applicable; and every supplied objective/RQ/hypothesis mapped to a required evidence-producing guide item appropriate to its construct. Usability phases require Scenario → Expectation → Task → Alignment; reaction-led concept phases require reveal → [P8-approved first impression, when included] → required construct-matched neutral prompts and no invented task.
+6. Correct every issue, then re-fetch and re-run content, parent/ACL, visual verifier, and render inspection. If render is unavailable, delivery blocks on every path; plain native is a fallback only for Option 4-specific styling/verifier limitations and must itself be rendered and labeled accordingly.
 
 ### 6.3 Return the verified guide
 
 1. Share the final Google Doc link in chat with a short summary of what's in the guide, plus a one-line **pilot reminder** (per Step 4.5 Part 4) to test the guide with a teammate or friendly participant before formal data collection.
-2. State verification status: "content complete, structure checked, links checked" plus any explicit limitation.
+2. State verification status: content/crosswalk checked, links checked, parent and permissions checked, style verifier result, and render inspected—plus any explicit limitation or fallback.
 3. **Only after the link is shared** is the skill allowed to respond to follow-up questions or correction requests from the researcher.
-4. Do not update project trackers or progress files unless the researcher separately asks (and never for a demo/mock, or Sasha/personal content).
+4. Do not update project trackers or progress files unless the researcher separately asks. Never update them for a demo/mock or for non-study personal content.
 
 ---
 
 ## Tool Usage
 
-- **AskUserQuestion** — present recommendations and gather approvals: the Section 1 parameter batch, the Section 2 block-by-block content approvals, and the Section 1 delivery/destination question.
+- **AskUserQuestion** — gather the Section 1 decisions, Section 2 core-block approvals, separate destination/audience, partial-recovery, and style confirmations, and the optional enhanced-panel choice.
 - **Directory / people search** (`mcp__glean_default__employee_search` or the connected directory search) — verify current stakeholder identities before carrying RACI names forward (Section 1, Row 9). *(May require auth in this session; if unavailable, keep a name only on the researcher's live confirmation, else `[TBD — fill in]`.)*
-- **`/multi-agent-check`** — the parallel review in Step 5; check the live skill list and invoke when installed, else disclose and proceed critique-only.
-- **google-docs:fetch-google-doc** / **Glean** (`mcp__glean_default__read_document`) — read PRDs, briefs, or reference docs from Google Drive (whichever is connected).
-- **Read** tool or **download-gdoc.py** / **read-gdoc.py** — fallback readers for Google Docs.
+- **`/multi-agent-check`** — optional enhanced panel in Step 5; invoke only when selected and reviewer access is authorized.
+- **Google Docs / approved enterprise search** — read non-public plans only after the source-authorization gate.
+- **Connected Google Docs / Drive read tools** — read authorized non-public plans and fresh document structure, revisions, parents, and permissions after the applicable gates.
 - **Connected Google Docs / Drive tools** — create the guide in the confirmed folder, apply the batch operations from the Option 4 formatter (or native styles on the plain-native fallback), read it back to verify, and return the link. No personal script required.
 - **`scripts/option4_guide_layout.py`** — **default (portable) styler:** the bundled Option 4 — Leadership formatter+verifier (`manifest`/`normalize`/`format`/`verify`). Produces the clean, edited leadership look with native Google Docs only. Drives from `references/option4-guide-style.json`.
 - **`references/option4-guide-style.json`** + **`references/option4-guide-style.md`** — the Option 4 visual contract (machine-readable + human-readable); load the `.md` before formatting. Visual tokens are shared verbatim with `/research-plan`'s Option 4.
-- **md2doc** (`upload-gdoc.py`) — *optional Jedida-variant* uploader (personal pipeline only).
-- **`~/.claude/skills/mod-guide/scripts/apply_jedida_reporting.py`** — *optional Jedida-variant* styler (navy/blue). Requires Jedida's local environment.
-- **scripts/apply_canonical_template.py** — *optional Jedida-variant* forest-green mod-guide template (only when the researcher explicitly picks it).
-- **scripts/apply_custom_template.py** — *optional Jedida-variant* — extract styling from a user-supplied reference doc and apply it to the target.
 - **references/template-prototype-usability.md** — **load in Section 1 when the format is Prototype/Usability.** Holds the prototype Section 1 params, Section 2 blocks, OUTPUT TEMPLATE, and generation rules.
 - **references/template-interview.md** — **load in Section 1 when the format is Interview.** Holds the interview Section 1 params, Section 2 blocks, OUTPUT TEMPLATE, and generation rules. (Only the format-neutral shared scaffolding is inline in Step 4; the interview body template lives here.)
-- **references/canonical-template-spec.md** — human-readable spec for the forest-green variant (mirrors the values in `apply_canonical_template.py`).
-- **references/mod-guide-methodology.md** — load on demand when the researcher asks about a specific probe, bias, or study-type nuance (incl. §3 sub-shapes: usability think-aloud, concept 5-second rule, diary entry-review, focus-group turn-taking).
+- **references/source-and-delivery-safety.md** — load before non-public source access, reviewer handoff, or any Google Doc creation.
+- **references/mod-guide-methodology.md** — load on demand for probes/bias, and automatically for concept tests, diary check-ins, and focus groups.
 
 ---
 
@@ -694,4 +678,3 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 - Nielsen Norman Group: Rosala, M. — [User Interviews 101](https://www.nngroup.com/articles/user-interviews/), [6 Mistakes When Crafting Interview Questions](https://www.nngroup.com/articles/interview-questions-mistakes/), [Writing an Effective Guide for a UX Interview](https://www.nngroup.com/articles/interview-guide/), [The Funnel Technique](https://www.nngroup.com/articles/the-funnel-technique-in-qualitative-user-research/), [5 Facilitation Mistakes](https://www.nngroup.com/articles/interview-facilitation-mistakes/), [Why User Interviews Fail](https://www.nngroup.com/articles/why-user-interviews-fail/), [The Critical Incident Technique in UX](https://www.nngroup.com/articles/critical-incident-technique/); Pernice, K. & Moran, K. — [Thinking Aloud: The #1 Usability Tool](https://www.nngroup.com/articles/thinking-aloud-the-1-usability-tool/); Fessenden, T. — [Talking with Users in a Usability Test](https://www.nngroup.com/articles/talking-to-users/), [Checklist for Moderating a Usability Test](https://www.nngroup.com/articles/usability-checklist/).
 - Anderson, N. — [User Research Academy](https://www.userresearchacademy.com/) and dscout *People Nerds*.
 - dscout — [17 Pro Tips to Perfect One-on-One Interviews](https://dscout.com/people-nerds/tips-master-researcher-participant-interviews), [Dig Deeper with Follow-Up Questions](https://dscout.com/people-nerds/generative-research-questions).
-- **Instacart AIxUXR Playbook** (internal) — Loosbrock, K., Venkatraman, S., & Milton, J. (2025). *Playbook for integrating AI within UXR workflows* (Pilot, Sep 30 / Oct 9 / Dec 1, 2025). Specifically: §1.2 "The H.E.A.R.T. of AI in Research"; *Discussion Guide Drafter & Critic* spoke (Prompt A generation, Prompt B critique — V1 and V2 revised with Bhargavi's feedback); *Questionnaire Critic* spoke (Responsible AI principles, construct validity, automation-bias guardrails). Knowledge base: *A Systematic Literature Review of Best Practices for Crafting and Evaluating Moderated Qualitative Interview Guides in UX Research*.

@@ -1,8 +1,8 @@
-<!-- Structural fixture: a mock INTERVIEW / IDI moderation guide. TEST ARTIFACT, never a real study. Two-tier header (all-caps kicker + italic period line), extended RACI, prose-bullet themes with indented probes, and a 3-col Participants Log table AFTER the Post-Session Debrief. -->
+<!-- Structural fixture: a mock INTERVIEW / IDI moderation guide. TEST ARTIFACT, never a real study. Canonical Moderation Guide + Study Title header, extended RACI, prose-bullet themes with indented probes, and a 3-col Participants Log table AFTER the Post-Session Debrief. -->
 
-MOCK EXPERT INTERVIEWS
+# Moderation Guide
 
-# Discussion Guide
+## Mock Expert Interviews
 
 *[Q3 · September 2026]*
 

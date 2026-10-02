@@ -16,7 +16,7 @@ Use these names **in-line** in generated guides so moderators build muscle memor
 | 2 | **Silence** | Count 5-10 seconds after an answer. Silence is a tool; participants fill the void with richer content. | (Pause. Count to 10 before re-prompting.) | Portigal; Hall; Anderson |
 | 3 | **Tell-Me-More** | The evergreen open probe. Works anywhere. | "Tell me more about that." | Anderson (TEDW); NN/g |
 | 4 | **Laddering / Why-chain** | Climb from behavior → reason → value. Stop when they hit a terminal value or say "I just do." | "Why was that important to you?" / "In what sense?" / "How so?" | Portigal; dscout |
-| 5 | **Critical Incident Technique (CIT)** | Replace typical-behavior questions with specific-incident prompts. Closes recall and say-do gaps. | "Tell me about the last time you [behavior]." / "Tell me about a time it went well… and a time it didn't." | Flanagan (1954) via NN/g |
+| 5 | **Critical Incident Technique (CIT)** | Replace typical-behavior questions with a neutral incident gate. Closes recall and say-do gaps without presupposing the event. | "What is the most recent time, if any, that you [behavior]?" → if confirmed: "Walk me through what happened." | Flanagan (1954) via NN/g |
 | 6 | **Contrast** | Compare two experiences to surface implicit criteria. | "How did that compare to [prior experience]?" | Portigal |
 | 7 | **Specificity** | When a vague or emotionally loaded word appears (frustrating, confusing, easy, annoying), unpack it immediately. | "What do you mean by 'frustrating'?" / "Can you give me an example of that?" | NN/g; dscout |
 | 8 | **Hypothetical / Projective** | Use **sparingly and late**. Good for dreams / 5-year-out / magic-wand; bad for predicting actual future behavior. | "If we came back in 5 years, what would be different?" / "If you had a magic wand…" | Portigal; avoid per NN/g 6 Mistakes |
@@ -46,16 +46,16 @@ Use when stated behavior likely diverges from actual behavior. NN/g: *"Interview
 
 ### 2b. Probes to include when risk is Medium/High
 
-1. **Replace typical with specific.** Instead of "How often do you cook at home?" → "Tell me about the last time you cooked dinner. What about the time before that?"
-2. **Ground in artifact.** "Can you open your Instacart app and walk me through your last order?" "Can you show me what's in your fridge right now?"
-3. **Diary / photo pre-work.** If you can prep before the session: "Before we talk, send me 3 photos of meals you cooked this week."
+1. **Replace typical with a neutral incident gate.** Instead of "How often do you cook at home?" ask "What is the most recent time, if any, that you cooked dinner?" If they confirm one, follow with "Walk me through what happened." If none, ask for the closest relevant experience.
+2. **Ground in artifact after confirmation and permission.** After the participant confirms a recent order and agrees to show it: "Please walk me through that order." Use only approved, minimum-necessary artifacts.
+3. **Protected diary / photo pre-work.** Diary/photo pre-work and participant artifact collection are off unless the approved plan and protocol explicitly define the collection, participant permission/consent, transfer channel, audience/access, and retention/deletion. When those conditions are met, use only the approved prompt, channel, and minimum necessary artifact set; otherwise keep the guide conversational.
 4. **Probe the gap directly (non-accusatory).** When stated and shown diverge: "Earlier you mentioned X — I'm curious how that connected to [what I just saw]." Never: "But you said…"
 5. **Ask about frequency via recent window.** "In the last 7 days, how many times did you…" beats "How often…"
 6. **Avoid future-prediction questions entirely.** "Would you use this?" / "Would you pay for X?" — NN/g: *"people are bad at predicting their future behavior."*
 
 ### 2c. Social-desirability counter-moves (Indi Young, Portigal)
 
-- **Normalize the undesirable answer.** "Lots of people I talk to skip this step — does that happen for you?"
+- **Remove evaluation pressure without asserting what others do.** Do not normalize with invented prevalence claims. Say, "There is no right or wrong answer here. What happened for you?" or use the neutral incident gate: "What is the most recent time, if any, that you [behavior]?"
 - **Decouple from identity.** "I'm not evaluating you — I'm learning about the product."
 - **Use third-person framing.** "What do you think other people in your situation do?" (Recognizes that people will project their own behavior onto "others" more honestly than onto themselves.)
 - **Focus on the problem space, not the solution space.** Indi's *listening session* stays in purpose/cognition and avoids priming with specific products until very late.
@@ -68,18 +68,18 @@ Use when stated behavior likely diverges from actual behavior. NN/g: *"Interview
 
 | Section | Time | Purpose |
 |---------|------|---------|
-| Consent + Recording | 2 min | Legal + set tone |
+| Consent + session setup | 2 min | Approved protocol + set tone |
 | Warm-Up | 5-7 min | Rapport, calibrate vocabulary |
 | Core Discussion (3-4 topics) | 40-45 min | Main data |
 | Wrap-Up / Debrief | 5-7 min | Catch-all, surprises, magic wand |
 
-Funnel each topic: broad → specific → closed (NN/g Rosala).
+Funnel each topic: broad → specific → optional factual clarifier (NN/g Rosala). A closed clarifier may confirm one fact after an open response; it must not replace the open generative question.
 
 ### 3b. Usability Test (Think-Aloud) — 60 min default
 
 | Section | Time | Purpose |
 |---------|------|---------|
-| Consent + Recording | 2 min | — |
+| Consent + session setup | 2 min | — |
 | Warm-Up + Think-Aloud Intro | 5-7 min | Rapport + protocol training |
 | Task 1 | 8-12 min | Observe |
 | Task 2 | 8-12 min | Observe |
@@ -105,16 +105,16 @@ Funnel each topic: broad → specific → closed (NN/g Rosala).
 | Comparison | 10 min | Trade-offs, preference |
 | Wrap-Up | 5-8 min | — |
 
-Use the **5-second rule** for first impressions: show stimulus for 5 seconds, hide, ask "what do you remember, what did it make you feel?"
+Use the 5-second rule only when the approved concept-test objective, RQ, or hypothesis measures initial recall, comprehension, reaction, or desirability and that first exposure is selected in P8: show the stimulus for 5 seconds, hide it, and ask one at a time: "What do you remember?" After the response: "How did it make you feel?" When no approved construct depends on that unaided exposure, P8 is Task-only; omit the exercise and leave no placeholder. A researcher may also approve Task-only as a material method amendment, but the crosswalk must then show how the affected construct will still be tested or flag a method mismatch.
 
 ### 3d. Diary Study Check-in — 30-45 min
 
 | Section | Time | Purpose |
 |---------|------|---------|
-| Consent (only on session 1) | 2 min | — |
+| Consent / recording check | 2 min | Follow the approved protocol each session; never assume session-1 consent covers later recording or observation |
 | Warm-Up / How did the week go | 3-5 min | Reconnect |
 | Entry Review (pick 3-5 entries) | 20-30 min | Probe specific entries — "Tell me what was going on when you wrote this one" |
-| Wrap-Up + Next Week Prompts | 5-7 min | Instructions for next phase |
+| Wrap-Up + Next Week Prompts | 5-8 min | Instructions for next phase |
 
 Diary studies close the say-do gap structurally — you probe *recorded* behavior, not memory.
 
@@ -124,7 +124,7 @@ Diary studies close the say-do gap structurally — you probe *recorded* behavio
 |---------|------|---------|
 | Consent + Ground Rules | 5 min | "One voice at a time, no wrong answers, disagreement welcome" |
 | Intros around the table | 5-10 min | — |
-| Divergent Discussion | 30-40 min | Broad topics, go-arounds |
+| Divergent Discussion | 30-45 min | Broad topics, go-arounds |
 | Convergent Activity | 15-20 min | Sort, rank, or prioritize together |
 | Wrap-Up | 5-10 min | — |
 
@@ -147,7 +147,7 @@ Diary studies close the say-do gap structurally — you probe *recorded* behavio
 - [ ] **Moderator talk ≤ 20%** (NN/g)
 - [ ] **Neutral body language** — no head-shakes, no "great!", no frowns (NN/g; Portigal)
 - [ ] **Don't finish their sentences** — Columbo/Silence instead (Fessenden)
-- [ ] **Normalize negative answers** — "I didn't design this, you won't hurt my feelings" (Portigal)
+- [ ] **Remove evaluation pressure without prevalence claims** — "I didn't design this, you won't hurt my feelings" (Portigal)
 - [ ] **Third-person framing for sensitive topics** (Indi Young)
 - [ ] **Max 2-3 silent observers**, out of frame (NN/g Rosala)
 - [ ] **Avoid the word "interview"** — call it a "chat" (NN/g)
@@ -156,7 +156,7 @@ Diary studies close the say-do gap structurally — you probe *recorded* behavio
 
 | Bias | What it looks like | Counter |
 |------|--------------------|--------|
-| **Social desirability** | "I always read ingredient labels" (when they don't) | Normalize undesirable answer; third-person framing; ground in artifact |
+| **Social desirability** | "I always read ingredient labels" (when they don't) | Use non-evaluative framing and a neutral incident gate; ground in an approved artifact only after confirmation and permission |
 | **Acquiescence (yea-saying)** | "Yes" to every question regardless | Use open questions, avoid yes/no framing |
 | **Recall bias** | Participants reconstruct rather than remember | Anchor to specific recent incidents (CIT), "in the last 7 days…" |
 | **Query effect** (NN/g) | Preferences form *because* you asked | Don't ask about preferences for things they haven't used; observe instead |
@@ -173,7 +173,7 @@ Diary studies close the say-do gap structurally — you probe *recorded* behavio
 - ✅ **Shut up and listen.** Hall: "Conducting a good interview is actually about shutting up."
 - ✅ **Use silence as a probe.** Count to 10.
 - ✅ **Echo their words**, don't paraphrase into your framing.
-- ✅ **Anchor to specific recent events.** "Tell me about the last time…"
+- ✅ **Gate, then anchor to a recent event.** Ask "What is the most recent time, if any, that you [behavior]?" If they confirm one: "Walk me through what happened."
 - ✅ **Watch body language** — hesitation, squinting, emotional shifts — and probe them: "I noticed you paused — what was going through your mind?"
 - ✅ **Write top 3 impressions within 5 minutes of session end** (memory decays fast).
 
@@ -192,10 +192,10 @@ Diary studies close the say-do gap structurally — you probe *recorded* behavio
 
 ### 6a. Opening variations
 
-**Default (60-sec consent + rapport):** See SKILL.md Consent + Recording Script.
+**Default (60-sec consent + rapport):** use the selected template's one approved consent pass.
 
 **Short (30-sec — for follow-up sessions or low-stakes):**
-> "Hi [name], thanks for joining. Quick recap: we're [brief topic], about [duration], recorded with your permission for internal research only. Any questions before we dive in?"
+> "Hi [name], thanks for joining. Quick recap: we're discussing [brief topic] for about [duration]. [If recording or observing: insert only the approved modality, observer, access/use, and consent language.] Any questions before we dive in?"
 
 **Indi Young style (listening session — explicit problem-space frame):**
 > "Today I'm not going to ask you about any specific product. I just want to understand how you think about [purpose — e.g., 'feeding your family during a busy week']. Whatever comes up, I want to hear it in your own words. There's no agenda I'm trying to confirm."
@@ -205,10 +205,10 @@ Diary studies close the say-do gap structurally — you probe *recorded* behavio
 **Default:** See SKILL.md Wrap-Up.
 
 **Usability-test close:**
-> "Before we wrap — on a scale of 1-7, how easy or difficult was that overall? What's the one thing you'd change? Anything else you want to flag?"
+> Ask one at a time: "What is the one thing you would change?" Then: "What else, if anything, would you like to flag?"
 
 **Concept-test close:**
-> "If a friend asked you to describe [concept] in one sentence, what would you say? Who is this for, in your mind? Is there anyone it's clearly *not* for?"
+> Ask one at a time: "If a friend asked you to describe [concept] in one sentence, what would you say?" Then: "Who does this seem designed for?" Then: "Who, if anyone, does it seem less suited to?"
 
 **Magic wand (works everywhere):**
 > "If you had a magic wand and could change anything about [topic/product], what would you do?"
