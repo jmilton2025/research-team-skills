@@ -1,98 +1,58 @@
-# Example: Step 5 multi-agent review of a mock research plan
+# Example: Synthetic Step 5 multi-agent review
 
-A saved result from one real run of `/multi-agent-check`, the two-reviewer check that Step 5 calls. Use it to see what a review returns, or in demos when you'd rather not run the check live. The plan is a **mock** (the “Your usuals” Buy It Again redesign, marked TEST ARTIFACT); the people and the product requirements document (PRD) are made up.
+This is a fully synthetic demonstration of the two-reviewer check that Step 5 calls. It is not a recorded study or a source of customer evidence. The product, people, dates, source notes, findings, counts, and quotes below are invented so this example can be shared safely.
 
 ## Run at a glance
 
 | | |
 |---|---|
-| **Date** | Sep 29, 2026 |
-| **Input** | The plan after the Step 4.5 critique (about 2,300 words), plus 4 source files: the mock PRD and 3 prior internal studies (not included) |
-| **Audience** | Jordan Park, the product manager who signs off, and leadership using the plan for the Oct 30 roadmap lock |
-| **Reviewers** | 2: Evidence checker and Stakeholder reader |
-| **Runtime** | Evidence checker 3 min 15 s · Stakeholder reader 3 min 12 s. Run side by side as the skill intends, the check takes about as long as the slower reviewer, plus the merge. (In this run the two were started about 5 minutes apart because the first launch hit a tool error.) |
+| **Input** | A fictional research plan for a “Pantry Pilot” saved-list concept, plus three fabricated source notes |
+| **Audience** | Casey Lee, the fictional product manager responsible for the decision |
+| **Reviewers** | Evidence checker and Stakeholder reader |
+| **Runtime** | Illustrative: both reviewers run in parallel; actual runtime varies with plan and source length |
 | **Verdict** | FIX FIRST — 4 must-fixes |
-| **Findings** | 25 fixes: 4 must-fix, 21 should-fix. The reviewers raised 27 between them; 2 were the same issue and were merged. |
-| **Must-fix check** | The Evidence checker's one must-fix was confirmed against the sources by hand before it was listed (Step 4 of the skill) |
-| **Applied?** | Not in this run. It was done to show the new check on the same draft as an earlier five-reviewer run (see the end). |
+| **Findings** | 12 fixes: 4 must-fix and 8 should-fix |
 
-## What this run shows
+## What this example shows
 
-- **Two views catch different things.** The two reviewers overlapped on only 2 of 27 findings. The Evidence checker found where the plan overstates or leaves out evidence; the Stakeholder reader found where Jordan couldn't act on it. All 3 of the Stakeholder reader's must-fixes are things an evidence check doesn't look for.
-- **Facts can be right while the framing is wrong.** The Evidence checker confirmed every participant quote, count, name, and date, yet still found a must-fix: a heading that says more than its sources do.
-- **Must-fixes get checked before they're listed.** The Evidence checker's must-fix was checked against the source lines it cited. It held up, so it stayed on the list.
+- **The reviewers cover different risks.** The Evidence checker tests claims against the supplied material; the Stakeholder reader tests whether the intended audience can make the decision.
+- **A fact can be cited yet still be overstated.** A heading may generalize beyond what a narrow fictional source note supports.
+- **Must-fixes are checked before they are listed.** A proposed correction must be supported by the permitted source extract, not merely sound plausible.
 
-## All 25 fixes
+## Merged fix list
 
 🔴 must-fix · 🟡 should-fix
 
 | # | | Where | Problem | Flagged by |
 |---|---|---|---|---|
-| 1 | 🔴 | Existing insights (“Add all” bullet), Objective 2 | Heading overstates “control worries”; counter-evidence left out; implies “Add all” was tested some other way when it was never tested | Evidence checker |
-| 2 | 🔴 | Next steps, first screen | Jordan is never asked to approve, and no date is given, though recruiting starts the next day | Stakeholder reader |
-| 3 | 🔴 | Decisions | Some results fit no path (a split between the two groups, a change to the slot count), and “trust” has no bar | Stakeholder reader |
-| 4 | 🔴 | RACI, Readout | “Informed: [TBD]” placeholder; leadership isn't named, and there's no route from the readout to the Oct 30 lock | Stakeholder reader |
-| 5 | 🟡 | Existing insights (8 slots), H4 | Cites only the shoppers who wanted more items, not those who expected fewer | Evidence checker |
-| 6 | 🟡 | Objective 3, H3 | “No prior evidence on store grouping” ignores related findings | Evidence checker |
-| 7 | 🟡 | Existing insights, Method (H1) | Leaves out that shoppers expected frequency and recency orders to look alike, which weakens the comparison | Evidence checker |
-| 8 | 🟡 | Existing insights, Topic | Leaves out that shoppers already remember their core staples | Evidence checker |
-| 9 | 🟡 | Background, Topic, Appendix | Omits the two 2026 studies listed in the PRD | Evidence checker |
-| 10 | 🟡 | Topic, Background | Two claims stronger than their sources | Evidence checker |
-| 11 | 🟡 | Existing insights (rotating staples) | The researcher's interpretation reads as fact | Evidence checker |
-| 12 | 🟡 | Existing insights (P2 quote) | Cited as a live test; that participant reacted to screenshots | Evidence checker |
-| 13 | 🟡 | Stimuli, Recruitment vs. H4 | Screener asks for about 8 items, so H4 (are 8 slots too few?) can't pass or fail | Evidence checker |
-| 14 | 🟡 | Timeline, Dependencies, Recruitment | Recruit count is 12 in one place, 14 with backups in another | Both |
-| 15 | 🟡 | Sample | Uncited “5–8 per group” norm | Evidence checker |
-| 16 | 🟡 | Deliverables | The Nov 16 build is treated as fixed and never explained; the fix list and clips have no dates | Both |
-| 17 | 🟡 | First screen | No bottom line above the timeline; mislabeled column; vague “last updated” date | Stakeholder reader |
-| 18 | 🟡 | Topic vs. Hypotheses | “H1” means both the first half of 2027 and Hypothesis 1 | Stakeholder reader |
-| 19 | 🟡 | Throughout | Unexplained terms: ResOps, AnswerLab, XFN, BIA | Stakeholder reader |
-| 20 | 🟡 | Dependencies | The two biggest schedule risks are left to an undated kickoff; no date to decide 12 vs. 10 sessions | Stakeholder reader |
-| 21 | 🟡 | Decisions (Modified v3) | No rule for which sub-option applies | Stakeholder reader |
-| 22 | 🟡 | Dependencies (Interpretation limit) | The key caveat for a roadmap decision is buried | Stakeholder reader |
-| 23 | 🟡 | Background, bullet 1 | Bold lead (“Most carts are restocks”) isn't supported by the text under it | Stakeholder reader |
-| 24 | 🟡 | Background, Resources | Leftover mock and process notes where links should be | Stakeholder reader |
-| 25 | 🟡 | Background, Existing insights | Too dense for leadership; the same study is linked five times | Stakeholder reader |
+| 1 | 🔴 | Existing insights | The heading says shoppers “need” automatic grouping, but the fictional source records only one request for it | Evidence checker |
+| 2 | 🔴 | Next steps | The decision owner is not asked to approve anything by a specific date | Stakeholder reader |
+| 3 | 🔴 | Decisions | The action paths omit a mixed result in which clarity improves but completion does not | Stakeholder reader |
+| 4 | 🔴 | RACI | The Accountable role is still `[TBD]`, so final authority is unclear | Stakeholder reader |
+| 5 | 🟡 | Existing insights | One counterexample from the fictional source notes is omitted | Evidence checker |
+| 6 | 🟡 | Sample | The participant count is listed without a decision-based rationale | Evidence checker |
+| 7 | 🟡 | Recruitment and Timeline | The planned and backup participant totals disagree | Both |
+| 8 | 🟡 | Method | The concept order is fixed, creating an avoidable order effect | Evidence checker |
+| 9 | 🟡 | Dependencies | The prototype-readiness dependency has no owner or decision date | Stakeholder reader |
+| 10 | 🟡 | Deliverables | The readout is named, but its approval purpose is not | Stakeholder reader |
+| 11 | 🟡 | First page | Two abbreviations appear before they are defined | Stakeholder reader |
+| 12 | 🟡 | Background | The section is too dense for the intended leadership audience | Stakeholder reader |
 
-**Couldn't check:** the links to the three prior studies (the local exports don't include them), the older research plan listed in the Appendix, the 2026 diary study beyond the PRD's one-line summary, and the dashboard and Figma file (the draft already marks both as unverified).
-
-**Reviewer reads:**
-
-- **Evidence checker:** the plan cites its sources accurately, but overstates the “Add all” evidence and leaves out findings that complicate its hypotheses.
-- **Stakeholder reader:** well-sourced and clear enough for Jordan to approve, once it has an explicit sign-off ask, decision rules that cover every result, and named leadership in place of the placeholder.
+**Could not check:** two fictional source links were intentionally omitted from the example packet. A real run would label those claims unverified or remove them rather than imply that the links had been reviewed.
 
 ## Two worked examples
 
-### #1 🔴 A heading that says more than its sources (Evidence checker)
+### #1 🔴 Claim stronger than its source
 
-- **Problem:** the insight's heading says auto-adding “raises control worries.” In the sources, the “few” participants cited were confused by the section's name, not worried about control. The one control comment came from 1 of 6 unmoderated sessions, in a study where most found the interaction straightforward. A third study had a participant who would welcome items being pre-selected. Objective 2 also says past studies “never tested it with shoppers' own items,” implying it was tested some other way; it was never tested.
-- **Fix:** retitle to “One participant asked for ‘Add all’; evidence on control is thin and mixed,” add the sample size and the counterpoint, and change Objective 2 to “never tested it.”
-- **Checked by hand:** each source line the reviewer cited was opened and matched before this was listed as a must-fix.
+- **Problem:** The draft says shoppers need automatic grouping. The permitted fictional source extract says only that one participant asked whether groups could be created automatically.
+- **Supported fix:** “One participant requested automatic grouping; broader demand is unverified.”
+- **Check:** The corrected wording retains the narrow observation and removes the unsupported generalization.
 
-### #2 🔴 No clear ask for the person signing off (Stakeholder reader)
+### #2 🔴 No actionable approval request
 
-- **Problem:** the only sign-off item is written as the researcher's own task (“share the plan for sign-off by Sep 30”). Jordan is never asked to approve anything, and the recruiting request also goes out Sep 30, so it's unclear whether approval has to come first.
-- **Fix:** a one-line ask near the top (“Needed from Jordan: approve by Sep 30 so the recruiting request can go to ResOps that day”) and a Next step that Jordan owns.
+- **Problem:** The plan says the researcher will circulate it, but never states what Casey must approve or when approval is needed.
+- **Fix:** Add a one-line request near the top and an owned Next step: “Casey: approve the study direction by the agreed planning date before recruitment begins.”
 
-## Compared with the earlier five-reviewer run
+## Example verdict
 
-The same draft and sources went through the earlier five-reviewer panel on Sep 28, 2026. That run took about 56 minutes and 7 agents, and returned 28 fixes (4 must-fix, 19 should-fix, 5 polish).
-
-- **Raised by both runs:**
-  - the “Add all” evidence (a must-fix both times)
-  - the omitted 2026 PRD studies
-  - store grouping's “no prior evidence”
-  - the unlabeled interpretation
-  - the uncited 5–8 norm
-  - the recruit count
-  - the fixed Nov 16 date
-  - the RACI placeholder
-  - the decision paths
-  - the screener that can't test H4
-- **Rated higher this time:** the RACI placeholder, the missing sign-off ask, and the gaps in the decision paths. The earlier panel called these should-fixes; the Stakeholder reader made them must-fixes.
-- **Rated lower this time:**
-  - The screener that can't test H4 was an earlier must-fix and is a should-fix here (#13).
-  - The unsourced opening claim in the Topic was an earlier must-fix and is part of should-fix #10 here.
-- **Not raised this time:**
-  - the earlier must-fix that Objective 1 claims to test item selection it can't test
-  - the example ranking-cue copy in the method: the Evidence checker judged its “e.g.” label enough
+**FIX FIRST.** Resolve the four must-fixes, verify every revised evidence claim against the permitted source extracts, then run the normal copyedit and Google Docs delivery pipeline.

@@ -3,15 +3,18 @@
 
 Pipeline:
     option4_layout.py manifest APPROVED.md manifest.json
-    option4_layout.py normalize imported-doc.json manifest.json normalize-batch.json
+    option4_layout.py normalize imported-doc.json manifest.json normalize-batch.json \
+        --required-revision-id IMPORTED_REVISION_ID
     # Apply batch and re-fetch the document.
-    option4_layout.py format normalized-doc.json manifest.json format-batch.json
+    option4_layout.py format normalized-doc.json manifest.json format-batch.json \
+        --required-revision-id NORMALIZED_REVISION_ID
     # Apply batch and re-fetch the document.
     option4_layout.py verify final-doc.json manifest.json
 
 The script only uses the Python standard library. Batch files use the native
 Google Docs API request schema and can be applied through any equivalent
-write-capable integration.
+write-capable integration. Normalize and format inputs must carry the fresh
+document `revisionId`; a supplied `--required-revision-id` must match it.
 """
 
 from __future__ import annotations
@@ -20,8 +23,10 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -478,9 +483,62 @@ def replace_target(targets: list[tuple[int, list[dict[str, Any]]]], tab_id: str,
     targets.append((start, operations))
 
 
-def build_normalize_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
+def _batch_payload(
+    requests: list[dict[str, Any]],
+    required_revision_id: str | None = None,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {"requests": requests}
+    if required_revision_id is None:
+        return payload
+    if not isinstance(required_revision_id, str) or not required_revision_id.strip():
+        raise ContractError("Required revision ID must be a non-empty string")
+    payload["writeControl"] = {"requiredRevisionId": required_revision_id.strip()}
+    return payload
+
+
+def resolve_required_revision_id(
+    doc: dict[str, Any],
+    supplied_revision_id: str | None,
+    *,
+    require: bool = False,
+) -> str | None:
+    snapshot_revision_id = doc.get("revisionId")
+    if snapshot_revision_id is not None:
+        if not isinstance(snapshot_revision_id, str) or not snapshot_revision_id.strip():
+            raise ContractError("Document snapshot revision ID must be a non-empty string")
+        snapshot_revision_id = snapshot_revision_id.strip()
+    elif require:
+        raise ContractError(
+            "Document snapshot revision ID is missing; fetch a fresh document snapshot before generating a write batch"
+        )
+
+    if supplied_revision_id is not None:
+        if not isinstance(supplied_revision_id, str) or not supplied_revision_id.strip():
+            raise ContractError("Required revision ID must be a non-empty string")
+        resolved = supplied_revision_id.strip()
+        if snapshot_revision_id is not None and resolved != snapshot_revision_id:
+            raise ContractError(
+                "Supplied revision ID does not match the input document snapshot"
+            )
+    else:
+        resolved = snapshot_revision_id
+
+    return resolved
+
+
+def build_normalize_requests(
+    doc: dict[str, Any],
+    manifest: dict[str, Any],
+    *,
+    required_revision_id: str | None = None,
+) -> dict[str, Any]:
     """Rebuild imported table-cell text and remove the Markdown conversion header."""
     validate_manifest(manifest)
+    resolved_revision_id = resolve_required_revision_id(
+        doc,
+        required_revision_id,
+        require=True,
+    )
     tab_id, tab = get_tab(doc)
     tables = doc_tables(tab)
     if len(tables) != 2:
@@ -604,7 +662,7 @@ def build_normalize_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> d
                 }
             )
 
-    return {"requests": requests}
+    return _batch_payload(requests, resolved_revision_id)
 
 
 def hex_color(value: str) -> dict[str, Any]:
@@ -788,9 +846,19 @@ def _text_style(contract: dict[str, Any], name: str) -> tuple[str, float, bool, 
     )
 
 
-def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
+def build_format_requests(
+    doc: dict[str, Any],
+    manifest: dict[str, Any],
+    *,
+    required_revision_id: str | None = None,
+) -> dict[str, Any]:
     """Generate exact Option 4 formatting requests for a normalized document."""
     validate_manifest(manifest)
+    resolved_revision_id = resolve_required_revision_id(
+        doc,
+        required_revision_id,
+        require=True,
+    )
     contract = load_contract()
     tab_id, tab = get_tab(doc)
     body = tab["body"]["content"]
@@ -1107,7 +1175,7 @@ def build_format_requests(doc: dict[str, Any], manifest: dict[str, Any]) -> dict
                 }
             )
 
-    return {"requests": requests}
+    return _batch_payload(requests, resolved_revision_id)
 
 
 def _rgb(value: dict[str, Any] | None, *, default_black: bool = False) -> tuple[int, int, int] | None:
@@ -1557,7 +1625,37 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
 
 
 def write_json(path: str | Path, value: dict[str, Any]) -> None:
-    Path(path).write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
+    target = Path(path)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{target.name}.",
+        suffix=".tmp",
+        dir=target.parent,
+    )
+    temporary = Path(temporary_name)
+    try:
+        stream = os.fdopen(descriptor, "w", encoding="utf-8")
+        descriptor = -1
+        with stream:
+            os.chmod(temporary, 0o600)
+            json.dump(value, stream, ensure_ascii=False, indent=2)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, target)
+    except BaseException:
+        if descriptor >= 0:
+            os.close(descriptor)
+        try:
+            temporary.unlink()
+        except FileNotFoundError:
+            pass
+        raise
+
+
+def read_json_object(path: str | Path, label: str) -> dict[str, Any]:
+    value = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ContractError(f"{label} JSON root must be an object")
+    return value
 
 
 def cli() -> argparse.ArgumentParser:
@@ -1572,11 +1670,19 @@ def cli() -> argparse.ArgumentParser:
     normalize.add_argument("document_json")
     normalize.add_argument("manifest_json")
     normalize.add_argument("output")
+    normalize.add_argument(
+        "--required-revision-id",
+        help="bind the batch to the freshly fetched Google Docs revision",
+    )
 
     format_parser = subparsers.add_parser("format", help="Generate exact Option 4 formatting requests")
     format_parser.add_argument("document_json")
     format_parser.add_argument("manifest_json")
     format_parser.add_argument("output")
+    format_parser.add_argument(
+        "--required-revision-id",
+        help="bind the batch to the freshly fetched Google Docs revision",
+    )
 
     verify = subparsers.add_parser("verify", help="Verify final content and machine-checkable styling")
     verify.add_argument("document_json")
@@ -1593,15 +1699,33 @@ def main(argv: list[str] | None = None) -> int:
         print(f"PASS: parsed {len(value['rows'])} overview rows and four leadership milestones")
         return 0
 
-    doc = json.loads(Path(args.document_json).read_text(encoding="utf-8"))
-    manifest = json.loads(Path(args.manifest_json).read_text(encoding="utf-8"))
+    doc = read_json_object(args.document_json, "Document")
+    manifest = read_json_object(args.manifest_json, "Manifest")
     if args.command == "normalize":
-        payload = build_normalize_requests(doc, manifest)
+        required_revision_id = resolve_required_revision_id(
+            doc,
+            args.required_revision_id,
+            require=True,
+        )
+        payload = build_normalize_requests(
+            doc,
+            manifest,
+            required_revision_id=required_revision_id,
+        )
         write_json(args.output, payload)
         print(f"PASS: generated {len(payload['requests'])} normalization requests")
         return 0
     if args.command == "format":
-        payload = build_format_requests(doc, manifest)
+        required_revision_id = resolve_required_revision_id(
+            doc,
+            args.required_revision_id,
+            require=True,
+        )
+        payload = build_format_requests(
+            doc,
+            manifest,
+            required_revision_id=required_revision_id,
+        )
         write_json(args.output, payload)
         print(f"PASS: generated {len(payload['requests'])} Option 4 formatting requests")
         return 0
@@ -1616,6 +1740,16 @@ def main(argv: list[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (ContractError, KeyError, IndexError, StopIteration) as error:
+    except (
+        ContractError,
+        KeyError,
+        IndexError,
+        StopIteration,
+        AttributeError,
+        TypeError,
+        OSError,
+        UnicodeError,
+        json.JSONDecodeError,
+    ) as error:
         print(f"FAIL: {error}", file=sys.stderr)
         raise SystemExit(1)

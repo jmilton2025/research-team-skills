@@ -13,7 +13,7 @@ A run is complete only when all of the following are true:
 
 1. Existing context has been searched and sourced.
 2. The researcher has approved every applicable plan row.
-3. The critique pass has run, and the multi-agent review has run when it is installed (otherwise the run is disclosed as critique-only), with fixes folded in.
+3. The critique pass has run, and the multi-agent review has run when it is installed and authorized (otherwise the run is disclosed as critique-only), with fixes folded in.
 4. The Google Drive destination has been confirmed.
 5. The plan has gone through the **copyedit → create → normalize → Option 4 format → verify → render** pipeline.
 6. The exact **Option 4 — Leadership** visual contract has passed, and a working Google Doc link has been returned with verification status.
@@ -26,15 +26,15 @@ Markdown is an intermediate representation, not the completed deliverable. A moc
 
 | Step | Work | Completion gate |
 |---|---|---|
-| **1** | Gather PRD, brief, kickoff notes, Slack thread, or free-form context → check the connections the run needs → announce the 3-section structure to the researcher | Inputs received; each missing connection connected or explicitly skipped; researcher understands the full workflow |
+| **1** | Gather the request without opening sources → audit the decision → authorize source use → check connections → announce the 3-section structure | Decision is genuinely open and actionable; sources and connections are authorized or skipped; researcher understands the workflow |
 | **1.5** | **Section 1 — Context & Foundation:** discover background, existing insights, and hypotheses → three sequential pop-ups (Step 1 of 3, 2 of 3, 3 of 3), each locked before the next | Background, Existing insights, and Hypotheses approved |
-| **1.6** | Audit the decision; fill only unresolved logistics; auto-draft title, date, RACI, and Topic (verify all names via people search) | Decision is actionable; opening approved |
+| **1.6** | Fill only unresolved logistics; auto-draft title, date, RACI, and Topic (verify all names via people search) | Opening approved |
 | **2** | Recommend the minimum valid method direction and the conditional rows the study needs | Method direction picked (the rows are approved in Step 3) |
 | **3** | **Section 2 — Research Design** (4 labeled steps: Objectives, Key research questions, Decisions, Method & approach) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, "Brainstorm with me" always offered, transition announced after each lock | All remaining rows approved; no row approved twice |
 | **3.5** | Confirm the Google Drive destination | Exact folder confirmed |
 | **4** | Assemble the approved plan (markdown intermediate, saved in a persistent working folder) | Content complete; mock warning applied when relevant |
 | **4.5** | Auto-run critique checklist (announced at end of Step 3) | Gaps fixed or explicitly accepted |
-| **5** | Auto-run multi-agent review on the fixed content — before the Doc; if it isn't installed, disclose a critique-only run | Review complete (or critique-only disclosed); confirmed fixes folded in |
+| **5** | Auto-run multi-agent review on the fixed content — before the Doc; if it isn't installed or reviewer processing is not authorized, disclose a critique-only run | Review complete (or critique-only disclosed); confirmed fixes folded in |
 | **6** | Copyedit, create, normalize, apply the exact Option 4 — Leadership layout, verify, render, correct, and return | Content, links, location, exact visual contract, and rendered pages pass |
 
 ## When to use
@@ -60,7 +60,7 @@ Work as a senior UX research partner. Apply both meanings of H.E.A.R.T. used by 
 
 The researcher is the final authority. Recommend clearly, but never silently lock a method, claim, or threshold.
 
-Load `references/research-plan-methodology.md` when method choice is disputed, sample-size defense is needed, or stakeholders request citation-level rationale. Load `references/content-rules.md` whenever drafting or editing the plan; it is the content source of truth. Load `references/option4-leadership-style.md` before assembling or formatting the final Google Doc.
+Load `references/research-plan-methodology.md` when method choice is disputed, sample-size defense is needed, or stakeholders request citation-level rationale. Load `references/content-rules.md` whenever drafting or editing the plan; it is the content source of truth. Load `references/source-and-delivery-safety.md` before using non-public sources or creating a Google Doc. Load `references/option4-leadership-style.md` before assembling or formatting the final Google Doc.
 
 ## Interaction contract
 
@@ -83,7 +83,7 @@ If native pop-ups are unavailable, state **“Inline fallback — native checkli
 The skill must produce the same leadership-ready visual system for every researcher. Runtime access to Jedida's private reference Doc is neither assumed nor required.
 
 - Use the bundled machine-readable contract in `references/option4-style-contract.json` and the executable pipeline in `scripts/option4_layout.py`.
-- Build the exact hierarchy: concise opening → separate **Research Timeline** → **Project Plan Overview** table.
+- Build the exact hierarchy: concise opening → separate five-row leadership timeline under **Research Timeline** → **Project Plan Overview** table.
 - Apply DM Serif Display and DM Sans, the exact colors, pageless editing mode with landscape-letter export geometry, one-inch print margins, fixed table widths, pale-yellow warning treatment, white body cells, and dark-green two-cell section bands.
 - Keep adaptive study content and milestones; never copy wording, dates, week labels, people, or findings from the historical reference plan.
 - Run the bundled verifier and inspect rendered pages. Structural similarity or a successful API response is not enough.
@@ -92,13 +92,31 @@ The skill must produce the same leadership-ready visual system for every researc
 
 ## Step 1: Gather study inputs and orient the researcher
 
-Ask the researcher to share what already exists: product requirements document, brief, kickoff notes, Slack thread, design, technical framework, prior plan, or a free-form description. Read supplied links with the connected enterprise search, Drive, Slack, or design tools.
+Ask first for metadata and links only: what artifacts exist (product requirements document, brief, kickoff notes, Slack thread, design, technical framework, or prior plan) plus a non-sensitive description of the request. Tell the researcher not to paste, upload, or expose non-public content until the source-use authorization gate passes. Collect links without opening or searching them.
 
-When a design link cannot be opened, request one sentence describing the stimulus and retain the URL for Resources from XFN (cross-functional partners).
+### Decision audit — before discovery
+
+Ask what decision the study will inform, then challenge it before reading prior evidence:
+
+- Is there one primary “must answer” decision?
+- Is it a real fork—a different finding leads to a different action?
+- Is the decision still open, answerable in the available time, and owned by a named person?
+
+If the request is only a goal such as “inform strategy” or “understand users,” propose a sharper decision and ask for approval. If the answer has already been chosen, do not run discovery under confirmatory framing. Offer three explicit branches:
+
+1. **Reopen or reframe** a genuine decision fork that evidence could change.
+2. **Measure implementation risk** without pretending the research selects the already-chosen direction.
+3. **Document the decision as closed and stop** the research-plan workflow.
+
+If the requester insists that research justify a closed answer, refuse that framing and stop. Continue only after an open, actionable decision is approved.
+
+### Source-use authorization gate
+
+Read `references/source-and-delivery-safety.md` and complete its authorization gate before accessing any non-public source. **Connector access is not requester authorization.** Record the authorization basis, approved AI processing, intended audience and source ACL, quote/link disclosure, minimum necessary de-identification, and provenance. If any required authorization is unknown, stop before reading that source; ask the researcher to confirm it or skip it. A skipped source remains unverified and cannot support a claim.
 
 ### Connection check
 
-Before discovery, check each connection the run depends on, with a quick test call rather than trusting the tool list (a listed tool can still ask for sign-in):
+After the source-use gate, check each connection the run depends on, with a quick authentication or metadata call rather than trusting the tool list (a listed tool can still ask for sign-in). This connection check must not open or retrieve source content; content access starts only under the approved gate above.
 
 | Connection | Needed for |
 |---|---|
@@ -109,7 +127,7 @@ Before discovery, check each connection the run depends on, with a quick test ca
 | People / directory search | Verifying RACI names (Step 1.6) |
 | `multi-agent-check` skill | The multi-agent review (Step 5); check the live skill list |
 
-For each missing connection, stop and tell the researcher right then: which connection, what the plan needs it for, and how to connect it (`/mcp` in Claude Code, or the connector's settings on claude.ai). Wait for them to connect it or explicitly choose to skip it. Never quietly work around a missing connection and mention it at the end. Report the result in one line before the announcement below (e.g., “Connected: Glean, Drive, Slack. Skipped: research-insights agent.”), and treat claims that depended on a skipped source as unverified. If Google Docs write access can't be connected, say now that the run will end with the approved draft blocked, not a Google Doc. If `multi-agent-check` isn't installed, say the review in Step 5 will be critique-only.
+For each missing connection, explain its purpose and how to connect it, then wait for connection or an explicit skip. Report connected/skipped sources before discovery; dependent claims remain unverified. Missing Docs write access means the run will end with a blocked draft, and missing `multi-agent-check` means critique-only review.
 
 Before discovery, say in chat:
 
@@ -120,7 +138,7 @@ Before discovery, say in chat:
 > **Section 1 — Context & Foundation** *(what we already know)*
 > Background · Existing Insights · Hypotheses
 >
-> *Then I’ll pin down the decision this study informs and draft the title, date, RACI, and Topic for one quick confirmation.*
+> *The primary decision is set. After Section 1, I’ll draft the title, date, RACI, and Topic for one quick confirmation.*
 >
 > **Section 2 — Research Design** *(how we’ll run the study)*
 > Objectives · Key Research Questions · Decisions · Method & Approach (plus sample, measures, or stimuli rows when the study needs them)
@@ -133,6 +151,8 @@ Before discovery, say in chat:
 > Starting with **Section 1 — Context & Foundation.** Pulling background and prior research now…
 
 ## Step 1.5: Discover existing context before logistics
+
+After the decision and source-use gates pass, if an authorized design link cannot be opened, request one non-sensitive sentence describing the stimulus and retain the URL for Resources from XFN (cross-functional partners).
 
 Search in this order:
 
@@ -171,7 +191,7 @@ After approval, say: *“Existing Insights locked. Moving on to Hypotheses.”*
 
 Show proposed, falsifiable beliefs grounded in evidence or explicit stakeholder assumptions. If none are grounded yet, propose the explicit empty state: *“No hypotheses confirmed at planning time.”* Pop-up label: **“Section 1 > Step 3 of 3: Hypotheses”**. Multi-select for which hypotheses to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
 
-After approval, say: *“Hypotheses locked. Section 1 — Context & Foundation is complete. Next I’ll pin down the decision and the opening details, then we’ll move into Section 2 — Research Design.”*
+After approval, say: *“Hypotheses locked. Section 1 — Context & Foundation is complete. Next I’ll confirm the opening details, then we’ll move into Section 2 — Research Design.”*
 
 These three rows are now approved. Don't ask for them again in Step 3; if later work changes one (e.g., a new hypothesis surfaces), show just the change and ask once.
 
@@ -179,19 +199,7 @@ These three rows are now approved. Don't ask for them again in Step 3; if later 
 
 Every material background claim and insight needs a source. If no prior user research exists, say so directly instead of creating generic insights.
 
-## Step 1.6: Audit the decision and confirm the opening
-
-### Decision audit
-
-Ask what decision the study will inform, then challenge it before accepting it:
-
-- Is there one primary “must answer” decision?
-- Is it a real fork—a different finding leads to a different action?
-- Is the decision still open, or is the research being asked to justify an answer already chosen?
-- Is the scope answerable in the available time?
-- Who owns the decision?
-
-If the answer is only a goal such as “inform strategy” or “understand users,” propose a sharper version and ask for approval.
+## Step 1.6: Confirm logistics and the opening
 
 ### Fill only true gaps
 
@@ -220,7 +228,7 @@ Choose the method family based on the evidence need:
 - **Generative:** interviews, fieldwork, or diary study for motivations, mental models, and context.
 - **Descriptive:** survey, analytics, or structured observation for prevalence and distribution.
 - **Evaluative:** moderated or unmoderated usability, concept test, or benchmark review for a specific solution.
-- **Causal:** experimental or mixed-method work when the decision requires causal inference.
+- **Causal:** randomized experiments or defensible quasi-experiments when the decision requires causal inference. Mixed methods may explain mechanisms but are not inherently causal.
 - **Human/model evaluation:** calibration, independent evaluation, adjudication, and separate blind validation when adoption depends on agreement or quality evidence.
 
 Resolve conflicts between the minimum valid design and the deadline; do not merely flag them. Present three paths: descope the decision or evidence need, extend the timeline, or pause/escalate because the study cannot validly answer the decision as scoped. Record the approved tradeoff in Dependencies & guardrails. Never compress a method below validity without explicit disclosure.
@@ -282,13 +290,13 @@ After all three sections are locked, tell the researcher exactly what happens ne
 
 > All three sections are approved — I now have everything I need. Here's what I'll do before I hand you the final plan:
 >
-> 1. **Run it through a critique agent** — a pressure-test that checks the plan for gaps, weak logic, and unsupported claims.
-> 2. **Run it through the multi-agent review** — two researchers review it in parallel: an Evidence checker (is every claim true to the sources?) and a Stakeholder reader (can your audience understand it and act on it?). This takes a few minutes.
+> 1. **Run a critique pass** — a pressure-test that checks the plan for gaps, weak logic, and unsupported claims. I will self-critique unless the authorized source-use boundary permits a separate critique reviewer.
+> 2. **Run it through the multi-agent review when the authorized source-use boundary permits it** — two researchers review it in parallel: an Evidence checker (is every claim true to the permitted source extracts?) and a Stakeholder reader (can your audience understand it and act on it?). Runtime varies with source length, service availability, and rate limits.
 > 3. **Then I'll draft your Google Doc** — the formatted, verified plan in your confirmed Drive folder.
 >
 > Running the critique and multi-agent checks now — I'll fold in any fixes before the Doc is created.
 
-If the Step 1 connection check found `multi-agent-check` isn't installed, drop item 2 and say the plan gets the critique pass only.
+If the Step 1 connection check found `multi-agent-check` isn't installed, or the source-use gate does not authorize reviewer processing, drop item 2 and say the plan gets the self-critique pass only.
 
 **Override:** if the researcher explicitly requests a full draft for review at the end, skip row-by-row approval but still show the complete draft for approval, confirm the Drive destination, and perform every output and verification step.
 
@@ -299,14 +307,15 @@ A real run requires a Google Doc, so ask about location—not output format.
 1. Infer the exact Drive folder from the supplied project context when possible.
 2. Confirm the folder plainly: **“I’m going to create the research plan in [folder/link]. Is that the right destination?”**
 3. If no destination is known, ask: **“Which Google Drive folder should this research plan live in?”**
-4. Write only to the confirmed folder. Never use a hardcoded personal folder ID.
-5. For a mock or demo, do not create a Drive artifact unless the tester explicitly asks for one.
+4. Apply the destination gate in `references/source-and-delivery-safety.md`: confirm the **destination ACL** and **intended audience before any write or creation**. If access is broader, stop before writing and ask for a compliant folder or separately authorized sharing change.
+5. Write only to the confirmed folder. Never use a hardcoded personal folder ID.
+6. For a mock or demo, do not create a Drive artifact unless the tester explicitly asks for one.
 
 ## Step 4: Assemble the approved plan
 
 Load `references/content-rules.md` and assemble the approved material in the exact contract below. Verify completeness, names, dates, and source-link coverage. Preserve the approved meaning and label uncertainty rather than guessing; the copyedit happens in the created Google Doc in Step 6.2.
 
-Save the assembled plan as a Markdown file in a persistent working folder (for example, `research-plan-work/<study-slug>/` in the project you're working from), not `/tmp`: a reboot can clear `/tmp` mid-run, and Steps 5–6 read from these files. Keep every later working file (source copies for the review, manifest, batch and document JSON, rendered PDF) in the same folder.
+Follow the working-file rules in `references/source-and-delivery-safety.md`: use a persistent **private, non-repository working directory**, not `/tmp`; set owner-only permissions; keep minimum necessary content; define retention and cleanup; and keep sensitive content out of command-line arguments.
 
 ### Mock warning
 
@@ -377,7 +386,7 @@ The bundled normalizer rebuilds every multi-item table cell as clean paragraphs 
 
 ## Step 4.5: Research-plan critique
 
-Pressure-test the assembled plan before creating the final Doc. Fix clear gaps; present judgment calls to the researcher for Accept / Consider / Reject.
+Pressure-test the assembled plan before creating the final Doc. Run the checklist as a **self-critique** by default. Use a separate critique agent only when `references/source-and-delivery-safety.md` authorizes its processing and reviewer access, and provide only minimum necessary de-identified extracts. Fix clear gaps; present judgment calls to the researcher for Accept / Consider / Reject.
 
 | Dimension | Check |
 |---|---|
@@ -397,13 +406,14 @@ Do not append this internal critique to the stakeholder plan unless the research
 
 ## Step 5: Multi-agent review
 
-Run the multi-agent review on the fixed plan content — before the Google Doc is created. This is automatic; do not ask permission. The researcher was already told this is coming (the end-of-Step-3 announcement).
+Run the multi-agent review on the fixed plan content before the Google Doc is created only when the Step 1 gate authorizes both AI processing and reviewer access. The review is automatic within that already confirmed boundary; do not ask twice.
 
 - Say in chat: *"Running the multi-agent review now — two researchers read the plan in parallel: an Evidence checker against the sources, and a Stakeholder reader reading it as [audience]."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Pass it the fixed plan, the discovered source files, and the audience; called from here, it doesn't ask the researcher anything.
-- If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass. This is a complete run, not a blocked one; say “critique-only” when you return the Doc.
-- **Runtime:** a few minutes. In the timed run (a plan of about 2,300 words, 4 source files), each reviewer took about 3 minutes; they run at the same time, and the merge adds a little. Longer drafts and more sources take longer.
-- **Live demo:** the check is short enough to run live. If you'd rather not, walk through the saved run in `examples/multi-agent-review-example.md` and say it's a saved run.
+- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Follow the reviewer-packet rules in `references/source-and-delivery-safety.md`; never pass complete source files by default.
+- Run `multi-agent-check` only when it is installed and that authorization is present; **otherwise, proceed critique-only without source files or content** handed to another reviewer. This is a complete run, not a blocked one; say “critique-only” when you return the Doc.
+- If the installed review fails or rate-limits (including HTTP 429), preserve any complete reviewer result and retry only the missing transient call once when the tool reports that no duplicate work or external write can occur. Otherwise stop the review, fall back to the self-critique, and disclose `critique-only — multi-agent review failed`. Never loop, hide the failure, or call a partial review complete.
+- **Runtime:** do not promise a duration. It varies with plan/source length, service availability, and rate limits.
+- **Live demo:** either run the check without a time promise or walk through the fully synthetic `examples/multi-agent-review-example.md` and identify it as synthetic.
 - Fold any confirmed fixes into the assembled plan before creating the Doc. **Check each fix's wording against the sources before applying it.** Apply only what the source supports: if a fix adds a fact, count, attribution, study detail, or quote the source doesn't support, apply the supported part and tell the researcher what you left out and why.
 
 The expected sequence is **approved plan → critique → multi-agent (or disclosed critique-only) → fixes → copyedit → exact Option 4 Google Doc → verify/render → share**. Never describe the plan as stakeholder-final before the quality checks and the final visual gate have run.
@@ -422,46 +432,39 @@ python3 scripts/option4_layout.py manifest APPROVED.md manifest.json
 
 The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, or a leadership-timeline summary is too long.
 
+#### Full capability preflight — before creation
+
+Run the preflight in `references/source-and-delivery-safety.md`. Before creation, prove that the authenticated integration can create/import, expose raw structure and revision, apply revision-bound updates, re-fetch/read back, render, and perform authorized cleanup or quarantine. A tool name or sign-in is not proof. If any capability is unverified, preserve the Markdown and block before creation.
+
 ### 6.2 Create in the confirmed folder
 
-1. Import the copyedited Markdown as a dedicated one-tab Google Doc with the current researcher’s connected Google Docs integration. Do not reuse a multi-tab document; the formatter blocks it to avoid styling the wrong tab.
-2. Use only the confirmed Drive folder and approved stakeholder-facing title.
-3. Capture the document ID, URL, active tab ID, and raw Google Docs JSON.
-4. Confirm that the import produced two tables—a five-row leadership timeline and the Project Plan Overview conversion table—and converted the intermediate `---` into one native horizontal rule between them. The Docs batch API cannot create that rule later; if the importer drops or leaves it as text, retry with a Markdown-to-Google-Docs import path that preserves horizontal rules or block completion.
+Record the confirmed folder, approved title, and attempt time. Import the Markdown as a dedicated one-tab Doc in that folder; capture the ID, URL, active tab, and raw JSON. Confirm two tables and one native horizontal rule. If import is malformed, apply the safety reference's partial-document policy before another attempt.
 
-With Google Workspace CLI (`gws`), fetch the required raw JSON like this; an equivalent connected integration is also valid:
+For an ambiguous create/import result, follow the idempotency procedure in `references/source-and-delivery-safety.md`: reconcile the known ID or the exact folder, title, and attempt-time window. **Never blindly retry a create or update.**
 
-```bash
-gws docs documents get \
-  --params "{\"documentId\":\"$DOC_ID\",\"includeTabsContent\":true}" \
-  > imported-doc.json
-```
-
-If the integration cannot write or expose equivalent raw structure and indices, preserve the approved Markdown and **block completion**.
+Fetch raw JSON into the protected working directory. If the integration cannot expose equivalent structure and indices, preserve the Markdown and **block completion**. Never return a partial document as final.
 
 ### 6.3 Normalize and apply the exact Option 4 layout
 
 Generate and apply normalization operations:
 
 ```bash
-python3 scripts/option4_layout.py normalize imported-doc.json manifest.json normalize-batch.json
+python3 scripts/option4_layout.py normalize imported-doc.json manifest.json normalize-batch.json \
+  --required-revision-id "$IMPORTED_REVISION_ID"
 ```
 
-The normalizer validates the manifest version and digest, confirms that the imported leadership timeline plus every Project Plan Overview label and body still match the approved Markdown, rebuilds clean overview-cell paragraphs, removes the generic conversion header, and restores two physical cells for section bands. It blocks rather than rewriting pre-overview timeline text, because a length change there would invalidate later Google Docs table indices in the same native batch. Apply `normalize-batch.json` through the connected Google Docs batch-update capability, then re-fetch the raw document JSON. With `gws`:
+The normalizer validates the manifest version and digest, confirms that the imported leadership timeline plus every Project Plan Overview label and body still match the approved Markdown, rebuilds clean overview-cell paragraphs, removes the generic conversion header, and restores two physical cells for section bands. It blocks rather than rewriting pre-overview timeline text, because a length change there would invalidate later Google Docs table indices in the same native batch.
 
-```bash
-gws docs documents batchUpdate \
-  --params "{\"documentId\":\"$DOC_ID\"}" \
-  --json "$(cat normalize-batch.json)"
-```
+Immediately before each normalization or formatting write, fetch fresh raw JSON and its revision, bind the batch to that **required revision ID**, apply it through a protected request body, then re-fetch and verify. Follow the safety reference for conflicts and ambiguous results: never resend a stale batch; if the expected post-state is present, record success without resending; otherwise regenerate against the new snapshot. Material content changes require researcher reapproval. Block when reconciliation fails.
 
 Generate and apply exact formatting operations:
 
 ```bash
-python3 scripts/option4_layout.py format normalized-doc.json manifest.json format-batch.json
+python3 scripts/option4_layout.py format normalized-doc.json manifest.json format-batch.json \
+  --required-revision-id "$NORMALIZED_REVISION_ID"
 ```
 
-Apply `format-batch.json`, then re-fetch again. With `gws`, use the same `batchUpdate` command with `format-batch.json`. This step must produce DM Serif Display/DM Sans typography, pageless editing mode with landscape-letter export geometry, one-inch print margins, the exact Option 4 colors and spacing, fixed 144pt / 554.4pt table columns, a repeating dark-green timeline header, a gray milestone column, white overview body cells, true bullets, active links, and dark-green two-cell section bands. The two columns intentionally total 698.4pt and extend 50.4pt beyond the 648pt paragraph text area; this matches the approved source and must not be “corrected” by shrinking the table.
+Apply `format-batch.json` with the same revision-bound sequence, then re-fetch again. This step must produce DM Serif Display/DM Sans typography, pageless editing mode with landscape-letter export geometry, one-inch print margins, the exact Option 4 colors and spacing, fixed 144pt / 554.4pt table columns, a repeating dark-green timeline header, a gray milestone column, white overview body cells, true bullets, active links, and dark-green two-cell section bands. The two columns intentionally total 698.4pt and extend 50.4pt beyond the 648pt paragraph text area; this matches the approved source and must not be “corrected” by shrinking the table.
 
 The script emits native Google Docs API requests. An equivalent connected integration may apply the same operations directly. If the environment cannot apply an essential operation, **block completion**—do not simplify the design.
 
@@ -480,7 +483,7 @@ python3 scripts/option4_layout.py verify final-doc.json manifest.json
    - at least one dense middle table page; and
    - the final Appendix page.
 5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. If the leadership timeline splits, tighten only its at-a-glance summaries; preserve the approved detailed Timeline row.
-6. Correct every issue, then re-fetch, rerun the verifier, and re-render. Repeat until all checks pass.
+6. Correct every issue with the same fresh-fetch, revision-bound, regenerate-on-conflict sequence; then re-fetch, rerun the verifier, and re-render. Repeat until all checks pass.
 
 A structural-only pass is insufficient. If raw verification or rendering is unavailable, **block completion** rather than returning an approximate document.
 
@@ -496,35 +499,8 @@ Open the verified Google Doc in the browser when the environment supports it. Do
 
 This is the final step. The plan has already passed the critique (Step 4.5) and the multi-agent review or its disclosed critique-only fallback (Step 5); only the exact verified Option 4 Google Doc is handed back.
 
-## Tool guidance
+## Resource routing
 
-- **Enterprise research agent / Glean:** discover prior evidence and read supplied internal documents.
-- **Slack:** read supplied kickoff threads.
-- **Drive / Google Docs (connector or `gws`):** create the document in the confirmed folder, expose raw document structure, apply native batch updates, read it back as text, inspect its structure, export/render it, and return the link only after the Option 4 gate passes.
-- **`multi-agent-check` (optional skill):** the Step 5 parallel review; without it, the run is critique-only and says so.
-- **`examples/multi-agent-review-example.md`:** a saved Step 5 run of the two-reviewer check — what it returns and how the fixes were handled. Use it in demos when you'd rather not run the check live.
-- **Directory / people search:** validate current stakeholder identities before carrying names forward.
-- **Approved data tooling or data-science partner:** obtain behavioral evidence when needed; report unavailable data rather than estimating it.
-- **`references/content-rules.md`:** exact row order, writing rules, adaptive fields, and bullet rules.
-- **`references/option4-leadership-style.md`:** human-readable Option 4 hierarchy and hard completion gate.
-- **`references/option4-style-contract.json`:** machine-readable typography, colors, geometry, spacing, and table invariants.
-- **`scripts/option4_layout.py`:** manifest, normalize, format, and verify pipeline.
-- **`references/research-plan-methodology.md`:** deeper method and sample-size rationale.
-- **`tests/validate_contract.py` and `tests/test_option4_layout.py`:** regression checks for the maintained content and visual contracts.
-
-## Methodology sources
-
-Use these when the recommendation is challenged or when rationale belongs in the plan:
-
-| Claim | Source |
-|---|---|
-| Small iterative qualitative usability studies often begin around five users | Nielsen, J. (2000), *Why You Only Need to Test with 5 Users*, Nielsen Norman Group |
-| Research method should follow the project phase and evidence need | Farrell, S. (2017), *UX Research Cheat Sheet*, Nielsen Norman Group |
-| Objectives are statements and must connect information to a decision | Anderson, N. (2022), *How to Write a User Research Plan*, dscout People Nerds |
-| Distinguish generative, descriptive, evaluative, and causal evidence needs | Hall, E. (2019), *Just Enough Research*, 2nd ed. |
-| Surface assumptions and reduce confirmation bias before fieldwork | Portigal, S. (2023), *Interviewing Users*, 2nd ed. |
-| Homogeneous interview samples often approach thematic saturation near twelve interviews | Guest, G., Bunce, A., & Johnson, L. (2006), *Field Methods*, 18(1) |
-| Quantitative sample recommendations depend on precision and decision needs | Sauro, J., & Lewis, J. R. (2012), *Quantifying the User Experience* |
-| Human authority, critique patterns, and Responsible AI guardrails | Loosbrock, K. (2025), *AIxUXR Playbook*, Instacart Internal |
+Use authorized enterprise search, Slack, people search, and approved data tools for evidence and stakeholder verification; use Drive/Docs only for the confirmed final destination. `references/content-rules.md` owns plan content, `references/source-and-delivery-safety.md` owns sensitive-source and write recovery, `references/research-plan-methodology.md` owns citation-level method rationale, and the Option 4 reference, JSON contract, script, and tests own final formatting. `examples/multi-agent-review-example.md` is synthetic demo material only.
 
 The verified Google Doc is the primary output. A real run is incomplete until its location, content, links, exact Option 4 styling, and rendered pages have passed and its URL is returned.

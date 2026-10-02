@@ -2,7 +2,7 @@
 
 This file is the content source of truth for `/research-plan`. Every final Google Doc uses the exact **Option 4 — Leadership** hierarchy: concise opening, separate leadership timeline, and the two-column Project Plan Overview.
 
-**Current contract: 2026-09-23.** It preserves the research rigor added in the June team workshops—discovery before logistics, sourced existing insights, decision-quality auditing, and minimum evidence to move the decision—while enforcing the verified Option 4 visual system for every researcher.
+**Current contract: 2026-10-02.** It preserves the research rigor added in the June team workshops—decision audit before discovery, sourced existing insights, and minimum evidence to move the decision—while enforcing the verified Option 4 visual system for every researcher.
 
 ## Canonical order
 
@@ -17,6 +17,16 @@ This file is the content source of truth for `/research-plan`. Every final Googl
 9. **Appendix**.
 
 The four named overview sections must stay in that order. The leadership timeline summarizes the approved detailed Timeline row; it never imports dates or week labels from an older study. The interactive approval walk in `SKILL.md` approves each row once, grouped by section (context first, then design, then outputs); assembly puts every row back in this canonical order.
+
+## Source-use, disclosure, and provenance boundary
+
+Audit the primary decision before discovery. If the answer is already chosen, the plan must reframe an open decision, measure implementation risk honestly, or stop and document the decision as closed; it must not disguise confirmatory work as open research.
+
+**Connector access is not requester authorization.** Before discovery, confirm requester authority and **approved AI processing** for every non-public source or bounded source class. Record the **intended audience** and **source ACL**, plus **quote/link disclosure** permission; the finished plan must not expose a quote, link, or fact beyond the permission of its source.
+
+Use only the **minimum necessary** source content. Redact or **de-identify** participant, customer, employee, and confidential business details before local storage or any authorized reviewer handoff. The reviewer receives only permitted, de-identified extracts—not complete source files by default. If processing or reviewer access is not authorized, use the critique-only path without handing off source content.
+
+Keep a provenance record for every source used: canonical URL or file ID, owner/system, **source revision** or version, **retrieval timestamp**, and **content hash** when available. Mark unavailable values as unavailable. Claims, quotes, and links in the plan must trace back to that record.
 
 ## 1. Opening block
 
@@ -37,7 +47,7 @@ Always include all four roles. Unknown names use `[TBD — fill in]`.
 - **Consulted:** partners whose expertise shapes the decision.
 - **Informed:** people who need the outcome but do not make the decision.
 
-If a consulted partner is the practical decision-maker, mark that inline. Cross-check people against current directory information before reusing names from an older plan.
+If a person listed as Consulted is actually the decision owner, confirm the role and place that person in Accountable instead of leaving the ownership ambiguous. Cross-check people against current directory information before reusing names from an older plan.
 
 A mock, demo, test, pressure scenario, regression, example, fixture, or otherwise simulated study includes this prominent line, even when its brief sounds realistic. Omit it only when the researcher confirms the study is real:
 
@@ -246,3 +256,4 @@ Use `scripts/option4_layout.py` to parse, normalize, format, and verify the docu
 - 2026-06-02: discovery-first workflow, verbatim sourcing, decision audit, minimum-evidence methodology, and critique handoff added from the team workshop.
 - 2026-09-23: approved Leadership structure adopted after an end-to-end mock test; fields made adaptive; Deliverables & Next Steps separated; Appendix restricted.
 - 2026-09-23: the mock exposed visual drift in the portable fallback; the exact Option 4 — Leadership timeline, typography, colors, geometry, formatter, and hard verification gate became mandatory for every final Doc.
+- 2026-09-29: source authorization, minimization, provenance, destination ACL, reviewer-handoff, idempotent-write, revision-binding, and partial-document safety gates added.

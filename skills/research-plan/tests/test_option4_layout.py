@@ -3,10 +3,17 @@
 
 from __future__ import annotations
 
+from contextlib import redirect_stdout
 import importlib.util
+import io
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
+from unittest import mock
 
 TEST_DIR = Path(__file__).resolve().parent
 SKILL_DIR = TEST_DIR.parent
@@ -144,6 +151,7 @@ def synthetic_document(manifest: dict, *, conversion_header: bool) -> dict:
     body.append(overview)
 
     return {
+        "revisionId": "fixture-revision",
         "tabs": [
             {
                 "tabProperties": {"tabId": "t.0"},
@@ -559,10 +567,128 @@ class Option4ContractTest(unittest.TestCase):
     def test_normalizer_removes_conversion_header_and_rebuilds_cells(self) -> None:
         doc = synthetic_document(self.manifest, conversion_header=True)
         payload = self.module.build_normalize_requests(doc, self.manifest)
+        self.assertEqual(
+            payload["writeControl"],
+            {"requiredRevisionId": "fixture-revision"},
+        )
         request_types = [next(iter(request)) for request in payload["requests"]]
         self.assertIn("deleteTableRow", request_types)
         self.assertIn("deleteContentRange", request_types)
         self.assertIn("insertText", request_types)
+
+    def test_mutating_payloads_bind_the_required_revision_id(self) -> None:
+        normalize_doc = synthetic_document(self.manifest, conversion_header=True)
+        normalize_doc["revisionId"] = "revision-normalize"
+        normalize = self.module.build_normalize_requests(
+            normalize_doc,
+            self.manifest,
+            required_revision_id="revision-normalize",
+        )
+        self.assertEqual(
+            normalize["writeControl"],
+            {"requiredRevisionId": "revision-normalize"},
+        )
+
+        format_doc = synthetic_document(self.manifest, conversion_header=False)
+        format_doc["revisionId"] = "revision-format"
+        formatted = self.module.build_format_requests(
+            format_doc,
+            self.manifest,
+            required_revision_id="revision-format",
+        )
+        self.assertEqual(
+            formatted["writeControl"],
+            {"requiredRevisionId": "revision-format"},
+        )
+
+    def test_mutating_payloads_reject_blank_revision_ids(self) -> None:
+        normalize_doc = synthetic_document(self.manifest, conversion_header=True)
+        with self.assertRaisesRegex(self.module.ContractError, "revision ID"):
+            self.module.build_normalize_requests(
+                normalize_doc,
+                self.manifest,
+                required_revision_id="   ",
+            )
+
+    def test_mutating_payloads_reject_revision_mismatch_with_input_snapshot(self) -> None:
+        normalize_doc = synthetic_document(self.manifest, conversion_header=True)
+        normalize_doc["revisionId"] = "snapshot-revision"
+        with self.assertRaisesRegex(self.module.ContractError, "does not match"):
+            self.module.build_normalize_requests(
+                normalize_doc,
+                self.manifest,
+                required_revision_id="different-revision",
+            )
+
+    def test_mutating_payloads_require_a_snapshot_revision_even_with_an_override(self) -> None:
+        normalize_doc = synthetic_document(self.manifest, conversion_header=True)
+        normalize_doc.pop("revisionId", None)
+        for supplied in (None, "unbound-revision"):
+            with self.subTest(supplied=supplied):
+                with self.assertRaisesRegex(
+                    self.module.ContractError,
+                    "snapshot revision ID",
+                ):
+                    self.module.build_normalize_requests(
+                        normalize_doc,
+                        self.manifest,
+                        required_revision_id=supplied,
+                    )
+
+    def test_cli_exposes_revision_binding_for_each_mutating_batch(self) -> None:
+        for command in ("normalize", "format"):
+            with self.subTest(command=command):
+                args = self.module.cli().parse_args(
+                    [
+                        command,
+                        "document.json",
+                        "manifest.json",
+                        "batch.json",
+                        "--required-revision-id",
+                        "revision-123",
+                    ]
+                )
+                self.assertEqual(args.required_revision_id, "revision-123")
+
+    def test_cli_requires_revision_from_flag_or_fresh_document(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            document_path = root / "document.json"
+            manifest_path = root / "manifest.json"
+            output_path = root / "batch.json"
+            document = synthetic_document(self.manifest, conversion_header=True)
+            document.pop("revisionId")
+            document_path.write_text(json.dumps(document), encoding="utf-8")
+            manifest_path.write_text(json.dumps(self.manifest), encoding="utf-8")
+
+            with self.assertRaisesRegex(self.module.ContractError, "revision ID"):
+                self.module.main(
+                    [
+                        "normalize",
+                        str(document_path),
+                        str(manifest_path),
+                        str(output_path),
+                    ]
+                )
+            self.assertFalse(output_path.exists())
+
+            document["revisionId"] = "revision-from-document"
+            document_path.write_text(json.dumps(document), encoding="utf-8")
+            with redirect_stdout(io.StringIO()):
+                result = self.module.main(
+                    [
+                        "normalize",
+                        str(document_path),
+                        str(manifest_path),
+                        str(output_path),
+                    ]
+                )
+            self.assertEqual(result, 0)
+            payload = json.loads(output_path.read_text(encoding="utf-8"))
+            self.assertEqual(
+                payload["writeControl"],
+                {"requiredRevisionId": "revision-from-document"},
+            )
 
     def test_normalizer_binds_imported_overview_content_to_manifest(self) -> None:
         doc = synthetic_document(self.manifest, conversion_header=True)
@@ -597,6 +723,10 @@ class Option4ContractTest(unittest.TestCase):
     def test_formatter_emits_every_required_operation_family(self) -> None:
         doc = synthetic_document(self.manifest, conversion_header=False)
         payload = self.module.build_format_requests(doc, self.manifest)
+        self.assertEqual(
+            payload["writeControl"],
+            {"requiredRevisionId": "fixture-revision"},
+        )
         request_types = [next(iter(request)) for request in payload["requests"]]
         for operation in (
             "updateDocumentStyle",
@@ -689,6 +819,89 @@ class Option4ContractTest(unittest.TestCase):
             "verify_document",
         ):
             self.assertTrue(callable(getattr(self.module, name, None)), name)
+
+    def test_write_json_is_atomic_private_and_cleans_up_after_replace_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "payload.json"
+            self.module.write_json(output, {"secret": "value"})
+            self.assertEqual(json.loads(output.read_text(encoding="utf-8")), {"secret": "value"})
+            self.assertEqual(os.stat(output).st_mode & 0o777, 0o600)
+
+            output.write_text("original", encoding="utf-8")
+            with mock.patch.object(self.module.os, "replace", side_effect=OSError("replace failed")):
+                with self.assertRaisesRegex(OSError, "replace failed"):
+                    self.module.write_json(output, {"secret": "replacement"})
+            self.assertEqual(output.read_text(encoding="utf-8"), "original")
+            self.assertEqual([output], list(Path(directory).iterdir()))
+
+    def test_cli_reports_bad_input_without_traceback_or_partial_output(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            missing = root / "missing-doc.json"
+            manifest = root / "manifest.json"
+            output = root / "batch.json"
+            manifest.write_text(json.dumps(self.manifest), encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT_PATH),
+                    "normalize",
+                    str(missing),
+                    str(manifest),
+                    str(output),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("FAIL:", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            self.assertFalse(output.exists())
+
+            malformed = root / "malformed-doc.json"
+            malformed.write_text("{not json", encoding="utf-8")
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT_PATH),
+                    "normalize",
+                    str(malformed),
+                    str(manifest),
+                    str(output),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("FAIL:", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            self.assertFalse(output.exists())
+
+            wrong_shape = root / "wrong-shape-doc.json"
+            wrong_shape.write_text("[]", encoding="utf-8")
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT_PATH),
+                    "normalize",
+                    str(wrong_shape),
+                    str(manifest),
+                    str(output),
+                    "--required-revision-id",
+                    "revision-123",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("FAIL:", result.stderr)
+            self.assertIn("JSON root must be an object", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            self.assertFalse(output.exists())
 
     def test_skill_has_no_visual_downgrade_path(self) -> None:
         skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")

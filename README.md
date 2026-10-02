@@ -22,9 +22,9 @@ All skills use collaborative approval gates: Claude recommends starting content,
 
 **`/research-plan` contract:**
 
-1. Discover existing evidence before asking logistics.
-2. Audit the decision and recommend the minimum valid research design.
-3. Approve the plan in four parts: **Key Information → Project Details → Deliverables & Next Steps → Appendix**.
+1. Audit the decision before reading prior evidence; stop or reframe when the answer is already closed.
+2. Authorize and discover existing evidence, then recommend the minimum valid research design.
+3. Approve the plan in three interactive sections: **Context & Foundation → Research Design → Outputs**. The final Google Doc assembles those approved rows into the four overview bands: **Key Information → Project Details → Deliverables & Next Steps → Appendix**.
 4. Confirm the exact Google Drive destination.
 5. Copyedit, create, normalize, apply the exact Option 4 layout, verify, render, and only then return the Google Doc link.
 

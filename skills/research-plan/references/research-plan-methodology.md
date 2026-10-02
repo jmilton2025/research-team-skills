@@ -29,9 +29,9 @@ Anderson (dscout, 2022) draws a sharp line that matters for plan quality:
 - A **research goal / objective** is a statement of what the team wants to learn. It is not phrased as a question.
   - Example: "Discover how Merchant Portal users currently search for content."
   - Example: "Uncover the pain points users encounter when finding content."
-- A **research question** is the interview-ready prompt that operationalizes the goal, usually 3–5 per objective.
-  - Use the TEDW approach: "**T**ell me, **E**xplain, **D**escribe, **W**alk me through."
-  - Example (from the goal above): "Walk me through the last time you searched for a recipe in the Merchant Portal."
+- A **research-plan question** is a broad, project-level question mapped to an objective. It states what the study must answer without becoming a moderator prompt.
+  - Example: "How do people currently find content in the Merchant Portal, and where does that process break down?"
+  - Interview-ready TEDW prompts ("Tell me," "Explain," "Describe," "Walk me through") operationalize these questions later in the moderation guide; they do not belong in the research plan.
 
 Anderson's Mad-Lib for pressure-testing a goal:
 
@@ -63,8 +63,10 @@ Combining NNG (Farrell, 2017 — "UX Research Cheat Sheet"), Erika Hall's four r
 
 - **Generative** — explore unknown territory, define problems. Methods: IDI, field study, diary study.
 - **Descriptive** — characterize known behavior/context. Methods: survey, analytics review, diary study.
-- **Evaluative** — test a specific solution or concept. Methods: usability test, concept test, A/B.
-- **Causal** — explain why something happens. Methods: log analysis, mixed-method studies.
+- **Evaluative** — assess a specific solution or concept. Methods: usability test, concept test, benchmark review.
+- **Causal** — estimate whether an intervention changes an outcome. Methods: randomized A/B experiment or a defensible quasi-experiment; mixed methods may explain mechanisms but are not inherently causal.
+
+Log analysis is usually **descriptive** unless paired with a design that supports causal inference.
 
 **By project phase (NNG — Farrell, 2017):**
 
@@ -107,7 +109,7 @@ When sample size is challenged, lead with the decision the research informs, not
 - **Conflated goals and questions (Anderson)** — Goals that end in a question mark are usually interview questions in disguise. Separate them.
 - **Unscoped objectives (Hall)** — "Understand the user" is not an objective. Tie every objective to a pending decision.
 - **Sample-size theater (Nielsen)** — Adding participants to feel more "confident" in qualitative work yields diminishing returns and delays the study.
-- **Missing stakeholder alignment (NNG)** — Without a documented RACI and readout date, findings evaporate. Name the decision-maker (Responsible) in the plan itself.
+- **Missing stakeholder alignment (NNG)** — Without a documented RACI and readout date, findings evaporate. Name the researcher running the study as Responsible and the decision owner as Accountable.
 
 ## 7. Stakeholder Alignment Tactics
 
@@ -144,9 +146,9 @@ Pick 2–4 per study. Over-promising deliverables is a common plan failure mode.
 - Recommendations doc with severity ratings
 - Follow-up research backlog
 
-## 10. Risks & Open Questions — why a dedicated section
+## 10. Risks & Open Questions
 
-NNG, Portigal, and Hall all implicitly or explicitly call for surfacing risk. A "Risks / Open Questions" section in the plan:
+NNG, Portigal, and Hall all implicitly or explicitly call for surfacing risk. In this skill, record them in the canonical **Dependencies & guardrails** row rather than adding a separate section. That row:
 
 - Documents what the study cannot answer (scope guardrail)
 - Names recruitment risks (specialized panels, low-incidence personas)
