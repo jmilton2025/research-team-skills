@@ -35,7 +35,7 @@ Ask these **in addition to** the shared Section 1 rows (study title, moderation 
 | I5 **(= Row 8)** | **Say-Do Gap module** — the shared Row 8, don't ask twice | single | Include / Skip / Let Claude decide — per Step 2c risk flag | The other two |
 | I6 | **Horizon framing** — for future/vision studies | single | The one source-supported horizon | One alternate horizon · No horizon framing |
 
-*(Truly interview-specific asks = I1, I2, I4, I6. I3 is the shared Row 7; I5 is the shared Row 8.)* Mark unknown stakeholders/recruit sources `[TBD — fill in]` rather than inventing them. For Responsible and Accountable, verify the person's name and role independently; never infer a role from a supplied name.
+*(Truly interview-specific asks = I1, I2, I4, I6. I3 is the shared Row 7; I5 is the shared Row 8.)* Mark unknown stakeholders/recruit sources `[TBD — fill in]` rather than inventing them. For Responsible and Accountable, take the person's name and role from the researcher, each on its own; never infer a role from a supplied name.
 
 ---
 

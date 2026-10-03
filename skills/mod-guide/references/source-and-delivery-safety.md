@@ -14,6 +14,8 @@ Connector access is not requester authorization. Before opening, searching, copy
 
 Pasting or attaching content does not establish the requester's authority or approved AI-processing status. Apply the same confirmation, minimization, and redaction gate to pasted non-public material before using it. If source authority or AI-processing approval is unknown, stop before access and ask the researcher to confirm it or omit the source. A skipped source remains unverified and cannot support a claim.
 
+Connection checks run at the start of Step 1, before this gate, so they must be non-content-bearing authentication, capability, or metadata checks. Do not retrieve source content merely to test a connector; when a connector's only tools return content, rely on its sign-in status instead.
+
 Do not ingest participant names, emails, phone numbers, addresses, recruiting profiles, raw recordings, or schedule/recording links to draft a guide. Ask for a de-identified study brief instead. Moderation-guide generation normally needs the plan, stimuli, research questions, participant criteria, and approved protocol language—not participant-level data.
 
 ## 2. Minimize working and reviewer data

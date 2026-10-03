@@ -52,7 +52,7 @@ For a real study, Markdown is an intermediate representation, not the completed 
 
 | Step | Work | Completion gate |
 |---|---|---|
-| **1** | Establish source authorization/minimization, then gather the de-identified plan, brief, approved notes, or free-form description → announce the 3-section structure | Inputs authorized and received; researcher understands the workflow |
+| **1** | Check connections and flag any that need sign-in → establish source authorization/minimization, then gather the de-identified plan, brief, approved notes, or free-form description → announce the 3-section structure | Missing connections flagged in the first message; inputs authorized and received; researcher understands the workflow |
 | **2** | Analyze inputs; prepare source-grounded Recommended options for Section 1; run the Say-Do Gap risk check | Recommendations and risk flag prepared for approval |
 | **3** | **Section 1 — Study Setup & Parameters:** the consolidated upfront batch of labeled pop-ups. **First question = guide format (Prototype/Usability vs Interview)**, then study title and the shared rows (moderation, duration, participants, profile, topics/tasks/flows, Say-Do, RACI [single confirm/revise]) + the **truly format-specific rows from the matching template reference** (prototype: prototype links/backup, device, experimental design, rating style, delivery model; interview: recruit source, blinded?, conditional blocks, horizon framing). Add Drive destination/audience, partial-artifact recovery, and delivery style only for real runs or explicitly requested test Docs. | Format and title chosen; all applicable parameters approved; real/test-Doc destination and recovery path confirmed or no-Drive demo branch locked; researcher says "Section 1 locked" |
 | **4** | **Section 2 — Guide Content:** show the template-driven surrounding content and obtain draft-first approval for each decision-bearing core block, using the matching template sequence | Core blocks approved; required template blocks present in the assembled draft |
@@ -88,6 +88,31 @@ If native pop-ups are unavailable, state **"Inline fallback — native checklist
 ---
 
 ## Step 1 — Gather Study Inputs & Orient the Researcher
+
+### Connection check — first, before any questions
+
+Start the run here. Check each connection the run depends on, with a quick authentication or metadata call rather than trusting the tool list (a listed tool can still ask for sign-in; Claude Code also reports servers that need authentication when the session starts). This connection check must not open or retrieve source content; content access starts only under the source-authorization gate below. If a connector's only tools return content (search or chat, as with most Glean servers), don't run a test query: use the session's sign-in report or its `/mcp` status, and treat the first authorized read as the live check.
+
+| Connection | Needed for |
+|---|---|
+| Enterprise search (e.g., Glean) | Reading a shared internal plan or brief (Step 1) |
+| Google Drive / Docs | Reading shared docs (Step 1); creating and verifying the guide Doc for a real study or requested test Doc (Step 6) |
+| `multi-agent-check` skill | The optional enhanced reviewer panel (Step 5); check the live skill list |
+| Slack | Shared threads; check only when a Slack link comes up |
+
+**Flag every missing or signed-out connection in your first message**, so the researcher can sign in while you gather inputs instead of finding out halfway through Section 1. That covers every row above except Slack. Name the connection, say what it's for, and give the sign-in steps. Glean is the one most often signed out; for any other connection, use the same steps with its name swapped in:
+
+> **Glean isn't signed in.** I use it to read the internal plan or brief you share. To sign in, type this in Claude Code (the chat box you're using now):
+>
+> ```
+> /mcp
+> ```
+>
+> Pick **glean** (if the list shows more than one Glean entry, such as `glean` and `glean_default`, do this for each one marked as needing sign-in), choose **Authenticate**, finish signing in on the browser tab that opens, then come back and say **done**. On claude.ai, connect it from your connector settings instead. Or say **skip Glean** to continue without it.
+
+Continue with the source-authorization gate and the request for inputs while the researcher signs in; neither needs a connection. When a new source type comes up later (a Slack thread, say), check that connection the moment it's mentioned and flag it the same way. Re-check right before reading a shared source: if its connection is still missing, wait for sign-in or an explicit skip; after a skip, ask for the minimum necessary content to be pasted instead. Missing Docs write access matters only for a real study or requested test Doc, which then ends with a blocked draft; missing `multi-agent-check` means the enhanced panel is unavailable, and the baseline audit still runs.
+
+### Source authorization and inputs
 
 Before opening or using non-public material, apply `references/source-and-delivery-safety.md`: confirm the researcher's authority and approved AI processing, source audience, minimum necessary content, and redaction. Do not request participant-level data. Pasting or attaching content does not establish the requester's authority or approved AI-processing status; apply the same gate before using pasted non-public material.
 
@@ -224,14 +249,18 @@ The **Select** column says whether the pop-up is `multiSelect: true` (more than 
 | 6 | **Participant profile** | single | Extracted screen criterion | Looser / tighter alternatives |
 | 7 | **Key topics / tasks / flows** | multi only for 2–3 items; otherwise single confirm/revise | The complete extracted set | Remove/reorder · Add/reframe |
 | 8 | **Say-Do Gap module** | single | Include / Skip / Let Claude decide — Recommended depends on Step 2c risk flag (usually **Include** for interviews on stated behavior; usually **Skip** for prototype tests, which observe behavior) | The other two |
-| 9 | **Stakeholders (RACI)** | single confirm/revise | The complete source-grounded assignment; `[TBD — fill in]` where unknown | Edit assignment · Use TBD placeholders |
+| 9 | **Stakeholders (RACI)** | single confirm/revise | Confirm as shown: the complete assignment, using only names the researcher gave in this run; `[TBD — fill in]` for a role they leave blank | Add more people (corrections go in the comments field) |
 | 10 | **Recording, observation, privacy, and incentive language** | single confirm/revise | Exact approved plan/ResOps protocol; `[TBD — confirm ResOps standard language]` for unknowns | No recording/observers · Revise approved protocol |
 | 11 | **Format-specific rows** — pull from the loaded template reference (Rows 7–10 are shared; don't re-ask them) | varies | **Prototype:** delivery model · prototype link(s) · backup · device · experimental design · rating style · feedback-then-task. **Interview:** recruit source · blinded? · conditional blocks · horizon framing | Each row's own alternatives, per the reference |
 | **FINAL-2** | **Drive destination + intended audience** | single confirm/revise | Exact authorized folder and audience | Choose another authorized folder · Brainstorm |
 | **FINAL-1** | **Partial-artifact recovery** | single | Source-authorized trash-by-ID or exact permission-checked quarantine folder | The other authorized path · Block creation until a path is authorized |
 | **LAST** | **Delivery style** | single | Option 4 — Leadership with pre-approved plain-native fallback | Strict Option 4 — Leadership (block if unavailable) · Plain native Docs |
 
-**Stakeholder identity verification (Row 9):** Before carrying any name into the RACI block, verify it is still current using the people/directory search tool (e.g. `mcp__glean_default__employee_search` or the connected directory search). Stored context and project files go stale — a named team member may have left or changed roles. If there is any doubt about who belongs in a role, ask the researcher directly *inside the RACI pop-up's "Other" field prompt or as part of this same Section 1 question* (e.g. "I see [Name] listed as [Role] — is that still accurate?"). Never carry a name forward from memory or a stale file without a live check. *(Current-session caveat: the people/Glean MCPs may require auth; if the directory search is unavailable, say so, keep the name only if the researcher confirms it live, and otherwise use `[TBD — fill in]`.)*
+**Row 9 (Stakeholders): Ask the researcher for the RACI instead of looking people up.** The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run: in the plan, brief, or notes they shared, or in their answers so far. Don't run a people or directory search, and don't carry names over from memory or older project files.
+
+1. **Key people first.** If any of the four roles has no name yet, ask for it in chat before the Section 1 batch that holds Row 9, one name per role: Responsible (usually the researcher), Accountable (the decision owner), Consulted, and Informed. For Responsible and Accountable, also ask for each person's role.
+2. **Confirm once.** Show the complete RACI in chat, then ask Row 9 with the options **"Confirm as shown (Recommended)"**, **"Add more people"**, and **"Brainstorm with me"**. Corrections go in the comments field.
+3. **Then offer more people.** If the researcher picks "Add more people," collect the extra names and roles in chat (a role can hold more than one name), then show the updated RACI in chat and ask them to reply **confirm** or correct it. This finishes the same Row 9 approval; don't show the pop-up again.
 
 **Row 0 (Guide format) is NEVER skipped — it is always the first question.** Rows that may be skipped, and only under these exact conditions:
 - **Row 1 (Phase/scope)** — skip only when the inputs describe a single-phase study with no sub-studies.
@@ -240,7 +269,7 @@ The **Select** column says whether the pop-up is `multiSelect: true` (more than 
 - **Row 8 (Say-Do module)** — for a prototype/usability guide this is usually Skip (the session observes behavior); ask it only when the prototype study also collects meaningful stated-preference data.
 - **Row 11 (Format-specific rows)** — governed by the loaded template reference; ask every applicable row it defines, and skip only the ones the reference marks optional.
 
-**Never fabricate a stakeholder name.** If a name is absent or cannot be verified, use `[TBD — fill in]`.
+**Never fabricate a stakeholder name.** If the researcher hasn't given a name for a role, use `[TBD — fill in]`.
 
 (The final destination, recovery, and style rows are skipped on demo/sample/test runs, which create no Drive artifact by default.)
 
@@ -360,7 +389,7 @@ Both guide types wrap the **same spine** — header, ownership, parameter table,
 
 **The document header is always "Moderation Guide."** Both formats use `# Moderation Guide` as the document title, followed by `## [Study Title]` and `*[Source-approved study period or TBD — fill in]*`. Do not use "UX Research | Research Plan | Q3/Q4 2026" or any breadcrumb format — the doc type is always "Moderation Guide." The ownership block is standardized as full RACI on both.
 
-Populate each RACI field only from the approved Row 9 assignment. For Responsible and Accountable, the first placeholder is the person's name and the parenthetical placeholder is that person's role; verify and fill them independently. Never infer a role from a supplied name, and leave either unknown as the exact `[TBD — fill in]` placeholder.
+Populate each RACI field only from the approved Row 9 assignment. For Responsible and Accountable, the first placeholder is the person's name and the parenthetical placeholder is that person's role; fill each one separately from what the researcher gave. Never infer a role from a supplied name, and leave either unknown as the exact `[TBD — fill in]` placeholder.
 
 > **Core principle:** the moderator's eye should land on **only the words to read, ask, or do aloud**. Probes, watch-fors, observation cues, "don'ts," and methodology rationale live in prose around those lines. Interview target **~4–5 pages**; prototype target **~6–8 pages**.
 >
@@ -655,9 +684,8 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 ## Tool Usage
 
 - **AskUserQuestion** — gather the Section 1 decisions, Section 2 core-block approvals, separate destination/audience, partial-recovery, and style confirmations, and the optional enhanced-panel choice.
-- **Directory / people search** (`mcp__glean_default__employee_search` or the connected directory search) — verify current stakeholder identities before carrying RACI names forward (Section 1, Row 9). *(May require auth in this session; if unavailable, keep a name only on the researcher's live confirmation, else `[TBD — fill in]`.)*
 - **`/multi-agent-check`** — optional enhanced panel in Step 5; invoke only when selected and reviewer access is authorized.
-- **Google Docs / approved enterprise search** — read non-public plans only after the source-authorization gate.
+- **Google Docs / approved enterprise search (e.g., Glean)** — check sign-in at the start of Step 1 without reading content; read non-public plans only after the source-authorization gate.
 - **Connected Google Docs / Drive read tools** — read authorized non-public plans and fresh document structure, revisions, parents, and permissions after the applicable gates.
 - **Connected Google Docs / Drive tools** — create the guide in the confirmed folder, apply the batch operations from the Option 4 formatter (or native styles on the plain-native fallback), read it back to verify, and return the link. No personal script required.
 - **`scripts/option4_guide_layout.py`** — **default (portable) styler:** the bundled Option 4 — Leadership formatter+verifier (`manifest`/`normalize`/`format`/`verify`). Produces the clean, edited leadership look with native Google Docs only. Drives from `references/option4-guide-style.json`.

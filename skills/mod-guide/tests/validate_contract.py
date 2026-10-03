@@ -209,6 +209,34 @@ class ModGuideCrossFileContractTest(unittest.TestCase):
                 with self.subTest(source=source_name, row=label):
                     self.assertRegex(row.casefold(), r"source|extracted|approved|\[tbd")
 
+    def test_raci_comes_from_the_researcher_not_a_directory_search(self) -> None:
+        self.assertIn("Ask the researcher for the RACI instead of looking people up", self.skill)
+        self.assertIn("Key people first", self.skill)
+        self.assertIn('"Confirm as shown (Recommended)"', self.skill)
+        self.assertRegex(self.skill, r"Add more people.{0,400}finishes the same Row 9 approval")
+        self.assertIn("don't carry names over from memory or older project files", self.skill)
+        for source in (self.skill, self.interview, self.prototype):
+            self.assertNotIn("employee_search", source)
+            self.assertNotIn("people/directory search", source)
+            self.assertNotIn("Directory / people search", source)
+            self.assertNotIn("without a live check", source)
+
+    def test_connection_check_runs_first_and_flags_sign_in(self) -> None:
+        connection = self.skill.index("### Connection check — first, before any questions")
+        step1 = self.skill.index("## Step 1 — Gather Study Inputs & Orient the Researcher")
+        inputs_request = self.skill.index("To build your moderation guide, share the de-identified")
+        self.assertLess(step1, connection)
+        self.assertLess(connection, inputs_request)
+        self.assertIn("Flag every missing or signed-out connection in your first message", self.skill)
+        self.assertRegex(self.skill, r"/mcp\n>\s*```\n>\s*\n> Pick \*\*glean\*\*")
+        self.assertRegex(self.skill, r"`glean` and `glean_default`")
+        self.assertIn("choose **Authenticate**", self.skill)
+        self.assertIn("say **skip Glean**", self.skill)
+        self.assertRegex(self.skill, r"only tools return content.{0,200}don't run a test query")
+        self.assertIn("Connection checks run at the start of Step 1, before this gate", self.safety)
+        section = self.skill[connection:self.skill.index("### Source authorization and inputs")]
+        self.assertNotIn("gws", section)
+
     def test_tool_contract_names_only_connected_or_packaged_readers(self) -> None:
         self.assertNotIn("download-gdoc.py", self.skill)
         self.assertNotIn("read-gdoc.py", self.skill)
