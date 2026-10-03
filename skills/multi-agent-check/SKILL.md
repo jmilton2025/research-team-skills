@@ -38,7 +38,7 @@ When the researcher runs `/multi-agent-check` directly, confirm in one line befo
 
 > Two researchers will review **[draft]** for **[audience]**: an Evidence checker against [sources], and a Stakeholder reader reading as [audience]. Takes a few minutes. Start?
 
-When another skill calls it as an automatic quality step, skip this — the researcher was already told the review is coming.
+When another skill calls it at its quality step, skip this — that skill has already told the researcher the review is coming, or asked them whether to run it (`/research-plan` does).
 
 ### 3. Run both reviewers at the same time
 

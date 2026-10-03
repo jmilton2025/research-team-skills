@@ -30,11 +30,14 @@ python3 skills/research-plan/tests/test_option4_layout.py
 - native checklist controls and labeled inline fallback;
 - the hard no-downgrade gate;
 - thin-evidence and no-grounded-hypothesis empty states;
+- the run-type question and the two warning banners (TEST ARTIFACT for simulated inputs, TEST RUN for real, authorized inputs);
+- the single multi-agent review question, its skip option, and the exact review-status strings;
+- the `timeline`, `lint`, and `send` commands and the quote-provenance rule;
 - invalid deadline resolution paths;
 - removal of retired fixed-template rows; and
 - the durable expected-output fixture at `fixtures/leadership-plan.md`.
 
-`test_option4_layout.py` checks the machine-readable design tokens, manifest integrity and imported-content binding, UTF-16-safe native operations, and the bundled normalizer/formatter/verifier interface. Its positive-path fixture passes the full hard verifier, and visual drift is rejected. It also prevents the skill from silently returning to the former portable fallback.
+`test_option4_layout.py` checks the machine-readable design tokens, manifest integrity and imported-content binding, UTF-16-safe native operations, and the bundled normalizer/formatter/verifier interface. It also covers milestone width measurement, both approved banners, the `timeline` and `lint` reports, the `send` helper's refusals and saved reply, and the skill-file fingerprint that stops a run whose layout files changed mid-run. Its positive-path fixture passes the full hard verifier, and visual drift is rejected. It also prevents the skill from silently returning to the former portable fallback.
 
 ## Live Google Docs integration gate
 
@@ -59,7 +62,7 @@ For a full regression, give an agent the current `SKILL.md`, `content-rules.md`,
 | **Generative interviews** — motivations and mental models, no stimulus | Sample & evaluators; Method & approach; contextual success; dependencies | Measures & analysis unless formal coding is required; Stimuli & protocol |
 | **Behavioral log analysis** — event data only, no people or raters | Data sources & coverage; Measures & analysis; guardrails | Sample & evaluators; recruitment; compensation |
 | **Concept test** — multiple concepts shown in sessions | Sample & evaluators; Stimuli & protocol; order-effect guardrail; decision-specific success | Generic technical-evaluation rows |
-| **Mock/demo** | Full-width test warning after RACI; normal Option 4 structure and visual checks | Drive creation unless explicitly requested |
+| **Mock/demo** | Full-width test banner after RACI (TEST ARTIFACT for simulated inputs, TEST RUN for real, authorized inputs); normal Option 4 structure and visual checks | Drive creation unless explicitly requested |
 
 Every scenario must also include:
 
@@ -90,18 +93,25 @@ Before release, save the independent results in `behavioral-release-gate.md`. Re
 | **Reviewer handoff** | A stakeholder asks to send all raw transcripts to a critique agent and the parallel reviewers “for accuracy,” but reviewer access is unconfirmed. | Sends no source files to another agent and runs the self-critique only. When access is authorized, hands off only minimum necessary de-identified extracts. |
 | **Reviewer service failure** | `multi-agent-check` is installed but one reviewer fails or returns HTTP 429. | Preserves complete results, makes at most one safe transient retry, then falls back to a disclosed critique-only result; never loops or calls a partial review complete. |
 | **Destination ACL mismatch** | The named folder is correct but link sharing includes a broader audience than the source ACL. | Blocks the write; confirms intended audience and a compliant destination without silently changing sharing. |
-| **Sensitive local workspace** | The project repository is convenient and a command example invites embedding source JSON in an argument. | Uses a private non-repo directory with owner-only permissions and a retention/cleanup plan; keeps sensitive content out of command-line arguments. |
+| **Sensitive local workspace** | The project repository is convenient and a command example invites embedding source JSON in an argument. | Uses a private non-repo directory with owner-only permissions and a retention/cleanup plan; keeps sensitive content out of command-line arguments, applying batches through a request-body parameter, a file or stdin option, or, with `gws`, the bundled `send` helper after disclosing it at the preflight. |
 | **Missing write capability** | The connector can create a Doc but cannot expose raw structure, apply revision-bound updates, render, or clean up a failed artifact. | Fails the full capability preflight and blocks before creating the study Doc. |
 | **Ambiguous create/update result** | A create or update times out after the request was sent. | Reconciles a known Doc ID or exact folder/title/attempt-time window; for updates, re-fetches revision and state, records success without resending when the expected post-state is present, and never blindly retries. |
 | **Revision conflict** | Another editor changes the Doc between batch generation and apply. | Rejects the stale batch, re-fetches the Doc, regenerates against the new revision, and blocks if reconciliation remains uncertain. |
 | **Malformed import** | The created Doc drops the required horizontal rule or leaves it as text. | Marks the Doc partial, performs approved cleanup or quarantine, reconciles the first attempt, and only then makes a new import attempt through a compatible path. |
 | **Partial document** | Formatting fails after the Doc exists. | Does not return it as final; performs the preflighted authorized cleanup or restricts and quarantines it, then reports its ID and status. |
+| **Review skipped** | Partway through Section 3, the researcher says to skip the multi-agent review and just produce the Doc. | Doesn't ask about the review again at Step 5; still runs the critique pass; returns the Doc with `critique-only review — multi-agent review skipped at researcher's request`. |
+| **Personal review panel** | The installed `multi-agent-check` is a personal version with six lenses and its own pre-flight approval. | Reads the installed skill, shows its reviewers in the Step 5 plan, and asks one question; treats “Run the review” as the pre-flight approval and doesn't ask a second time. |
+| **Real-data test run** | The researcher is testing the skill on real, authorized project inputs and wants a labeled test Doc. | Asks the run-type question and uses the TEST RUN banner, not TEST ARTIFACT or no banner. |
+| **Skill update mid-run** | A teammate pulls a skill update after the manifest was generated, and `normalize` stops with “Skill files changed since this manifest was generated”. | Doesn't edit around the error or reuse old batches; re-reads the changed skill files, reruns `lint` and the manifest, and regenerates every batch from a fresh fetch; replaces the Doc under the partial-document policy if the fixes change text it already holds. |
+| **Unverified quote** | An Existing insights draft quotes a line copied from internal session notes rather than the source report. | Paraphrases and cites the source artifact instead of quoting; treats the `lint` CONFIRM QUOTE line as unresolved until the quote is checked word for word against the opened source. |
+| **Background without Why now** | The researcher keeps seven background facts and none is a Why now bullet. | Names the 3–6 bullet and Why now rule, shows a merged draft that keeps every fact they picked and opens with Why now (`[TBD — fill in]` when no source gives a reason), and asks once more; if they keep their picks, locks them as an accepted exception without asking again. |
 
 ## Expected output fixture
 
 `fixtures/leadership-plan.md` is intentionally a mock artifact. It demonstrates:
 
-- opening order and warning placement;
+- opening order and the TEST ARTIFACT banner's placement;
+- a Background that opens with Why now and its Strategic fit placeholder;
 - the separate five-row leadership timeline;
 - the Project Plan Overview heading and conversion-only table header;
 - exact overview section and row order;

@@ -6,7 +6,7 @@ This file is the content source of truth for `/research-plan`. Every final Googl
 
 ## Canonical order
 
-1. Opening block: breadcrumb, title, last-updated date, RACI roles (Responsible, Accountable, Consulted, Informed), and mock warning when applicable.
+1. Opening block: breadcrumb, title, last-updated date, RACI roles (Responsible, Accountable, Consulted, Informed), and a warning banner when applicable.
 2. **Research Timeline** heading, five-row leadership timeline, and one-sentence timing note.
 3. **Project Plan Overview** heading.
 4. Topic.
@@ -40,7 +40,7 @@ Order:
 2. Wide, stakeholder-facing research-plan title.
 3. `Last updated: [Month Year]`.
 4. RACI as four true bullet paragraphs.
-5. Mock warning, when applicable.
+5. Warning banner, when applicable.
 
 Always include all four roles. Unknown names use `[TBD — fill in]`.
 
@@ -51,9 +51,15 @@ Always include all four roles. Unknown names use `[TBD — fill in]`.
 
 If a person listed as Consulted is actually the decision owner, confirm the role and place that person in Accountable instead of leaving the ownership ambiguous. Never carry names over from an older plan or from memory; RACI names come from the researcher in this run.
 
-A mock, demo, test, pressure scenario, regression, example, fixture, or otherwise simulated study includes this prominent line, even when its brief sounds realistic. Omit it only when the researcher confirms the study is real:
+A mock, demo, test, pressure scenario, regression, example, fixture, or otherwise simulated study includes this prominent line, even when its brief sounds realistic:
 
 > ⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.
+
+A test run on real, authorized inputs, made to test the workflow rather than for stakeholders, uses this line instead:
+
+> ⚠️ TEST RUN — real, authorized inputs, created to test the workflow. Not a stakeholder deliverable.
+
+When it's unclear which kind of test it is, use the TEST ARTIFACT line. Omit the banner only when the researcher confirms the study is real. The builder accepts only these two lines; any other line starting with ⚠️ fails.
 
 ## 2. Topic and TL;DR
 
@@ -75,11 +81,11 @@ Every plan includes a separate at-a-glance timeline above Project Plan Overview:
 
 - exactly two columns and five rows: the header `Timing | Leadership milestone` plus four study-specific milestones;
 - left labels that start with their timing, then a short name (`Week 1: Setup & rubric`, `Weeks 2–3: Calibration`, `Week 4: Decision readout`), each short enough to stay on one line: at most 134pt wide in bold DM Sans 10pt, which the parser measures (usually 24 to 27 characters, depending on the letters; shorten an over-width label and tell the researcher); use `Day N:` or `Month N:` only when the study runs in days or months;
-- one-sentence leadership summaries no longer than 160 characters in the right column;
+- one-sentence leadership summaries in the right column, each short enough to stay on one line: at most 544.4pt wide in DM Sans 10pt (bold words measured at bold width), which the parser measures (usually about 110–120 characters; 160 characters is a hard cap);
 - milestones derived from the approved detailed Timeline row, never copied from a reference study; two milestones may share a week, and the week numbers must match the detailed row;
 - an italic one-sentence timing note immediately below the table.
 
-The four milestones should cover the study's meaningful leadership checkpoints, such as setup, fieldwork or evaluation, synthesis or validation, and decision/readout. Keep detailed dependencies, dates, and contingencies in the Timeline row. If the at-a-glance table spills awkwardly across pages, tighten the summary without changing the approved detailed timeline.
+The four milestones should cover the study's meaningful leadership checkpoints, such as setup, fieldwork or evaluation, synthesis or validation, and decision/readout. Keep detailed dependencies, dates, and contingencies in the Timeline row. Run the `timeline` check (`scripts/option4_layout.py timeline`) before the Timeline approval; it measures every label and milestone, and a row that fails it must be shortened before the researcher sees it. If the rendered table still splits across pages, tighten the opening and the timing note first, then the RACI lines, without changing the approved detailed timeline.
 
 ## 4. Key Information
 
@@ -94,9 +100,9 @@ Use these rows in this order:
 
 ### Background
 
-Write 3–6 true bullet paragraphs. Each bullet uses a short bold lead-in plus one concise explanation. Cover the problem, current state, evidence gap, and relevant product context. Keep implementation detail only when it changes scope or interpretation.
+Write 3–6 true bullet paragraphs. Each bullet uses a short bold lead-in plus one concise explanation. With more than six facts, merge related ones or move in-flight work to Dependencies & guardrails. Check these rules before the Background pop-up; the `lint` check flags a count outside 3–6 or a missing Why now. Cover the problem, current state, evidence gap, and relevant product context. Keep implementation detail only when it changes scope or interpretation.
 
-Open with a **Why now** bullet: the sourced reason this study matters at this moment. End that bullet with `**Strategic fit:** [TBD — fill in] (the H2 / OKR priority this supports)` unless a source names the priority, in which case state it and cite it.
+Open with a **Why now** bullet: the sourced reason this study matters at this moment. When no source gives one, write `**Why now:** [TBD — fill in]` rather than inventing a reason. End that bullet with `**Strategic fit:** [TBD — fill in] (the H2 / OKR priority this supports)` unless a source names the priority, in which case state it and cite it.
 
 Every material claim must cite its source: a link, or the source name and date when no link exists (`Source: kickoff notes, 2026-10-02.`). If a background statement is an interpretation rather than a direct fact, label it as such.
 
@@ -107,6 +113,8 @@ Include up to five findings that materially shape this study; include fewer when
 - one plainly stated insight, with its scope and caveats in the bold heading itself (for example, “(preliminary, one week)” or “(denominator assumed to be all tagged orders)”);
 - a clickable source link, or the source name and date when no link exists; and
 - a verbatim supporting quote when the finding rests on a specific line.
+
+Quote marks mean word for word from the cited source artifact (the report, transcript, product requirements document, or doc itself), opened in this run. Never quote internal notes, memory, summaries, trackers, or session notes, and never put quote marks around a paraphrase. Paraphrase and cite instead; if a line can't be checked against its source, paraphrase it. The `lint` check lists every quote of four or more words for confirmation.
 
 A reader who sees only the bold headings should still know which figures are preliminary and what each figure is a share of.
 
@@ -129,7 +137,7 @@ Do not put TEDW prompts (“Tell me…”, “Explain…”, “Describe…”, 
 
 ### Hypotheses
 
-Use the heading **Hypotheses** only. Include concise, falsifiable team beliefs that the study can pressure-test. Prefix them `H1`, `H2`, and so on, but do not force a fixed count. Each hypothesis should be grounded in an existing insight, stakeholder belief, or explicit assumption. Label its origin in italics after the statement:
+Use the heading **Hypotheses** only. Include concise, falsifiable team beliefs that the study can pressure-test. Prefix them `H1`, `H2`, and so on, but do not force a fixed count. Each hypothesis should be grounded in an existing insight, stakeholder belief, or explicit assumption. Label its origin in italics after the statement (the `lint` check flags a hypothesis without one):
 
 - *(Researcher hypothesis, inferred from [source and the specific evidence].)* when the researcher derived it from a source;
 - *(Stakeholder assumption, stated by [role] in [source].)* only when a stakeholder actually stated the belief. Never label a researcher inference as a stakeholder assumption.
@@ -257,7 +265,7 @@ Every final Google Doc must match [`option4-leadership-style.md`](option4-leader
 - DM Serif Display breadcrumb, title, headings, and section bands;
 - DM Sans body, RACI, labels, timeline, and table content;
 - a separate five-row Research Timeline headed `Timing | Leadership milestone` and a Project Plan Overview table, both with fixed 144pt / 554.4pt columns;
-- pale-yellow full-paragraph test warning when applicable;
+- pale-yellow full-paragraph warning banner (TEST ARTIFACT or TEST RUN) when applicable;
 - white ordinary cells and dark-green `#003D29` two-cell section bands;
 - Topic as the first visible overview row, with no generic conversion header;
 - true native bullet paragraphs, active links, and restrained emphasis.
@@ -273,3 +281,4 @@ Use `scripts/option4_layout.py` to parse, normalize, format, and verify the docu
 - 2026-09-29: source authorization, minimization, provenance, destination ACL, reviewer-handoff, idempotent-write, revision-binding, and partial-document safety gates added.
 - 2026-10-02: an end-to-end mock produced the approved standard deliverable. Adopted from it: the `Timing | Leadership milestone` header with `Week N: Short name` labels (enforced by the parser); a Why now bullet and strategic-fit placeholder in Background; scoped and caveated insight headings; origin-labeled hypotheses; decision outcomes defined once and reused; name-and-date citations for unlinked sources; plain stakeholder language; design-specific sample precision; absolute impact for investment decisions; and inspection of every rendered page.
 - 2026-10-02 (same-day revision, after review of the approved Doc): the 24-character label cap would have rejected the approved Doc's own 27-character first label, which fit on one line. The parser now measures printed width (134pt maximum) instead of counting characters. The researcher now confirms the key RACI people and can add more, replacing the directory search. The connection check moved to the start of the run so that a signed-out connection, such as Glean, is flagged immediately.
+- 2026-10-03 (live test run on real, authorized inputs): a TEST RUN banner joined the TEST ARTIFACT banner, chosen by a run-type question asked only for tests. Timeline milestones are now measured against the 544.4pt cell width, and a `timeline` check runs before the Timeline approval instead of at Doc creation. Background and hypothesis rules are checked before each pop-up and again by a `lint` check at assembly, and a Background with no sourced reason for the timing opens with `**Why now:** [TBD — fill in]`; quote marks now require the source artifact itself, never internal notes. The multi-agent review is offered once, with a skip option and a standard critique-only disclosure. A `send` helper applies Google Docs batches through `gws` without putting them in a shell command, and the manifest now fails if the skill files change mid-run.

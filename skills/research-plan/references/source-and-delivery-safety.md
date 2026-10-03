@@ -24,9 +24,15 @@ Create working files in a **private, non-repository working directory** with own
 
 Keep only the approved plan and minimum necessary de-identified source extracts, manifests, raw document snapshots, request batches, and render needed for the run. At verified handoff or a blocked run, remove files no longer authorized or needed and record any approved retention exception.
 
-Never place credentials, source text, document bodies, or other **sensitive content in command-line arguments**. Use a protected file, standard input, or an authorized request-body mechanism. Block the sensitive operation when the available integration cannot avoid process-argument exposure.
+Never place credentials, source text, document bodies, or other **sensitive content in command-line arguments** that you type or paste into a shell. Apply each Google Docs request body through the first of these that the integration offers:
 
-Run a separate critique agent or `multi-agent-check` only when both approved AI processing and reviewer access cover the packet and audience. Provide minimum necessary de-identified extracts, never complete source files by default. Otherwise run the self-critique and disclose a critique-only result.
+1. a connector tool's request-body parameter;
+2. the CLI's own file or standard-input option;
+3. the bundled `send` helper (`python3 scripts/option4_layout.py send BATCH.json --document-id ID --response FILE`), for a CLI such as `gws` that takes the body only as an argument. The helper reads the batch from its protected file and starts `gws` directly, without a shell, so the body never appears in a typed command, the shell history, or the chat transcript, and it saves the reply with owner-only permissions. While that `gws` call runs, the body is in its process arguments, which other programs on the same computer may be able to read (for example, with `ps`). Disclose that once at the §4 preflight and use the helper only when the researcher approves it for the run.
+
+If none of these is available or approved, block the write.
+
+Run a separate critique agent or `multi-agent-check` only when both approved AI processing and reviewer access cover the packet and audience. Provide minimum necessary de-identified extracts, never complete source files by default. Otherwise run the self-critique and disclose a critique-only result, using the exact review status from `SKILL.md` Step 5 (for example, `critique-only review — reviewer processing not authorized`).
 
 ## 3. Confirm the destination boundary
 
@@ -47,6 +53,8 @@ Before creating the study Doc, verify that the authenticated integration can:
 
 A listed tool or successful sign-in is not proof of these capabilities. Use documented capability metadata and non-content-bearing checks. If proof requires a disposable write that was not authorized, treat the capability as unverified and block before creating the study Doc.
 
+For capability 3, name the request-body route from §2 that the run will use. When it is the `send` helper, tell the researcher that each batch briefly sits in the `gws` process arguments while it runs, and ask once whether to use it for this run. If they decline and no other route exists, block before creating the study Doc.
+
 ## 5. Create idempotently
 
 Before creation, record the confirmed folder, exact approved title, and attempt timestamp. If creation or import has an ambiguous result because of a timeout, disconnect, or lost response, stop and reconcile before another write:
@@ -65,7 +73,7 @@ Immediately before every normalization or formatting write:
 1. fetch fresh raw JSON and its revision;
 2. generate the batch against that snapshot;
 3. bind it to the **required revision ID** or equivalent atomic precondition;
-4. apply it through a protected request body; and
+4. apply it through a protected request body, using the first available route in §2's order; and
 5. re-fetch and verify the expected post-state.
 
 On a revision mismatch, ambiguous response, or concurrent edit, never reuse or resend the old batch. Re-fetch the known Doc. If the expected post-state is verified, record success and do not resend. Otherwise regenerate against the new snapshot.

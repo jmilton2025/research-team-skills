@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Build and verify the exact Option 4 — Leadership Google Docs layout.
 
+Checks while drafting:
+    option4_layout.py timeline TIMELINE.md   # Step 3: draft timeline rows fit on one line
+    option4_layout.py lint APPROVED.md       # Step 4: layout failures plus content-rule flags
+
 Pipeline:
     option4_layout.py manifest APPROVED.md manifest.json
     option4_layout.py normalize imported-doc.json manifest.json normalize-batch.json \
@@ -10,6 +14,9 @@ Pipeline:
         --required-revision-id NORMALIZED_REVISION_ID
     # Apply batch and re-fetch the document.
     option4_layout.py verify final-doc.json manifest.json
+
+Applying a batch through gws, which has no request-body file option:
+    option4_layout.py send BATCH.json --document-id DOC_ID --response response.json
 
 The script only uses the Python standard library. Batch files use the native
 Google Docs API request schema and can be applied through any equivalent
@@ -25,6 +32,8 @@ import html
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -55,7 +64,11 @@ PROJECT_CORE_ROWS = (
     "Dependencies & guardrails",
 )
 DELIVERABLE_ROWS = ("Deliverables", "Timeline", "Next steps")
+# The simulated-study banner; the contract's warning.variants holds every accepted banner.
 WARNING = "⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable."
+# Files whose hashes a manifest records, so a skill update mid-run is caught.
+SKILL_FILES = ("scripts/option4_layout.py", "references/option4-style-contract.json")
+GWS_FALLBACK_PATH = Path.home() / ".config" / "gohan" / "bin" / "gws"
 
 
 class ContractError(ValueError):
@@ -64,18 +77,41 @@ class ContractError(ValueError):
 
 def load_contract() -> dict[str, Any]:
     contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
-    table_total = round(sum(contract["tables"]["column_widths_pt"]), 3)
+    tables = contract["tables"]
+    table_total = round(sum(tables["column_widths_pt"]), 3)
     usable_width = round(
         contract["page"]["width_pt"]
         - contract["page"]["margins_pt"]["left"]
         - contract["page"]["margins_pt"]["right"],
         3,
     )
-    if table_total != contract["tables"]["total_width_pt"]:
+    if table_total != tables["total_width_pt"]:
         raise ContractError("Option 4 table-width tokens are internally inconsistent")
-    if round(table_total - usable_width, 3) != contract["tables"]["intentional_text_area_overflow_pt"]:
+    if round(table_total - usable_width, 3) != tables["intentional_text_area_overflow_pt"]:
         raise ContractError("Option 4 intentional table overflow token is inconsistent")
+    for column, key in ((0, "timeline_left_label_max_width_pt"), (1, "timeline_right_cell_max_width_pt")):
+        if round(tables["column_widths_pt"][column] - 2 * tables["cell_padding_pt"], 3) != tables[key]:
+            raise ContractError(f"Option 4 {key} must equal its column width minus both cell paddings")
+    label_font = tables["timeline_left_label_font"]
+    milestone_font = tables["timeline_right_cell_font"]
+    if (
+        label_font["bold"] is not True
+        or milestone_font["bold"] is not False
+        or label_font["size_pt"] != milestone_font["size_pt"]
+        or label_font["units_per_em"] != milestone_font["units_per_em"]
+    ):
+        raise ContractError("Option 4 timeline font-width tokens are inconsistent")
+    variants = contract["warning"]["variants"]
+    if set(variants) != {"simulated", "test_run"} or variants["simulated"] != WARNING:
+        raise ContractError("Option 4 warning variants must be exactly simulated and test_run")
     return contract
+
+
+def skill_files_digest() -> dict[str, str]:
+    return {
+        name: hashlib.sha256((SKILL_DIR / name).read_bytes()).hexdigest()
+        for name in SKILL_FILES
+    }
 
 
 def manifest_digest(manifest: dict[str, Any]) -> str:
@@ -94,6 +130,11 @@ def validate_manifest(manifest: dict[str, Any]) -> None:
         raise ContractError("Manifest is missing its approved-Markdown SHA-256")
     if manifest.get("manifest_sha256") != manifest_digest(manifest):
         raise ContractError("Manifest content has changed since approved Markdown was parsed")
+    if manifest.get("skill_files_sha256") != skill_files_digest():
+        raise ContractError(
+            "Skill files changed since this manifest was generated — rerun manifest "
+            "(and don't update the skill mid-run)"
+        )
 
 
 def parse_inline(markdown: str) -> dict[str, Any]:
@@ -266,8 +307,123 @@ def timeline_label_width_pt(text: str, table_contract: dict[str, Any]) -> float:
     return units * font["size_pt"] / font["units_per_em"]
 
 
+def timeline_milestone_width_pt(cell: dict[str, Any], table_contract: dict[str, Any]) -> float:
+    """Printed width of a milestone: regular DM Sans, bold widths inside its bold runs."""
+    regular = table_contract["timeline_right_cell_font"]
+    bold = table_contract["timeline_left_label_font"]
+    bold_positions = {index for start, end in cell["bold"] for index in range(start, end)}
+    units = 0
+    for index, char in enumerate(cell["text"]):
+        font = bold if index in bold_positions else regular
+        units += font["advance_widths"].get(char, font["unknown_character_width"])
+    return units * regular["size_pt"] / regular["units_per_em"]
+
+
+def parse_timeline_table(lines: list[str], heading_index: int, table_contract: dict[str, Any]) -> tuple[list[list[dict[str, Any]]], int]:
+    """Parse the five-row leadership timeline that follows heading_index (-1 for a bare table)."""
+    if not any(line.strip().startswith("|") for line in lines[heading_index + 1 :]):
+        raise ContractError("No Research Timeline table found")
+    timeline_rows_raw, timeline_end = table_after(lines, heading_index)
+    if len(timeline_rows_raw) < 2 or not is_separator_row(timeline_rows_raw[1]):
+        raise ContractError("Research Timeline must be a Markdown table with a separator row")
+    timeline_rows = timeline_rows_raw[:1] + timeline_rows_raw[2:]
+    if len(timeline_rows) != 5 or any(len(row) != 2 for row in timeline_rows):
+        raise ContractError("Research Timeline must contain one header plus four milestone rows")
+    timeline = [[parse_inline(cell) for cell in row] for row in timeline_rows]
+    expected_header = table_contract["timeline_header"]
+    if [cell["text"] for cell in timeline[0]] != expected_header:
+        raise ContractError(
+            f"Research Timeline header must be {' | '.join(expected_header)!r}"
+        )
+    label_pattern = re.compile(table_contract["timeline_left_label_pattern"])
+    for row in timeline[1:]:
+        if not label_pattern.match(row[0]["text"]):
+            raise ContractError(
+                "Leadership timeline label must start with its timing, as in "
+                f"'Week 1: Setup & rubric': {row[0]['text']!r}"
+            )
+    return timeline, timeline_end
+
+
+def timeline_problems(timeline: list[list[dict[str, Any]]], table_contract: dict[str, Any]) -> list[str]:
+    """Labels and milestones that would wrap onto a second line; each wrapped row can split the table."""
+    left_maximum_pt = table_contract["timeline_left_label_max_width_pt"]
+    right_maximum_pt = table_contract["timeline_right_cell_max_width_pt"]
+    right_maximum = table_contract["timeline_right_cell_max_characters"]
+    problems: list[str] = []
+    too_wide_labels: list[str] = []
+    too_wide_milestones: list[str] = []
+    for row in timeline[1:]:
+        width = timeline_label_width_pt(row[0]["text"], table_contract)
+        if width > left_maximum_pt:
+            too_wide_labels.append(f"{row[0]['text']!r} ({width:.1f}pt)")
+        if len(row[1]["text"]) > right_maximum:
+            problems.append(
+                f"Leadership timeline milestone exceeds {right_maximum} characters: {row[1]['text']!r}"
+            )
+        width = timeline_milestone_width_pt(row[1], table_contract)
+        if width > right_maximum_pt:
+            too_wide_milestones.append(f"{row[1]['text']!r} ({width:.1f}pt)")
+    if too_wide_labels:
+        problems.insert(
+            0,
+            f"Leadership timeline label would wrap; the first column fits {left_maximum_pt}pt "
+            f"on one line. Shorten the name after the colon: {', '.join(too_wide_labels)}",
+        )
+    if too_wide_milestones:
+        problems.append(
+            f"Leadership timeline milestone would wrap; the second column fits {right_maximum_pt}pt "
+            f"on one line. Tighten the sentence: {', '.join(too_wide_milestones)}"
+        )
+    return problems
+
+
+def timeline_report(timeline: list[list[dict[str, Any]]], table_contract: dict[str, Any]) -> list[str]:
+    """One line per milestone row with its measured widths, for the researcher-facing check."""
+    left_maximum_pt = table_contract["timeline_left_label_max_width_pt"]
+    right_maximum_pt = table_contract["timeline_right_cell_max_width_pt"]
+    report = []
+    for row in timeline[1:]:
+        label_width = timeline_label_width_pt(row[0]["text"], table_contract)
+        milestone_width = timeline_milestone_width_pt(row[1], table_contract)
+        fits = label_width <= left_maximum_pt and milestone_width <= right_maximum_pt
+        report.append(
+            f"{'OK  ' if fits else 'WRAP'} {row[0]['text']} — label {label_width:.1f}/{left_maximum_pt}pt, "
+            f"milestone {milestone_width:.1f}/{right_maximum_pt}pt"
+        )
+    return report
+
+
+def find_warning_banner(lines: list[str], start: int, end: int, contract: dict[str, Any]) -> tuple[int | None, str | None]:
+    """Locate the one approved warning banner between start and end; reject an unknown or repeated one."""
+    variants = contract["warning"]["variants"]
+    found: list[tuple[int, str]] = []
+    for i in range(start, end):
+        text = parse_inline(lines[i].strip().removeprefix(">").strip())["text"]
+        if text in variants.values():
+            found.append((i, text))
+        elif text.startswith("⚠"):
+            raise ContractError(
+                "Unrecognized warning banner; use exactly one of: "
+                + " | ".join(repr(value) for value in variants.values())
+                + f". Found: {text!r}"
+            )
+    if len(found) > 1:
+        raise ContractError("Use one warning banner, not more than one")
+    return found[0] if found else (None, None)
+
+
 def parse_markdown(markdown: str) -> dict[str, Any]:
     """Parse an approved Option 4 intermediate Markdown document."""
+    manifest, problems = _parse(markdown)
+    if problems:
+        raise ContractError("\n".join(problems))
+    return manifest
+
+
+def _parse(markdown: str) -> tuple[dict[str, Any], list[str]]:
+    """Parse approved Markdown; structural errors raise, timeline layout problems are returned."""
+    contract = load_contract()
     lines = markdown.splitlines()
     nonempty = [i for i, line in enumerate(lines) if line.strip() and not line.lstrip().startswith("<!--")]
     if not nonempty:
@@ -310,14 +466,7 @@ def parse_markdown(markdown: str) -> dict[str, Any]:
     if [item["role"] for item in raci] != list(RACI_ROLES):
         raise ContractError("RACI must contain Responsible, Accountable, Consulted, and Informed in order")
 
-    warning_index = next(
-        (
-            i
-            for i in range(updated_index + 1, timeline_heading)
-            if parse_inline(lines[i].strip().removeprefix(">").strip())["text"] == WARNING
-        ),
-        None,
-    )
+    warning_index, warning = find_warning_banner(lines, updated_index + 1, timeline_heading, contract)
     notes: list[dict[str, Any]] = []
     after_opening = (warning_index if warning_index is not None else raci_indices[-1]) + 1
     for i in range(after_opening, timeline_heading):
@@ -325,41 +474,9 @@ def parse_markdown(markdown: str) -> dict[str, Any]:
         if value and value != "---":
             notes.append(parse_inline(_strip_wrapping_italics(value)))
 
-    timeline_rows_raw, timeline_end = table_after(lines, timeline_heading)
-    if len(timeline_rows_raw) < 2 or not is_separator_row(timeline_rows_raw[1]):
-        raise ContractError("Research Timeline must be a Markdown table with a separator row")
-    timeline_rows = timeline_rows_raw[:1] + timeline_rows_raw[2:]
-    if len(timeline_rows) != 5 or any(len(row) != 2 for row in timeline_rows):
-        raise ContractError("Research Timeline must contain one header plus four milestone rows")
-    timeline = [[parse_inline(cell) for cell in row] for row in timeline_rows]
-    table_contract = load_contract()["tables"]
-    expected_header = table_contract["timeline_header"]
-    if [cell["text"] for cell in timeline[0]] != expected_header:
-        raise ContractError(
-            f"Research Timeline header must be {' | '.join(expected_header)!r}"
-        )
-    label_pattern = re.compile(table_contract["timeline_left_label_pattern"])
-    left_maximum_pt = table_contract["timeline_left_label_max_width_pt"]
-    right_maximum = table_contract["timeline_right_cell_max_characters"]
-    too_wide: list[str] = []
-    for row in timeline[1:]:
-        if not label_pattern.match(row[0]["text"]):
-            raise ContractError(
-                "Leadership timeline label must start with its timing, as in "
-                f"'Week 1: Setup & rubric': {row[0]['text']!r}"
-            )
-        width = timeline_label_width_pt(row[0]["text"], table_contract)
-        if width > left_maximum_pt:
-            too_wide.append(f"{row[0]['text']!r} ({width:.1f}pt)")
-        if len(row[1]["text"]) > right_maximum:
-            raise ContractError(
-                f"Leadership timeline milestone exceeds {right_maximum} characters: {row[1]['text']!r}"
-            )
-    if too_wide:
-        raise ContractError(
-            f"Leadership timeline label would wrap; the first column fits {left_maximum_pt}pt "
-            f"on one line. Shorten the name after the colon: {', '.join(too_wide)}"
-        )
+    table_contract = contract["tables"]
+    timeline, timeline_end = parse_timeline_table(lines, timeline_heading, table_contract)
+    problems = timeline_problems(timeline, table_contract)
 
     timeline_note = None
     for i in range(timeline_end, overview_heading):
@@ -423,14 +540,15 @@ def parse_markdown(markdown: str) -> dict[str, Any]:
 
     manifest = {
         "contract": "Option 4 — Leadership",
-        "contract_version": load_contract()["version"],
+        "contract_version": contract["version"],
         "markdown_sha256": hashlib.sha256(markdown.encode("utf-8")).hexdigest(),
+        "skill_files_sha256": skill_files_digest(),
         "top": {
             "breadcrumb": parse_inline(lines[breadcrumb_index].strip()),
             "title": parse_inline(lines[title_index][2:].strip()),
             "updated": parse_inline(lines[updated_index].strip()),
             "raci": raci,
-            "warning": WARNING if warning_index is not None else None,
+            "warning": warning,
             "notes": notes,
         },
         "timeline": timeline,
@@ -438,7 +556,140 @@ def parse_markdown(markdown: str) -> dict[str, Any]:
         "rows": rows,
     }
     manifest["manifest_sha256"] = manifest_digest(manifest)
-    return manifest
+    return manifest, problems
+
+
+QUOTE_PATTERN = re.compile(r"“([^”]+)”|\"([^\"]+)\"")
+QUOTE_MINIMUM_WORDS = 4
+
+
+def _plan_items(manifest: dict[str, Any]) -> list[tuple[str, dict[str, Any]]]:
+    items = [("Opening note", note) for note in manifest["top"]["notes"]]
+    items += [("Research Timeline", cell) for row in manifest["timeline"][1:] for cell in row]
+    items.append(("Timing note", manifest["timeline_note"]))
+    items += [(row["label"], item) for row in manifest["rows"] for item in row["items"]]
+    return items
+
+
+def lint_markdown(markdown: str) -> tuple[list[str], list[str], list[str]]:
+    """Return layout failures, content-rule flags to fix or accept, and quotes to confirm."""
+    manifest, failures = _parse(markdown)
+    rows = {row["label"]: row for row in manifest["rows"]}
+    flags: list[str] = []
+
+    background = rows["Background"]["items"]
+    if not 3 <= len(background) <= 6:
+        flags.append(f"Background has {len(background)} bullets; the rule is 3–6.")
+    first = background[0] if background else {"text": "", "bold": []}
+    lead = next((first["text"][start:end] for start, end in first["bold"] if start == 0), "")
+    if not lead.strip().lower().startswith("why now"):
+        flags.append("Background must open with a bullet whose bold lead-in is **Why now**.")
+    if "Strategic fit" not in first["text"]:
+        flags.append(
+            "The Why now bullet must end with **Strategic fit:** — the priority a source names, "
+            "or [TBD — fill in] (the H2 / OKR priority this supports)."
+        )
+
+    hypotheses = rows["Hypotheses"]["items"]
+    empty_state = len(hypotheses) == 1 and "No hypotheses confirmed at planning time" in hypotheses[0]["text"]
+    if not empty_state:
+        for item in hypotheses:
+            if "(Researcher hypothesis" not in item["text"] and "(Stakeholder assumption" not in item["text"]:
+                flags.append(
+                    "Hypothesis has no origin label — add *(Researcher hypothesis, inferred from …)* "
+                    f"or *(Stakeholder assumption, stated by …)*: {item['text'][:90]!r}"
+                )
+
+    quotes: list[str] = []
+    for where, item in _plan_items(manifest):
+        for match in QUOTE_PATTERN.finditer(item["text"]):
+            quote = match.group(1) or match.group(2)
+            if len(quote.split()) >= QUOTE_MINIMUM_WORDS:
+                quotes.append(f"{where}: “{quote}”")
+    return failures, flags, quotes
+
+
+SEND_TIMEOUT_SECONDS = 600
+# macOS caps a command line plus environment at 1 MiB; leave room for the environment.
+SEND_MAXIMUM_BODY_BYTES = 900_000
+DOCUMENT_ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{20,}")
+
+
+def resolve_gws(explicit: str | None) -> str:
+    if explicit:
+        candidate = Path(explicit).expanduser()
+        if not (candidate.is_file() and os.access(candidate, os.X_OK)):
+            raise ContractError(f"--gws is not an executable file: {candidate}")
+        return str(candidate)
+    found = shutil.which("gws")
+    if found:
+        return found
+    if GWS_FALLBACK_PATH.is_file() and os.access(GWS_FALLBACK_PATH, os.X_OK):
+        return str(GWS_FALLBACK_PATH)
+    raise ContractError(
+        "gws not found on PATH or at ~/.config/gohan/bin/gws; pass --gws PATH, "
+        "or apply the batch through a Google Docs connector tool instead"
+    )
+
+
+def send_batch(batch_path: str | Path, document_id: str, response_path: str | Path, gws: str | None = None) -> dict[str, Any]:
+    """Apply one revision-bound batch through gws without a shell, then save its reply privately.
+
+    gws reads the request body only from a process argument. This keeps the body out of the
+    shell, shell history, and the chat transcript; it still sits in gws's process arguments
+    while gws runs, which is why the safety reference asks for one-time approval.
+    """
+    if not DOCUMENT_ID_PATTERN.fullmatch(document_id):
+        raise ContractError("--document-id must be the ID from the Doc URL (letters, digits, - and _)")
+    batch = read_json_object(batch_path, "Batch")
+    requests = batch.get("requests")
+    if not isinstance(requests, list) or not requests:
+        raise ContractError("Batch must contain a non-empty requests list")
+    write_control = batch.get("writeControl")
+    if not isinstance(write_control, dict) or not str(write_control.get("requiredRevisionId") or "").strip():
+        raise ContractError("Batch is not bound to a revision; regenerate it from a freshly fetched Doc")
+    body = json.dumps(batch, separators=(",", ":"))
+    if len(body.encode("utf-8")) > SEND_MAXIMUM_BODY_BYTES:
+        raise ContractError(
+            f"Batch is too large to hand to gws ({len(body.encode('utf-8'))} bytes); "
+            "apply it through a Google Docs connector tool instead"
+        )
+    command = [
+        resolve_gws(gws),
+        "docs",
+        "documents",
+        "batchUpdate",
+        "--params",
+        json.dumps({"documentId": document_id}),
+        "--json",
+        body,
+    ]
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, check=False, timeout=SEND_TIMEOUT_SECONDS)
+    except subprocess.TimeoutExpired as error:
+        raise ContractError(
+            "gws did not answer in time, so the outcome is unknown. Re-fetch the Doc and check its "
+            "revision before anything else; do not resend this batch"
+        ) from error
+    record: dict[str, Any] = {"returncode": result.returncode, "stdout": result.stdout, "stderr": result.stderr}
+    try:
+        reply = json.loads(result.stdout)
+    except ValueError:
+        reply = None
+    if isinstance(reply, dict):
+        record["response"] = reply
+    write_json(response_path, record)
+    if result.returncode != 0:
+        raise ContractError(
+            f"gws batchUpdate failed (exit {result.returncode}); details saved to {response_path}. "
+            "Re-fetch the Doc before deciding what to do next; do not resend this batch"
+        )
+    if "response" not in record:
+        raise ContractError(
+            f"gws exited 0 but its reply was not a JSON object; saved to {response_path}. "
+            "Re-fetch the Doc and verify the expected post-state; do not resend this batch"
+        )
+    return record["response"]
 
 
 def paragraph_text(paragraph: dict[str, Any]) -> str:
@@ -1512,7 +1763,7 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
         _assert_paragraph_metrics(warning, line_spacing=115, space_above=6, space_below=8, keep_next=True)
         shading = warning["paragraph"].get("paragraphStyle", {}).get("shading", {}).get("backgroundColor")
         if _rgb(shading) != _hex_tuple(contract["warning"]["background"]):
-            raise ContractError("Mock warning does not use full-paragraph pale-yellow shading")
+            raise ContractError("Warning banner does not use full-paragraph pale-yellow shading")
 
     for item in top.get("notes", []):
         element = find_paragraph(body, item["text"])
@@ -1686,9 +1937,27 @@ def cli() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    timeline = subparsers.add_parser(
+        "timeline", help="Check that draft leadership-timeline rows each fit on one line"
+    )
+    timeline.add_argument("markdown", help="a file holding the draft timeline table, or the whole plan")
+
+    lint = subparsers.add_parser(
+        "lint", help="Check assembled Markdown for layout failures and content-rule gaps"
+    )
+    lint.add_argument("markdown")
+
     manifest = subparsers.add_parser("manifest", help="Parse approved Markdown into a build manifest")
     manifest.add_argument("markdown")
     manifest.add_argument("output")
+
+    send = subparsers.add_parser(
+        "send", help="Apply one revision-bound batch through gws without a shell"
+    )
+    send.add_argument("batch_json")
+    send.add_argument("--document-id", required=True)
+    send.add_argument("--response", required=True, help="private file for gws's reply")
+    send.add_argument("--gws", help="path to gws (default: PATH, then ~/.config/gohan/bin/gws)")
 
     normalize = subparsers.add_parser("normalize", help="Generate cleanup/population requests after import")
     normalize.add_argument("document_json")
@@ -1716,6 +1985,44 @@ def cli() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = cli().parse_args(argv)
+    if args.command == "timeline":
+        lines = Path(args.markdown).read_text(encoding="utf-8").splitlines()
+        heading = next((i for i, line in enumerate(lines) if line.strip() == "# Research Timeline"), -1)
+        tables = load_contract()["tables"]
+        rows, _ = parse_timeline_table(lines, heading, tables)
+        for line in timeline_report(rows, tables):
+            print(line)
+        problems = timeline_problems(rows, tables)
+        for problem in problems:
+            print(f"FAIL: {problem}")
+        if problems:
+            return 1
+        print("PASS: all four labels and milestones fit on one line")
+        return 0
+    if args.command == "lint":
+        failures, flags, quotes = lint_markdown(Path(args.markdown).read_text(encoding="utf-8"))
+        for failure in failures:
+            print(f"FAIL: {failure}")
+        for flag in flags:
+            print(f"FIX OR ACCEPT: {flag}")
+        for quote in quotes:
+            print(
+                f"CONFIRM QUOTE: {quote} — keep the quote marks only if this is word for word in the "
+                "cited source artifact; otherwise paraphrase"
+            )
+        if not (failures or flags or quotes):
+            print("PASS: no layout failures, content-rule gaps, or quotes to confirm")
+        else:
+            print(
+                f"lint: {len(failures)} layout failure(s), {len(flags)} to fix or accept, "
+                f"{len(quotes)} quote(s) to confirm"
+            )
+        return 1 if failures else 0
+    if args.command == "send":
+        reply = send_batch(args.batch_json, args.document_id, args.response, args.gws)
+        revision = (reply.get("writeControl") or {}).get("requiredRevisionId", "unavailable")
+        print(f"PASS: batch applied; new revision {revision}; reply saved to {args.response}")
+        return 0
     if args.command == "manifest":
         markdown = Path(args.markdown).read_text(encoding="utf-8")
         value = parse_markdown(markdown)
@@ -1775,5 +2082,6 @@ if __name__ == "__main__":
         UnicodeError,
         json.JSONDecodeError,
     ) as error:
-        print(f"FAIL: {error}", file=sys.stderr)
+        for line in str(error).splitlines() or [repr(error)]:
+            print(f"FAIL: {line}", file=sys.stderr)
         raise SystemExit(1)

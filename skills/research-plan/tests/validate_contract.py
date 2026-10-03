@@ -257,6 +257,56 @@ require_regex(
     "source-free critique fallback",
 )
 
+# 2026-10-03 live test run: run type, one review question, early layout checks, quote provenance.
+require("skill", "### Run type — ask only for a test")
+for term in (
+    "“Simulated test”",
+    "Test run with real, authorized inputs",
+    "Recommend the option that matches what the researcher said",
+    "or the researcher already asked to skip the review",
+    "Never answer a factual question for the researcher",
+    "Step 5: Multi-agent review",
+    "Run the review (Recommended)",
+    "Skip review (critique-only)",
+    "python3 scripts/option4_layout.py timeline",
+    "python3 scripts/option4_layout.py lint",
+    "python3 scripts/option4_layout.py send",
+    "Skill files changed since this manifest was generated",
+    "Keep my picks as they are",
+    "recorded as an accepted exception",
+    "Step 5: Reviewer questions",
+    "re-read the changed skill files",
+    "I'll fold in any fixes before I draft your Google Doc",
+):
+    require("skill", term)
+for status in (
+    "multi-agent review complete",
+    "self-review only — independent reviewers unavailable here",
+    "critique-only review — multi-agent review skipped at researcher's request",
+    "critique-only review — multi-agent-check not installed",
+    "critique-only review — reviewer processing not authorized",
+    "critique-only review — multi-agent review failed",
+):
+    require("skill", status)
+for retired in ("ask twice", "two researchers review it in parallel", "Auto-run multi-agent review"):
+    forbid("skill", retired)
+for name in ("skill", "rules"):
+    require_regex(
+        name,
+        r"quote marks mean word for word from the cited source artifact",
+        "quotes come word for word from the source artifact",
+    )
+require_regex("rules", r"check these rules before the background pop-up", "Background rules checked before its pop-up")
+for name in ("rules", "style"):
+    require(name, "544.4pt")
+require_regex(
+    "safety",
+    r"request-body parameter.{0,300}file or standard-input option.{0,600}`send` helper",
+    "ordered request-body routes",
+)
+require("safety", "If none of these is available or approved, block the write.")
+require_regex("safety", r"`send` helper.{0,200}ask once", "send helper disclosed and approved at the preflight")
+
 # Safety reference: validate destination, local handling, runtime capability, and write idempotency.
 require("skill", "references/source-and-delivery-safety.md")
 for term in (
@@ -319,7 +369,7 @@ require_regex(
 )
 
 # The behavioral-test guide must exercise every new safety decision under pressure.
-for term in (
+SCENARIOS = (
     "Closed decision",
     "Unauthorized source reuse",
     "Reviewer handoff",
@@ -331,25 +381,20 @@ for term in (
     "Revision conflict",
     "Malformed import",
     "Partial document",
-):
+    "Review skipped",
+    "Personal review panel",
+    "Real-data test run",
+    "Skill update mid-run",
+    "Unverified quote",
+    "Background without Why now",
+)
+for term in SCENARIOS:
     require("test_readme", term)
 
 require("behavior_gate", "**Contract version:** 2026-10-02")
-for term in (
-    "Closed decision",
-    "Unauthorized source reuse",
-    "Reviewer handoff",
-    "Reviewer service failure",
-    "Destination ACL mismatch",
-    "Sensitive local workspace",
-    "Missing write capability",
-    "Ambiguous create result",
-    "Revision conflict",
-    "Malformed import",
-    "Partial document",
-):
+for term in SCENARIOS:
     require_regex("behavior_gate", rf"{re.escape(term)}.*?\*\*PASS\*\*", f"captured PASS for {term}")
-require("behavior_gate", "PASS — 11 of 11 scenarios")
+require("behavior_gate", f"PASS — {len(SCENARIOS)} of {len(SCENARIOS)} scenarios")
 
 # Cross-file guidance must agree with the active contract.
 require("readme", "three interactive sections")
@@ -468,6 +513,20 @@ try:
         failures.append("style_json: leadership timeline label widths no longer match the rendered calibration")
     if visual["tables"]["timeline_right_cell_max_characters"] != 160:
         failures.append("style_json: leadership timeline summaries must be capped at 160 characters")
+    right_usable_width = tables["column_widths_pt"][1] - 2 * tables["cell_padding_pt"]
+    if round(tables["timeline_right_cell_max_width_pt"], 6) != round(right_usable_width, 6):
+        failures.append("style_json: leadership milestone width must equal the second column less padding")
+    milestone_font = tables["timeline_right_cell_font"]
+    if (milestone_font["font"], milestone_font["size_pt"], milestone_font["bold"]) != (
+        visual["typography"]["body"]["font"], visual["typography"]["body"]["size_pt"], False
+    ):
+        failures.append("style_json: leadership milestone widths must describe regular body text")
+    banners = visual["warning"]["variants"]
+    if set(banners) != {"simulated", "test_run"}:
+        failures.append("style_json: warning variants must be exactly simulated and test_run")
+    for banner in banners.values():
+        for name in ("skill", "rules", "style"):
+            require(name, banner)
 except (json.JSONDecodeError, KeyError, TypeError) as error:
     failures.append(f"style_json: invalid contract: {error}")
 
@@ -478,7 +537,7 @@ for function_name in (
     "def verify_document(",
 ):
     require("script", function_name)
-for command in ("manifest", "normalize", "format", "verify"):
+for command in ("timeline", "lint", "manifest", "send", "normalize", "format", "verify"):
     require("script", f'"{command}"')
 
 # Durable fixture carries the exact two-table hierarchy and canonical overview.

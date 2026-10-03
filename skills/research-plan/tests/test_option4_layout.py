@@ -20,6 +20,31 @@ SKILL_DIR = TEST_DIR.parent
 STYLE_PATH = SKILL_DIR / "references" / "option4-style-contract.json"
 SCRIPT_PATH = SKILL_DIR / "scripts" / "option4_layout.py"
 FIXTURE_PATH = TEST_DIR / "fixtures" / "leadership-plan.md"
+DOCUMENT_ID = "1AbCdEfGhIjKlMnOpQrStUvWxYz0123456789"
+
+
+def run_script(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(SCRIPT_PATH), *args], capture_output=True, text=True, check=False
+    )
+
+
+def fake_gws(directory: Path, *, exit_code: int, reply: dict | None) -> tuple[Path, Path]:
+    """A stand-in gws that records its arguments, prints a JSON reply, and exits with exit_code."""
+    directory.mkdir(parents=True, exist_ok=True)
+    argv_log = directory / "argv.json"
+    program = directory / "fake_gws.py"
+    program.write_text(
+        "import json, sys\n"
+        f"open({str(argv_log)!r}, 'w', encoding='utf-8').write(json.dumps(sys.argv[1:]))\n"
+        f"print({json.dumps(reply) if reply is not None else 'gws: request failed'!r})\n"
+        f"sys.exit({exit_code})\n",
+        encoding="utf-8",
+    )
+    launcher = directory / "gws"
+    launcher.write_text(f'#!/bin/sh\nexec "{sys.executable}" "{program}" "$@"\n', encoding="utf-8")
+    launcher.chmod(0o700)
+    return launcher, argv_log
 
 
 def load_module():
@@ -462,7 +487,24 @@ class Option4ContractTest(unittest.TestCase):
             {"font": "DM Sans", "size_pt": 10, "bold": True, "units_per_em": 1000},
         )
         self.assertEqual(label_font["unknown_character_width"], max(label_font["advance_widths"].values()))
+        self.assertEqual(contract["tables"]["timeline_right_cell_max_width_pt"], 544.4)
+        milestone_font = contract["tables"]["timeline_right_cell_font"]
+        self.assertEqual(
+            {key: milestone_font[key] for key in ("font", "size_pt", "bold", "units_per_em")},
+            {"font": "DM Sans", "size_pt": 10, "bold": False, "units_per_em": 1000},
+        )
+        self.assertEqual(
+            milestone_font["unknown_character_width"], max(milestone_font["advance_widths"].values())
+        )
+        self.assertEqual(set(milestone_font["advance_widths"]), set(label_font["advance_widths"]))
         self.assertEqual(contract["tables"]["timeline_right_cell_max_characters"], 160)
+        self.assertEqual(
+            contract["warning"]["variants"],
+            {
+                "simulated": "⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.",
+                "test_run": "⚠️ TEST RUN — real, authorized inputs, created to test the workflow. Not a stakeholder deliverable.",
+            },
+        )
         self.assertEqual(
             contract["tables"]["overview_section_rows"],
             ["KEY INFORMATION", "PROJECT DETAILS", "DELIVERABLES & NEXT STEPS", "APPENDIX"],
@@ -490,6 +532,7 @@ class Option4ContractTest(unittest.TestCase):
             self.manifest["top"]["warning"],
             "⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.",
         )
+        self.assertEqual(set(self.manifest["skill_files_sha256"]), set(self.module.SKILL_FILES))
 
     def test_pipeline_rejects_stale_or_tampered_manifest(self) -> None:
         stale = json.loads(json.dumps(self.manifest))
@@ -560,6 +603,220 @@ class Option4ContractTest(unittest.TestCase):
         )
         with self.assertRaisesRegex(self.module.ContractError, "header must be"):
             self.module.parse_markdown(source)
+
+    def test_manifest_rejects_milestone_that_would_wrap_under_the_character_cap(self) -> None:
+        original = (
+            "Complete independent human and system scoring on the development set; "
+            "refine only evidence-supported gaps."
+        )
+        wrapped = original[:-1] + " and log every change."
+        self.assertLess(len(wrapped), 160)
+        source = FIXTURE_PATH.read_text(encoding="utf-8").replace(original, wrapped, 1)
+        with self.assertRaisesRegex(
+            self.module.ContractError,
+            r"milestone would wrap; the second column fits 544\.4pt on one line",
+        ):
+            self.module.parse_markdown(source)
+
+    def test_milestone_width_uses_regular_widths_and_bold_widths_inside_bold_runs(self) -> None:
+        tables = self.module.load_contract()["tables"]
+        plain = self.module.parse_inline("Freeze the system and run blind validation.")
+        regular = tables["timeline_right_cell_font"]
+        self.assertAlmostEqual(
+            self.module.timeline_milestone_width_pt(plain, tables),
+            sum(regular["advance_widths"][char] for char in plain["text"]) * 10 / 1000,
+        )
+        bold = self.module.parse_inline("**Freeze the system** and run blind validation.")
+        self.assertEqual(plain["text"], bold["text"])
+        self.assertGreater(
+            self.module.timeline_milestone_width_pt(bold, tables),
+            self.module.timeline_milestone_width_pt(plain, tables),
+        )
+
+    def test_manifest_reports_every_timeline_problem_at_once(self) -> None:
+        source = FIXTURE_PATH.read_text(encoding="utf-8").replace(
+            "Week 1: Setup & rubric", "Week 1: Setup, rubric & sample", 1
+        ).replace(
+            "Freeze the system and run separate blind validation with adjudication and documented uncertainty.",
+            "Freeze the system, then run separate blind validation with adjudication, documented uncertainty, and a complete change log.",
+            1,
+        )
+        with self.assertRaises(self.module.ContractError) as raised:
+            self.module.parse_markdown(source)
+        message = str(raised.exception)
+        self.assertIn("label would wrap", message)
+        self.assertIn("milestone would wrap", message)
+
+    def test_manifest_accepts_either_approved_warning_banner_or_none(self) -> None:
+        source = FIXTURE_PATH.read_text(encoding="utf-8")
+        simulated = "⚠️ **TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.**"
+        test_run = "⚠️ TEST RUN — real, authorized inputs, created to test the workflow. Not a stakeholder deliverable."
+        manifest = self.module.parse_markdown(source.replace(simulated, f"**{test_run}**", 1))
+        self.assertEqual(manifest["top"]["warning"], test_run)
+        doc = formatted_document(self.module, manifest)
+        self.assertEqual(len(self.module.verify_document(doc, manifest)), 5)
+
+        real = "\n".join(line for line in source.splitlines() if "TEST ARTIFACT" not in line)
+        self.assertIsNone(self.module.parse_markdown(real)["top"]["warning"])
+
+    def test_manifest_rejects_unknown_or_repeated_warning_banner(self) -> None:
+        source = FIXTURE_PATH.read_text(encoding="utf-8")
+        banner = "> ⚠️ **TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.**"
+        unknown = source.replace(banner, "> ⚠️ **TEST — demo only.**", 1)
+        with self.assertRaisesRegex(self.module.ContractError, "Unrecognized warning banner"):
+            self.module.parse_markdown(unknown)
+        repeated = source.replace(banner, banner + "\n\n" + banner, 1)
+        with self.assertRaisesRegex(self.module.ContractError, "one warning banner"):
+            self.module.parse_markdown(repeated)
+
+    def test_pipeline_rejects_manifest_built_by_different_skill_files(self) -> None:
+        drifted = json.loads(json.dumps(self.manifest))
+        drifted["skill_files_sha256"]["scripts/option4_layout.py"] = "0" * 64
+        drifted["manifest_sha256"] = self.module.manifest_digest(drifted)
+        with self.assertRaisesRegex(self.module.ContractError, "Skill files changed since this manifest"):
+            self.module.build_normalize_requests(
+                synthetic_document(self.manifest, conversion_header=True), drifted
+            )
+        changed = {name: "f" * 64 for name in self.module.SKILL_FILES}
+        with mock.patch.object(self.module, "skill_files_digest", return_value=changed):
+            with self.assertRaisesRegex(self.module.ContractError, "Skill files changed"):
+                self.module.verify_document(formatted_document(self.module, self.manifest), self.manifest)
+
+    def test_lint_passes_fixture_and_flags_content_rule_gaps(self) -> None:
+        source = FIXTURE_PATH.read_text(encoding="utf-8")
+        failures, flags, quotes = self.module.lint_markdown(source)
+        self.assertEqual((failures, flags), ([], []))
+        self.assertEqual(quotes, ["Existing insights: “Verbatim evidence from the source.”"])
+
+        no_why_now = source.replace("**Why now** —", "**Context** —", 1)
+        self.assertTrue(any("Why now" in flag for flag in self.module.lint_markdown(no_why_now)[1]))
+
+        no_fit = source.replace("**Strategic fit:** [TBD — fill in] (the H2 / OKR priority this supports).", "", 1)
+        self.assertTrue(any("Strategic fit" in flag for flag in self.module.lint_markdown(no_fit)[1]))
+
+        extra = "".join(f"<br>- **Fact {n}** — Another sourced fact." for n in range(4))
+        too_many = source.replace(
+            "independent human judgment. |", f"independent human judgment.{extra} |", 1
+        )
+        self.assertIn("Background has 7 bullets; the rule is 3–6.", self.module.lint_markdown(too_many)[1])
+
+        unlabeled = source.replace(
+            " *(Stakeholder assumption, stated by the decision owner in the product requirements document.)*", "", 1
+        )
+        self.assertTrue(any("no origin label" in flag for flag in self.module.lint_markdown(unlabeled)[1]))
+
+        hypotheses_row = next(line for line in source.splitlines() if line.startswith("| **Hypotheses** |"))
+        empty = source.replace(hypotheses_row, "| **Hypotheses** | No hypotheses confirmed at planning time. |", 1)
+        self.assertEqual(self.module.lint_markdown(empty)[1], [])
+
+        short = source.replace("“Verbatim evidence from the source.”", "“two words”", 1)
+        self.assertEqual(self.module.lint_markdown(short)[2], [])
+
+    def test_lint_cli_exits_nonzero_only_for_layout_failures(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            plan = Path(directory) / "APPROVED.md"
+            plan.write_text(FIXTURE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            result = run_script("lint", str(plan))
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("CONFIRM QUOTE: Existing insights: “Verbatim evidence from the source.”", result.stdout)
+
+            plan.write_text(
+                FIXTURE_PATH.read_text(encoding="utf-8").replace(
+                    "Week 1: Setup & rubric", "Week 1: Setup, rubric & sample", 1
+                ),
+                encoding="utf-8",
+            )
+            result = run_script("lint", str(plan))
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("FAIL: Leadership timeline label would wrap", result.stdout)
+            self.assertIn("CONFIRM QUOTE:", result.stdout)
+            self.assertNotIn("Traceback", result.stderr)
+
+    def test_timeline_cli_checks_a_bare_draft_table(self) -> None:
+        source = FIXTURE_PATH.read_text(encoding="utf-8").splitlines()
+        start = source.index("| Timing | Leadership milestone |")
+        draft = "\n".join(source[start:start + 6]) + "\n"
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "TIMELINE.md"
+            path.write_text(draft, encoding="utf-8")
+            result = run_script("timeline", str(path))
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.count("OK   Week"), 4)
+            self.assertIn("PASS: all four labels and milestones fit on one line", result.stdout)
+
+            path.write_text(draft.replace("Week 1: Setup & rubric", "Week 1: Setup, rubric & sample"), encoding="utf-8")
+            result = run_script("timeline", str(path))
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("WRAP Week 1: Setup, rubric & sample", result.stdout)
+            self.assertIn("FAIL: Leadership timeline label would wrap", result.stdout)
+
+            path.write_text(draft.replace("| Timing |", "| When |"), encoding="utf-8")
+            result = run_script("timeline", str(path))
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("FAIL: Research Timeline header must be", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+
+    def test_send_passes_the_body_as_one_argument_and_saves_the_reply_privately(self) -> None:
+        batch = {
+            "requests": [{"insertText": {"location": {"index": 1}, "text": "approved text"}}],
+            "writeControl": {"requiredRevisionId": "rev-1"},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            gws, argv_log = fake_gws(root, exit_code=0, reply={"writeControl": {"requiredRevisionId": "rev-2"}})
+            batch_path = root / "batch.json"
+            batch_path.write_text(json.dumps(batch), encoding="utf-8")
+            response = root / "response.json"
+            result = run_script(
+                "send", str(batch_path), "--document-id", DOCUMENT_ID, "--response", str(response), "--gws", str(gws)
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("new revision rev-2", result.stdout)
+            self.assertNotIn("approved text", result.stdout + result.stderr)
+            argv = json.loads(argv_log.read_text(encoding="utf-8"))
+            self.assertEqual(argv[:4], ["docs", "documents", "batchUpdate", "--params"])
+            self.assertEqual(json.loads(argv[4]), {"documentId": DOCUMENT_ID})
+            self.assertEqual(argv[5], "--json")
+            self.assertEqual(json.loads(argv[6]), batch)
+            self.assertEqual(len(argv), 7)
+            self.assertEqual(os.stat(response).st_mode & 0o777, 0o600)
+            self.assertEqual(json.loads(response.read_text(encoding="utf-8"))["returncode"], 0)
+
+    def test_send_refuses_unbound_batches_and_reports_gws_failure_without_resending(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            response = root / "response.json"
+            unbound = root / "unbound.json"
+            unbound.write_text(json.dumps({"requests": [{"insertText": {}}]}), encoding="utf-8")
+            gws, argv_log = fake_gws(root, exit_code=0, reply={})
+            result = run_script(
+                "send", str(unbound), "--document-id", DOCUMENT_ID, "--response", str(response), "--gws", str(gws)
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("not bound to a revision", result.stderr)
+            self.assertFalse(argv_log.exists())
+
+            bound = root / "bound.json"
+            bound.write_text(
+                json.dumps({"requests": [{"insertText": {}}], "writeControl": {"requiredRevisionId": "rev-1"}}),
+                encoding="utf-8",
+            )
+            result = run_script(
+                "send", str(bound), "--document-id", "not a doc id", "--response", str(response), "--gws", str(gws)
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("--document-id", result.stderr)
+
+            failing, _ = fake_gws(root / "failing", exit_code=3, reply=None)
+            result = run_script(
+                "send", str(bound), "--document-id", DOCUMENT_ID, "--response", str(response), "--gws", str(failing)
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("gws batchUpdate failed (exit 3)", result.stderr)
+            self.assertIn("do not resend", result.stderr)
+            self.assertNotIn("PASS", result.stdout)
+            self.assertEqual(json.loads(response.read_text(encoding="utf-8"))["returncode"], 3)
+            self.assertNotIn("Traceback", result.stderr)
 
     def test_inline_parser_decodes_entities_before_ranges_and_balances_url_parentheses(self) -> None:
         item = self.module.parse_inline(

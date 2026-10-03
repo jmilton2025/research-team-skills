@@ -12,7 +12,7 @@ Every finished plan has this order:
 2. Stakeholder-facing title.
 3. Last-updated date.
 4. Four RACI bullet paragraphs.
-5. Full-width test warning for mock/demo runs only.
+5. Full-width warning banner for test runs only.
 6. Optional short context note when the plan needs a historical or interpretation caveat.
 7. **Research Timeline** heading.
 8. Five-row leadership timeline table: one header plus four concise milestones.
@@ -39,11 +39,16 @@ Apply named paragraph styles before direct text styles. Google Docs can clear di
 
 ## Warning treatment
 
-For a mock/demo/test only:
+For a test only, use one of the two approved lines, word for word:
+
+- simulated or mock inputs: `⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.`
+- real, authorized inputs used to test the workflow: `⚠️ TEST RUN — real, authorized inputs, created to test the workflow. Not a stakeholder deliverable.`
+
+A real study has no banner. For either line:
 
 - shade the entire warning paragraph pale yellow `#FFF2CC`;
 - use DM Sans 10pt bold text in `#6F4A00`;
-- retain the exact approved warning copy.
+- retain the exact approved warning copy; the manifest rejects any other line that starts with ⚠️.
 
 Inline highlighting is not equivalent to full-paragraph shading.
 
@@ -56,10 +61,10 @@ Inline highlighting is not equivalent to full-paragraph shading.
 - Left milestone column: gray `#D9D9D9`, bold DM Sans 10pt.
 - Right column: white, DM Sans 10pt.
 - Each left-hand label starts with its timing, then a short name, such as `Week 1: Setup & rubric` or `Weeks 2–3: Calibration`. Use `Day N:` or `Month N:` only for studies measured in days or months.
-- Each left-hand label renders on one line: its printed width in bold DM Sans 10pt is at most **134pt**, the 144pt column less 5pt padding on each side. The contract stores DM Sans Bold advance widths, and the parser adds them up for each label; a character outside the table counts as the widest glyph. Character counts don't work: in the 2026-10-02 mock, the 27-character `Week 1: Setup & definitions` (133.1pt) fit, while 26- and 27-character labels measuring 141.1pt and 143.0pt wrapped and split the timeline across pages. Each right-hand milestone is one concise sentence, no more than 160 characters. Put detailed dates, contingencies, and dependencies in the plan's Timeline row.
+- Each left-hand label renders on one line: its printed width in bold DM Sans 10pt is at most **134pt**, the 144pt column less 5pt padding on each side. The contract stores DM Sans Bold advance widths, and the parser adds them up for each label; a character outside the table counts as the widest glyph. Character counts don't work: in the 2026-10-02 mock, the 27-character `Week 1: Setup & definitions` (133.1pt) fit, while 26- and 27-character labels measuring 141.1pt and 143.0pt wrapped and split the timeline across pages. Each right-hand milestone is one concise sentence that also renders on one line: at most **544.4pt** wide (the 554.4pt column less padding) in regular DM Sans 10pt, with bold words measured at bold width. The contract stores DM Sans Regular advance widths for this. That is usually about 110–120 characters; 160 characters is a hard cap. Put detailed dates, contingencies, and dependencies in the plan's Timeline row.
 - The four milestones adapt to the study. Do not copy an old study's week labels or schedule.
 
-If the leadership timeline spills onto another page, shorten any wrapped label or tighten only the timeline summary; preserve the approved detailed Timeline row.
+The `timeline` command measures every label and milestone before the Timeline approval, so rows should never wrap in the Doc. If the leadership timeline still spills onto another page, shorten any wrapped row, then tighten the opening and the timing note, then the RACI lines; preserve the approved detailed Timeline row.
 
 ## Project Plan Overview table
 
@@ -75,14 +80,19 @@ If the leadership timeline spills onto another page, shorten any wrapped label o
 
 ## Required build pipeline
 
-Use `scripts/option4_layout.py`:
+Use `scripts/option4_layout.py`. Two checks run before the build:
 
-1. `manifest` — parse the approved markdown into a style/content manifest.
+- `timeline` — at Section 3 > Timeline, measure a draft timeline table and print `PASS` or a `FAIL` line for each row that would wrap.
+- `lint` — at Step 4, check the assembled plan for layout failures, content-rule gaps (`FIX OR ACCEPT`), and quotes to confirm against their source (`CONFIRM QUOTE`).
+
+The build:
+
+1. `manifest` — parse the approved markdown into a style/content manifest. It also records a fingerprint of the layout script and this contract; `normalize`, `format`, and `verify` fail if either changed mid-run.
 2. Import the markdown into the confirmed Google Drive folder using a conversion path that turns the intermediate `---` into one native horizontal rule. The Docs batch API cannot create that rule after import.
 3. `normalize` — rebuild cell text, remove the conversion header, and restore two-cell section rows.
 4. Re-fetch the raw Google Docs JSON.
 5. `format` — generate the exact Option 4 Google Docs batch operations.
-6. Apply those operations and re-fetch the document.
+6. Apply those operations and re-fetch the document. Apply every batch (normalize and format) through a protected request body; with `gws`, use `send`, which applies a revision-bound batch file without a shell.
 7. `verify` — validate content and all machine-checkable visual invariants.
 8. Export/render the Doc and visually inspect every page. The verifier cannot see page breaks, so a timeline split or an orphaned section band shows up only in the render.
 

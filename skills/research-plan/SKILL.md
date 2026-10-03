@@ -13,7 +13,7 @@ A run is complete only when all of the following are true:
 
 1. Existing context has been searched and sourced.
 2. The researcher has approved every applicable plan row.
-3. The critique pass has run, and the multi-agent review has run when it is installed and authorized (otherwise the run is disclosed as critique-only), with fixes folded in.
+3. The critique pass has run, and the multi-agent review has run when it is installed and authorized and the researcher didn't skip it (otherwise the run is disclosed as critique-only, using the exact wording in Step 5), with fixes folded in.
 4. The Google Drive destination has been confirmed.
 5. The plan has gone through the **copyedit → create → normalize → Option 4 format → verify → render** pipeline.
 6. The exact **Option 4 — Leadership** visual contract has passed, and a working Google Doc link has been returned with verification status.
@@ -26,15 +26,15 @@ Markdown is an intermediate representation, not the completed deliverable. A moc
 
 | Step | Work | Completion gate |
 |---|---|---|
-| **1** | Check connections and flag any sign-in (e.g., Glean) in the first message → gather the request without opening sources → audit the decision → authorize source use → announce the 3-section structure | Decision is genuinely open and actionable; sources and connections are authorized or skipped; researcher understands the workflow |
-| **1.5** | **Section 1 — Context & Foundation:** discover background, existing insights, and hypotheses → three sequential pop-ups (Step 1 of 3, 2 of 3, 3 of 3), each locked before the next | Background, Existing insights, and Hypotheses approved |
+| **1** | Check connections and flag any sign-in (e.g., Glean) in the first message → gather the request without opening sources → audit the decision → authorize source use → confirm the run type when it's a test → announce the 3-section structure | Decision is genuinely open and actionable; sources and connections are authorized or skipped; researcher understands the workflow |
+| **1.5** | **Section 1 — Context & Foundation:** discover background, existing insights, and hypotheses → three sequential pop-ups (Step 1 of 3, 2 of 3, 3 of 3), each checked against the content rules before it's shown and locked before the next | Background, Existing insights, and Hypotheses approved, and rule-compliant or recorded as an accepted exception |
 | **1.6** | Fill only unresolved logistics; auto-draft title, date, and Topic; ask the researcher to confirm the key RACI people, then offer to add more | Opening approved |
 | **2** | Recommend the minimum valid method direction and the conditional rows the study needs | Method direction picked (the rows are approved in Step 3) |
-| **3** | **Section 2 — Research Design** (4 labeled steps: Objectives, Key research questions, Decisions, Method & approach) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, "Brainstorm with me" always offered, transition announced after each lock | All remaining rows approved; no row approved twice |
+| **3** | **Section 2 — Research Design** (4 labeled steps: Objectives, Key research questions, Decisions, Method & approach) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, "Brainstorm with me" always offered, transition announced after each lock; the Timeline step runs the `timeline` check before its pop-up | All remaining rows approved; no row approved twice; timeline rows fit on one line |
 | **3.5** | Confirm the Google Drive destination | Exact folder confirmed |
-| **4** | Assemble the approved plan (markdown intermediate, saved in a persistent working folder) | Content complete; mock warning applied when relevant |
-| **4.5** | Auto-run critique checklist (announced at end of Step 3) | Gaps fixed or explicitly accepted |
-| **5** | Auto-run multi-agent review on the fixed content — before the Doc; if it isn't installed or reviewer processing is not authorized, disclose a critique-only run | Review complete (or critique-only disclosed); confirmed fixes folded in |
+| **4** | Assemble the approved plan (markdown intermediate, saved in a persistent working folder) and run the `lint` check | Content complete; layout checks pass; the warning banner matches the run type |
+| **4.5** | Auto-run critique checklist, starting from the `lint` results (announced at end of Step 3) | Gaps fixed or explicitly accepted |
+| **5** | Show the review plan and ask once: run the multi-agent review or skip it — before the Doc. If it isn't installed or reviewer processing is not authorized, don't ask; disclose a critique-only run | Review complete (or critique-only disclosed with its reason); confirmed fixes folded in |
 | **6** | Copyedit, create, normalize, apply the exact Option 4 — Leadership layout, verify, render, correct, and return | Content, links, location, exact visual contract, and rendered pages pass |
 
 ## When to use
@@ -114,7 +114,7 @@ Start the run here. Check each connection the run depends on, with a quick authe
 >
 > Pick **glean** (if the list shows more than one Glean entry, such as `glean` and `glean_default`, do this for each one marked as needing sign-in), choose **Authenticate**, finish signing in on the browser tab that opens, then come back and say **done**. On claude.ai, connect it from your connector settings instead. Or say **skip Glean** to continue without it.
 
-Continue with the inputs, decision audit, and source-use gate while the researcher signs in; none of them needs a connection. When a new source type comes up later (a Slack thread, say), check that connection the moment it's mentioned and flag it the same way. Re-check right before discovery: if a connection is still missing, wait for sign-in or an explicit skip, then report connected and skipped sources. A skipped connection's sources stay unverified and cannot support a claim. Missing Docs write access means the run will end with a blocked draft, and missing `multi-agent-check` means critique-only review.
+Continue with the inputs, decision audit, and source-use gate while the researcher signs in; none of them needs a connection. When a new source type comes up later (a Slack thread, say), check that connection the moment it's mentioned and flag it the same way. Re-check right before discovery: if a connection is still missing, wait for sign-in or an explicit skip, then report connected and skipped sources. A skipped connection's sources stay unverified and cannot support a claim. Missing Docs write access means the run will end with a blocked draft, and missing `multi-agent-check` means a critique-only review, disclosed as `critique-only review — multi-agent-check not installed`.
 
 ### Request inputs — metadata and links only
 
@@ -139,6 +139,18 @@ If the requester insists that research justify a closed answer, refuse that fram
 ### Source-use authorization gate
 
 Read `references/source-and-delivery-safety.md` and complete its authorization gate before accessing any non-public source. **Connector access is not requester authorization.** Record the authorization basis, approved AI processing, intended audience and source ACL, quote/link disclosure, minimum necessary de-identification, and provenance. If any required authorization is unknown, stop before reading that source; ask the researcher to confirm it or skip it. A skipped source remains unverified and cannot support a claim.
+
+### Run type — ask only for a test
+
+When the researcher describes the run as a test, pressure scenario, regression, example, fixture, mock, or demo, ask one single-select pop-up labeled **“Run type”** before discovery. It sets the warning banner (see Step 4), so the banner is right from the first draft rather than fixed at the end. No “Brainstorm with me” option here; it's a factual question.
+
+- **“Simulated test”** — invented or mock inputs → TEST ARTIFACT banner.
+- **“Test run with real, authorized inputs”** — real sources, run to test the workflow → TEST RUN banner.
+- **“Real study”** — no banner.
+
+Recommend the option that matches what the researcher said: list it first with “(Recommended)” in its label, then the other two in the order above. When they haven't said whether the inputs are real, recommend **“Simulated test”**, and treat the test as simulated until they pick otherwise. When nothing suggests a test, skip the question: the run is a real study with no banner.
+
+### Announce the three sections
 
 Before discovery, say in chat:
 
@@ -180,11 +192,13 @@ Distinguish completed findings from adjacent work still in progress. Completed e
 
 Walk the researcher through three sequential pop-ups. Announce each one in chat before showing the pop-up, and announce the transition after each is approved.
 
+Before each pop-up, check the draft against that row's rules in `references/content-rules.md` and fix it first. A pop-up approves content; it doesn't waive the rules. Only the researcher's explicit choice to keep a version after you've named the rule does that, and Step 4.5 then records it as an accepted exception. Step 4's `lint` check catches anything that slips through, but by then the researcher has already approved it, so fixing it means asking again.
+
 **Section 1 > Step 1 of 3: Background & Context**
 
 Say in chat: *“Let's start with background and context — here's what I found from your PRD and prior research.”*
 
-Show concise source-backed facts in chat, numbered. Lead with a **Why now** fact and a **Strategic fit** line; use `[TBD — fill in]` for strategic fit when no source names the priority. Pop-up label: **“Section 1 > Step 1 of 3: Background & Context”**. The researcher picks which facts to keep, so use multi-select (grouped when there are more than 3 facts), with **“Brainstorm with me”** last. Lock before advancing.
+Show concise source-backed facts in chat, numbered. The row holds 3–6 bullets, and the first bullet's bold lead-in is **Why now**, ending with **Strategic fit:** and the priority a source names, or `[TBD — fill in]` when no source names it. Likewise, when no source says why now, the bullet reads `**Why now:** [TBD — fill in]`; never invent a reason. When you find more than 6 facts, merge related ones or move in-flight work to Dependencies & guardrails; the Recommended option must be a compliant set. Pop-up label: **“Section 1 > Step 1 of 3: Background & Context”**. The researcher picks which facts to keep, so use multi-select (grouped when there are more than 3 facts), with **“Brainstorm with me”** last. If the researcher's picks break the rule (more than 6 bullets, or no Why now first), name the rule, show a merged draft that keeps every fact they picked, and ask once more with the same label, offering **“Use the merged draft (Recommended)”**, **“Keep my picks as they are”**, and **“Brainstorm with me”**. If they keep their picks, lock them and say it's recorded as an accepted exception; don't ask a third time. Lock before advancing.
 
 After approval, say: *“Background & Context locked. Moving on to Existing Insights.”*
 
@@ -192,7 +206,7 @@ After approval, say: *“Background & Context locked. Moving on to Existing Insi
 
 **Section 1 > Step 2 of 3: Existing Insights**
 
-Show up to five prior findings in chat with source links and verbatim evidence when available; show fewer when fewer relevant findings exist. Pop-up label: **“Section 1 > Step 2 of 3: Existing Insights”**. Multi-select for which findings to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
+Show up to five prior findings in chat with source links; show fewer when fewer relevant findings exist. Quote marks mean word for word from the cited source artifact (the report, transcript, product requirements document, or doc itself) opened in this run. Never quote internal notes, memory, summaries, trackers, or session notes, and never put quote marks around your own paraphrase. Paraphrase without quote marks and cite the artifact instead; if you can't check a line against the artifact, paraphrase it. Pop-up label: **“Section 1 > Step 2 of 3: Existing Insights”**. Multi-select for which findings to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
 
 After approval, say: *“Existing Insights locked. Moving on to Hypotheses.”*
 
@@ -200,7 +214,7 @@ After approval, say: *“Existing Insights locked. Moving on to Hypotheses.”*
 
 **Section 1 > Step 3 of 3: Hypotheses**
 
-Show proposed, falsifiable beliefs grounded in evidence or explicit stakeholder assumptions. Label each one's origin: a researcher hypothesis inferred from a named source, or a stakeholder assumption only when a stakeholder actually stated it. If none are grounded yet, propose the explicit empty state: *“No hypotheses confirmed at planning time.”* Pop-up label: **“Section 1 > Step 3 of 3: Hypotheses”**. Multi-select for which hypotheses to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
+Show proposed, falsifiable beliefs grounded in evidence or explicit stakeholder assumptions. Label each one's origin: a researcher hypothesis inferred from a named source, or a stakeholder assumption only when a stakeholder actually stated it. Check that every hypothesis carries its italic origin label before the pop-up. If none are grounded yet, propose the explicit empty state: *“No hypotheses confirmed at planning time.”* Pop-up label: **“Section 1 > Step 3 of 3: Hypotheses”**. Multi-select for which hypotheses to keep (grouped when there are more than 3), with **“Brainstorm with me”** last. Lock before advancing.
 
 After approval, say: *“Hypotheses locked. Section 1 — Context & Foundation is complete. Next I’ll confirm the opening details, then we’ll move into Section 2 — Research Design.”*
 
@@ -229,7 +243,7 @@ Auto-draft the breadcrumb, title, date, and one-sentence Topic from the inputs. 
 **Ask the researcher for the RACI instead of looking people up.** The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run: in the brief, product requirements document, or kickoff notes they shared, or in their answers so far (the decision audit names the decision owner). Don't run a people or directory search, and don't carry names over from memory or older project files.
 
 1. **Key people first.** If any of the four roles has no name yet, ask for it in chat, one name per role: Responsible (usually the researcher), Accountable (the decision owner), Consulted, and Informed.
-2. **Confirm the opening once.** Show the complete opening (breadcrumb, title, date, RACI, and Topic). Pop-up label: **“Opening: Title, Date & RACI”**, with the options **“Confirm as shown (Recommended)”**, **“Add more people”**, and **“Brainstorm with me”**. Corrections go in the comments field.
+2. **Confirm the opening once.** Show the complete opening (breadcrumb, title, date, RACI, and Topic). Topic appears in the Doc as the first overview row, but it's confirmed here with the opening. Pop-up label: **“Opening: Title, Date & RACI”**, with the options **“Confirm as shown (Recommended)”**, **“Add more people”**, and **“Brainstorm with me”**. Corrections go in the comments field.
 3. **Then offer more people.** If the researcher picks “Add more people,” collect the extra names and roles in chat (a role can hold more than one name), then show the updated RACI in chat and ask them to reply **confirm** or correct it. This finishes the same opening approval; don't show the pop-up again.
 
 This is the only time the opening is approved. Include all four RACI roles; a role the researcher leaves blank stays `[TBD — fill in]`.
@@ -298,7 +312,13 @@ Approve in this order:
 
 1. **What does success look like? + Dependencies & guardrails** — Pop-up label: **“Section 3 > Step 1 of 4: Success & Guardrails”**. After lock: *“Success & Guardrails locked. Moving on to Deliverables.”*
 2. **Deliverables** — Pop-up label: **“Section 3 > Step 2 of 4: Deliverables”**. After lock: *“Deliverables locked. Moving on to Timeline.”*
-3. **Timeline** — Pop-up label: **“Section 3 > Step 3 of 4: Timeline”**. After lock: *“Timeline locked. Moving on to Next Steps & Appendix.”*
+3. **Timeline** — Draft the detailed Timeline row and the four leadership milestones together (format in Step 4's output contract). Save the draft milestone table in the private working folder (the working-file rules in Step 4 apply from here), then run:
+
+   ```bash
+   python3 scripts/option4_layout.py timeline TIMELINE.md
+   ```
+
+   Resolve `scripts/…` from the directory containing this `SKILL.md`; `TIMELINE.md` is the draft in the working folder. The file may hold just the `Timing | Leadership milestone` table. The check prints one line per milestone (`OK` or `WRAP`, with the measured width) and a `FAIL:` line for each label or milestone that would wrap. Fix every reported line without changing its meaning, tell the researcher what you shortened, and rerun until it prints `PASS`. Then show both the detailed row and the milestones in chat for one approval. Pop-up label: **“Section 3 > Step 3 of 4: Timeline”**. After lock: *“Timeline locked. Moving on to Next Steps & Appendix.”*
 4. **Next steps + Additional UXR documents + Resources from XFN** — Pop-up label: **“Section 3 > Step 4 of 4: Next Steps & Appendix”**. Auto-sort every relevant kickoff document into Additional UXR documents or Resources from XFN. Existing documents use real links; future artifacts are labeled “to be created” without fake links.
 
 After all three sections are locked, tell the researcher exactly what happens next so they know what to expect:
@@ -306,12 +326,12 @@ After all three sections are locked, tell the researcher exactly what happens ne
 > All three sections are approved — I now have everything I need. Here's what I'll do before I hand you the final plan:
 >
 > 1. **Run a critique pass** — a pressure-test that checks the plan for gaps, weak logic, and unsupported claims. I will self-critique unless the authorized source-use boundary permits a separate critique reviewer.
-> 2. **Run it through the multi-agent review when the authorized source-use boundary permits it** — two researchers review it in parallel: an Evidence checker (is every claim true to the permitted source extracts?) and a Stakeholder reader (can your audience understand it and act on it?). Runtime varies with source length, service availability, and rate limits.
+> 2. **Offer the multi-agent review** — independent reviewers check the plan against the permitted source extracts and read it as your audience would. I'll show you who reviews it and what each reviewer sees, then ask once: run it, or skip it and go critique-only.
 > 3. **Then I'll draft your Google Doc** — the formatted, verified plan in your confirmed Drive folder.
 >
-> Running the critique and multi-agent checks now — I'll fold in any fixes before the Doc is created.
+> Running the critique pass now — I'll fold in any fixes before the review question.
 
-If the Step 1 connection check found `multi-agent-check` isn't installed, or the source-use gate does not authorize reviewer processing, drop item 2 and say the plan gets the self-critique pass only.
+If the Step 1 connection check found `multi-agent-check` isn't installed, the source-use gate does not authorize reviewer processing, or the researcher already asked to skip the review, drop item 2 and say the plan gets the critique pass only, with the reason. End that message with “Running the critique pass now — I'll fold in any fixes before I draft your Google Doc.”
 
 **Override:** if the researcher explicitly requests a full draft for review at the end, skip row-by-row approval but still show the complete draft for approval, confirm the Drive destination, and perform every output and verification step.
 
@@ -332,13 +352,17 @@ Load `references/content-rules.md` and assemble the approved material in the exa
 
 Follow the working-file rules in `references/source-and-delivery-safety.md`: use a persistent **private, non-repository working directory**, not `/tmp`; set owner-only permissions; keep minimum necessary content; define retention and cleanup; and keep sensitive content out of command-line arguments.
 
-### Mock warning
+### Warning banner
 
-For invented, simulated, or demo inputs, place this line after the RACI block. Treat any invocation described as a test, pressure scenario, regression, example, fixture, mock, or demo as simulated even when the brief sounds realistic; omit the warning only when the researcher confirms it is a real study.
+Place the banner for the run type picked in Step 1 after the RACI block, copied exactly:
 
-> ⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.
+| Run type | Banner |
+|---|---|
+| Simulated test (invented, mock, or demo inputs) | `⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.` |
+| Test run with real, authorized inputs | `⚠️ TEST RUN — real, authorized inputs, created to test the workflow. Not a stakeholder deliverable.` |
+| Real study | No banner |
 
-Keep it prominent in every rendered option.
+Treat any invocation described as a test, pressure scenario, regression, example, fixture, mock, or demo as simulated, even when the brief sounds realistic, until the researcher picks another run type. The builder accepts only these two lines; any other line starting with ⚠️ fails the manifest. Keep the banner prominent in every rendered option.
 
 ### Output contract
 
@@ -348,9 +372,17 @@ The opening order is:
 2. Research-plan title.
 3. Last-updated date.
 4. RACI bullet list.
-5. Mock warning, when applicable.
+5. Warning banner, when applicable.
 
-Then add the separate Option 4 leadership timeline and the Project Plan Overview. The leadership timeline has the header `Timing | Leadership milestone` plus four study-specific milestones derived from the approved detailed Timeline row. Each left-hand label starts with its timing, then a short name: `Week 1: Setup & rubric`. Use `Weeks 2–3:` for a span, and `Day N:` or `Month N:` only when the study runs in days or months. Two milestones may share a week. Each label must fit on one line, because a wrapped label can split the timeline across pages. The builder measures each label's printed width in bold DM Sans 10pt and allows at most 134pt, the usable width of the 144pt column. That is usually 24 to 27 characters, depending on the letters: `Week 1: Setup & definitions` fits, but `Week 2: Baseline comparison` does not. When a label is too wide, shorten the name after the colon yourself without changing its meaning (`Week 2: Baseline comparison` becomes `Week 2: Compare baseline`), then tell the researcher what changed; don't ask them to count characters. A shortening that keeps the meaning isn't a material change and needs no reapproval; if no short name keeps it, ask the researcher. Run the Step 6.1 manifest command on the assembled draft right away, so a too-wide label surfaces now rather than after the review. Each right-hand summary is one sentence and no more than 160 characters. The old reference study's four-week schedule is never reused.
+Then add the separate Option 4 leadership timeline and the Project Plan Overview. The leadership timeline has the header `Timing | Leadership milestone` plus four study-specific milestones derived from the approved detailed Timeline row. Each left-hand label starts with its timing, then a short name: `Week 1: Setup & rubric`. Use `Weeks 2–3:` for a span, and `Day N:` or `Month N:` only when the study runs in days or months. Two milestones may share a week. Each label must fit on one line, because a wrapped label can split the timeline across pages. The builder measures each label's printed width in bold DM Sans 10pt and allows at most 134pt, the usable width of the 144pt column. That is usually 24 to 27 characters, depending on the letters: `Week 1: Setup & definitions` fits, but `Week 2: Baseline comparison` does not. When a label is too wide, shorten the name after the colon yourself without changing its meaning (`Week 2: Baseline comparison` becomes `Week 2: Compare baseline`), then tell the researcher what changed; don't ask them to count characters. A shortening that keeps the meaning isn't a material change and needs no reapproval; if no short name keeps it, ask the researcher. Each right-hand milestone is one sentence that also fits on one line: at most 544.4pt in regular DM Sans 10pt (bold words count at their bold width), usually about 110 to 120 characters, with 160 characters as a hard cap. A milestone that wraps to two lines makes its row taller and can split the timeline across pages just as a wrapped label does. The `timeline` check at Section 3 > Step 3 measures both columns, so the approved milestones should already fit. The old reference study's four-week schedule is never reused.
+
+After assembling, run the layout check on the whole draft:
+
+```bash
+python3 scripts/option4_layout.py lint APPROVED.md
+```
+
+It prints `FAIL:` for layout problems the builder would reject (missing sections, a timeline row that would wrap, an unrecognized banner); fix those before moving on. `FIX OR ACCEPT:` lines are content-rule gaps (for example, Background without a Why now bullet, or a hypothesis without an origin label), and `CONFIRM QUOTE:` lines list every quoted phrase of four or more words. Both feed the Step 4.5 critique. It prints `PASS` when there is nothing to report.
 
 ```markdown
 # Research Timeline
@@ -403,10 +435,14 @@ The bundled normalizer rebuilds every multi-item table cell as clean paragraphs 
 
 Pressure-test the assembled plan before creating the final Doc. Run the checklist as a **self-critique** by default. Use a separate critique agent only when `references/source-and-delivery-safety.md` authorizes its processing and reviewer access, and provide only minimum necessary de-identified extracts. Fix clear gaps; present judgment calls to the researcher for Accept / Consider / Reject.
 
+Start from the Step 4 `lint` output: every `FIX OR ACCEPT` line is either fixed or explicitly accepted by the researcher, and every `CONFIRM QUOTE` line is resolved under Quote provenance below.
+
 | Dimension | Check |
 |---|---|
 | **Strategic alignment** | One clear primary decision; each objective and question changes that decision. |
 | **Existing evidence** | Claims are sourced; completed findings are separated from in-flight work. |
+| **Quote provenance** | Every quoted phrase is confirmed word for word against the cited source artifact opened in this run; otherwise it is paraphrased without quote marks. Never confirm a quote against internal notes, memory, summaries, or trackers. |
+| **Content rules** | Background has 3–6 bullets and opens with Why now and Strategic fit; every hypothesis has its origin label; each row follows `references/content-rules.md`. |
 | **Objectives and questions** | Objectives are statements; questions are broad, concise, and mapped to objectives. |
 | **Hypotheses** | Beliefs are explicit, falsifiable where possible, and grounded rather than invented. |
 | **Method fit** | The method is the leanest valid path; alternatives and confidence tradeoffs were considered. |
@@ -421,15 +457,32 @@ Do not append this internal critique to the stakeholder plan unless the research
 
 ## Step 5: Multi-agent review
 
-Run the multi-agent review on the fixed plan content before the Google Doc is created only when the Step 1 gate authorizes both AI processing and reviewer access. The review is automatic within that already confirmed boundary; do not ask twice.
+Offer the multi-agent review on the fixed plan content before the Google Doc is created, and ask about it exactly once.
 
-- Say in chat: *"Running the multi-agent review now — two researchers read the plan in parallel: an Evidence checker against the sources, and a Stakeholder reader reading it as [audience]."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Follow the reviewer-packet rules in `references/source-and-delivery-safety.md`; never pass complete source files by default.
-- Run `multi-agent-check` only when it is installed and that authorization is present; **otherwise, proceed critique-only without source files or content** handed to another reviewer. This is a complete run, not a blocked one; say “critique-only” when you return the Doc.
-- If the installed review fails or rate-limits (including HTTP 429), preserve any complete reviewer result and retry only the missing transient call once when the tool reports that no duplicate work or external write can occur. Otherwise stop the review, fall back to the self-critique, and disclose `critique-only — multi-agent review failed`. Never loop, hide the failure, or call a partial review complete.
+1. **When not to ask.** If `multi-agent-check` isn't installed, or the Step 1 gate doesn't authorize both AI processing and reviewer access, don't ask: proceed critique-only and record the matching status below. If the researcher already said earlier in this run to skip the review, don't ask again; record the skip.
+2. **Show the review plan in chat.** Check the live skill list and read the installed `multi-agent-check` SKILL.md, because installs differ: the team version runs two reviewers (an Evidence checker and a Stakeholder reader), while a personal install may run more lenses or add its own steps. Name the reviewers that install will run and the permitted extracts each one receives, following the reviewer-packet rules in `references/source-and-delivery-safety.md` (never pass complete source files by default). Don't promise a runtime.
+3. **Ask one pop-up.** Label: **“Step 5: Multi-agent review”**. Options: **“Run the review (Recommended)”**, **“Skip review (critique-only)”**, and **“Brainstorm with me”** last. A focus area for the reviewers goes in the comments field.
+4. **That answer is the review's only question.** If the installed check has its own pre-flight approval, the plan you showed is that plan and “Run the review” is its approval: don't show the plan or ask for approval again, and pass that answer on if the check asks for approval anyway. Answer its clarifying questions from the researcher's comments, or with “no special focus” when it asks for a focus and there is none. Never answer a factual question for the researcher (for example, whether a sample size is final). Ask the researcher again only for a decision the pop-up didn't cover, such as that kind of factual question or a source the reviewers can't reach. Put all of these in one pop-up labeled **“Step 5: Reviewer questions”**, one question each, offering the likely answers as options (the comments field takes anything else) and no “Brainstorm with me” option, since they're factual. These come after the “Running the multi-agent review now” message, while the check sets up. (The team version already skips its own confirmation when another skill calls it.)
+
+Then:
+
+- After the researcher picks **Run the review**, say in chat: *“Running the multi-agent review now — [the reviewers from the plan you showed].”* and invoke `/multi-agent-check` with the extracts from the plan.
+- Run `multi-agent-check` only when it is installed, that authorization is present, and the researcher didn't skip it; **otherwise, proceed critique-only without source files or content** handed to another reviewer. This is a complete run, not a blocked one; disclose the status when you return the Doc.
+- If the installed review fails or rate-limits (including HTTP 429), preserve any complete reviewer result and retry only the missing transient call once when the tool reports that no duplicate work or external write can occur. Otherwise stop the review, fall back to the self-critique, and record `critique-only review — multi-agent review failed`. Never loop, hide the failure, or call a partial review complete.
 - **Runtime:** do not promise a duration. It varies with plan/source length, service availability, and rate limits.
 - **Live demo:** either run the check without a time promise or walk through the fully synthetic `examples/multi-agent-review-example.md` and identify it as synthetic.
 - Fold any confirmed fixes into the assembled plan before creating the Doc. **Check each fix's wording against the sources before applying it.** Apply only what the source supports: if a fix adds a fact, count, attribution, study detail, or quote the source doesn't support, apply the supported part and tell the researcher what you left out and why.
+
+Record exactly one review status and repeat it word for word when you return the Doc (Step 6.5):
+
+| Review status | When |
+|---|---|
+| `multi-agent review complete` | The installed review ran with independent reviewers and finished. |
+| `self-review only — independent reviewers unavailable here` | The installed check ran but reported that it couldn't use independent reviewers in this environment. |
+| `critique-only review — multi-agent review skipped at researcher's request` | The researcher picked **Skip review (critique-only)** or asked to skip it earlier in the run. |
+| `critique-only review — multi-agent-check not installed` | The skill isn't in the live skill list. |
+| `critique-only review — reviewer processing not authorized` | The Step 1 gate didn't authorize AI processing or reviewer access. |
+| `critique-only review — multi-agent review failed` | The review failed or rate-limited, and the one allowed retry didn't recover it. |
 
 The expected sequence is **approved plan → critique → multi-agent (or disclosed critique-only) → fixes → copyedit → exact Option 4 Google Doc → verify/render → share**. Never describe the plan as stakeholder-final before the quality checks and the final visual gate have run.
 
@@ -445,7 +498,9 @@ Copyedit the approved Markdown for clarity, grammar, complete sentences, consist
 python3 scripts/option4_layout.py manifest APPROVED.md manifest.json
 ```
 
-The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, its header is not `Timing | Leadership milestone`, a label does not start with its timing or is wider than 134pt, or a leadership-timeline summary is too long. A too-wide error lists every label that would wrap, with its measured width; shorten each one as described in Step 4, tell the researcher, and rerun the command.
+The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, its header is not `Timing | Leadership milestone`, a label does not start with its timing or is wider than 134pt, a milestone is wider than 544.4pt or longer than 160 characters, or the warning banner isn't one of the two approved lines. A too-wide error lists every row that would wrap, with its measured width; shorten each one as described in Step 4, tell the researcher, and rerun the command.
+
+The manifest also records a fingerprint of the layout script and style contract. The later `normalize`, `format`, and `verify` steps fail with “Skill files changed since this manifest was generated” if either file changed mid-run, because a different builder could produce a different Doc. Don't pull, update, or edit the skill during a run. If you see that error, tell the researcher the skill was updated mid-run and re-read the changed skill files, since the update may change later steps too. Then rerun the `lint` check and the manifest command (the update may have changed the rules either one applies), fix anything they now flag and tell the researcher what changed (re-confirm only a change that alters meaning, as in Step 4), and regenerate every batch from a fresh fetch. If those fixes change text the Doc already holds, the Doc no longer matches the plan: handle it under the partial-document policy in `references/source-and-delivery-safety.md` and create a new Doc from the updated plan. Rerun the critique pass on any row whose meaning changed; the review status stands unless a fix adds a claim the reviewers didn't see, in which case say so when you return the Doc.
 
 #### Full capability preflight — before creation
 
@@ -470,7 +525,13 @@ python3 scripts/option4_layout.py normalize imported-doc.json manifest.json norm
 
 The normalizer validates the manifest version and digest, confirms that the imported leadership timeline plus every Project Plan Overview label and body still match the approved Markdown, rebuilds clean overview-cell paragraphs, removes the generic conversion header, and restores two physical cells for section bands. It blocks rather than rewriting pre-overview timeline text, because a length change there would invalidate later Google Docs table indices in the same native batch.
 
-Immediately before each normalization or formatting write, fetch fresh raw JSON and its revision, bind the batch to that **required revision ID**, apply it through a protected request body, then re-fetch and verify. Follow the safety reference for conflicts and ambiguous results: never resend a stale batch; if the expected post-state is present, record success without resending; otherwise regenerate against the new snapshot. Material content changes require researcher reapproval. Block when reconciliation fails.
+Immediately before each normalization or formatting write, fetch fresh raw JSON and its revision, bind the batch to that **required revision ID**, apply it through a protected request body (in the order set in the safety reference's §2: a connector tool's request-body parameter, then a CLI file or stdin option, then the bundled `send` helper), then re-fetch and verify. With `gws`, which has no file option, apply each batch with the helper rather than pasting JSON into a shell command:
+
+```bash
+python3 scripts/option4_layout.py send normalize-batch.json --document-id "$DOC_ID" --response normalize-response.json
+```
+
+It refuses a batch without a required revision ID, runs `gws` without a shell, saves the reply to the private response file, and prints `PASS` with the new revision. On any failure or timeout it tells you not to resend: re-fetch and reconcile first. Follow the safety reference for conflicts and ambiguous results: never resend a stale batch; if the expected post-state is present, record success without resending; otherwise regenerate against the new snapshot. Material content changes require researcher reapproval. Block when reconciliation fails.
 
 Generate and apply exact formatting operations:
 
@@ -494,11 +555,11 @@ python3 scripts/option4_layout.py verify final-doc.json manifest.json
 ```
 
 4. Export or render the Google Doc and inspect **every page**, not a sample. The verifier cannot see page breaks: in the 2026-10-02 mock it passed while the render showed the timeline split onto a second page and a section band orphaned at the foot of a later page.
-5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. Every leadership-timeline label must sit on one line; a wrapped label is the usual cause of a timeline split, which then pushes a section band to the foot of a later page with its rows on the next. Shorten any wrapped label, or tighten only the at-a-glance summaries; preserve the approved detailed Timeline row. Re-render to confirm the band rejoined its rows.
+5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. Every leadership-timeline label and milestone must sit on one line; the `timeline` and `manifest` checks measure both, so a wrapped row means the text changed after the check. A wrapped row makes the table taller and can push it across a page break, which shifts everything below it, including the section bands. Shorten any wrapped row without changing its meaning. If every row sits on one line and the timeline still splits, tighten the opening and the timing note first, then shorten RACI lines; preserve the approved detailed Timeline row. Don't reach for the row setting `preventOverflow` instead: it only stops a single row from breaking across a page, which a one-line row can't do anyway, and it can't keep the five rows together. Re-render to confirm the band rejoined its rows.
 6. Correct every issue with the same fresh-fetch, revision-bound, regenerate-on-conflict sequence; then re-fetch, rerun the verifier, and re-render. Repeat until all checks pass. For a text correction after formatting (for example, shortening a timeline label):
    1. Edit `APPROVED.md` first and regenerate `manifest.json`, so the verifier checks the new text. A material content change needs researcher reapproval; shortening a timeline label without changing its meaning is not one.
    2. Fetch fresh raw JSON and its revision. For each change, build a `deleteContentRange` for the old text, then an `insertText` of the new text at the same start index; both carry the active `tabId`.
-   3. Order the pairs from the highest index to the lowest so no edit shifts another's indices, bind the batch to the fresh revision ID, and apply it through a protected request body.
+   3. Order the pairs from the highest index to the lowest so no edit shifts another's indices, bind the batch to the fresh revision ID, and apply it through a protected request body (the `send` helper with `gws`).
    4. Re-fetch, rerun the verifier (it confirms the inserted text kept the cell's typography), and re-render every page.
 
 A structural-only pass is insufficient. If raw verification or rendering is unavailable, **block completion** rather than returning an approximate document.
@@ -508,7 +569,7 @@ A structural-only pass is insufficient. If raw verification or rendering is unav
 Confirm the file location and return:
 
 - the working Google Doc link;
-- `content complete, Option 4 formatting checked, links checked, rendered pages checked` (add `critique-only review` when the multi-agent review couldn't run);
+- `content complete, Option 4 formatting checked, links checked, rendered pages checked`, followed by the exact review status recorded in Step 5 (for example, `critique-only review — multi-agent review skipped at researcher's request`);
 - no styling caveat—any unresolved styling limitation means the document is not final.
 
 Open the verified Google Doc in the browser when the environment supports it. Do not update project trackers, progress files, or unrelated systems unless the researcher separately asks.
