@@ -30,7 +30,9 @@ Keep a provenance record for every source used: canonical URL or file ID, owner/
 
 ## 1. Opening block
 
-Auto-draft the title, current date, and RACI from the PRD, brief, current directory information, and confirmed people context. Ask for one simple confirmation rather than asking the researcher to compose each field.
+Auto-draft the title and current date. Ask for one simple confirmation rather than asking the researcher to compose each field.
+
+Get RACI names from the researcher, not from a people or directory search. Pre-fill a role only with a name the researcher has supplied in this run (brief, PRD, kickoff notes, or their answers), ask in chat for any key role still missing, and then offer to add more people after the key four are confirmed.
 
 Order:
 
@@ -47,7 +49,7 @@ Always include all four roles. Unknown names use `[TBD — fill in]`.
 - **Consulted:** partners whose expertise shapes the decision.
 - **Informed:** people who need the outcome but do not make the decision.
 
-If a person listed as Consulted is actually the decision owner, confirm the role and place that person in Accountable instead of leaving the ownership ambiguous. Cross-check people against current directory information before reusing names from an older plan.
+If a person listed as Consulted is actually the decision owner, confirm the role and place that person in Accountable instead of leaving the ownership ambiguous. Never carry names over from an older plan or from memory; RACI names come from the researcher in this run.
 
 A mock, demo, test, pressure scenario, regression, example, fixture, or otherwise simulated study includes this prominent line, even when its brief sounds realistic. Omit it only when the researcher confirms the study is real:
 
@@ -72,7 +74,7 @@ Do not ask the researcher to predict findings before the study.
 Every plan includes a separate at-a-glance timeline above Project Plan Overview:
 
 - exactly two columns and five rows: the header `Timing | Leadership milestone` plus four study-specific milestones;
-- left labels that start with their timing, then a short name (`Week 1: Setup & rubric`, `Weeks 2–3: Calibration`, `Week 4: Decision readout`), no longer than 24 characters so each stays on one line; use `Day N:` or `Month N:` only when the study runs in days or months;
+- left labels that start with their timing, then a short name (`Week 1: Setup & rubric`, `Weeks 2–3: Calibration`, `Week 4: Decision readout`), each short enough to stay on one line: at most 134pt wide in bold DM Sans 10pt, which the parser measures (usually 24 to 27 characters, depending on the letters; shorten an over-width label and tell the researcher); use `Day N:` or `Month N:` only when the study runs in days or months;
 - one-sentence leadership summaries no longer than 160 characters in the right column;
 - milestones derived from the approved detailed Timeline row, never copied from a reference study; two milestones may share a week, and the week numbers must match the detailed row;
 - an italic one-sentence timing note immediately below the table.
@@ -269,4 +271,5 @@ Use `scripts/option4_layout.py` to parse, normalize, format, and verify the docu
 - 2026-09-23: approved Leadership structure adopted after an end-to-end mock test; fields made adaptive; Deliverables & Next Steps separated; Appendix restricted.
 - 2026-09-23: the mock exposed visual drift in the portable fallback; the exact Option 4 — Leadership timeline, typography, colors, geometry, formatter, and hard verification gate became mandatory for every final Doc.
 - 2026-09-29: source authorization, minimization, provenance, destination ACL, reviewer-handoff, idempotent-write, revision-binding, and partial-document safety gates added.
-- 2026-10-02: an end-to-end mock produced the approved standard deliverable. Adopted from it: the `Timing | Leadership milestone` header with `Week N: Short name` labels of 24 characters or fewer (enforced by the parser); a Why now bullet and strategic-fit placeholder in Background; scoped and caveated insight headings; origin-labeled hypotheses; decision outcomes defined once and reused; name-and-date citations for unlinked sources; plain stakeholder language; design-specific sample precision; absolute impact for investment decisions; and inspection of every rendered page.
+- 2026-10-02: an end-to-end mock produced the approved standard deliverable. Adopted from it: the `Timing | Leadership milestone` header with `Week N: Short name` labels (enforced by the parser); a Why now bullet and strategic-fit placeholder in Background; scoped and caveated insight headings; origin-labeled hypotheses; decision outcomes defined once and reused; name-and-date citations for unlinked sources; plain stakeholder language; design-specific sample precision; absolute impact for investment decisions; and inspection of every rendered page.
+- 2026-10-02 (same-day revision, after review of the approved Doc): the 24-character label cap would have rejected the approved Doc's own 27-character first label, which fit on one line. The parser now measures printed width (134pt maximum) instead of counting characters. The researcher now confirms the key RACI people and can add more, replacing the directory search. The connection check moved to the start of the run so that a signed-out connection, such as Glean, is flagged immediately.

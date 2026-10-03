@@ -258,6 +258,14 @@ def _strip_wrapping_italics(value: str) -> str:
     return stripped
 
 
+def timeline_label_width_pt(text: str, table_contract: dict[str, Any]) -> float:
+    """Printed width of a timeline label, from the bold DM Sans advance widths."""
+    font = table_contract["timeline_left_label_font"]
+    widths = font["advance_widths"]
+    units = sum(widths.get(char, font["unknown_character_width"]) for char in text)
+    return units * font["size_pt"] / font["units_per_em"]
+
+
 def parse_markdown(markdown: str) -> dict[str, Any]:
     """Parse an approved Option 4 intermediate Markdown document."""
     lines = markdown.splitlines()
@@ -331,22 +339,27 @@ def parse_markdown(markdown: str) -> dict[str, Any]:
             f"Research Timeline header must be {' | '.join(expected_header)!r}"
         )
     label_pattern = re.compile(table_contract["timeline_left_label_pattern"])
-    left_maximum = table_contract["timeline_left_cell_max_characters"]
+    left_maximum_pt = table_contract["timeline_left_label_max_width_pt"]
     right_maximum = table_contract["timeline_right_cell_max_characters"]
+    too_wide: list[str] = []
     for row in timeline[1:]:
         if not label_pattern.match(row[0]["text"]):
             raise ContractError(
                 "Leadership timeline label must start with its timing, as in "
                 f"'Week 1: Setup & rubric': {row[0]['text']!r}"
             )
-        if len(row[0]["text"]) > left_maximum:
-            raise ContractError(
-                f"Leadership timeline label exceeds {left_maximum} characters: {row[0]['text']!r}"
-            )
+        width = timeline_label_width_pt(row[0]["text"], table_contract)
+        if width > left_maximum_pt:
+            too_wide.append(f"{row[0]['text']!r} ({width:.1f}pt)")
         if len(row[1]["text"]) > right_maximum:
             raise ContractError(
                 f"Leadership timeline milestone exceeds {right_maximum} characters: {row[1]['text']!r}"
             )
+    if too_wide:
+        raise ContractError(
+            f"Leadership timeline label would wrap; the first column fits {left_maximum_pt}pt "
+            f"on one line. Shorten the name after the colon: {', '.join(too_wide)}"
+        )
 
     timeline_note = None
     for i in range(timeline_end, overview_heading):

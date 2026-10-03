@@ -454,7 +454,14 @@ class Option4ContractTest(unittest.TestCase):
         self.assertEqual(contract["tables"]["cell_padding_pt"], 5)
         self.assertEqual(contract["tables"]["timeline_rows"], 5)
         self.assertEqual(contract["tables"]["timeline_header"], ["Timing", "Leadership milestone"])
-        self.assertEqual(contract["tables"]["timeline_left_cell_max_characters"], 24)
+        self.assertNotIn("timeline_left_cell_max_characters", contract["tables"])
+        self.assertEqual(contract["tables"]["timeline_left_label_max_width_pt"], 134)
+        label_font = contract["tables"]["timeline_left_label_font"]
+        self.assertEqual(
+            {key: label_font[key] for key in ("font", "size_pt", "bold", "units_per_em")},
+            {"font": "DM Sans", "size_pt": 10, "bold": True, "units_per_em": 1000},
+        )
+        self.assertEqual(label_font["unknown_character_width"], max(label_font["advance_widths"].values()))
         self.assertEqual(contract["tables"]["timeline_right_cell_max_characters"], 160)
         self.assertEqual(
             contract["tables"]["overview_section_rows"],
@@ -468,7 +475,11 @@ class Option4ContractTest(unittest.TestCase):
             [cell["text"] for cell in self.manifest["timeline"][0]],
             ["Timing", "Leadership milestone"],
         )
-        self.assertEqual(max(len(row[0]["text"]) for row in self.manifest["timeline"][1:]), 24)
+        tables = self.module.load_contract()["tables"]
+        self.assertTrue(all(
+            self.module.timeline_label_width_pt(row[0]["text"], tables) <= tables["timeline_left_label_max_width_pt"]
+            for row in self.manifest["timeline"][1:]
+        ))
         self.assertEqual(len(self.manifest["rows"]), 22)
         self.assertEqual(
             [row["label"] for row in self.manifest["rows"] if row["section"]],
@@ -515,8 +526,22 @@ class Option4ContractTest(unittest.TestCase):
             "Week 1: Setup, rubric & sample",
             1,
         )
-        with self.assertRaisesRegex(self.module.ContractError, "exceeds 24 characters"):
+        with self.assertRaisesRegex(self.module.ContractError, r"would wrap.*'Week 1: Setup, rubric & sample' \(150\.8pt\)"):
             self.module.parse_markdown(source)
+
+    def test_leadership_label_limit_is_printed_width_not_characters(self) -> None:
+        # Calibrated against a rendered Doc: "Setup & definitions" (27 characters, 133.1pt) fit on
+        # one line; "Baseline comparison" (27 characters, 143.0pt) wrapped.
+        source = FIXTURE_PATH.read_text(encoding="utf-8").replace(
+            "Week 1: Setup & rubric", "Week 1: Setup & definitions", 1
+        )
+        self.module.parse_markdown(source)
+        self.module.parse_markdown(source.replace("Weeks 2–3: Calibration", "Week 2: Evaluator training", 1))
+        for label in ("Week 2: Baseline comparison", "Week 2: Concept test round"):
+            with self.subTest(label=label):
+                wrapped = source.replace("Weeks 2–3: Calibration", label, 1)
+                with self.assertRaisesRegex(self.module.ContractError, "would wrap"):
+                    self.module.parse_markdown(wrapped)
 
     def test_manifest_rejects_leadership_label_without_timing(self) -> None:
         source = FIXTURE_PATH.read_text(encoding="utf-8").replace(

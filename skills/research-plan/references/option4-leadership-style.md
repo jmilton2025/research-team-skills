@@ -56,7 +56,7 @@ Inline highlighting is not equivalent to full-paragraph shading.
 - Left milestone column: gray `#D9D9D9`, bold DM Sans 10pt.
 - Right column: white, DM Sans 10pt.
 - Each left-hand label starts with its timing, then a short name, such as `Week 1: Setup & rubric` or `Weeks 2–3: Calibration`. Use `Day N:` or `Month N:` only for studies measured in days or months.
-- Each left-hand label is no more than 24 characters, so it renders on one line in the 144pt column. In the 2026-10-02 mock, a 26-character label wrapped and split the timeline across pages. Each right-hand milestone is one concise sentence, no more than 160 characters. Put detailed dates, contingencies, and dependencies in the plan's Timeline row.
+- Each left-hand label renders on one line: its printed width in bold DM Sans 10pt is at most **134pt**, the 144pt column less 5pt padding on each side. The contract stores DM Sans Bold advance widths, and the parser adds them up for each label; a character outside the table counts as the widest glyph. Character counts don't work: in the 2026-10-02 mock, the 27-character `Week 1: Setup & definitions` (133.1pt) fit, while 26- and 27-character labels measuring 141.1pt and 143.0pt wrapped and split the timeline across pages. Each right-hand milestone is one concise sentence, no more than 160 characters. Put detailed dates, contingencies, and dependencies in the plan's Timeline row.
 - The four milestones adapt to the study. Do not copy an old study's week labels or schedule.
 
 If the leadership timeline spills onto another page, shorten any wrapped label or tighten only the timeline summary; preserve the approved detailed Timeline row.

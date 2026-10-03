@@ -16,7 +16,7 @@ Record the authorization basis available for the study, such as a researcher att
 
 If any required authorization is unknown, stop before reading that source. Ask the researcher to confirm it or skip the source. A skipped source remains unverified and cannot support a claim.
 
-Connection tests after this gate must be non-content-bearing authentication, capability, or metadata checks. Do not retrieve source content merely to test a connector.
+Connection checks run at the start of Step 1, before this gate, so they must be non-content-bearing authentication, capability, or metadata checks. Do not retrieve source content merely to test a connector; when a connector's only tools return content, rely on its sign-in status instead.
 
 ## 2. Minimize local and reviewer data
 

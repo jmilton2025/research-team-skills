@@ -5,7 +5,7 @@ description: Use when a UX researcher is planning a new study, converting a brie
 
 # Research Plan
 
-Build a stakeholder-ready research plan collaboratively. Ground the plan in existing evidence, audit the decision it must inform, recommend the minimum valid method, and obtain researcher approval row by row. Every real run ends with a copyedited, formatted, verified Google Doc in the approved Drive location.
+Build a stakeholder-ready research plan collaboratively. Ground the plan in existing evidence, audit the decision it must inform, recommend the minimum valid method, and obtain researcher approval row by row. Every real run that passes the decision audit ends with a copyedited, formatted, verified Google Doc in the approved Drive location; a run stopped at the decision audit ends with a closed-decision note instead.
 
 ## Completion contract
 
@@ -26,9 +26,9 @@ Markdown is an intermediate representation, not the completed deliverable. A moc
 
 | Step | Work | Completion gate |
 |---|---|---|
-| **1** | Gather the request without opening sources → audit the decision → authorize source use → check connections → announce the 3-section structure | Decision is genuinely open and actionable; sources and connections are authorized or skipped; researcher understands the workflow |
+| **1** | Check connections and flag any sign-in (e.g., Glean) in the first message → gather the request without opening sources → audit the decision → authorize source use → announce the 3-section structure | Decision is genuinely open and actionable; sources and connections are authorized or skipped; researcher understands the workflow |
 | **1.5** | **Section 1 — Context & Foundation:** discover background, existing insights, and hypotheses → three sequential pop-ups (Step 1 of 3, 2 of 3, 3 of 3), each locked before the next | Background, Existing insights, and Hypotheses approved |
-| **1.6** | Fill only unresolved logistics; auto-draft title, date, RACI, and Topic (verify all names via people search) | Opening approved |
+| **1.6** | Fill only unresolved logistics; auto-draft title, date, and Topic; ask the researcher to confirm the key RACI people, then offer to add more | Opening approved |
 | **2** | Recommend the minimum valid method direction and the conditional rows the study needs | Method direction picked (the rows are approved in Step 3) |
 | **3** | **Section 2 — Research Design** (4 labeled steps: Objectives, Key research questions, Decisions, Method & approach) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, "Brainstorm with me" always offered, transition announced after each lock | All remaining rows approved; no row approved twice |
 | **3.5** | Confirm the Google Drive destination | Exact folder confirmed |
@@ -73,7 +73,7 @@ Use native `AskUserQuestion` checklist pop-ups when available, within the tool's
 - Keep the built-in **Other / comments** field so researchers can add, correct, or rewrite. The tool adds it automatically; don't add your own “Other” option.
 - Show the proposed content in chat before the pop-up. Options are short labels, not the content itself.
 - **Offer “Brainstorm with me” as the last option in every approval pop-up.** It opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing.
-- Label every pop-up with its section and step in the question text: **“Section 1 > Step 2 of 3: Existing Insights”**. The researcher must always know exactly where they are. (The short header chip holds at most 12 characters, so the full label goes in the question.)
+- Label every pop-up with its section and step in the question text: **“Section 1 > Step 2 of 3: Existing Insights”**. The researcher must always know exactly where they are. Pop-ups outside the three sections use their own short name instead, such as **“Opening: Title, Date & RACI”**, **“Method direction”**, or **“Drive destination”**. (The short header chip holds at most 12 characters, so the full label goes in the question.)
 - Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Step 3.
 
 If native pop-ups are unavailable, state **“Inline fallback — native checklist unavailable in this environment”** and reproduce the same numbered options and selection instructions in chat. Do not silently substitute an unlabeled prose question.
@@ -92,6 +92,32 @@ The skill must produce the same leadership-ready visual system for every researc
 
 ## Step 1: Gather study inputs and orient the researcher
 
+### Connection check — first, before any questions
+
+Start the run here. Check each connection the run depends on, with a quick authentication or metadata call rather than trusting the tool list (a listed tool can still ask for sign-in; Claude Code also reports servers that need authentication when the session starts). This connection check must not open or retrieve source content; content access starts only under the source-use authorization gate below. If a connector's only tools return content (search or chat, as with most Glean servers), don't run a test query: use the session's sign-in report or its `/mcp` status, and treat the first authorized query in Step 1.5 as the live check.
+
+| Connection | Needed for |
+|---|---|
+| Enterprise search (e.g., Glean) | Prior research, supplied internal docs (Steps 1–1.5) |
+| Research-insights agent | Prior findings (Step 1.5) |
+| Google Drive / Docs (connector or `gws`) | Reading supplied docs; creating and verifying the final Doc (Step 6) |
+| Slack | Supplied kickoff threads; check only when a Slack link comes up |
+| `multi-agent-check` skill | The multi-agent review (Step 5); check the live skill list |
+
+**Flag every missing or signed-out connection in your first message**, so the researcher can sign in while you gather inputs instead of finding out halfway through discovery. That covers every row above except Slack. Name the connection, say what it's for, and give the sign-in steps. Glean is the one most often signed out; for any other connection, use the same steps with its name swapped in:
+
+> **Glean isn't signed in.** I use it to find prior research and the internal docs you share. To sign in, type this in Claude Code (the chat box you're using now):
+>
+> ```
+> /mcp
+> ```
+>
+> Pick **glean** (if the list shows more than one Glean entry, such as `glean` and `glean_default`, do this for each one marked as needing sign-in), choose **Authenticate**, finish signing in on the browser tab that opens, then come back and say **done**. On claude.ai, connect it from your connector settings instead. Or say **skip Glean** to continue without it.
+
+Continue with the inputs, decision audit, and source-use gate while the researcher signs in; none of them needs a connection. When a new source type comes up later (a Slack thread, say), check that connection the moment it's mentioned and flag it the same way. Re-check right before discovery: if a connection is still missing, wait for sign-in or an explicit skip, then report connected and skipped sources. A skipped connection's sources stay unverified and cannot support a claim. Missing Docs write access means the run will end with a blocked draft, and missing `multi-agent-check` means critique-only review.
+
+### Request inputs — metadata and links only
+
 Ask first for metadata and links only: what artifacts exist (product requirements document, brief, kickoff notes, Slack thread, design, technical framework, or prior plan) plus a non-sensitive description of the request. Tell the researcher not to paste, upload, or expose non-public content until the source-use authorization gate passes. Collect links without opening or searching them.
 
 ### Decision audit — before discovery
@@ -102,32 +128,17 @@ Ask what decision the study will inform, then challenge it before reading prior 
 - Is it a real fork—a different finding leads to a different action?
 - Is the decision still open, answerable in the available time, and owned by a named person?
 
-If the request is only a goal such as “inform strategy” or “understand users,” propose a sharper decision and ask for approval. If the answer has already been chosen, do not run discovery under confirmatory framing. Offer three explicit branches:
+If the request is only a goal such as “inform strategy” or “understand users,” propose a sharper decision and ask for approval. If the answer has already been chosen, do not run discovery under confirmatory framing. Offer three explicit branches in a single-select pop-up, with **“Brainstorm with me”** last:
 
 1. **Reopen or reframe** a genuine decision fork that evidence could change.
 2. **Measure implementation risk** without pretending the research selects the already-chosen direction.
-3. **Document the decision as closed and stop** the research-plan workflow.
+3. **Document the decision as closed and stop** the research-plan workflow. Write a short closed-decision note in chat: the decision, its owner, the date, and why research won't change it. No Google Doc is created.
 
 If the requester insists that research justify a closed answer, refuse that framing and stop. Continue only after an open, actionable decision is approved.
 
 ### Source-use authorization gate
 
 Read `references/source-and-delivery-safety.md` and complete its authorization gate before accessing any non-public source. **Connector access is not requester authorization.** Record the authorization basis, approved AI processing, intended audience and source ACL, quote/link disclosure, minimum necessary de-identification, and provenance. If any required authorization is unknown, stop before reading that source; ask the researcher to confirm it or skip it. A skipped source remains unverified and cannot support a claim.
-
-### Connection check
-
-After the source-use gate, check each connection the run depends on, with a quick authentication or metadata call rather than trusting the tool list (a listed tool can still ask for sign-in). This connection check must not open or retrieve source content; content access starts only under the approved gate above.
-
-| Connection | Needed for |
-|---|---|
-| Research-insights agent | Prior findings (Step 1.5) |
-| Enterprise search (e.g., Glean) | Prior research, supplied internal docs (Steps 1–1.5) |
-| Google Drive / Docs (connector or `gws`) | Reading supplied docs; creating and verifying the final Doc (Step 6) |
-| Slack | Supplied kickoff threads |
-| People / directory search | Verifying RACI names (Step 1.6) |
-| `multi-agent-check` skill | The multi-agent review (Step 5); check the live skill list |
-
-For each missing connection, explain its purpose and how to connect it, then wait for connection or an explicit skip. Report connected/skipped sources before discovery; dependent claims remain unverified. Missing Docs write access means the run will end with a blocked draft, and missing `multi-agent-check` means critique-only review.
 
 Before discovery, say in chat:
 
@@ -138,7 +149,7 @@ Before discovery, say in chat:
 > **Section 1 — Context & Foundation** *(what we already know)*
 > Background · Existing Insights · Hypotheses
 >
-> *The primary decision is set. After Section 1, I’ll draft the title, date, RACI, and Topic for one quick confirmation.*
+> *The primary decision is set. After Section 1, I’ll draft the title, date, and Topic, and ask you to confirm the key people for the RACI.*
 >
 > **Section 2 — Research Design** *(how we’ll run the study)*
 > Objectives · Key Research Questions · Decisions · Method & Approach (plus sample, measures, or stimuli rows when the study needs them)
@@ -213,11 +224,15 @@ Infer known information from the inputs. Ask one pop-up at a time only for unres
 
 ### Opening confirmation
 
-Auto-draft the title, date, and RACI from the PRD and current people context. Show the complete opening (breadcrumb, title, date, RACI, and Topic) once and ask for a simple confirmation or correction. Pop-up label: **“Opening: Title, Date & RACI”**. This is the only time the opening is approved. Include all four RACI roles and use `[TBD — fill in]` only where discovery cannot identify the person.
+Auto-draft the breadcrumb, title, date, and one-sentence Topic from the inputs. Insert the TL;DR placeholder automatically; do not ask the researcher to draft findings.
 
-**Stakeholder identity verification:** Before carrying any name into the RACI block, verify it is still current using the people/directory search tool. Stored context and project files can become stale (e.g., a named team member may have left or changed roles). If there is any doubt about who belongs in a role, ask the researcher directly: *"I see [Name] listed as [Role] — is that still accurate?"* Never assume a name from memory is current without a live check.
+**Ask the researcher for the RACI instead of looking people up.** The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run: in the brief, product requirements document, or kickoff notes they shared, or in their answers so far (the decision audit names the decision owner). Don't run a people or directory search, and don't carry names over from memory or older project files.
 
-Also auto-draft the one-sentence Topic. Insert the TL;DR placeholder automatically; do not ask the researcher to draft findings.
+1. **Key people first.** If any of the four roles has no name yet, ask for it in chat, one name per role: Responsible (usually the researcher), Accountable (the decision owner), Consulted, and Informed.
+2. **Confirm the opening once.** Show the complete opening (breadcrumb, title, date, RACI, and Topic). Pop-up label: **“Opening: Title, Date & RACI”**, with the options **“Confirm as shown (Recommended)”**, **“Add more people”**, and **“Brainstorm with me”**. Corrections go in the comments field.
+3. **Then offer more people.** If the researcher picks “Add more people,” collect the extra names and roles in chat (a role can hold more than one name), then show the updated RACI in chat and ask them to reply **confirm** or correct it. This finishes the same opening approval; don't show the pop-up again.
+
+This is the only time the opening is approved. Include all four RACI roles; a role the researcher leaves blank stays `[TBD — fill in]`.
 
 ## Step 2: Recommend the minimum valid research design
 
@@ -335,7 +350,7 @@ The opening order is:
 4. RACI bullet list.
 5. Mock warning, when applicable.
 
-Then add the separate Option 4 leadership timeline and the Project Plan Overview. The leadership timeline has the header `Timing | Leadership milestone` plus four study-specific milestones derived from the approved detailed Timeline row. Each left-hand label starts with its timing, then a short name: `Week 1: Setup & rubric`. Use `Weeks 2–3:` for a span, and `Day N:` or `Month N:` only when the study runs in days or months. Two milestones may share a week. Keep each label to 24 characters or fewer so it stays on one line; a wrapped label can split the timeline across pages. Each right-hand summary is one sentence and no more than 160 characters. The old reference study's four-week schedule is never reused.
+Then add the separate Option 4 leadership timeline and the Project Plan Overview. The leadership timeline has the header `Timing | Leadership milestone` plus four study-specific milestones derived from the approved detailed Timeline row. Each left-hand label starts with its timing, then a short name: `Week 1: Setup & rubric`. Use `Weeks 2–3:` for a span, and `Day N:` or `Month N:` only when the study runs in days or months. Two milestones may share a week. Each label must fit on one line, because a wrapped label can split the timeline across pages. The builder measures each label's printed width in bold DM Sans 10pt and allows at most 134pt, the usable width of the 144pt column. That is usually 24 to 27 characters, depending on the letters: `Week 1: Setup & definitions` fits, but `Week 2: Baseline comparison` does not. When a label is too wide, shorten the name after the colon yourself without changing its meaning (`Week 2: Baseline comparison` becomes `Week 2: Compare baseline`), then tell the researcher what changed; don't ask them to count characters. A shortening that keeps the meaning isn't a material change and needs no reapproval; if no short name keeps it, ask the researcher. Run the Step 6.1 manifest command on the assembled draft right away, so a too-wide label surfaces now rather than after the review. Each right-hand summary is one sentence and no more than 160 characters. The old reference study's four-week schedule is never reused.
 
 ```markdown
 # Research Timeline
@@ -430,7 +445,7 @@ Copyedit the approved Markdown for clarity, grammar, complete sentences, consist
 python3 scripts/option4_layout.py manifest APPROVED.md manifest.json
 ```
 
-The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, its header is not `Timing | Leadership milestone`, a label does not start with its timing or exceeds 24 characters, or a leadership-timeline summary is too long.
+The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, its header is not `Timing | Leadership milestone`, a label does not start with its timing or is wider than 134pt, or a leadership-timeline summary is too long. A too-wide error lists every label that would wrap, with its measured width; shorten each one as described in Step 4, tell the researcher, and rerun the command.
 
 #### Full capability preflight — before creation
 
@@ -481,7 +496,7 @@ python3 scripts/option4_layout.py verify final-doc.json manifest.json
 4. Export or render the Google Doc and inspect **every page**, not a sample. The verifier cannot see page breaks: in the 2026-10-02 mock it passed while the render showed the timeline split onto a second page and a section band orphaned at the foot of a later page.
 5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. Every leadership-timeline label must sit on one line; a wrapped label is the usual cause of a timeline split, which then pushes a section band to the foot of a later page with its rows on the next. Shorten any wrapped label, or tighten only the at-a-glance summaries; preserve the approved detailed Timeline row. Re-render to confirm the band rejoined its rows.
 6. Correct every issue with the same fresh-fetch, revision-bound, regenerate-on-conflict sequence; then re-fetch, rerun the verifier, and re-render. Repeat until all checks pass. For a text correction after formatting (for example, shortening a timeline label):
-   1. Edit `APPROVED.md` first and regenerate `manifest.json`, so the verifier checks the new text. A material content change needs researcher reapproval.
+   1. Edit `APPROVED.md` first and regenerate `manifest.json`, so the verifier checks the new text. A material content change needs researcher reapproval; shortening a timeline label without changing its meaning is not one.
    2. Fetch fresh raw JSON and its revision. For each change, build a `deleteContentRange` for the old text, then an `insertText` of the new text at the same start index; both carry the active `tabId`.
    3. Order the pairs from the highest index to the lowest so no edit shifts another's indices, bind the batch to the fresh revision ID, and apply it through a protected request body.
    4. Re-fetch, rerun the verifier (it confirms the inserted text kept the cell's typography), and re-render every page.
@@ -502,6 +517,6 @@ This is the final step. The plan has already passed the critique (Step 4.5) and 
 
 ## Resource routing
 
-Use authorized enterprise search, Slack, people search, and approved data tools for evidence and stakeholder verification; use Drive/Docs only for the confirmed final destination. `references/content-rules.md` owns plan content, `references/source-and-delivery-safety.md` owns sensitive-source and write recovery, `references/research-plan-methodology.md` owns citation-level method rationale, and the Option 4 reference, JSON contract, script, and tests own final formatting. `examples/multi-agent-review-example.md` is synthetic demo material only.
+Use authorized enterprise search, Slack, and approved data tools for evidence; RACI names come from the researcher, not a people search. Use Drive/Docs only for the confirmed final destination. `references/content-rules.md` owns plan content, `references/source-and-delivery-safety.md` owns sensitive-source and write recovery, `references/research-plan-methodology.md` owns citation-level method rationale, and the Option 4 reference, JSON contract, script, and tests own final formatting. `examples/multi-agent-review-example.md` is synthetic demo material only.
 
 The verified Google Doc is the primary output. A real run is incomplete until its location, content, links, exact Option 4 styling, and rendered pages have passed and its URL is returned.

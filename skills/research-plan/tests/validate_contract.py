@@ -153,7 +153,12 @@ for term in (
 for retired in ("get_doc_as_markdown", "inspect_doc_structure"):
     forbid("skill", retired)
 require_regex("skill", r"private, non-repository working directory.{0,120}not `/tmp`", "private persistent working folder rule")
-require_regex("skill", r"### Connection check.{0,900}multi-agent-check", "connection check before discovery")
+require_regex("skill", r"### Connection check.{0,1200}multi-agent-check", "connection check before discovery")
+require_regex("skill", r"Flag every missing or signed-out connection in your first message", "immediate sign-in flag")
+require_regex("skill", r"Glean isn't signed in.{0,400}/mcp.{0,200}Authenticate", "Glean sign-in instructions")
+require_regex("skill", r"only tools return content.{0,200}don't run a test query", "no content-returning connection probe")
+require_regex("safety", r"Connection checks run at the start of Step 1, before this gate", "connection check placed before the source gate")
+forbid("safety", "Connection tests after this gate")
 require_regex("skill", r"multi-agent review has run when it is installed.{0,120}critique-only", "critique-only fallback")
 require_regex("skill", r"Check each fix's wording against the sources", "fix-wording check before applying review fixes")
 require("skill", "examples/multi-agent-review-example.md")
@@ -161,7 +166,16 @@ require("example", "fully synthetic demonstration")
 require("example", "not a recorded study")
 forbid("example", "one real run")
 forbid("example", "prior internal studies")
-require_regex("skill", r"auto-draft.{0,300}title.{0,300}date.{0,300}RACI", "auto-drafted opening")
+require_regex("skill", r"auto-draft.{0,300}title.{0,300}date.{0,300}Topic", "auto-drafted opening")
+require_regex("skill", r"Ask the researcher for the RACI instead of looking people up", "researcher-confirmed RACI")
+require_order("skill", ("Key people first", "Confirm the opening once", "Then offer more people"), "key RACI before extra people")
+require("skill", "Add more people")
+require_regex("skill", r"Add more people.{0,400}finishes the same opening approval", "added people finish the one opening approval")
+require("rules", "RACI names come from the researcher in this run")
+for name in ("skill", "rules"):
+    forbid(name, "people/directory search tool")
+    forbid(name, "current directory information")
+    forbid(name, "without the researcher confirming them")
 require_order(
     "skill",
     (
@@ -202,12 +216,12 @@ for name in ("rules", "safety"):
 require_order(
     "skill",
     (
+        "### Connection check",
         "### Decision audit — before discovery",
         "### Source-use authorization gate",
-        "### Connection check",
         "## Step 1.5: Discover existing context before logistics",
     ),
-    "decision and source-use authorization before connector checks and discovery",
+    "connection check first, then decision and source-use authorization before discovery",
 )
 require_order(
     "skill",
@@ -430,8 +444,28 @@ try:
         failures.append("style_json: leadership timeline header must be Timing | Leadership milestone")
     if not re.match(visual["tables"]["timeline_left_label_pattern"], "Week 1: Setup & rubric"):
         failures.append("style_json: leadership timeline label pattern must accept 'Week N: Name'")
-    if visual["tables"]["timeline_left_cell_max_characters"] != 24:
-        failures.append("style_json: leadership timeline labels must be capped at 24 characters")
+    tables = visual["tables"]
+    usable_width = tables["column_widths_pt"][0] - 2 * tables["cell_padding_pt"]
+    if "timeline_left_cell_max_characters" in tables:
+        failures.append("style_json: leadership timeline labels are limited by printed width, not characters")
+    if tables["timeline_left_label_max_width_pt"] != usable_width:
+        failures.append("style_json: leadership timeline label width must equal the first column less padding")
+    label_font = tables["timeline_left_label_font"]
+    if (label_font["font"], label_font["size_pt"], label_font["bold"]) != (
+        visual["typography"]["body"]["font"], visual["typography"]["body"]["size_pt"], True
+    ):
+        failures.append("style_json: leadership timeline label widths must describe bold body text")
+    missing_glyphs = [chr(code) for code in range(0x20, 0x7F) if chr(code) not in label_font["advance_widths"]]
+    if missing_glyphs or "–" not in label_font["advance_widths"]:
+        failures.append(f"style_json: leadership timeline label widths missing {missing_glyphs + ['–']}")
+
+    def label_width(text: str) -> float:
+        units = sum(label_font["advance_widths"].get(char, label_font["unknown_character_width"]) for char in text)
+        return units * label_font["size_pt"] / label_font["units_per_em"]
+
+    # Rendered calibration: the first label fit on one line, the second wrapped.
+    if not label_width("Week 1: Setup & definitions") <= usable_width < label_width("Week 2: Baseline comparison"):
+        failures.append("style_json: leadership timeline label widths no longer match the rendered calibration")
     if visual["tables"]["timeline_right_cell_max_characters"] != 160:
         failures.append("style_json: leadership timeline summaries must be capped at 160 characters")
 except (json.JSONDecodeError, KeyError, TypeError) as error:
