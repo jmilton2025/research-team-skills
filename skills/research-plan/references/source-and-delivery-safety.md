@@ -14,7 +14,7 @@ Read this reference whenever a run uses non-public material or creates a Google 
 
 Record the authorization basis available for the study, such as a researcher attestation with role and project context, an approved protocol or data-use policy, or source-owner/data-governance confirmation. Mark unavailable provenance fields as unavailable. Never infer permission from technical access.
 
-If any required authorization is unknown, stop before reading that source. Ask the researcher to confirm it or skip the source. A skipped source remains unverified and cannot support a claim.
+If any required authorization is unknown, stop before reading that source. Ask the researcher to confirm it or skip the source. A skipped source remains unverified, cannot support a claim, and stays out of the plan, including its link in the Appendix. An authorization given later in the run counts from then on; record it like the others.
 
 Connection checks run at the start of Step 1, before this gate, so they must be non-content-bearing authentication, capability, or metadata checks. Do not retrieve source content merely to test a connector; when a connector's only tools return content, rely on its sign-in status instead.
 
@@ -32,13 +32,13 @@ Never place credentials, source text, document bodies, or other **sensitive cont
 
 If none of these is available or approved, block the write.
 
-Run a separate critique agent or `multi-agent-check` only when both approved AI processing and reviewer access cover the packet and audience. Provide minimum necessary de-identified extracts, never complete source files by default. Otherwise run the self-critique and disclose a critique-only result, using the exact review status from `SKILL.md` Step 5 (for example, `critique-only review — reviewer processing not authorized`).
+Run a separate critique agent or `multi-agent-check` only when both approved AI processing and reviewer access cover the packet and audience. Provide minimum necessary de-identified extracts, never a complete source file unless the recorded authorization explicitly covers sending that whole file to reviewers. Otherwise run the self-critique and disclose a critique-only result, using the exact review status from `SKILL.md` Step 5 (for example, `critique-only review — reviewer processing not authorized`).
 
 ## 3. Confirm the destination boundary
 
 Confirm the **destination ACL** and **intended audience before any write or creation**, along with the exact folder. Perform a fresh permissions read that covers effective Drive permissions, inherited access, group access when visible, and link-sharing scope. The destination must be no broader than the permitted source and plan audience.
 
-If permissions cannot be read, or access is broader, stop before writing. Ask for a compliant destination or a separately authorized sharing change. Never silently change sharing or inherit a broader link-sharing policy.
+If permissions cannot be read, or access is broader, stop before writing. Ask for a compliant destination, or for the folder's owner to narrow its sharing. Never change sharing yourself or inherit a broader link-sharing policy. Assembly, critique, and review don't depend on the destination and may continue; only creation waits.
 
 ## 4. Preflight every required capability
 
@@ -53,7 +53,7 @@ Before creating the study Doc, verify that the authenticated integration can:
 
 A listed tool or successful sign-in is not proof of these capabilities. Use documented capability metadata and non-content-bearing checks. If proof requires a disposable write that was not authorized, treat the capability as unverified and block before creating the study Doc.
 
-For capability 3, name the request-body route from §2 that the run will use. When it is the `send` helper, tell the researcher that each batch briefly sits in the `gws` process arguments while it runs, and ask once whether to use it for this run. If they decline and no other route exists, block before creating the study Doc.
+For capability 3, name the request-body route from §2 that the run will use. When it is the `send` helper, ask once per run, in a pop-up labeled **“Google Docs write route”** with no “Brainstorm with me” option. Say: *“Your Google Docs tool (`gws`) can't read edits from a file, so a bundled helper passes each batch of edits to it directly. While each batch is sent, other programs on this computer could briefly see it.”* Offer **“Use the helper (Recommended)”** and **“Don't create the Doc”**. If they decline and no other route exists, block before creating the study Doc.
 
 ## 5. Create idempotently
 
@@ -64,7 +64,7 @@ Before creation, record the confirmed folder, exact approved title, and attempt 
 
 Reuse one verified match. If there is no match, more than one plausible match, or no safe inspection path, block and report the uncertainty. **Never blindly retry a create or update.**
 
-If import loses the required horizontal rule or produces another malformed structure, mark the Doc partial and perform approved cleanup or quarantine before a new import attempt.
+If import loses the required horizontal rule or produces another malformed structure, mark the Doc partial and perform approved cleanup or quarantine before a new import attempt. Make at most one new attempt, through a different import route when one exists (for example, the connector's import instead of `gws`, or the reverse). If that is malformed too, block.
 
 ## 6. Bind and reconcile writes
 
@@ -78,7 +78,7 @@ Immediately before every normalization or formatting write:
 
 On a revision mismatch, ambiguous response, or concurrent edit, never reuse or resend the old batch. Re-fetch the known Doc. If the expected post-state is verified, record success and do not resend. Otherwise regenerate against the new snapshot.
 
-A material content change requires researcher reapproval. A formatting-only concurrent edit may be reconciled without reapproval only when approved meaning, evidence, and links remain unchanged. Block when the state cannot be reconciled.
+A material content change requires researcher reapproval: show the other editor's change and ask whether to keep it (then update `APPROVED.md` and the manifest to match) or restore the approved text. Never keep or revert it silently. A formatting-only concurrent edit may be reconciled without reapproval only when approved meaning, evidence, and links remain unchanged. When a material change is kept, rerun the critique pass on that row; if it adds a claim the reviewers didn't see, say so when returning the Doc. Block when the state cannot be reconciled.
 
 ## 7. Handle partial documents
 
@@ -87,4 +87,4 @@ A failed or incomplete Doc is not a deliverable. Apply the preflighted policy:
 - trash it when that action is authorized; or
 - restrict it and move or retitle it in the approved quarantine location.
 
-Record its ID, location, and status. Never leave an unlabeled partial document in the stakeholder destination or return it as final.
+Record its ID, location, and status, then give the blocked result described under “Blocked result” in `SKILL.md`, unless the workflow allows a new attempt (one re-import after a malformed import, §5, or a new Doc after a mid-run skill update, `SKILL.md` Step 6.1). Never leave an unlabeled partial document in the stakeholder destination or return it as final.

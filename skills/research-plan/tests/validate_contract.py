@@ -258,11 +258,11 @@ require_regex(
 )
 
 # 2026-10-03 live test run: run type, one review question, early layout checks, quote provenance.
-require("skill", "### Run type — ask only for a test")
+require("skill", "### Run type — set by what the researcher says")
 for term in (
-    "“Simulated test”",
-    "Test run with real, authorized inputs",
-    "Recommend the option that matches what the researcher said",
+    "Don't ask about the run type.",
+    "A run is a test only when the person starting it says so",
+    "Test on invented inputs",
     "or the researcher already asked to skip the review",
     "Never answer a factual question for the researcher",
     "Step 5: Multi-agent review",
@@ -288,8 +288,39 @@ for status in (
     "critique-only review — multi-agent review failed",
 ):
     require("skill", status)
-for retired in ("ask twice", "two researchers review it in parallel", "Auto-run multi-agent review"):
+for retired in (
+    "ask twice",
+    "two researchers review it in parallel",
+    "Auto-run multi-agent review",
+    "labeled **“Run type”**",
+    "“Simulated test”",
+):
     forbid("skill", retired)
+
+# 2026-10-05: layout default, no run-type question, explicit recovery limits and blocked result.
+for term in (
+    "This layout is the default, not a choice.",
+    "labeled **“Decision audit”**",
+    "stays out of the plan, Appendix included",
+    "rerun only the failed reviewer, once",
+    "never change sharing yourself",
+    "Apply them without asking one by one",
+    "make at most one more attempt",
+    "for at most three rounds",
+    "### Blocked result",
+    "Blocked — the Google Doc isn't finished.",
+):
+    require("skill", term)
+for term in (
+    "Google Docs write route",
+    "Make at most one new attempt",
+    "Never keep or revert it silently.",
+    "give the blocked result",
+    "including its link in the Appendix",
+):
+    require("safety", term)
+require("rules", "nobody is asked which it is")
+require("readme", "with no styling question")
 for name in ("skill", "rules"):
     require_regex(
         name,
@@ -387,6 +418,7 @@ SCENARIOS = (
     "Skill update mid-run",
     "Unverified quote",
     "Background without Why now",
+    "Personal default template",
 )
 for term in SCENARIOS:
     require("test_readme", term)

@@ -6,7 +6,7 @@ This file is the content source of truth for `/research-plan`. Every final Googl
 
 ## Canonical order
 
-1. Opening block: breadcrumb, title, last-updated date, RACI roles (Responsible, Accountable, Consulted, Informed), and a warning banner when applicable.
+1. Opening block: breadcrumb, title, last-updated date, RACI roles (Responsible, Accountable, Consulted, Informed), a warning banner when applicable, and an optional short context note.
 2. **Research Timeline** heading, five-row leadership timeline, and one-sentence timing note.
 3. **Project Plan Overview** heading.
 4. Topic.
@@ -41,6 +41,7 @@ Order:
 3. `Last updated: [Month Year]`.
 4. RACI as four true bullet paragraphs.
 5. Warning banner, when applicable.
+6. Optional short context note, only for a historical or interpretation caveat the reader needs before the timeline.
 
 Always include all four roles. Unknown names use `[TBD — fill in]`.
 
@@ -51,15 +52,15 @@ Always include all four roles. Unknown names use `[TBD — fill in]`.
 
 If a person listed as Consulted is actually the decision owner, confirm the role and place that person in Accountable instead of leaving the ownership ambiguous. Never carry names over from an older plan or from memory; RACI names come from the researcher in this run.
 
-A mock, demo, test, pressure scenario, regression, example, fixture, or otherwise simulated study includes this prominent line, even when its brief sounds realistic:
+A plan carries a banner only when the person starting the run calls it a test (a mock test, test, demo, pressure scenario, or regression run); otherwise it's a real study with no banner, and nobody is asked which it is. A test on invented inputs (a made-up brief, sample scenario, or fixture) is simulated and includes this prominent line:
 
 > ⚠️ TEST ARTIFACT — mock inputs, not a real study. Do not use as a deliverable.
 
-A test run on real, authorized inputs, made to test the workflow rather than for stakeholders, uses this line instead:
+Any other test, including one on real, authorized project inputs, uses this line instead:
 
 > ⚠️ TEST RUN — real, authorized inputs, created to test the workflow. Not a stakeholder deliverable.
 
-When it's unclear which kind of test it is, use the TEST ARTIFACT line. Omit the banner only when the researcher confirms the study is real. The builder accepts only these two lines; any other line starting with ⚠️ fails.
+The builder accepts only these two lines; any other line starting with ⚠️ fails.
 
 ## 2. Topic and TL;DR
 
@@ -282,3 +283,4 @@ Use `scripts/option4_layout.py` to parse, normalize, format, and verify the docu
 - 2026-10-02: an end-to-end mock produced the approved standard deliverable. Adopted from it: the `Timing | Leadership milestone` header with `Week N: Short name` labels (enforced by the parser); a Why now bullet and strategic-fit placeholder in Background; scoped and caveated insight headings; origin-labeled hypotheses; decision outcomes defined once and reused; name-and-date citations for unlinked sources; plain stakeholder language; design-specific sample precision; absolute impact for investment decisions; and inspection of every rendered page.
 - 2026-10-02 (same-day revision, after review of the approved Doc): the 24-character label cap would have rejected the approved Doc's own 27-character first label, which fit on one line. The parser now measures printed width (134pt maximum) instead of counting characters. The researcher now confirms the key RACI people and can add more, replacing the directory search. The connection check moved to the start of the run so that a signed-out connection, such as Glean, is flagged immediately.
 - 2026-10-03 (live test run on real, authorized inputs): a TEST RUN banner joined the TEST ARTIFACT banner, chosen by a run-type question asked only for tests. Timeline milestones are now measured against the 544.4pt cell width, and a `timeline` check runs before the Timeline approval instead of at Doc creation. Background and hypothesis rules are checked before each pop-up and again by a `lint` check at assembly, and a Background with no sourced reason for the timing opens with `**Why now:** [TBD — fill in]`; quote marks now require the source artifact itself, never internal notes. The multi-agent review is offered once, with a skip option and a standard critique-only disclosure. A `send` helper applies Google Docs batches through `gws` without putting them in a shell command, and the manifest now fails if the skill files change mid-run.
+- 2026-10-05: the run-type question was removed; a run is a test only when the person starting it says so, and the banner follows from that. The Option 4 — Leadership layout is stated as the automatic default for every final Doc, never replaced by a researcher's personal default template. Recovery rules gained explicit limits: one rerun of a failed reviewer, one re-import after a malformed import, three correction rounds, then a standard blocked result.
