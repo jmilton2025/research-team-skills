@@ -10,6 +10,7 @@ No Google Docs API call is made. Every test builds a synthetic raw-Docs JSON tre
 in Python and exercises the same parse/normalize/format/verify code paths the live
 pipeline uses. Two fixtures are covered — an Interview / IDI guide and a
 Prototype / Usability guide — because the formatter must handle both shapes.
+The ``send`` tests run against a stand-in gws, never the real one.
 """
 
 from __future__ import annotations
@@ -18,6 +19,8 @@ import importlib.util
 import json
 from pathlib import Path
 import stat
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -29,6 +32,31 @@ INTERVIEW_TEMPLATE = SKILL_DIR / "references" / "template-interview.md"
 PROTOTYPE_TEMPLATE = SKILL_DIR / "references" / "template-prototype-usability.md"
 INTERVIEW_FIXTURE = TEST_DIR / "fixtures" / "mock-interview-guide.md"
 PROTOTYPE_FIXTURE = TEST_DIR / "fixtures" / "mock-prototype-guide.md"
+DOCUMENT_ID = "1AbCdEfGhIjKlMnOpQrStUvWxYz0123456789_-ab"
+
+
+def run_script(*args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, str(SCRIPT_PATH), *args], capture_output=True, text=True, check=False
+    )
+
+
+def fake_gws(directory: Path, *, exit_code: int, reply: dict | None) -> tuple[Path, Path]:
+    """A stand-in gws that records its arguments, prints a JSON reply, and exits with exit_code."""
+    directory.mkdir(parents=True, exist_ok=True)
+    argv_log = directory / "argv.json"
+    program = directory / "fake_gws.py"
+    program.write_text(
+        "import json, sys\n"
+        f"open({str(argv_log)!r}, 'w', encoding='utf-8').write(json.dumps(sys.argv[1:]))\n"
+        f"print({json.dumps(reply) if reply is not None else 'gws: request failed'!r})\n"
+        f"sys.exit({exit_code})\n",
+        encoding="utf-8",
+    )
+    launcher = directory / "gws"
+    launcher.write_text(f'#!/bin/sh\nexec "{sys.executable}" "{program}" "$@"\n', encoding="utf-8")
+    launcher.chmod(0o700)
+    return launcher, argv_log
 
 
 def load_module():
@@ -1149,8 +1177,94 @@ class Option4GuideContractTest(unittest.TestCase):
             self.module.verify_document(doc, self.prototype)
 
     def test_layout_tool_exposes_required_pipeline(self) -> None:
-        for name in ("parse_markdown", "build_normalize_requests", "build_format_requests", "verify_document"):
+        for name in (
+            "parse_markdown",
+            "build_normalize_requests",
+            "build_format_requests",
+            "verify_document",
+            "send_batch",
+        ):
             self.assertTrue(callable(getattr(self.module, name, None)), name)
+
+    def test_send_passes_the_body_as_one_argument_and_saves_the_reply_privately(self) -> None:
+        batch = {
+            "requests": [{"insertText": {"location": {"index": 1}, "text": "approved text"}}],
+            "writeControl": {"requiredRevisionId": "rev-1"},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            gws, argv_log = fake_gws(
+                root, exit_code=0, reply={"writeControl": {"requiredRevisionId": "rev-2"}}
+            )
+            batch_path = root / "batch.json"
+            batch_path.write_text(json.dumps(batch), encoding="utf-8")
+            response = root / "response.json"
+            result = run_script(
+                "send", str(batch_path), "--document-id", DOCUMENT_ID,
+                "--response", str(response), "--gws", str(gws),
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("new revision rev-2", result.stdout)
+            self.assertNotIn("approved text", result.stdout + result.stderr)
+            argv = json.loads(argv_log.read_text(encoding="utf-8"))
+            self.assertEqual(argv[:4], ["docs", "documents", "batchUpdate", "--params"])
+            self.assertEqual(json.loads(argv[4]), {"documentId": DOCUMENT_ID})
+            self.assertEqual(argv[5], "--json")
+            self.assertEqual(json.loads(argv[6]), batch)
+            self.assertEqual(len(argv), 7)
+            self.assertEqual(stat.S_IMODE(response.stat().st_mode), 0o600)
+            self.assertEqual(json.loads(response.read_text(encoding="utf-8"))["returncode"], 0)
+
+    def test_send_refuses_unsafe_batches_and_reports_gws_failure_without_resending(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            gws, argv_log = fake_gws(root, exit_code=0, reply={})
+            unbound = root / "unbound.json"
+            unbound.write_text(json.dumps({"requests": [{"insertText": {}}]}), encoding="utf-8")
+            result = run_script(
+                "send", str(unbound), "--document-id", DOCUMENT_ID,
+                "--response", str(root / "unbound-response.json"), "--gws", str(gws),
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("not bound to a revision", result.stderr)
+            self.assertFalse(argv_log.exists())
+
+            bound = root / "bound.json"
+            bound.write_text(
+                json.dumps({"requests": [{"insertText": {}}], "writeControl": {"requiredRevisionId": "rev-1"}}),
+                encoding="utf-8",
+            )
+            result = run_script(
+                "send", str(bound), "--document-id", "not a doc id",
+                "--response", str(root / "bad-id-response.json"), "--gws", str(gws),
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("--document-id", result.stderr)
+
+            # The reply file is checked before gws runs, so an unusable one never
+            # leaves a written Doc with no record of the write.
+            taken = root / "taken.json"
+            taken.write_text("{}", encoding="utf-8")
+            result = run_script(
+                "send", str(bound), "--document-id", DOCUMENT_ID,
+                "--response", str(taken), "--gws", str(gws),
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("Refusing to overwrite", result.stderr)
+            self.assertFalse(argv_log.exists())
+
+            response = root / "failed-response.json"
+            failing, _ = fake_gws(root / "failing", exit_code=3, reply=None)
+            result = run_script(
+                "send", str(bound), "--document-id", DOCUMENT_ID,
+                "--response", str(response), "--gws", str(failing),
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("gws batchUpdate failed (exit 3)", result.stderr)
+            self.assertIn("do not resend", result.stderr)
+            self.assertNotIn("PASS", result.stdout)
+            self.assertEqual(json.loads(response.read_text(encoding="utf-8"))["returncode"], 3)
+            self.assertNotIn("Traceback", result.stderr)
 
 
 if __name__ == "__main__":

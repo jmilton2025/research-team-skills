@@ -65,7 +65,7 @@ For a real study, Markdown is an intermediate representation, not the completed 
 The skill must work for any researcher with a write-capable Google Docs integration.
 
 - **Option 4 — Leadership is the default deliverable look**, applied by the bundled `scripts/option4_guide_layout.py` formatter against `references/option4-guide-style.json` using connected Google Docs / Drive tools. Plain native Google Docs is an explicit choice or a pre-approved, disclosed fallback.
-- Do not depend on a personal template, custom font beyond the bundled Option 4 contract, private reference document, hardcoded folder ID, personal styling script, command-line utility (gws/gohan), or researcher-specific authentication setup for a real run to succeed. The Option 4 formatter is bundled with the skill and portable; it is not a personal dependency.
+- Do not depend on a personal template, custom font beyond the bundled Option 4 contract, private reference document, hardcoded folder ID, personal styling script, command-line utility (gws/gohan), or researcher-specific authentication setup for a real run to succeed. The Option 4 formatter is bundled with the skill and portable; it is not a personal dependency. When `gws` is the researcher's only Docs write route, the formatter's `send` command can use it after the Section 1 write-route approval; it is never required.
 - Confirm the exact Drive destination, intended audience, effective permissions, and authorized partial-artifact recovery path before creating any doc. Never write to a hardcoded personal folder or broaden sharing silently. Follow `references/source-and-delivery-safety.md`.
 - If no write-capable Docs integration is available, preserve the approved markdown draft and report that the required deliverable is blocked. Do not call the markdown output final.
 
@@ -78,7 +78,7 @@ Use native `AskUserQuestion` checklist pop-ups when available.
 - Number the options. Mark a **Recommended** option based on the inputs and discovered evidence — it is the source-grounded choice prepared internally in Step 2.
 - Preserve the built-in **Other / comments** field so researchers can add, correct, or rewrite (including custom durations, participant counts, or a Drive folder URL).
 - Show the proposed content before asking for approval.
-- **The last option in every pop-up must be "Brainstorm with me"** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. Never bury it mid-list.
+- **The last option in every pop-up must be "Brainstorm with me"** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. Never bury it mid-list. The one exception is the yes/no **Google Docs write route** approval in Section 1.
 - Label every pop-up with its section and step: **"Section 1 > Step 3 of 10: Duration"** / **"Section 2 > Step 2 of 5: Core — Task Flow"**. The researcher must always know exactly where they are.
 - Native `AskUserQuestion` allows **at most 4 questions per call and 4 options per question**, including "Brainstorm with me," and cannot pre-select. Therefore each question has one Recommended option, at most two alternatives, then "Brainstorm with me." For more than three drafted items, use a single "Accept the drafted set" option plus revise/add alternatives; never drop items or imply they were pre-selected. Keep dependent rows in separate batches and order them after their prerequisites.
 - Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Step 4.
@@ -231,7 +231,7 @@ So the rule is: **zero *unplanned* questions.** That means:
 4. **"Brainstorm with me" as the last option** — every pop-up ends with this; it opens a short chat exchange on that specific parameter, then re-shows the revised choice for approval before advancing.
 5. **A section/step label** — every pop-up is labeled **"Section 1 > Step N of M: <name>"**, where M is the number of applicable parameter questions actually being asked (conditional rows that are skipped don't count).
 
-On real-study runs and explicitly requested test-Doc runs, the final three Section 1 decisions are **Drive destination + intended audience**, **partial-artifact recovery**, and **delivery style**. Keep them separate. Preauthorize exactly one partial-artifact recovery path (trash the verified Doc ID, or restrict and move/retitle it in an exact quarantine folder); if neither path is authorized and supported, block before creation. No-Drive demo/sample/test runs omit all three decisions and lock the labeled Markdown branch instead.
+On real-study runs and explicitly requested test-Doc runs, the final three Section 1 decisions are **Drive destination + intended audience**, **partial-artifact recovery**, and **delivery style**. Keep them separate. Preauthorize exactly one partial-artifact recovery path (trash the verified Doc ID, or restrict and move/retitle it in an exact quarantine folder); if neither path is authorized and supported, block before creation. When `gws` is the only way to write to Google Docs, a fourth decision, **Google Docs write route**, follows delivery style. No-Drive demo/sample/test runs omit all of these decisions and lock the labeled Markdown branch instead.
 
 ### Mandatory question set (ask ALL of these — even if extracted from inputs)
 
@@ -255,6 +255,7 @@ The **Select** column says whether the pop-up is `multiSelect: true` (more than 
 | **FINAL-2** | **Drive destination + intended audience** | single confirm/revise | Exact authorized folder and audience | Choose another authorized folder · Brainstorm |
 | **FINAL-1** | **Partial-artifact recovery** | single | Source-authorized trash-by-ID or exact permission-checked quarantine folder | The other authorized path · Block creation until a path is authorized |
 | **LAST** | **Delivery style** | single | Option 4 — Leadership with pre-approved plain-native fallback | Strict Option 4 — Leadership (block if unavailable) · Plain native Docs |
+| **ROUTE** | **Google Docs write route** — only when `gws` is the only way to write to Google Docs | single, no Brainstorm | Use the helper | Don't create the Doc |
 
 **Row 9 (Stakeholders): Ask the researcher for the RACI instead of looking people up.** The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run: in the plan, brief, or notes they shared, or in their answers so far. Don't run a people or directory search, and don't carry names over from memory or older project files.
 
@@ -271,7 +272,7 @@ The **Select** column says whether the pop-up is `multiSelect: true` (more than 
 
 **Never fabricate a stakeholder name.** If the researcher hasn't given a name for a role, use `[TBD — fill in]`.
 
-(The final destination, recovery, and style rows are skipped on demo/sample/test runs, which create no Drive artifact by default.)
+(The final destination, recovery, style, and write-route rows are skipped on demo/sample/test runs, which create no Drive artifact by default.)
 
 **Every other row must be asked**, even if the answer seems obvious from the inputs. The researcher confirming an extracted value is the whole point. Never skip a row just because you think you know the answer.
 
@@ -285,7 +286,7 @@ When the research plan specifies more than one cohort (e.g. an "abandoner" cohor
 
 `AskUserQuestion` accepts up to 4 questions per call. Count applicable rows to set M in each "Section 1 > Step N of M" label. Batch up to four independent questions, but keep dependent rows in a later batch.
 
-For a real study, or a demo/test run whose tester explicitly requested a test Doc, the final sequence is **Drive destination + audience**, **partial-artifact recovery**, then **delivery style**. Never combine these decisions; all three must be locked before Section 2 drafting begins.
+For a real study, or a demo/test run whose tester explicitly requested a test Doc, the final sequence is **Drive destination + audience**, **partial-artifact recovery**, then **delivery style**, plus **Google Docs write route** when it applies. Never combine these decisions; all of them must be locked before Section 2 drafting begins.
 
 For a demo/test run on the default no-Drive path, omit all three decisions, end Section 1 with the last applicable study parameter, and lock the labeled Markdown delivery branch before Section 2. No destination, recovery, or style approval is required because no Doc will be created.
 
@@ -306,9 +307,9 @@ For every question, structure the popup like this:
 
 **A run counts as a demo when** the invocation contains a clear demo/sample/test signal — e.g. "demo", "sample run", "test this skill", "show me how this works", "just demoing", "dry run", or an equivalent phrase indicating it's a walkthrough rather than a real study deliverable. (This is the same signal class as `feedback_sample_runs.md`, which also means: do NOT save the output to project folders, the tracker, or Drive.)
 
-**Effect on Section 1 batching:** drop all three final rows and reduce M by three. All other parameter rows still run so the demo exercises the skill.
+**Effect on Section 1 batching:** drop the final rows (three, or four with the write route) and reduce M to match. All other parameter rows still run so the demo exercises the skill.
 
-**Real (non-demo) runs:** ask all three final questions.
+**Real (non-demo) runs:** ask all three final questions, plus the write route when it applies.
 
 ### Final destination, recovery, and delivery questions
 
@@ -322,6 +323,8 @@ For every question, structure the popup like this:
 - **Strict Option 4 — Leadership:** block before creation when any required capability is unavailable.
 - **Plain native Google Docs:** native styles and tables, no Option 4 styling.
 - **Brainstorm with me.**
+
+**Google Docs write route (only when it applies):** before this row, check which Docs write route the run will use, with a capability or sign-in check that reads no content (`references/source-and-delivery-safety.md` §2). If a connected Docs tool takes edit batches as a request-body parameter, use it and skip this row. If `gws` is the only way to write, ask once, labeled **"Section 1 > Step N of M: Google Docs write route"**, with no "Brainstorm with me" option. Say: *"Your Google Docs tool (`gws`) can't read edits from a file, so a bundled helper passes each batch of edits to it directly. While each batch is sent, other programs on this computer could briefly see it."* Offer **"Use the helper (Recommended)"** and **"Don't create the Doc"**. If they decline and no other route exists, Step 6 blocks before creation and the approved guide is returned as a blocked draft.
 
 ---
 
@@ -654,9 +657,9 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 3. Record the exact folder, approved title, and attempt time. Create/import once. On timeout or ambiguous response, reconcile by returned ID or exact title + folder + attempt window; reuse one verified match and never blindly retry.
 4. **Default path — Option 4 — Leadership:** run the bundled formatter in place against `references/option4-guide-style.json` (load `references/option4-guide-style.md` first):
    - `manifest` — parse the approved guide markdown into a build manifest;
-   - import Markdown as `application/vnd.google-apps.document`; plain-text paste does not create real headings/tables. Fetch with `includeTabsContent: true` and a fresh `revisionId`;
-   - `normalize` — generate the cleanup batch against that snapshot and require the same `revisionId`; apply once, then re-fetch;
-   - `format` — generate the styling batch against the new snapshot and require its new `revisionId`; apply once, then re-fetch;
+   - import Markdown as `application/vnd.google-apps.document` from the protected working file (with `gws`: `drive files create --upload`, run from the private working directory); plain-text paste does not create real headings/tables. Fetch with `includeTabsContent: true` and a fresh `revisionId`;
+   - `normalize` — generate the cleanup batch against that snapshot and require the same `revisionId`; apply once through the route chosen in Section 1 (a connector's request-body parameter, or `send` with `gws`), then re-fetch;
+   - `format` — generate the styling batch against the new snapshot and require its new `revisionId`; apply once the same way, then re-fetch;
    - `verify` — validate the visual invariants (page geometry, fonts, colors, band styling, table widths/padding), then export/render and eyeball the opening page and a dense page.
    - **Completion gate:** if an Option 4-only capability is unavailable, block when Strict Option 4 — Leadership was selected. Otherwise use the pre-approved plain-native fallback and disclose it; never claim Option 4 passed. Missing write access, content/parent/permission readback, or render blocks delivery on every path.
 5. **Plain native Google Docs (explicit or approved fallback):** apply native Title/Heading/body styles and native tables, then read back and render. No Option 4 claim.
@@ -683,12 +686,12 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 
 ## Tool Usage
 
-- **AskUserQuestion** — gather the Section 1 decisions, Section 2 core-block approvals, separate destination/audience, partial-recovery, and style confirmations, and the optional enhanced-panel choice.
+- **AskUserQuestion** — gather the Section 1 decisions, Section 2 core-block approvals, separate destination/audience, partial-recovery, style, and (when it applies) write-route confirmations, and the optional enhanced-panel choice.
 - **`/multi-agent-check`** — optional enhanced panel in Step 5; invoke only when selected and reviewer access is authorized.
 - **Google Docs / approved enterprise search (e.g., Glean)** — check sign-in at the start of Step 1 without reading content; read non-public plans only after the source-authorization gate.
 - **Connected Google Docs / Drive read tools** — read authorized non-public plans and fresh document structure, revisions, parents, and permissions after the applicable gates.
 - **Connected Google Docs / Drive tools** — create the guide in the confirmed folder, apply the batch operations from the Option 4 formatter (or native styles on the plain-native fallback), read it back to verify, and return the link. No personal script required.
-- **`scripts/option4_guide_layout.py`** — **default (portable) styler:** the bundled Option 4 — Leadership formatter+verifier (`manifest`/`normalize`/`format`/`verify`). Produces the clean, edited leadership look with native Google Docs only. Drives from `references/option4-guide-style.json`.
+- **`scripts/option4_guide_layout.py`** — **default (portable) styler:** the bundled Option 4 — Leadership formatter+verifier (`manifest`/`normalize`/`format`/`verify`, plus `send` to apply a batch through `gws` without a shell). Produces the clean, edited leadership look with native Google Docs only. Drives from `references/option4-guide-style.json`.
 - **`references/option4-guide-style.json`** + **`references/option4-guide-style.md`** — the Option 4 visual contract (machine-readable + human-readable); load the `.md` before formatting. Visual tokens are shared verbatim with `/research-plan`'s Option 4.
 - **references/template-prototype-usability.md** — **load in Section 1 when the format is Prototype/Usability.** Holds the prototype Section 1 params, Section 2 blocks, OUTPUT TEMPLATE, and generation rules.
 - **references/template-interview.md** — **load in Section 1 when the format is Interview.** Holds the interview Section 1 params, Section 2 blocks, OUTPUT TEMPLATE, and generation rules. (Only the format-neutral shared scaffolding is inline in Step 4; the interview body template lives here.)

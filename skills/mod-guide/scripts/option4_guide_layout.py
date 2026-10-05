@@ -34,12 +34,15 @@ Pipeline (same four stages as the research-plan formatter):
     # Apply the format batch and re-fetch the document.
     option4_guide_layout.py verify final-doc.json manifest.json
 
+Applying a batch through gws, which has no request-body file option:
+    option4_guide_layout.py send BATCH.json --document-id DOC_ID --response response.json
+
 The script only uses the Python standard library. Batch files use the native
 Google Docs API request schema and can be applied through any write-capable
-integration (the MCP batch_update_doc tool, gws, etc.). No live API call is made
-by this script; every stage operates on JSON, so the whole pipeline is testable
-offline against fixtures. Normalize and format inputs must carry the fresh
-document ``revisionId``; a supplied ``--required-revision-id`` must match it.
+integration (the MCP batch_update_doc tool, gws, etc.). Only ``send`` makes a
+live API call, through gws; every other stage operates on JSON, so the pipeline
+is testable offline against fixtures. Normalize and format inputs must carry the
+fresh document ``revisionId``; a supplied ``--required-revision-id`` must match it.
 
 The contract loaded here is skills/mod-guide/references/option4-guide-style.json.
 Its page/colors/typography/warning/spacing tokens are copied verbatim from
@@ -56,7 +59,9 @@ import html
 import json
 import os
 import re
+import shutil
 import stat
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -66,6 +71,11 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_DIR = SCRIPT_DIR.parent
 CONTRACT_PATH = SKILL_DIR / "references" / "option4-guide-style.json"
 TAB_ID_FALLBACK = "t.0"
+GWS_FALLBACK_PATH = Path.home() / ".config" / "gohan" / "bin" / "gws"
+SEND_TIMEOUT_SECONDS = 600
+# macOS caps a command line plus environment at 1 MiB; leave room for the environment.
+SEND_MAXIMUM_BODY_BYTES = 900_000
+DOCUMENT_ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{20,}")
 
 # Exact TEST ARTIFACT copy, verbatim from
 # references/output-status-and-labeling-conventions.md. Do not paraphrase.
@@ -2100,7 +2110,7 @@ def _verify_list(
 # ---------------------------------------------------------------------------
 
 
-def write_json(path: str | Path, value: dict[str, Any]) -> None:
+def private_output_target(path: str | Path) -> Path:
     requested = Path(path).expanduser()
     parent = requested.parent.resolve()
     target = parent / requested.name
@@ -2120,7 +2130,11 @@ def write_json(path: str | Path, value: dict[str, Any]) -> None:
         raise ContractError(
             f"Output directory must be owner-only (mode 0700 or stricter): {parent}"
         )
+    return target
 
+
+def write_json(path: str | Path, value: dict[str, Any]) -> None:
+    target = private_output_target(path)
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=f".{target.name}.",
         suffix=".tmp",
@@ -2146,6 +2160,102 @@ def write_json(path: str | Path, value: dict[str, Any]) -> None:
         if descriptor >= 0:
             os.close(descriptor)
         temporary.unlink(missing_ok=True)
+
+
+def resolve_gws(explicit: str | None) -> str:
+    if explicit:
+        candidate = Path(explicit).expanduser()
+        if not (candidate.is_file() and os.access(candidate, os.X_OK)):
+            raise ContractError(f"--gws is not an executable file: {candidate}")
+        return str(candidate)
+    found = shutil.which("gws")
+    if found:
+        return found
+    if GWS_FALLBACK_PATH.is_file() and os.access(GWS_FALLBACK_PATH, os.X_OK):
+        return str(GWS_FALLBACK_PATH)
+    raise ContractError(
+        "gws not found on PATH or at ~/.config/gohan/bin/gws; pass --gws PATH, "
+        "or apply the batch through a Google Docs connector tool instead"
+    )
+
+
+def send_batch(
+    batch_path: str | Path,
+    document_id: str,
+    response_path: str | Path,
+    gws: str | None = None,
+) -> dict[str, Any]:
+    """Apply one revision-bound batch through gws without a shell, then save its reply privately.
+
+    gws reads the request body only from a process argument. This keeps the body out of the
+    shell, shell history, and the chat transcript; it still sits in gws's process arguments
+    while gws runs, which is why the safety reference asks for one-time approval.
+    """
+    if not DOCUMENT_ID_PATTERN.fullmatch(document_id):
+        raise ContractError("--document-id must be the ID from the Doc URL (letters, digits, - and _)")
+    try:
+        batch = json.loads(Path(batch_path).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        raise ContractError(f"Batch is not a readable JSON file: {batch_path}") from error
+    if not isinstance(batch, dict):
+        raise ContractError("Batch JSON root must be an object")
+    requests = batch.get("requests")
+    if not isinstance(requests, list) or not requests:
+        raise ContractError("Batch must contain a non-empty requests list")
+    write_control = batch.get("writeControl")
+    if not isinstance(write_control, dict) or not str(write_control.get("requiredRevisionId") or "").strip():
+        raise ContractError("Batch is not bound to a revision; regenerate it from a freshly fetched Doc")
+    body = json.dumps(batch, separators=(",", ":"))
+    if len(body.encode("utf-8")) > SEND_MAXIMUM_BODY_BYTES:
+        raise ContractError(
+            f"Batch is too large to hand to gws ({len(body.encode('utf-8'))} bytes); "
+            "apply it through a Google Docs connector tool instead"
+        )
+    # Check the reply file before writing to the Doc, so a successful write is
+    # never followed by a failure to record it.
+    private_output_target(response_path)
+    command = [
+        resolve_gws(gws),
+        "docs",
+        "documents",
+        "batchUpdate",
+        "--params",
+        json.dumps({"documentId": document_id}),
+        "--json",
+        body,
+    ]
+    try:
+        result = subprocess.run(
+            command, capture_output=True, text=True, check=False, timeout=SEND_TIMEOUT_SECONDS
+        )
+    except subprocess.TimeoutExpired as error:
+        raise ContractError(
+            "gws did not answer in time, so the outcome is unknown. Re-fetch the Doc and check "
+            "its revision before anything else; do not resend this batch"
+        ) from error
+    record: dict[str, Any] = {
+        "returncode": result.returncode,
+        "stdout": result.stdout,
+        "stderr": result.stderr,
+    }
+    try:
+        reply = json.loads(result.stdout)
+    except ValueError:
+        reply = None
+    if isinstance(reply, dict):
+        record["response"] = reply
+    write_json(response_path, record)
+    if result.returncode != 0:
+        raise ContractError(
+            f"gws batchUpdate failed (exit {result.returncode}); details saved to {response_path}. "
+            "Re-fetch the Doc before deciding what to do next; do not resend this batch"
+        )
+    if "response" not in record:
+        raise ContractError(
+            f"gws exited 0 but its reply was not a JSON object; saved to {response_path}. "
+            "Re-fetch the Doc and verify the expected post-state; do not resend this batch"
+        )
+    return record["response"]
 
 
 def cli() -> argparse.ArgumentParser:
@@ -2177,6 +2287,12 @@ def cli() -> argparse.ArgumentParser:
     verify = subparsers.add_parser("verify", help="Verify final content and machine-checkable styling")
     verify.add_argument("document_json")
     verify.add_argument("manifest_json")
+
+    send = subparsers.add_parser("send", help="Apply one revision-bound batch through gws without a shell")
+    send.add_argument("batch_json")
+    send.add_argument("--document-id", required=True)
+    send.add_argument("--response", required=True, help="private file for gws's reply")
+    send.add_argument("--gws", help="path to gws (default: PATH, then ~/.config/gohan/bin/gws)")
     return parser
 
 
@@ -2190,6 +2306,11 @@ def main(argv: list[str] | None = None) -> int:
             f"PASS: parsed {len(value['sections'])} sections and "
             f"{len(manifest_tables(value))} tables"
         )
+        return 0
+    if args.command == "send":
+        reply = send_batch(args.batch_json, args.document_id, args.response, args.gws)
+        revision = (reply.get("writeControl") or {}).get("requiredRevisionId", "unavailable")
+        print(f"PASS: batch applied; new revision {revision}; reply saved to {args.response}")
         return 0
 
     doc = json.loads(Path(args.document_json).read_text(encoding="utf-8"))

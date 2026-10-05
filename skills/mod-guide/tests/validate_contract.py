@@ -143,6 +143,51 @@ class ModGuideCrossFileContractTest(unittest.TestCase):
             with self.subTest(invariant=invariant):
                 self.assertIn(invariant, self.safety)
 
+    def test_gws_write_route_is_protected_approved_in_section1_and_optional(self) -> None:
+        for phrase in (
+            "Apply each Google Docs request body through the first of these that the integration offers",
+            "a connector tool's request-body parameter",
+            "the CLI's own file or standard-input option",
+            "the bundled `send` helper",
+            "starts `gws` directly, without a shell",
+            "other programs on the same computer may be able to read",
+            "approved it in Section 1",
+            "If none of these is available or approved, block the write.",
+            "`gws drive files create --upload FILE`",
+            "For capability 3, name the request-body route from §2",
+            "using the first available route in §2's order",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, self.safety)
+
+        section1 = self.skill.split("## Step 3", 1)[1].split("## Step 4", 1)[0]
+        step6 = self.skill.split("## Step 6", 1)[1].split("## Tool Usage", 1)[0]
+        lines = section1.splitlines()
+        last_row = next(i for i, line in enumerate(lines) if line.startswith("| **LAST** |"))
+        route_row = next(i for i, line in enumerate(lines) if line.startswith("| **ROUTE** |"))
+        self.assertEqual(route_row, last_row + 1)
+        self.assertIn("only when `gws` is the only way to write", lines[route_row])
+        for phrase in (
+            '"Section 1 > Step N of M: Google Docs write route"',
+            'with no "Brainstorm with me" option',
+            '"Use the helper (Recommended)"',
+            "\"Don't create the Doc\"",
+            "reads no content",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, section1)
+        self.assertIn("The one exception is the yes/no **Google Docs write route** approval", self.skill)
+        self.assertIn("route chosen in Section 1", step6)
+        self.assertIn("`drive files create --upload`", step6)
+        self.assertNotIn("Use the helper", step6)
+        self.assertIn("it is never required", self.skill)
+
+        self.assertIn("drive files create --upload guide.md", self.style_md)
+        self.assertIn("with `gws`, use `send`", self.style_md)
+        script = SCRIPT_PATH.read_text(encoding="utf-8")
+        self.assertNotIn("shell=True", script)
+        self.assertTrue(callable(getattr(self.layout, "send_batch", None)))
+
     def test_pasted_non_public_content_does_not_bypass_authorization(self) -> None:
         required = (
             "Pasting or attaching content does not establish the requester's authority "

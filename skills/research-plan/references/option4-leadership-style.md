@@ -88,7 +88,7 @@ Use `scripts/option4_layout.py`. Two checks run before the build:
 The build:
 
 1. `manifest` — parse the approved markdown into a style/content manifest. It also records a fingerprint of the layout script and this contract; `normalize`, `format`, and `verify` fail if either changed mid-run.
-2. Import the markdown into the confirmed Google Drive folder using a conversion path that turns the intermediate `---` into one native horizontal rule. The Docs batch API cannot create that rule after import.
+2. Import the markdown into the confirmed Google Drive folder using a conversion path that turns the intermediate `---` into one native horizontal rule. The Docs batch API cannot create that rule after import. With `gws`, run `gws drive files create --upload plan.md --upload-content-type text/markdown` from the private working directory (gws only uploads files inside the current directory), with only the name, `application/vnd.google-apps.document`, and the folder ID in `--json`. This route was checked on 2026-10-05: it turned `---` into one native rule and kept native headings, tables, and bullets.
 3. `normalize` — rebuild cell text, remove the conversion header, and restore two-cell section rows.
 4. Re-fetch the raw Google Docs JSON.
 5. `format` — generate the exact Option 4 Google Docs batch operations.

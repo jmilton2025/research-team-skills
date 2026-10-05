@@ -79,15 +79,15 @@ It deliberately does **not** enforce guide semantics such as task/objective cove
 Use `scripts/option4_guide_layout.py` (same four stages as research-plan):
 
 1. `manifest` — parse the approved markdown into a style/content manifest (with a self-digest and contract binding).
-2. Import the markdown into the confirmed Google Drive folder with the connected Docs importer.
+2. Import the markdown into the confirmed Google Drive folder with the connected Docs importer. With `gws`, run `gws drive files create --upload guide.md --upload-content-type text/markdown` from the private working directory (gws only uploads files inside the current directory), with only the name, `application/vnd.google-apps.document`, and the folder ID in `--json`. Markdown import creates native headings, tables, and bullets.
 3. `normalize` — bind imported content to the manifest, uppercase the band headings, delete each table's conversion header row, and drop every horizontal rule. Column-count agnostic; header presence is detected per table.
 4. Re-fetch the raw Google Docs JSON.
 5. `format` — generate the exact Option 4 Google Docs batch operations.
-6. Apply those operations and re-fetch the document.
+6. Apply those operations and re-fetch the document. Apply every batch (normalize and format) through a protected request body, in the route order of `source-and-delivery-safety.md` §2; with `gws`, use `send`, which applies a revision-bound batch file without a shell.
 7. `verify` — validate content fidelity and every machine-checkable visual invariant (raises and exits 1 on any drift).
 8. Export/render the Doc and visually inspect the opening page, an interior page, and the last page.
 
-The batch files use the native Google Docs API request schema, so they apply through the session's connected Docs integration (the MCP `batch_update_doc` tool, `gws`, etc.) — no personal template, `gws`/gohan, or custom auth is required, which is what makes the clean edited look reproducible for any researcher who opens the finished document.
+The batch files use the native Google Docs API request schema, so they apply through the session's connected Docs integration (a connector tool such as `batch_update_doc`, or `gws` through `send`) — no personal template, `gws`/gohan, or custom auth is required, which is what makes the clean edited look reproducible for any researcher who opens the finished document.
 
 ## Hard completion gate
 
