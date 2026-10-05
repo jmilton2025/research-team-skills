@@ -628,7 +628,7 @@ def resolve_gws(explicit: str | None) -> str:
         return str(GWS_FALLBACK_PATH)
     raise ContractError(
         "gws not found on PATH or at ~/.config/gohan/bin/gws; pass --gws PATH, "
-        "or apply the batch through a Google Docs connector tool instead"
+        "or apply the batch through a connector tool that takes native, revision-bound Google Docs requests"
     )
 
 
@@ -652,7 +652,7 @@ def send_batch(batch_path: str | Path, document_id: str, response_path: str | Pa
     if len(body.encode("utf-8")) > SEND_MAXIMUM_BODY_BYTES:
         raise ContractError(
             f"Batch is too large to hand to gws ({len(body.encode('utf-8'))} bytes); "
-            "apply it through a Google Docs connector tool instead"
+            "apply it through a connector tool that takes native, revision-bound Google Docs requests"
         )
     command = [
         resolve_gws(gws),

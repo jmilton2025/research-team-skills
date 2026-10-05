@@ -87,7 +87,7 @@ Use `scripts/option4_guide_layout.py` (same four stages as research-plan):
 7. `verify` — validate content fidelity and every machine-checkable visual invariant (raises and exits 1 on any drift).
 8. Export/render the Doc and visually inspect the opening page, an interior page, and the last page.
 
-The batch files use the native Google Docs API request schema, so they apply through the session's connected Docs integration (a connector tool such as `batch_update_doc`, or `gws` through `send`) — no personal template, `gws`/gohan, or custom auth is required, which is what makes the clean edited look reproducible for any researcher who opens the finished document.
+The batch files use the native Google Docs API request schema, bound to the snapshot's `revisionId`. They apply only through a route that sends them unchanged with `writeControl.requiredRevisionId`: a connector tool that takes native batch requests as a request-body parameter, or `gws` through `send`. A connector edit tool with its own simplified operation format or no revision binding cannot apply them. Checked on 2026-10-05, Runlayer's Google Workspace connector was the only connector available, and its `batch_update_doc` has both limits, so formatting currently runs on `gws` through `send`. Runlayer still works for creating (`import_to_google_doc`), reading (`readDocument`), and trashing (`update_drive_file`) the Doc, but `readDocument` omitted `revisionId`, so the snapshots for `normalize` and `format` come from `gws`. No personal template or private reference Doc is required, which is what makes the clean edited look reproducible for any researcher who opens the finished document.
 
 ## Hard completion gate
 

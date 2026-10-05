@@ -26,11 +26,13 @@ Keep only the approved plan and minimum necessary de-identified source extracts,
 
 Never place credentials, source text, document bodies, or other **sensitive content in command-line arguments** that you type or paste into a shell. Apply each Google Docs request body through the first of these that the integration offers:
 
-1. a connector tool's request-body parameter;
+1. a connector tool's request-body parameter, only when that tool takes the native Google Docs batch requests unchanged and sends `writeControl.requiredRevisionId` with them. A connector edit tool with its own simplified operation format, or with no revision binding, does not qualify;
 2. the CLI's own file or standard-input option;
 3. the bundled `send` helper (`python3 scripts/option4_layout.py send BATCH.json --document-id ID --response FILE`), for a CLI such as `gws` that takes the body only as an argument. The helper reads the batch from its protected file and starts `gws` directly, without a shell, so the body never appears in a typed command, the shell history, or the chat transcript, and it saves the reply with owner-only permissions. While that `gws` call runs, the body is in its process arguments, which other programs on the same computer may be able to read (for example, with `ps`). Disclose that once at the §4 preflight and use the helper only when the researcher approves it for the run.
 
 If none of these is available or approved, block the write.
+
+A connector that cannot carry these batches can still create, read back, and trash the Doc. A connector Markdown importer that takes the file's contents as a tool parameter is a protected create route. Checked on 2026-10-05, Runlayer's Google Workspace connector worked this way: `import_to_google_doc` turned `---` into one native horizontal rule and kept native headings, tables, and bullets, and `update_drive_file` trashed the Doc, but its `batch_update_doc` uses a simplified format with no revision binding and no `pinTableHeaderRows`, which Option 4 needs. A connector's readback can feed `normalize` and `format` only when it returns the document's `revisionId` (Runlayer's `readDocument` did not); otherwise fetch those snapshots through the route that applies the batches.
 
 Run a separate critique agent or `multi-agent-check` only when both approved AI processing and reviewer access cover the packet and audience. Provide minimum necessary de-identified extracts, never a complete source file unless the recorded authorization explicitly covers sending that whole file to reviewers. Otherwise run the self-critique and disclose a critique-only result, using the exact review status from `SKILL.md` Step 5 (for example, `critique-only review — reviewer processing not authorized`).
 

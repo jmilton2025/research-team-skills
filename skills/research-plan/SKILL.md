@@ -525,7 +525,7 @@ python3 scripts/option4_layout.py normalize imported-doc.json manifest.json norm
 
 The normalizer validates the manifest version and digest, confirms that the imported leadership timeline plus every Project Plan Overview label and body still match the approved Markdown, rebuilds clean overview-cell paragraphs, removes the generic conversion header, and restores two physical cells for section bands. It blocks rather than rewriting pre-overview timeline text, because a length change there would invalidate later Google Docs table indices in the same native batch.
 
-Immediately before each normalization or formatting write, fetch fresh raw JSON and its revision, bind the batch to that **required revision ID**, apply it through a protected request body (in the order set in the safety reference's §2: a connector tool's request-body parameter, then a CLI file or stdin option, then the bundled `send` helper), then re-fetch and verify. With `gws`, which has no file option, apply each batch with the helper rather than pasting JSON into a shell command:
+Immediately before each normalization or formatting write, fetch fresh raw JSON and its revision, bind the batch to that **required revision ID**, apply it through a protected request body (in the order set in the safety reference's §2: a connector tool's request-body parameter that takes these native, revision-bound requests unchanged, then a CLI file or stdin option, then the bundled `send` helper), then re-fetch and verify. With `gws`, which has no file option, apply each batch with the helper rather than pasting JSON into a shell command:
 
 ```bash
 python3 scripts/option4_layout.py send normalize-batch.json --document-id "$DOC_ID" --response normalize-response.json

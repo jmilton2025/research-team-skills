@@ -38,8 +38,10 @@ Applying a batch through gws, which has no request-body file option:
     option4_guide_layout.py send BATCH.json --document-id DOC_ID --response response.json
 
 The script only uses the Python standard library. Batch files use the native
-Google Docs API request schema and can be applied through any write-capable
-integration (the MCP batch_update_doc tool, gws, etc.). Only ``send`` makes a
+Google Docs API request schema and apply only through a route that sends them
+unchanged with writeControl.requiredRevisionId (gws through ``send``, or a
+connector that takes native batch requests; a connector's simplified
+batch_update_doc tool does not qualify). Only ``send`` makes a
 live API call, through gws; every other stage operates on JSON, so the pipeline
 is testable offline against fixtures. Normalize and format inputs must carry the
 fresh document ``revisionId``; a supplied ``--required-revision-id`` must match it.
@@ -2175,7 +2177,7 @@ def resolve_gws(explicit: str | None) -> str:
         return str(GWS_FALLBACK_PATH)
     raise ContractError(
         "gws not found on PATH or at ~/.config/gohan/bin/gws; pass --gws PATH, "
-        "or apply the batch through a Google Docs connector tool instead"
+        "or apply the batch through a connector tool that takes native, revision-bound Google Docs requests"
     )
 
 
@@ -2209,7 +2211,7 @@ def send_batch(
     if len(body.encode("utf-8")) > SEND_MAXIMUM_BODY_BYTES:
         raise ContractError(
             f"Batch is too large to hand to gws ({len(body.encode('utf-8'))} bytes); "
-            "apply it through a Google Docs connector tool instead"
+            "apply it through a connector tool that takes native, revision-bound Google Docs requests"
         )
     # Check the reply file before writing to the Doc, so a successful write is
     # never followed by a failure to record it.

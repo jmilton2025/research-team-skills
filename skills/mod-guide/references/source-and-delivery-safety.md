@@ -24,11 +24,13 @@ Prefer session-only processing with no persistent source extracts. When persiste
 
 Never place credentials, source text, document bodies, or other sensitive material directly in command-line arguments that you type or paste into a shell. Create the Doc from a protected file (for example, `gws drive files create --upload FILE`, run from the private working directory, with only the name, Doc type, and parent folder in `--json`). Apply each Google Docs request body through the first of these that the integration offers:
 
-1. a connector tool's request-body parameter;
+1. a connector tool's request-body parameter, only when that tool takes the native Google Docs batch requests unchanged and sends `writeControl.requiredRevisionId` with them. A connector edit tool with its own simplified operation format, or with no revision binding, does not qualify;
 2. the CLI's own file or standard-input option;
 3. the bundled `send` helper (`python3 scripts/option4_guide_layout.py send BATCH.json --document-id ID --response FILE`), for a CLI such as `gws` that takes the body only as an argument. The helper reads the batch from its protected file and starts `gws` directly, without a shell, so the body never appears in a typed command, the shell history, or the chat transcript, and it saves the reply with owner-only permissions. While that `gws` call runs, the body is in its process arguments, which other programs on the same computer may be able to read (for example, with `ps`). Use the helper only when the researcher approved it in Section 1 (`SKILL.md`, “Google Docs write route”).
 
 If none of these is available or approved, block the write.
+
+A connector that cannot carry these batches can still create, read back, and trash the Doc. A connector Markdown importer that takes the file's contents as a tool parameter is a protected create route. Checked on 2026-10-05, Runlayer's Google Workspace connector worked this way: `import_to_google_doc` produced native headings, tables, and bullets, and `update_drive_file` trashed the Doc, but its `batch_update_doc` uses a simplified format with no revision binding. A connector's readback can feed `normalize` and `format` only when it returns the document's `revisionId` (Runlayer's `readDocument` did not); otherwise fetch those snapshots through the route that applies the batches.
 
 Send content to a critique agent or multi-agent reviewer only when approved AI processing and reviewer access cover that packet. Pass the minimum necessary de-identified guide plus source excerpts—not complete source files by default. Otherwise run the mandatory self-contained baseline audit and disclose that the enhanced panel did not run.
 
