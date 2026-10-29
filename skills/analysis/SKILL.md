@@ -190,7 +190,7 @@ The researcher may edit or reject any claim. Approval locks the analytic meaning
 
 ## 8. Final QA and delivery
 
-After researcher approval, run the mode-aware final gate in `quality-gates.md`. Use only `Pass`, `Pass with limitation`, `Fail`, or `N/A`, with evidence and a reason for every limitation or N/A. Run an independent review when available without moving deidentified data outside its approved environment. Fold confirmed fixes into the draft. If a fix materially changes an approved claim, its evidence, confidence, or implication, return only that affected unit for reapproval.
+After researcher approval, run the mode-aware final gate in `quality-gates.md`. Use only `Pass`, `Pass with limitation`, `Fail`, or `N/A`, with evidence and a reason for every limitation or N/A. Offer the independent or multi-agent review once and run it only after the researcher says yes; never run it automatically. Say which reviewers will run and which de-identified extracts each will see, and keep the data inside its approved environment. If the researcher skips it, or it isn't available or authorized, record that status. Fold confirmed fixes into the draft. If a fix materially changes an approved claim, its evidence, confidence, or implication, return only that affected unit for reapproval.
 
 Do not deliver while any applicable check is `Fail`. A final `Pass with limitation` is acceptable only when the limitation is explicit and does not invalidate the claims.
 
@@ -213,6 +213,7 @@ If a required step could not run, say so precisely. Never report a blocked or sk
 
 ## Boundaries and handoffs
 
+- Follow [`../../references/skill-handoffs.md`](../../references/skill-handoffs.md) for what to ask from upstream skills (the plan and the guide) and what to pass to `/report`. At intake, ask for the plan and guide links before reconstructing their questions.
 - Use `/research-plan` upstream when the research question or study design is not yet defined.
 - Use `/mod-guide` for a discussion or usability-session guide.
 - Use `/report` after the analysis is approved when the task is stakeholder storytelling rather than evidence synthesis. Hand it the approved evidence ledger, confidence ratings, and plan crosswalk, so the report reuses verified quotes and the plan's decision terms instead of re-deriving them.

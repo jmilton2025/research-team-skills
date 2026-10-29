@@ -242,6 +242,7 @@ Auto-draft the breadcrumb, title, date, and one-sentence Topic from the inputs. 
 
 **Ask the researcher for the RACI instead of looking people up.** The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run: in the brief, product requirements document, or kickoff notes they shared, or in their answers so far (the decision audit names the decision owner). Don't run a people or directory search, and don't carry names over from memory or older project files.
 
+0. **Pull every stakeholder from the supplied docs.** Before asking, extract every person the PRD, brief, kickoff notes, or shared thread names: owners, approvers, PM/EM/design/data leads, partners, and anyone tagged for review. Map each to the RACI role their source implies, and note where you found them (`from PRD`). Capture as many names as the sources give; don't drop someone because their role already has a name. Mark the main DRI — the person who drives the study day to day, usually the Responsible researcher unless a source names someone else — with `(DRI)` after their name. Show the pre-filled RACI in chat so the researcher can confirm, add, edit, or move anyone.
 1. **Key people first.** If any of the four roles has no name yet, ask for it in chat, one name per role: Responsible (usually the researcher), Accountable (the decision owner), Consulted, and Informed.
 2. **Confirm the opening once.** Show the complete opening (breadcrumb, title, date, RACI, and Topic). Topic appears in the Doc as the first overview row, but it's confirmed here with the opening. Pop-up label: **“Opening: Title, Date & RACI”**, with the options **“Confirm as shown (Recommended)”**, **“Add more people”**, and **“Brainstorm with me”**. Corrections go in the comments field.
 3. **Then offer more people.** If the researcher picks “Add more people,” collect the extra names and roles in chat (a role can hold more than one name), then show the updated RACI in chat and ask them to reply **confirm** or correct it. This finishes the same opening approval; don't show the pop-up again.
@@ -586,6 +587,8 @@ Confirm the file location and return:
 - no styling caveat—any unresolved styling limitation means the document is not final.
 
 Open the verified Google Doc in the browser when the environment supports it. Do not update project trackers, progress files, or unrelated systems unless the researcher separately asks.
+
+End with one line offering the next step from [`../../references/skill-handoffs.md`](../../references/skill-handoffs.md): *"Next: `/mod-guide` can build the moderation guide from this plan. Bring this Doc link."* Don't start it unless asked.
 
 This is the final step. The plan has already passed the critique (Step 4.5) and the multi-agent review or its disclosed critique-only fallback (Step 5); only the exact verified Option 4 Google Doc is handed back.
 

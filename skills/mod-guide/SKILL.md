@@ -116,7 +116,7 @@ Continue with the source-authorization gate and the request for inputs while the
 
 Before opening or using non-public material, apply `references/source-and-delivery-safety.md`: confirm the researcher's authority and approved AI processing, source audience, minimum necessary content, and redaction. Do not request participant-level data. Pasting or attaching content does not establish the requester's authority or approved AI-processing status; apply the same gate before using pasted non-public material.
 
-Ask the researcher to paste or share the de-identified study inputs. Say:
+If a `/research-plan` output exists, ask for it first. It is the primary input, and its approved RACI, hypotheses, and decision terms carry forward unchanged ([`../../references/skill-handoffs.md`](../../references/skill-handoffs.md)). Ask the researcher to paste or share the de-identified study inputs. Say:
 
 > "To build your moderation guide, share the de-identified study plan, brief, approved notes, or a plain-English description. Please leave out participant names, contact details, schedules, and recording links. **For a usability/prototype test, include the approved prototype link or a description of the flows.** I'll extract the parameters, recommend the guide format, and build from there."
 
@@ -259,6 +259,7 @@ The **Select** column says whether the pop-up is `multiSelect: true` (more than 
 
 **Row 9 (Stakeholders): Ask the researcher for the RACI instead of looking people up.** The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run: in the plan, brief, or notes they shared, or in their answers so far. Don't run a people or directory search, and don't carry names over from memory or older project files.
 
+0. **Pull every stakeholder from the supplied docs.** Before asking, extract every person the plan, brief, PRD, or notes name, including the research plan's approved RACI when one exists. Map each to the RACI role their source implies, and note where you found them (`from plan`). Capture as many names as the sources give. Mark the main DRI with `(DRI)` after their name; this is usually the Responsible researcher unless a source names someone else. Show the pre-filled RACI in chat so the researcher can confirm, add, edit, or move anyone.
 1. **Key people first.** If any of the four roles has no name yet, ask for it in chat before the Section 1 batch that holds Row 9, one name per role: Responsible (usually the researcher), Accountable (the decision owner), Consulted, and Informed. For Responsible and Accountable, also ask for each person's role.
 2. **Confirm once.** Show the complete RACI in chat, then ask Row 9 with the options **"Confirm as shown (Recommended)"**, **"Add more people"**, and **"Brainstorm with me"**. Corrections go in the comments field.
 3. **Then offer more people.** If the researcher picks "Add more people," collect the extra names and roles in chat (a role can hold more than one name), then show the updated RACI in chat and ask them to reply **confirm** or correct it. This finishes the same Row 9 approval; don't show the pop-up again.
@@ -694,6 +695,7 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 2. State verification status: content/crosswalk checked, links checked, parent and permissions checked, style verifier result, and render inspected—plus any explicit limitation or fallback.
 3. **Only after the link is shared** is the skill allowed to respond to follow-up questions or correction requests from the researcher.
 4. Do not update project trackers or progress files unless the researcher separately asks. Never update them for a demo/mock or for non-study personal content.
+5. End with one line offering the next step from [`../../references/skill-handoffs.md`](../../references/skill-handoffs.md): after fieldwork, `/analysis` takes the de-identified sessions plus this guide and the plan. The guide's must-haves and expected paths seed the analysis. Don't start it unless asked.
 
 ---
 

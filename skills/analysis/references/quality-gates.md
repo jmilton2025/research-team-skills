@@ -163,7 +163,7 @@ Apply only the row for the selected mode. Mark other modes `N/A` with the reason
 
 ## Independent review
 
-When an independent reviewer or multi-agent review is available inside the approved data environment, use it after researcher approval and before finalizing. Give the reviewer the approved scope, evidence ledger, draft, method, and deidentified source. Ask for:
+When an independent reviewer or multi-agent review is available inside the approved data environment, offer it once after the analysis is approved and before finalizing, and run it only with the researcher's permission. Show who reviews and what each reviewer sees, and offer **Run the review (Recommended)**, **Skip review**, and **Brainstorm with me**. Give the reviewer the approved scope, evidence ledger, draft, method, and deidentified source. Ask for:
 
 - quote and locator verification;
 - scope and attribution errors;
@@ -172,7 +172,7 @@ When an independent reviewer or multi-agent review is available inside the appro
 - method-variant coherence;
 - confidence and limitation calibration.
 
-Do not move data to a new tool or reviewer outside the authorization boundary. If independent review is unavailable or not permitted, mark it `N/A` with the reason and set the overall gate to at most `Pass with limitation`; never claim it ran.
+Do not move data to a new tool or reviewer outside the authorization boundary. If independent review is unavailable, not permitted, or skipped by the researcher, mark it `N/A` with the reason and set the overall gate to at most `Pass with limitation`; never claim it ran.
 
 ## Final outcome and reapproval
 

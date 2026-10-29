@@ -30,7 +30,7 @@ Full catalogs (with every URL and an opened/blocked flag) and pattern files with
 | Research questions | Open words; don't assume the solution (GOV.UK, 18F) | Broad and not TEDW | Open-word rule plus a weak → stronger rewrite table |
 | Hypotheses | Facts / opinions / guesses sort (User Interviews); "We believe… will achieve…" (GitLab) | Origin labels | Sort first; GitLab form when an outcome is predicted |
 | Method | State what it won't tell you; name rejected alternatives; map methods to RQs; no reflexive triangulation (Great Question, NN/g) | Minimum valid design + alternatives | All four, plus a **Won't tell us** bullet in Method & approach |
-| Sample | Per-segment sizing; recruit 7 to seat 5; screener distractors (GOV.UK, rampstackco, NN/g) | Nielsen / Guest sizing | Per-segment, counts not percentages, no-show buffer, screener hygiene |
+| Sample | Per-segment sizing; recruit 7 to seat 5; screener distractors (GOV.UK, rampstackco, NN/g) | Nielsen / Guest sizing | Per-segment, count-plus-percentage reporting, no-show buffer, screener hygiene |
 | Timeline | Anchor to the decision date; pilot; analysis ≈ 2× sessions (18F) or 1:2 (GOV.UK) | Phase plan | All three; the plan states its analysis ratio |
 | Risks | Risks to a conclusive answer, each with a mitigation | Dependencies & guardrails | Conclusiveness risks and a mixed-results plan in that row; 4 new critique rows |
 
@@ -59,7 +59,7 @@ Full catalogs (with every URL and an opened/blocked flag) and pattern files with
 | Counterevidence | "But consider" per pattern; leftovers are signal; not-act implications (rampstackco) | Seek contradictions | Mandatory "But consider"; single-source signals; not-act allowed |
 | Usability data | Rainbow sheet; assisted vs. unassisted; Nielsen 0–4 severity with the LLM as one rater | No usability mode | New `references/usability-analysis.md` overlay |
 | Scale | Batch more than 15 transcripts in groups of 10–12; pass only verified output forward | — | Large-corpus overlay |
-| Consistency | — | Example used "8 of 14 (57%)" | Counts with participant IDs, matching `/report`'s n<20 rule |
+| Consistency | — | `/analysis` used "8 of 14 (57%)"; `/report` banned percentages below n=20 | One team rule across skills: count first, then percentage ("8 of 14 (57%)"); n≤4 count-only |
 
 ### `/report`
 
@@ -81,7 +81,17 @@ Full catalogs (with every URL and an opened/blocked flag) and pattern files with
 | `/report` had no source-authorization or privacy gate | Added (connector access ≠ authorization; de-identified inputs; prefer `/analysis` output) |
 | `/report` ran the multi-agent review automatically with no skip | Offered once with skip, failure handling, and standard critique-only statuses, matching `/research-plan` |
 | `/report` had no connection check | First-message sign-in flag added |
-| Analysis example percentages vs. `/report`'s n<20 rule | Example rewritten to counts |
+| Analysis used percentages; `/report` banned them below n=20 | One rule everywhere: "8 of 14 (57%)", with n≤4 count-only |
+
+## Researcher decisions applied (2026-10-29)
+
+| Decision | Applied in |
+|---|---|
+| **RACI from the supplied docs, then confirmed.** Pull as many stakeholder names as the PRD, brief, or plan give. Always use the full RACI format, mark the main DRI, and let the researcher confirm, add, or edit. No people search. | `/research-plan` Step 1.6, `/mod-guide` Row 9, `/report` Step 1 (which now also includes **Accountable** in every template) |
+| **The multi-agent review always asks permission first.** | `/research-plan` Step 5, `/mod-guide` Section 3, `/report` Step 7, `/analysis` §8 and the quality gates |
+| **Fix the pop-up limit bug.** | `/report` interaction contract (4 options, grouped when there are more) |
+| **Use percentages, next to the count.** Write "8 of 14 (57%)", never a bare percentage. n≤4 stays count-only, because the analysis contract script enforces that and a percentage of 3 people misleads. | `/analysis` methodology and usability overlay, `/report` Rule 6, `/research-plan` Sample row |
+| **Skills hand off to each other.** | New [`references/skill-handoffs.md`](../../references/skill-handoffs.md); each skill asks for its upstream artifact and offers the next skill at the end |
 
 ## Considered, not adopted
 

@@ -132,7 +132,7 @@ Ask the researcher for the raw material. Accept any format: Google Doc URL, past
 
 **Authorship check:** If the person driving this conversation is not the researcher who ran the study (a PM or designer relaying someone else's finished analysis is a normal, supported case), confirm the named researcher for the "Responsible" field rather than defaulting to whoever is typing. Note in the delivery message (Step 8) that the named researcher should review and sign off before this ships as final — "Responsible" should never imply a review that didn't happen.
 
-**Ask the researcher for RACI / stakeholder names instead of looking people up** (the same rule as `/research-plan` and `/mod-guide`). The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run — in the plan, analysis, or notes they shared, or in their answers so far. Don't run a people or directory search, and don't carry names over from memory or older project files. When a supplied file names someone, confirm it: *"The plan lists [Name] as [Role] — is that still accurate?"* A role left blank stays `[TBD — fill in]`.
+**Ask the researcher for RACI / stakeholder names instead of looking people up** (the same rule as `/research-plan` and `/mod-guide`). The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pull every stakeholder from the supplied docs — the research plan's approved RACI first, then the PRD, brief, analysis, or notes. Capture as many names as the sources give, mapped to the RACI role each source implies, with where you found them. Mark the main DRI with `(DRI)` after their name; this is usually the Responsible researcher unless a source names someone else. Always use the full RACI format: Responsible, Accountable, Consulted, Informed. Show the pre-filled block so the researcher can confirm, add, edit, or move anyone (*"The plan lists [Name] as [Role] — is that still accurate?"*). Don't run a people or directory search, and don't carry names over from memory or older project files. A role left blank stays `[TBD — fill in]`.
 
 **Source authorization — before opening any non-public material.** Connector access is not authorization. Before reading a linked doc, analysis, transcript, or clip, confirm that the researcher may use it for AI-assisted drafting, that participant data is de-identified, and who the report's audience is. Quotes, links, and clips in the report must not reach a wider audience than their source allows. Prefer the approved `/analysis` output, its evidence ledger, and plan crosswalk over raw transcripts. If raw, identifiable data is pasted, don't repeat it; ask for a de-identified version, as `/analysis` §1 describes.
 
@@ -307,7 +307,7 @@ After style is confirmed, say: *"Style locked. Two more setup items — authorsh
 
 Two decisions, one pop-up each (per the interaction contract — one decision per pop-up).
 
-**Authorship / RACI.** Show the drafted RACI block — Responsible, Consulted, Informed — and confirm every name is current. Use only names the researcher gave or confirmed in this run (Step 1); never a people search. Consulted and Informed are `multiSelect: true` (several people legitimately belong in each); Responsible is single (one accountable author). Pop-up label: **"Section 1 > Step 3 of 4: Authorship / RACI"**. Last option always **"Brainstorm with me"**. After lock, say: *"Authorship locked. Moving on to the BLUF."*
+**Authorship / RACI.** Show the drafted RACI block — Responsible, Accountable, Consulted, Informed, with the DRI marked — and confirm every name is current. Use only names the researcher gave or confirmed in this run (Step 1); never a people search. Consulted and Informed are `multiSelect: true` (several people legitimately belong in each); Responsible and Accountable are single (one author, one decision owner). Pop-up label: **"Section 1 > Step 3 of 4: Authorship / RACI"**. Last option always **"Brainstorm with me"**. After lock, say: *"Authorship locked. Moving on to the BLUF."*
 
 **BLUF.** Draft the three-sentence Bottom Line Up Front per the BLUF discipline above (sentence 1: what we learned · sentence 2: what it means for the business · sentence 3: the single most important ask — no methodology). Show it, then accept / brainstorm. Single-select — the BLUF is one exclusive statement, though each of its three sentences can be brainstormed. Pop-up label: **"Section 1 > Step 4 of 4: BLUF"**. Last option always **"Brainstorm with me"**.
 
@@ -328,7 +328,7 @@ For every item: show the draft first, then let the researcher accept it, pick wh
 Draft and approve **one finding at a time**. For each finding:
 
 - Write it past-tense and descriptive (the observed pattern), per the Finding → Insight → Recommendation ladder.
-- Attach its primary evidence: P-coded verbatim quotes (never cleaned up), denominators for small n ("7 of 10," not "70%" when n < 20), and clip/screenshot references. Apply the evidence gate — every finding carries ≥1 verbatim quote or a quantitative observation with denominator.
+- Attach its primary evidence: P-coded verbatim quotes (never cleaned up), count first, then percentage ("7 of 10 (70%)", never a bare "70%"), and clip/screenshot references. Apply the evidence gate — every finding carries ≥1 verbatim quote or a quantitative observation with denominator.
 - Curate to the strongest hero quotes (Portigal's three-quote rule for strong patterns); the rest go to the Appendix.
 - Pop-up label: **"Section 2 > Step N of M: Finding N — [headline]"** where M is the total number of findings. `multiSelect: true` — the researcher can select which quotes/evidence to keep for that finding. Last option always **"Brainstorm with me"**.
 - After each lock: *"Finding N locked. Moving on to Finding N+1."* (After the last: *"All findings locked. Moving on to Section 3 — Insights."*)
@@ -375,7 +375,8 @@ After Section 4 is locked, tell the researcher exactly what happens next so they
 
 Last updated: [Month Year]
 
-- **Responsible:** [Researcher name] (UX Researcher)
+- **Responsible:** [Researcher name] (UX Researcher) (DRI)
+- **Accountable:** [Decision owner name] (Role)
 - **Consulted:** [Name] (Role), [Name] (Role)
 - **Informed:** [Name] (Role), [Name] (Role)
 
@@ -513,7 +514,9 @@ For each P0 or P1 recommendation, generate a one-line business-impact framing. P
 
 Last updated: [Month Year]
 
-- **Responsible:** [Researcher]
+- **Responsible:** [Researcher] (DRI)
+- **Accountable:** [Decision owner]
+- **Consulted:** [Name(s) or TBD — fill in]
 - **Informed:** [Exec name(s)]
 
 ## Bottom Line
@@ -553,7 +556,7 @@ Last updated: [Month Year]
 
 # [Failure mode or behavior-led title]
 
-[RACI block — Responsible + Consulted + Informed, same 3-row shape as the Product/PM variant above, not the 2-row Exec version]
+[RACI block — Responsible, Accountable, Consulted, Informed, same four-row shape as the Product/PM variant above]
 
 ## Bottom Line
 
@@ -596,7 +599,7 @@ Last updated: [Month Year]
 3. **Evidence gate** — Every finding needs ≥1 verbatim quote OR a specific quantitative observation with denominator. Three-quote rule for strong patterns (Portigal).
 4. **Participant coding** — Use P01, P02. Never names. Add one demographic tag ("P04, 34F, weekly shopper").
 5. **Never clean up quotes** — Preserve "um," hedges, grammar. Cleaned quotes read as fabricated (Portigal).
-6. **Numbers with denominator for small n** — "7 of 10," not "70%" when n < 20. NNG rule.
+6. **Count first, then percentage** — Write "7 of 10 (70%)", never a bare "70%", so the reader always sees the denominator. Single-session (n=1) and pilot-signal (n=2–4) evidence stays count-only, matching `/analysis`.
 7. **Tense discipline** — Findings: past. Insights: present. Recommendations: imperative.
 8. **Priority emojis lead** — 🔴 P0 / 🟡 P1 / 🟢 P2. Consistent across all tables and the exec summary.
 9. **Owned recommendations** — Every rec has a named human owner. "Someone should…" is not a recommendation; it's an open question. Move it.
@@ -762,7 +765,7 @@ A report that changes nothing has failed, however good it is. After returning it
 - **Schedule a decision check.** Suggest a check in about three months: can the team name the decision this report informed? Log real outcomes (a roadmap change, a shipped fix, a cited strategy), not praise (Sprig, *A framework for demonstrating research impact*).
 - **Open questions → next study.** Offer `/research-plan` for the top open question.
 
-Don't update trackers, plans, or tickets unless the researcher asks.
+Don't update trackers, plans, or tickets unless the researcher asks. The full chain is in [`../../references/skill-handoffs.md`](../../references/skill-handoffs.md).
 
 ---
 

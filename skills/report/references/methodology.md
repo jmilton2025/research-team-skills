@@ -178,7 +178,7 @@ Options for making qualitative findings scannable:
 - **Present tense for insights.** "Shoppers rely on the image as the brand signal."
 - **Imperative for recommendations.** "Move the badge."
 - **Never apologize for the method** in the findings section. Caveat once in methodology.
-- **Numbers with denominator.** "7 of 10" not "70%" when n is small. Common qualitative-research guidance (NNG-aligned, exact threshold not independently verified — treat "n<20" as a reasonable working rule, not a citable NNG statistic): avoid percentages for small qualitative samples, use denominators instead.
+- **Count first, then percentage.** "7 of 10 (70%)", never a bare "70%"; n≤4 stays count-only. NN/g warns that a bare percentage from a small qualitative sample reads as more precise than it is; keeping the count beside it shows the denominator.
 
 ---
 
@@ -218,7 +218,7 @@ If any row fails the So-What Test, it is not ready to ship in the readout. It ei
 | Confidence → wording | High stated directly; Medium attributed; Low only as a limitation; Unverified excluded. | tyroneross `pyramid-source-integrity` skill |
 | Evaluative and causal words are claims | "significant", "most", "because" need evidence. | tyroneross `pyramid-source-integrity` skill |
 | Order by decision impact | Not by guide or session order. | Versive, *Build a research report*; Dovetail report prompt guide |
-| Small-n numbers | Report individual values and counts ("1 of 6"), not averages or rates. | NN/g, *Quantitative Metrics in Qualitative Studies* |
+| Small-n numbers | Count first, then percentage ("1 of 6 (17%)"); individual values rather than averages. Team rule: percentages always sit next to their count. | NN/g, *Quantitative Metrics in Qualitative Studies* |
 | Don't-act recommendations | A pattern can justify not acting; a recommendation wishlist isn't synthesis. | rampstackco `discovery-research-synthesis` |
 | Evaluative studies may stop at findings | Don't manufacture insights for evaluative questions. | AnswerLab, *What are research insights?* |
 | Decision test | Three months on, can the team name the decision the report informed? | rampstackco `discovery-research-synthesis` |

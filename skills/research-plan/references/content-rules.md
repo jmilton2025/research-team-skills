@@ -43,7 +43,7 @@ Order:
 5. Warning banner, when applicable.
 6. Optional short context note, only for a historical or interpretation caveat the reader needs before the timeline.
 
-Always include all four roles. Unknown names use `[TBD — fill in]`.
+Always include all four roles. Unknown names use `[TBD — fill in]`. Pre-fill as many names as the supplied PRD, brief, and kickoff notes give, each in the role its source implies. Mark the main DRI with `(DRI)` after their name (for example, `- **Responsible:** [Name] (UX Researcher) (DRI)`). The researcher then confirms, adds, edits, or moves names.
 
 - **Responsible:** the researcher running the study.
 - **Accountable:** the owner of the decision.
@@ -182,7 +182,7 @@ Do not add a research-priorities or themes row.
 
 | Row | Include when |
 |---|---|
-| **Sample & evaluators** | Include only when relevant: the study recruits participants, uses human evaluators, requires sampling strata, or needs defensible coverage. State behavioral criteria before demographics, sample rationale, exclusions, and evaluator independence where applicable. State precision for the allocation actually planned (proportional, or equal strata re-weighted, which is wider), and say that per-stratum estimates are wider. Mark strata provisional when the source does not define them all, and report very small strata descriptively rather than as rates. Size qualitative samples per segment the decision depends on, not only in total, and say findings will be reported as counts (“5 of 8”), not percentages. Recruit for no-shows explicitly (plan roughly 20–30% over, e.g. recruit 7 to seat 5). When a screener is in scope, screen on behavior before demographics and include distractor answers so the target isn't guessable. |
+| **Sample & evaluators** | Include only when relevant: the study recruits participants, uses human evaluators, requires sampling strata, or needs defensible coverage. State behavioral criteria before demographics, sample rationale, exclusions, and evaluator independence where applicable. State precision for the allocation actually planned (proportional, or equal strata re-weighted, which is wider), and say that per-stratum estimates are wider. Mark strata provisional when the source does not define them all, and report very small strata descriptively rather than as rates. Size qualitative samples per segment the decision depends on, not only in total, and say findings will be reported as counts with percentages (“5 of 8 (63%)”), never a bare percentage. Recruit for no-shows explicitly (plan roughly 20–30% over, e.g. recruit 7 to seat 5). When a screener is in scope, screen on behavior before demographics and include distractor answers so the target isn't guessable. |
 | **Measures & analysis** | Include only when relevant: the decision depends on metrics, scoring, comparison, statistical precision, coding, adjudication, or a defined analysis approach. Put every measure and analysis step in its own true Google Docs bullet paragraph. When the decision is an investment call, include an absolute-impact measure (the rate gap × volume, in affected units per week or month), not rates alone. |
 | **Stimuli & protocol** | The study evaluates concepts, designs, tasks, scenarios, content, or benchmark cases. Name counterbalancing or blinding when needed. |
 | **Recruitment & incentives** | Operational recruiting details materially affect feasibility or ethics. |

@@ -24,7 +24,7 @@ Rules:
 Report per task:
 
 - **Unassisted success**, **assisted success**, and **not completed**, separately. Never fold assisted into success.
-- **Counts, not rates, for small samples:** "3 of 6 completed unassisted". Below n=20, no percentages or averages.
+- **Count first, then percentage:** "3 of 6 (50%) completed unassisted". Never a bare percentage. For n≤4, counts only. For small samples, give individual values rather than averages.
 - **Time on task** only when the plan measures it: report the median and the individual values for small n, and watch for bimodal results.
 - **The most common first error.** It often points to the root cause.
 - **A worst-case rollup for scanning:** a task is red if any participant failed it unassisted, amber if any needed help, and green otherwise. The rollup is a navigation aid, not a severity rating.
@@ -61,7 +61,7 @@ Add these to the Gate 1 and final checks in `quality-gates.md`:
 
 - Every grid cell used in a count traces to a session locator.
 - Assisted and unassisted outcomes are reported separately.
-- No percentage or average appears below n=20.
+- Every percentage sits next to its count and denominator ("3 of 6 (50%)"); none appears for n≤4.
 - Each severity rating records both raters and the resolution.
 - Moderator-influenced cells are excluded from counts.
 
