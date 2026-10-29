@@ -359,7 +359,7 @@ Every content pop-up must be labeled with its section and step (e.g. **"Section 
 
 **If the format is Prototype/Usability** (`references/template-prototype-usability.md`):
 1. **Objectives & Research Questions** — preserve supplied hypotheses and priority labels; never invent them. Keep them separate from the script. **No pop-up — source-grounded.**
-2. **Session Flow** — a Phase/Time table whose minutes sum to the approved duration; no counterbalance grid here. **Auto-generated.**
+2. **Session Flow** — a `Phase | Description` table; each phase label ends with its approved minutes (e.g. `Introduction & Think-Aloud Setup (5 min)`) and the minutes sum to the approved duration; no counterbalance grid here. **Auto-generated.**
 3. **Background & Warm-Up** *(no pop-up, no approval gate)* — simple numbered questions (Q1, Q2, Q3), no table format, no "Probes to use:" header. Observation cues at the end. Auto-generated from template.
 4. **Phases (the core)** — **one block per phase / stimulus** from the approved Row-7 list, using the shape that matches the approved construct. A **usability phase** uses Scenario → P8-gated First impression → Expectation → executable Task → Alignment → approved rating. A **reaction-led concept phase** uses Stimulus reveal → P8-gated 5-second First impression → required neutral recall/comprehension prompt → reaction/relevance/desirability prompts → comparison/fit when applicable. Add a task to a concept phase only when an approved objective, RQ, or hypothesis measures observable behavior with the concept. Observation cues and probes stay in prose outside the bold-label list. **Pop-up for each phase.** Concept P8 = Task-only is invalid when an approved objective or hypothesis measures initial recall, comprehension, reaction, or desirability. Usability P8 = Task-only is invalid only when an approved objective or hypothesis measures unaided initial comprehension or reaction. When it is valid, P8 = Task-only means omit every First impression item and leave no placeholder. Never convert a reaction, recall, comprehension, or desirability hypothesis into an invented behavioral task.
 5. **Wrap-Up** *(no pop-up, no approval gate)* — standard three-question close plus a thank-you: one reflection, one open catch-all, and participant questions. Auto-generated.
@@ -395,7 +395,7 @@ Apply the approved parameters and blocks using the selected OUTPUT TEMPLATE. Int
 
 Both guide types wrap the **same spine** — header, ownership, parameter table, Pre-Session Checklist, and Post-Session Debrief. Insert exactly one approved consent pass from the selected template.
 
-**The document header is always "Moderation Guide."** Both formats use `# Moderation Guide` as the document title, followed by `## [Study Title]` and `*[Source-approved study period or TBD — fill in]*`. Do not use "UX Research | Research Plan | Q3/Q4 2026" or any breadcrumb format — the doc type is always "Moderation Guide." The ownership block is standardized as full RACI on both.
+**The document header is always "Moderation Guide."** Both formats use `# Moderation Guide` as the document title, followed by `## [Study Title]`, a `Study period: [Source-approved study period or TBD — fill in]` line, the RACI bullets, an optional `**Links:**` line, and the parameter table, in that order. Do not use "UX Research | Research Plan | Q3/Q4 2026" or any breadcrumb format — the doc type is always "Moderation Guide." The ownership block is standardized as full RACI on both.
 
 Populate each RACI field only from the approved Row 9 assignment. For Responsible and Accountable, the first placeholder is the person's name and the parenthetical placeholder is that person's role; fill each one separately from what the researcher gave. Never infer a role from a supplied name, and leave either unknown as the exact `[TBD — fill in]` placeholder.
 
@@ -408,14 +408,16 @@ Populate each RACI field only from the approved Row 9 assignment. For Responsibl
 
 ## [Study Title — derived from research goal]
 
-*[Source-approved study period or TBD — fill in]*
+Study period: [Source-approved study period or TBD — fill in]
 
 - **Responsible:** [TBD — fill in] ([TBD — fill in])
 - **Accountable:** [TBD — fill in] ([TBD — fill in])
 - **Consulted:** [TBD — fill in]
 - **Informed:** [TBD — fill in]
 
-[Prototype only — a Links row containing only audience-approved study/prototype links; never participant grids, schedules, biographies, or recording links]
+**Links:** [Approved link](URL) · [Approved link](URL)
+
+[The Links line is optional on both formats; omit it when there are no links. It holds only audience-approved study/prototype links, never participant grids, schedules, biographies, or recording links.]
 
 | Parameter | Detail |
 |-----------|--------|
@@ -478,7 +480,7 @@ The shared scaffolding above wraps this body identically for both formats.
 
 #### Visual
 
-**Default — Option 4 — Leadership:** use `scripts/option4_guide_layout.py` and `references/option4-guide-style.json`: landscape-letter export metadata, DM Serif Display/DM Sans, dark-green H2 bands, native lists, and aligned tables. Verify before delivery.
+**Default — Option 4 — Leadership:** use `scripts/option4_guide_layout.py` and `references/option4-guide-style.json`: landscape-letter export metadata, DM Serif Display/DM Sans, the title / study title / italic study period top matter, dark-green H2 bands, native lists at a 36pt step, aligned tables, and one empty spacer paragraph between block groups. Verify before delivery.
 
 **Plain-native fallback / explicit choice:** native Title/Heading/body styles and native tables only. Disclose that Option 4 was not applied.
 

@@ -1,12 +1,12 @@
 {
   "name": "Option 4 — Leadership (Moderation Guide)",
-  "version": "2026-10-02",
+  "version": "2026-10-29",
   "derived_from": "skills/research-plan/references/option4-style-contract.json",
-  "reference_usage": "Visual language shared with /research-plan Option 4; the runtime does not require access to any private reference document. page/colors/typography/warning/spacing tokens are copied verbatim from the research-plan contract so the finished look matches. The document structure is inferred generically (structure-agnostic) and each table's geometry is derived from its complete header.",
+  "reference_usage": "Visual language shared with /research-plan Option 4 (page geometry, colors, DM Serif Display / DM Sans, section bands, tables) and matched to the approved Meals MVP moderation guide (October 2026): top matter, vertical rhythm, list geometry, inline label styles, and the Session Flow table. The runtime does not require access to any reference document. The document structure is inferred generically (structure-agnostic) and each table's geometry is derived from its complete header.",
   "structure_agnostic": true,
   "supported_guide_shapes": [
-    "Interview / IDI (# Moderation Guide plus study-title top matter, RACI, Parameter and Consent tables, prose-bullet themes with indented probes, optional Parking Lot)",
-    "Prototype / Usability (# Moderation Guide plus study-title top matter, RACI, Parameter and Session Flow tables, bold-label read/do lists, optional vendor Communication & Deliverables back-matter)"
+    "Interview / IDI (# Moderation Guide plus study-title, study-period, RACI, and optional Links top matter; Parameter and Consent tables; prose-bullet themes with indented probes; optional Parking Lot)",
+    "Prototype / Usability (# Moderation Guide plus study-title, study-period, RACI, and optional Links top matter; Parameter and Phase | Description Session Flow tables; bold-label read/do lists; optional vendor Communication & Deliverables back-matter)"
   ],
   "page": {
     "document_mode": "PAGELESS",
@@ -38,20 +38,33 @@
       "size_pt": 16,
       "bold": true,
       "color": "#666666",
-      "_note": "Retained for backward-compatible parsing only. The canonical schema starts with # Moderation Guide and has no breadcrumb or kicker."
+      "_note": "Retained for backward-compatible parsing only (a line above the title or a fully italic top-matter line). The canonical schema has no breadcrumb; the study period line replaces it."
     },
     "title": {
       "font": "DM Serif Display",
       "size_pt": 26,
       "bold": true,
-      "color": "#003D29"
+      "color": "#003D29",
+      "named_style": "TITLE",
+      "_note": "The first line, '# Moderation Guide', rendered in the TITLE named style."
     },
     "phase_subtitle": {
       "font": "DM Serif Display",
       "size_pt": 14,
       "bold": true,
       "color": "#003D29",
-      "_note": "Styles the required ## Study Title top-matter line (dark-green-on-white, distinct from white-on-green section bands)."
+      "named_style": "NORMAL_TEXT",
+      "_note": "The study title. Written as the required '## [Study Title]' line after the title, rendered as a NORMAL_TEXT paragraph (not a heading, not a band), 0/3pt, keep-with-next."
+    },
+    "study_period": {
+      "font": "DM Serif Display",
+      "size_pt": 16,
+      "bold": true,
+      "italic": true,
+      "color": "#666666",
+      "named_style": "NORMAL_TEXT",
+      "text_prefix": "Study period:",
+      "_note": "The top-matter line that begins 'Study period:', directly under the study title. 0/16pt, keep-with-next."
     },
     "heading": {
       "font": "DM Serif Display",
@@ -65,26 +78,41 @@
       "size_pt": 14,
       "bold": true,
       "color": "#FFFFFF",
-      "_note": "Applied to every section Heading-2 after the required Study Title top-matter line."
+      "_note": "Applied to every section Heading-2 after the required Study Title top-matter line.",
+      "named_style": "HEADING_2"
     },
     "sub_phase_heading": {
       "font": "DM Serif Display",
       "size_pt": 12,
       "bold": true,
       "color": "#003D29",
-      "_note": "Applied to EVERY Heading-3 (e.g. 'Flow 1', '2.1'); green-on-white so it never reads as a band. Alt: DM Sans 11pt bold #003D29."
+      "_note": "Applied to EVERY Heading-3 (e.g. 'Meals Hub', 'Flow 1'); green-on-white so it never reads as a band. 12pt above / 4pt below.",
+      "named_style": "HEADING_3"
     },
     "body": {
       "font": "DM Sans",
       "size_pt": 10,
-      "color": "#000000"
+      "color": "#000000",
+      "named_style": "NORMAL_TEXT"
     },
     "context_note": {
       "font": "DM Sans",
       "size_pt": 9,
       "italic": true,
       "color": "#666666",
-      "_note": "Used for the optional 'Last updated' metadata line."
+      "_note": "Legacy optional 'Last updated:' line. Not part of the canonical top matter."
+    },
+    "links_line": {
+      "font": "DM Sans",
+      "size_pt": 10,
+      "color": "#000000",
+      "named_style": "NORMAL_TEXT",
+      "label": "Links:",
+      "label_bold": true,
+      "link_underline": true,
+      "link_color": "#000000",
+      "separator": " · ",
+      "_note": "Optional top-matter line '**Links:** [Label](url) · [Label](url)'. Links are black and underlined, never Google blue."
     }
   },
   "warning": {
@@ -94,18 +122,27 @@
     "foreground": "#6F4A00",
     "background": "#FFF2CC",
     "full_paragraph_shading": true,
-    "copy_source": "../../../references/output-status-and-labeling-conventions.md"
+    "copy_source": "../../../references/output-status-and-labeling-conventions.md",
+    "_note": "Test/demo runs only. The reference guide has no warning block; real-study guides omit it."
   },
   "structure": {
     "native_horizontal_rules": 0,
     "band_render": "shaded_h2_paragraph",
     "band_render_alt": "single_row_two_cell_table_698pt",
-    "role_inference": "canonical — first H1 must be 'Moderation Guide'; the immediately following H2 is the Study Title top-matter line; RACI = consecutive '**Label:** …' bullets; warning = the TEST ARTIFACT paragraph; every later H2 = band; every H3 = sub-phase; every table = Option 4 table styling; every list preserves nesting; all other paragraphs = body.",
+    "role_inference": "canonical — first H1 must be 'Moderation Guide'; the immediately following H2 is the study title (rendered NORMAL_TEXT); a top-matter line beginning 'Study period:' is the study period; a top-matter line beginning 'Links:' is the Links line; RACI = consecutive '**Label:** …' bullets; warning = the TEST ARTIFACT paragraph; every later H2 = band; every H3 = sub-phase; every table = Option 4 table styling; every list preserves nesting; all other paragraphs = body.",
     "no_terminal_section": "The guide may end anywhere (a table may appear after Post-Session Debrief). The formatter does NOT enforce a terminal section — that content rule lives in SKILL.md / the templates.",
     "variable_table_count": true,
     "variable_columns": true,
     "variable_header_rows": true,
-    "heading_outline_preserved": true
+    "heading_outline_preserved": true,
+    "top_matter_order": [
+      "title",
+      "study_title",
+      "study_period",
+      "raci",
+      "links_line (optional)",
+      "parameter_table"
+    ]
   },
   "section_bands": {
     "style": {
@@ -131,11 +168,11 @@
     "narrow_first_column_trigger": "#",
     "narrow_first_column_pt": 90,
     "label_first_column_pt": 144,
-    "column_width_rule": "Derive widths from the complete header. Phase|Time uses [554.4, 144] so the agenda phase stays wide. A first header cell of '#' uses [90, remaining]. Other two-column label/content tables such as Parameter|Detail and Cue|Read aloud use [144, 554.4]. For 3+ columns, reserve 144pt for the first label column and split the remainder evenly.",
+    "column_width_rule": "Derive widths from the complete header. Every two-column label/content table, including Parameter | Detail, Cue | Read aloud, and the Phase | Description Session Flow, uses [144, 554.4]. A first header cell of '#' uses [90, remaining]. For 3+ columns, reserve 144pt for the first label column and split the remainder evenly.",
     "top_matter_label_background": "#D9D9D9",
     "section_label_background": "#FFFFFF",
-    "label_background_rule": "The two-column Parameter|Detail dashboard in top matter gets the gray label column. In-section Consent and Session Flow tables use white body cells.",
-    "first_column_bold_rule": "The first column renders bold when every first cell in the source Markdown is fully bold, as in Parameter|Detail and Cue|Read aloud. Session Flow phases remain normal weight unless the approved Markdown explicitly emphasizes them.",
+    "label_background_rule": "The two-column Parameter | Detail dashboard in top matter gets the gray label column. In-section Consent and Session Flow tables use white cells.",
+    "first_column_bold_rule": "The first column renders bold when every first cell in the source Markdown is fully bold, as in Parameter | Detail and Cue | Read aloud. Session Flow phase labels stay regular weight.",
     "label_column_text": {
       "font": "DM Sans",
       "size_pt": 10,
@@ -157,6 +194,20 @@
         "color": "#FFFFFF"
       },
       "repeat_as_table_header": true
+    },
+    "session_flow": {
+      "header": [
+        "Phase",
+        "Description"
+      ],
+      "widths_pt": [
+        144,
+        554.4
+      ],
+      "label_bold": false,
+      "label_background": "#FFFFFF",
+      "timing": "each phase label ends with its approved minutes, e.g. 'Introduction & Think-Aloud Setup (5 min)'; the minutes sum to the session length",
+      "follows_band_directly": true
     }
   },
   "spacing": {
@@ -165,14 +216,107 @@
     "breadcrumb_space_below_pt": 16,
     "title_space_below_pt": 3,
     "phase_subtitle_space_below_pt": 3,
+    "study_period_space_below_pt": 16,
     "band_space_above_pt": 20,
     "band_space_below_pt": 6,
     "sub_phase_space_above_pt": 12,
     "sub_phase_space_below_pt": 4,
+    "raci_space_above_pt": 12,
+    "raci_space_below_pt": 12,
     "raci_indent_start_pt": 36,
     "raci_indent_first_line_pt": 18,
     "list_indent_start_pt": 36,
     "list_indent_first_line_pt": 18,
-    "list_indent_level_step_pt": 18
+    "list_indent_level_step_pt": 36
+  },
+  "inline_roles": {
+    "topic_label": {
+      "pattern": "**Topic N — Name**",
+      "rendered_as": "body paragraph, whole line bold DM Sans 10; never a heading"
+    },
+    "italic_label_bullet": {
+      "pattern": "- *Objective:* … / - *Key Questions:* …",
+      "label": {
+        "italic": true,
+        "bold": false
+      },
+      "value": {
+        "italic": false,
+        "bold": false
+      }
+    },
+    "bold_label_bullet": {
+      "pattern": "- **Label:** \"quoted script\"",
+      "label": {
+        "bold": true
+      },
+      "value": {
+        "bold": false
+      }
+    },
+    "checklist_item": {
+      "pattern": "- ☐ item",
+      "rendered_as": "ordinary ● bullet whose text starts with '☐ ' (not a native checkbox)"
+    },
+    "moderator_note": {
+      "pattern": "[bracketed instruction]",
+      "rendered_as": "plain body text; no italic, gray, or blockquote treatment"
+    }
+  },
+  "vertical_rhythm": {
+    "mechanism": "explicit empty spacer paragraphs, reconciled by normalize (inserted, removed, or merged) and styled by format",
+    "spacer_style": {
+      "named_style": "NORMAL_TEXT",
+      "content": "\n",
+      "text_style": "none (inherits the NORMAL_TEXT named style)",
+      "alignment": "START",
+      "line_spacing_percent": 115,
+      "space_above_pt": 0,
+      "space_below_pt": 0,
+      "indent_start_pt": 0,
+      "indent_first_line_pt": 0,
+      "keep_with_next": false,
+      "avoid_widow_and_orphan": false,
+      "bullet": false,
+      "shading": false
+    },
+    "spacers_per_gap": 1,
+    "no_spacer": [
+      "before the title",
+      "between the title, the study title, and the study period",
+      "after a section band (H2), including between the Session Flow band and its table",
+      "after a sub-phase heading (H3)",
+      "before a sub-phase heading (H3)",
+      "between items of the same list or RACI block"
+    ],
+    "one_spacer": "between every other pair of adjacent block groups: body to list, list to body, body to body, either side of a table, and before the next band",
+    "trailing": "none after a final paragraph; Google Docs keeps one empty paragraph after a final table"
+  },
+  "lists": {
+    "bullet_preset": "BULLET_DISC_CIRCLE_SQUARE",
+    "bullet_glyphs": [
+      "●",
+      "○",
+      "■"
+    ],
+    "numbered_preset": "NUMBERED_DECIMAL_ALPHA_ROMAN",
+    "numbered_glyphs": [
+      "DECIMAL %0.",
+      "ALPHA %1.",
+      "ROMAN %2."
+    ],
+    "indent_start_pt_by_level": [
+      36,
+      72,
+      108
+    ],
+    "indent_first_line_pt_by_level": [
+      18,
+      54,
+      90
+    ],
+    "item_space_above_pt": 0,
+    "item_space_below_pt": 0,
+    "separate_list_per_block": true
   }
 }

@@ -1,17 +1,24 @@
 # Analysis Delivery Routing
 
-These are the default delivery rules for the `analysis` skill only. They do not set delivery defaults for `research-plan`, `mod-guide`, `report`, or any other skill; each skill owns its own delivery default. Requesting analysis with this skill selects the analysis delivery default below. Google Doc creation still waits for analytic approval, final QA, and a confirmed destination.
+These are the default delivery rules for the `analysis` skill only. They do not set delivery defaults for `research-plan`, `mod-guide`, `report`, or any other skill; each skill owns its own delivery default. Requesting analysis with this skill selects the analysis delivery default below. Deck creation still waits for analytic approval, final QA, and a confirmed destination.
 
 ## Decision matrix
 
-| Scenario | Default completed deliverable | Google Doc creation rule | Style rule | If Google Docs is unavailable |
-| --- | --- | --- | --- | --- |
-| **Any researcher · real study** | One Instacart Green Google Doc. | After analysis approval and final QA, create and verify one Doc in the confirmed project folder. If the destination is unknown or ambiguous, ask once for it and wait. Do not ask for output-format or style confirmation. | Apply Instacart Green automatically. | Return the complete analysis in Markdown, preserve the Instacart Green structure as far as Markdown allows, and state that Drive placement, native Docs formatting, and link verification remain incomplete. |
-| **Any researcher · skill test or mock run** | One clearly labelled Instacart Green Google Doc. | After analysis approval and final QA, create and verify one test Doc only in a confirmed test/project folder. If the destination is unknown or ambiguous, ask once for it and wait; do not choose a Drive location. | Apply Instacart Green automatically and retain the required test/provenance label. | Return the complete, correctly labelled test artifact in Markdown and state the Docs-specific limitation. Missing Docs tooling is a delivery limitation, not an analysis failure. |
-| **Explicit researcher override** | Change only the requested dimension: a format-only override keeps Instacart Green; a style-only override keeps one Google Doc. If both are specified, change both. | Follow the requested format. For any external write, ask once for a destination that is unknown or ambiguous, then wait. | Use an explicitly requested style; otherwise retain Instacart Green. | Return the complete content in an available format and identify only the unavailable format-specific verification. |
-| **Google Docs or GWS unavailable** | A complete Markdown artifact, not a partial preview. | Do not claim a Doc was created. Do not install or mandate a connector without separate authorization. | Preserve the selected structure and style semantics as far as Markdown allows. | Provide the artifact plus a short statement of what remains: Drive placement, native Docs formatting, and link verification. |
+The finished analysis is a **Google Slides deck built from Instacart's official brand template**, following [`../../../references/brand-deck/README.md`](../../../references/brand-deck/README.md). The Instacart Green Google Doc described in `instacart-green-analysis-style.md` remains available only when the researcher asks for a Doc.
 
-The default route authorizes one completed Google Doc after the analysis and final-QA gates pass; it does not authorize early drafts, extra copies, or writing to an inferred destination. Before retrying after an ambiguous creation result, check the confirmed folder for the Doc to avoid duplicates. An explicit researcher request for a different format or style overrides the default.
+| Scenario | Default completed deliverable | Creation rule | Style rule | If Slides is unavailable |
+| --- | --- | --- | --- | --- |
+| **Any researcher · real study** | One brand-template analysis deck. | After analysis approval and final QA, copy the template into the confirmed project folder, build the deck from approved content only, and verify every slide. If the destination is unknown or ambiguous, ask once and wait. Don't ask about format or style. | The brand template's own styles, kept by filling its text boxes in place. | Return the complete analysis in Markdown and state that the deck, Drive placement, and slide verification remain incomplete, naming the missing tool or access. |
+| **Any researcher · skill test or mock run** | Labelled Markdown. A test deck only when the tester asks for one. | A requested test deck goes only to a confirmed test folder, with the test label on the title and closing slides. | Brand template, plus the required test/provenance label. | Return the complete, correctly labelled Markdown. Missing Slides tooling is a delivery limitation, not an analysis failure. |
+| **Explicit researcher override** | Exactly what was asked for: an Instacart Green Google Doc, or Markdown only. | Follow the requested format. For any external write, ask once for an unknown or ambiguous destination, then wait. | Instacart Green for a Doc; the brand template for a deck. | Return the complete content in an available format and name the format-specific step that couldn't run. |
+
+The default route authorizes one completed deck after the analysis and final-QA gates pass. It doesn't authorize early drafts, extra copies, or writing to an inferred destination. Before retrying after an ambiguous copy or creation result, check the confirmed folder for the deck, to avoid duplicates.
+
+### What goes on the analysis deck
+
+- **n=1 memo or n=2–4 pilot signals:** Title → Method & sample → Research questions answered (when a question or plan exists) → one Finding slide per evidence-backed observation or signal, in participant-specific or signal language → Next research steps on the next-steps slide (validation priorities, never product work) → Closing. No BLUF recommendations slide, no P0/P1/P2, and no recommendations table.
+- **n≥5:** Title → Bottom line → Method & sample → Research questions answered → Findings (claim headline; evidence with count and percentage; "But consider" in the evidence box) → Task success & severity (usability overlay only) → Insights → recommendations (only when the multi-session evidence supports prioritization) → Next steps → Appendix (codebook or crosswalk) → Closing.
+- Every quote on a slide is verbatim from the evidence ledger, and every number uses the count-plus-percentage format.
 
 ## Status labels are distinct
 
@@ -35,12 +42,12 @@ Participant IDs such as `Participant P01` are evidence-source identifiers. Prior
 
 ## Adapter routing
 
-After the route's approval, QA, and destination requirements are met, use the available supported adapter:
+After the route's approval, QA, and destination requirements are met:
 
-- native Google Docs MCP; or
-- `gws`/raw Google Docs API.
+- **Deck (default):** use the connected Google Slides / Google Workspace tools and the build and verify steps in `../../../references/brand-deck/README.md`.
+- **Instacart Green Doc (on request):** use the native Google Docs MCP or `gws`/raw Google Docs API, following `instacart-green-analysis-style.md` for formatting operations, adapter-specific line-spacing units, and verification.
 
-Neither is universally required. Follow `instacart-green-analysis-style.md` for equivalent formatting operations, adapter-specific line-spacing units, and verification. If no adapter is available, use the fallback in the matrix and report the exact limitation.
+If no adapter is available, use the fallback in the matrix and report the exact limitation.
 
 ## Offline content and render contract
 

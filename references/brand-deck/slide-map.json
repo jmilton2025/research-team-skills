@@ -1,0 +1,1582 @@
+{
+ "presentation_id": "1OtbcbEOY2jE8wjp57mcvY6nf-iaeV2XZ3sddUwLqBog",
+ "title": "Oct 2026 Template",
+ "url": "https://docs.google.com/presentation/d/1OtbcbEOY2jE8wjp57mcvY6nf-iaeV2XZ3sddUwLqBog/edit",
+ "mapped_on": "2026-10-29",
+ "page_size_emu": {
+  "width": 9144000,
+  "height": 5143500,
+  "aspect": "16:9",
+  "inches": [
+   10.0,
+   5.625
+  ],
+  "points": [
+   720,
+   405
+  ]
+ },
+ "palette": {
+  "primary": {
+   "Carrot": "#FF7009",
+   "Lime": "#0AAD0A",
+   "Kale": "#003D29",
+   "Honeydew": "#C5FF96",
+   "Cantaloupe": "#FFBB6E",
+   "Spinach": "#3A682F"
+  },
+  "secondary": {
+   "Tangerine": "#FFA323",
+   "Matcha": "#85CC3E",
+   "Granny Smith": "#DBEF77",
+   "Banana": "#FFDC23",
+   "Mushroom": "#EDC9A2",
+   "Butter": "#F9FB93",
+   "Watermelon": "#FF8E67",
+   "Mint": "#C6F0CB"
+  },
+  "neutrals": {
+   "Dark Chocolate": "#442202",
+   "Cashew 80": "#32302E",
+   "Cashew 60": "#716C67",
+   "Cashew 50": "#AFA9A0",
+   "Cashew 40": "#C8C1B7",
+   "Cashew 30": "#E1D9CE",
+   "Cashew 20": "#EFE1CF",
+   "Cashew 10": "#FAF1E5"
+  }
+ },
+ "observed_usage": {
+  "dark_bg": "Kale #003D29 (renders #003D28) - titles, agenda, closing, end card, table header rows",
+  "light_bg": "Cashew 10 #FAF1E5 - default content background",
+  "panels_cards": "Cashew 20 #EFE1CF - tinted panels, filled cards, zebra rows",
+  "accent_bg": "Spinach #3A682F (exec summary, timelines, 3-point), Matcha/Butter/Cantaloupe/Spinach header bands",
+  "section_bgs": "Cantaloupe, Honeydew, Lime, Butter, Mushroom, Banana, Watermelon, Mint organic produce silhouettes",
+  "title_on_kale": "Cantaloupe #FFBB6E",
+  "label_on_kale": "Cashew 10 #FAF1E5",
+  "agenda_text_on_kale": "Honeydew #C5FF96",
+  "body_on_light": "near-black (#000000 sampled; may be Cashew 80 #32302E)",
+  "status": {
+   "on_track": "Matcha #85CC3E",
+   "at_risk": "~#FFBB1A (between Tangerine #FFA323 and Banana #FFDC23)",
+   "off_track": "Carrot #FF7009"
+  },
+  "arrows": "Lime #0AAD0A arrows on light slides; Carrot/Lime arrow top-right on title slides",
+  "highlight_outline": "Tangerine #FFA323 (table row highlight slide 97)",
+  "rules_gridlines": "~#ABAA9F (Cashew 50)"
+ },
+ "typography": {
+  "status": "estimated_from_thumbnails",
+  "note": "get_page returns no font family/size/weight. Typeface is a geometric grotesk; Instacart brand guidance names DM Sans (Bold titles / Regular body). Verify in Slides UI before hard-coding.",
+  "roles": {
+   "cover_title_short": {
+    "approx_pt": "54-60",
+    "weight": "Bold",
+    "color": "Cantaloupe #FFBB6E on Kale; Kale on Cashew"
+   },
+   "cover_title_long": {
+    "approx_pt": "40-44",
+    "weight": "Bold",
+    "color": "Cantaloupe on Kale; Kale on light; Honeydew on Spinach"
+   },
+   "cover_eyebrow": {
+    "approx_pt": "14-16",
+    "weight": "Bold/Medium",
+    "color": "Cashew 10 on Kale; Kale on light"
+   },
+   "cover_names_date": {
+    "approx_pt": "7-8",
+    "weight": "Regular",
+    "color": "Cashew 10 on Kale"
+   },
+   "slide_header": {
+    "approx_pt": "20-24",
+    "weight": "Bold/Semibold",
+    "color": "near-black on light; Cashew 10 on Spinach/Kale"
+   },
+   "subheader": {
+    "approx_pt": "9-10",
+    "weight": "Regular",
+    "color": "near-black"
+   },
+   "body": {
+    "approx_pt": "9-11",
+    "weight": "Regular",
+    "color": "near-black"
+   },
+   "card_label_number": {
+    "approx_pt": "9-10",
+    "weight": "Bold",
+    "color": "near-black"
+   },
+   "big_number_stat": {
+    "approx_pt": "32-36",
+    "weight": "Medium",
+    "color": "near-black; '%' set smaller"
+   },
+   "statement_quote": {
+    "approx_pt": "30-32",
+    "weight": "Regular",
+    "color": "Cashew 10 on Spinach"
+   },
+   "break_title": {
+    "approx_pt": "32-36",
+    "weight": "Bold",
+    "color": "Kale / Honeydew / Spinach / Dark Chocolate depending on bg"
+   },
+   "break_subtitle": {
+    "approx_pt": "14-16",
+    "weight": "Bold",
+    "color": "Lime / Carrot / Kale"
+   },
+   "pill_label": {
+    "approx_pt": "6-7",
+    "weight": "Regular",
+    "color": "Kale text on Honeydew/Butter/Cantaloupe pill"
+   },
+   "table_header": {
+    "approx_pt": "8-9",
+    "weight": "Bold",
+    "color": "Cashew 10 on Kale row"
+   },
+   "table_body": {
+    "approx_pt": "8-9",
+    "weight": "Regular",
+    "color": "near-black"
+   },
+   "caption_footer": {
+    "approx_pt": "4-5",
+    "weight": "Regular",
+    "color": "Kale"
+   }
+  }
+ },
+ "brand_marks": {
+  "logo": "instacart carrot + wordmark. Large top-left on title slides; small bottom-left on content slides; centered on end cards (slides 106/107). Logo is not returned by get_page -> it lives on the layout/master, so duplicated slides inherit it.",
+  "footer": "Bottom-right outlined pill 'CONFIDENTIAL' + outlined page-number pill on content/section slides (not on title slides). The empty TEXT_BOX on most content slides is the page-number slot; leave it alone.",
+  "title_arrow": "Arrow glyph top-right on title slides (Lime on Kale, Carrot on light)",
+  "illustrations": "Watercolor produce art on slides 4-7; flat organic produce silhouettes on 10-17 and break slides 29-33"
+ },
+ "template_rules": [
+  "Slide 1 is a WIP banner ('Still cooking - Check back for the latest version'): the template itself is marked work-in-progress; delete slide 1 from any generated deck.",
+  "Long title: 'max use is 2-3 lines' (slides 8-13).",
+  "Metric slides: 'The headline should sum up the key metrics' (73-76).",
+  "Insights/recs: 'Sum up insights & recommendations below in a concise way'; left box = 'Insight that directly supports the recommendation', right box = 'This is what you think the team should do.' (68-71).",
+  "'Optional label' pills above screenshots are optional (77-82); 'Subtitle option here' on break slides is optional.",
+  "Slide 21 contains leftover sample content (Claude Code 101 / Anthropic Design AMA / Office Hours) - replace or skip.",
+  "Gantt slides 98-99 contain the typo 'Q4 ‘256' (should be 'Q4 ‘26') - fix when reusing.",
+  "No explicit do/don't slide exists. Speaker notes could not be read with the permitted tools."
+ ],
+ "workflow": [
+  "Never edit this template; make a Drive copy of the deck first (outside this mapping task), then work on the copy.",
+  "In the copy, duplicateObject the template slide; pass objectIds {old_element_id: new_id} so fills are deterministic, or re-read the new slide with get_page to get generated IDs.",
+  "Replace text: deleteText(objectId, textRange ALL) then insertText(objectId, text). Cards use line breaks between label / value / body - keep the same paragraph count to preserve styling.",
+  "Tables: insertText with cellLocation; deleteTableRow / insertTableRow to resize.",
+  "Delete all unused template slides (and slide 1) at the end; reorder with updateSlidesPosition."
+ ],
+ "readout_order": [
+  "title",
+  "bluf_exec_summary",
+  "agenda",
+  "method_and_sample",
+  "research_questions_answered",
+  "section_divider",
+  "finding",
+  "quote_highlight",
+  "task_success_severity_table",
+  "recommendations_table",
+  "next_steps",
+  "appendix",
+  "closing"
+ ],
+ "readout_mapping": {
+  "title": {
+   "duplicate": "g3ddc97de995_1_513",
+   "slide_no": 8,
+   "alt": [
+    {
+     "slide_no": 2,
+     "id": "g3ddc97de995_1_468",
+     "when": "title fits one short line"
+    },
+    {
+     "slide_no": 4,
+     "id": "g3ddc97de995_1_623",
+     "when": "want produce illustration"
+    }
+   ],
+   "fill": {
+    "g3ddc97de995_1_514": "eyebrow label, e.g. 'UX Research Readout'",
+    "g3ddc97de995_1_515": "study title (max 2-3 lines)",
+    "g3ddc97de995_1_516": "Researcher name \\v role",
+    "g3ddc97de995_1_517": "Partner name \\v role (or delete)",
+    "g3ddc97de995_1_519": "Partner name \\v role (or delete)",
+    "g3ddc97de995_1_518": "Month DD, YYYY"
+   }
+  },
+  "bluf_exec_summary": {
+   "duplicate": "g3c583a198fc_0_1300",
+   "slide_no": 22,
+   "alt": [
+    {
+     "slide_no": 85,
+     "id": "g3cea868f3d3_0_1729",
+     "when": "BLUF as 3 numbered takeaways (fill g3d1d3e03454_0_277/278/279; header g3d4cae52bba_1_81; sub g3d4cae52bba_1_82)"
+    }
+   ],
+   "fill": {
+    "g3cea868f3d3_0_242": "'Bottom line' / 'Executive summary'",
+    "g3c583a198fc_0_1301": "1-3 sentence BLUF (<= ~35 words)"
+   }
+  },
+  "agenda": {
+   "duplicate": "g3c583a198fc_0_11",
+   "slide_no": 19,
+   "alt": [
+    {
+     "slide_no": 18,
+     "id": "g3d1d3e03454_0_18",
+     "when": "dark Kale agenda"
+    }
+   ],
+   "fill": {
+    "g3c583a198fc_0_86": "'Agenda'",
+    "g3cec7d21da8_1_8": "01 ...",
+    "g3cec7d21da8_1_9": "02 ...",
+    "g3cec7d21da8_1_3": "03 ...",
+    "g3cec7d21da8_1_4": "04 ...",
+    "g3cec7d21da8_1_11": "05 ..."
+   }
+  },
+  "method_and_sample": {
+   "duplicate": "g3cea868f3d3_0_261",
+   "slide_no": 44,
+   "alt": [
+    {
+     "slide_no": 74,
+     "id": "g396fd92fe40_1_2769",
+     "when": "lead with one big sample number (n=) plus 2 small stats"
+    }
+   ],
+   "fill": {
+    "g3d4cae52bba_1_58": "'Method & sample'",
+    "g3d4cae52bba_1_59": "one-line study summary (method, dates, platform)",
+    "g3cea868f3d3_0_264": "'Method' \\n 'Moderated usability' \\n detail",
+    "g3cea868f3d3_0_265": "'Participants' \\n 'n=8' \\n segment/criteria",
+    "g3cea868f3d3_0_266": "'Tasks' \\n '5 tasks' \\n list",
+    "g3cea868f3d3_0_267": "'Fieldwork' \\n dates \\n caveats"
+   },
+   "card_text_structure": "line1 label (bold, small) / line2 '00X' value (bold) / line3 body"
+  },
+  "research_questions_answered": {
+   "duplicate": "g3ddc97de995_1_197",
+   "slide_no": 63,
+   "alt": [
+    {
+     "slide_no": 62,
+     "id": "g396fd92fe40_1_2512",
+     "when": "2 RQs"
+    },
+    {
+     "slide_no": 64,
+     "id": "g3ddc97de995_1_216",
+     "when": "4 RQs"
+    }
+   ],
+   "fill": {
+    "g3ddc97de995_1_199": "'What we learned'",
+    "g3ddc97de995_1_200": "subheader",
+    "g3ddc97de995_1_201": "RQ1 \\n question text",
+    "g3ddc97de995_1_202": "RQ2 \\n question",
+    "g3ddc97de995_1_203": "RQ3 \\n question",
+    "g3ddc97de995_1_207": "Answer 1 \\n answer",
+    "g3ddc97de995_1_208": "Answer 2 \\n answer",
+    "g3ddc97de995_1_209": "Answer 3 \\n answer"
+   }
+  },
+  "finding": {
+   "duplicate": "h5dd2d203c9a55db4_0_74",
+   "slide_no": 37,
+   "alt": [
+    {
+     "slide_no": 77,
+     "id": "g3cea868f3d3_0_197",
+     "when": "evidence is a screenshot (header g3d1d3e03454_0_334, body g3d4cae52bba_0_192, image g3ddc97de995_1_106, label g3ddc97de995_1_813)"
+    },
+    {
+     "slide_no": 39,
+     "id": "h3e0e9d65fddd9736_1_8",
+     "when": "longer evidence list (left h3e0e9d65fddd9736_1_11, right panel h3e0e9d65fddd9736_1_43)"
+    }
+   ],
+   "fill": {
+    "h5dd2d203c9a55db4_0_75": "claim headline (full-sentence finding)",
+    "h5dd2d203c9a55db4_0_77": "evidence summary: x/n participants, metric, 2 bullets",
+    "h5dd2d203c9a55db4_0_78": "verbatim quote(s) + participant IDs, or implication bullets"
+   }
+  },
+  "quote_highlight": {
+   "duplicate": "g3c583a198fc_0_1300",
+   "slide_no": 22,
+   "alt": [
+    {
+     "slide_no": 27,
+     "id": "g3cec7d21da8_1_49",
+     "when": "very short quote (<10 words) as a break slide: title g3cec7d21da8_1_52, attribution g3d4cae52bba_0_227"
+    }
+   ],
+   "fill": {
+    "g3cea868f3d3_0_242": "'In their words' or theme name",
+    "g3c583a198fc_0_1301": "“verbatim quote” \\n — P4, segment"
+   },
+   "note": "No dedicated quote layout exists in the template; slide 22 large-statement style is the closest."
+  },
+  "task_success_severity_table": {
+   "duplicate": "h3e0e9d65fddd9736_1_46",
+   "slide_no": 103,
+   "alt": [
+    {
+     "slide_no": 102,
+     "id": "h5dd2d203c9a55db4_0_51",
+     "when": "simpler 4-col severity table (table h5dd2d203c9a55db4_0_69 5x4; pills h5dd2d203c9a55db4_0_70..73)"
+    }
+   ],
+   "fill": {
+    "h3e0e9d65fddd9736_1_47": "'Task success & severity'",
+    "h3e0e9d65fddd9736_1_53": "TABLE 7x6: header row -> Task | Success | Time on task | Severity | Status | Notes; rows 2-7 one task each",
+    "h3e0e9d65fddd9736_1_55": "legend pill (amber) -> 'Partial' or 'Medium'",
+    "h3e0e9d65fddd9736_1_56": "legend pill (green) -> 'Pass' or 'Low'",
+    "h3e0e9d65fddd9736_1_57": "legend pill (orange) -> 'Fail' or 'High'",
+    "h3e0e9d65fddd9736_1_58..63": "status dots per row; recolor fill to Matcha #85CC3E / Banana-Tangerine (sampled ~#FFBB1A) / Carrot #FF7009"
+   },
+   "table_fill_method": "batch_update insertText with cellLocation{rowIndex,columnIndex} on the table objectId; delete unused rows with deleteTableRow"
+  },
+  "recommendations_table": {
+   "duplicate": "g3ddc97de995_1_326",
+   "slide_no": 70,
+   "alt": [
+    {
+     "slide_no": 71,
+     "id": "g3ddc97de995_1_728",
+     "when": "4 recommendations"
+    },
+    {
+     "slide_no": 69,
+     "id": "g3ddc97de995_1_715",
+     "when": "2 recommendations"
+    },
+    {
+     "slide_no": 102,
+     "id": "h5dd2d203c9a55db4_0_51",
+     "when": "need owner/priority columns"
+    }
+   ],
+   "fill": {
+    "g3ddc97de995_1_330": "headline summarizing what to do",
+    "g3ddc97de995_1_338": "'Insights' (or 'Evidence')",
+    "g3ddc97de995_1_339": "'Recommendations'",
+    "g3ddc97de995_1_332": "insight 1",
+    "g3ddc97de995_1_333": "rec 1",
+    "g3ddc97de995_1_334": "insight 2",
+    "g3ddc97de995_1_335": "rec 2",
+    "g3ddc97de995_1_336": "insight 3",
+    "g3ddc97de995_1_337": "rec 3"
+   }
+  },
+  "next_steps": {
+   "duplicate": "h5dd2d203c9a55db4_0_51",
+   "slide_no": 102,
+   "alt": [
+    {
+     "slide_no": 86,
+     "id": "g3d1d3e03454_0_260",
+     "when": "time-phased next steps (Q labels g3d1d3e03454_0_271..273, items g3d1d3e03454_0_261/266/267)"
+    },
+    {
+     "slide_no": 57,
+     "id": "g396fd92fe40_1_2707",
+     "when": "3 headline actions as dark tiles"
+    }
+   ],
+   "fill": {
+    "h5dd2d203c9a55db4_0_54": "'Next steps'",
+    "h5dd2d203c9a55db4_0_69": "TABLE 5x4: Action | Owner | Status | Due/Update",
+    "h5dd2d203c9a55db4_0_70..73": "status pills per row (On track/At risk/Off track -> Not started/In progress/Done if desired)"
+   }
+  },
+  "section_divider": {
+   "duplicate": "g3cec7d21da8_1_49",
+   "slide_no": 27,
+   "alt": [
+    {
+     "slide_no": 28,
+     "id": "g3cec7d21da8_1_55"
+    },
+    {
+     "slide_no": 30,
+     "id": "g3d4cae52bba_1_13"
+    }
+   ],
+   "fill": {
+    "g3cec7d21da8_1_52": "section name",
+    "g3d4cae52bba_0_227": "optional subtitle (delete text if unused)"
+   }
+  },
+  "appendix": {
+   "divider": {
+    "duplicate": "g3cec7d21da8_1_55",
+    "slide_no": 28,
+    "fill": {
+     "g3cec7d21da8_1_58": "'Appendix'",
+     "g3d4cae52bba_0_224": "e.g. 'Detailed findings, screener, task list'"
+    }
+   },
+   "content_slides": [
+    {
+     "slide_no": 35,
+     "id": "h5dd2d203c9a55db4_0_36",
+     "use": "text detail: header h5dd2d203c9a55db4_0_37, body h5dd2d203c9a55db4_0_42"
+    },
+    {
+     "slide_no": 97,
+     "id": "g3cea868f3d3_0_1841",
+     "use": "raw data table g3cea868f3d3_0_1844 (7x7), header g396fd92fe40_1_3087"
+    },
+    {
+     "slide_no": 94,
+     "id": "g3cea868f3d3_0_1773",
+     "use": "chart: header g3cea868f3d3_0_1776, chart name g3cea868f3d3_0_1779, text g3cea868f3d3_0_3039, chart g3cea868f3d3_0_3045 (replace)"
+    }
+   ]
+  },
+  "closing": {
+   "duplicate": "g3cea868f3d3_0_1767",
+   "slide_no": 105,
+   "alt": [
+    {
+     "slide_no": 106,
+     "id": "g3ddc97de995_1_898",
+     "when": "logo-only end card"
+    }
+   ],
+   "fill": {
+    "g3cea868f3d3_0_1768": "'Thank you!' / 'Questions?'",
+    "g3ddc97de995_1_907": "where to find the full report / repo link",
+    "g3ddc97de995_2_203": "contacts (Name \\v Title \\v email) - trim to real people",
+    "g3ddc97de995_1_908": "CTA pill, e.g. 'Read the full report →' (or delete)"
+   }
+  }
+ },
+ "slides": [
+  {
+   "slide_no": 1,
+   "id": "g396fd92fe40_1_3095",
+   "purpose": "wip_banner",
+   "name": "WIP 'Still cooking' notice",
+   "background": "Cantaloupe #FFBB6E",
+   "elements": [
+    {
+     "id": "g396fd92fe40_1_3096",
+     "type": "TEXT_BOX",
+     "preview": "Still cooking / Check back for the latest version"
+    },
+    {
+     "id": "g396fd92fe40_1_3097",
+     "type": "TEXT_BOX",
+     "preview": "WIP"
+    },
+    {
+     "id": "g396fd92fe40_1_3104",
+     "type": "TEXT_BOX",
+     "preview": "(empty)"
+    }
+   ]
+  },
+  {
+   "slide_no": 2,
+   "id": "g3ddc97de995_1_468",
+   "purpose": "title",
+   "name": "Title - Kale, side label",
+   "background": "Kale #003D29",
+   "elements": [
+    {
+     "id": "g3ddc97de995_1_469",
+     "type": "TEXT_BOX",
+     "preview": "Presentation Template"
+    },
+    {
+     "id": "g3ddc97de995_1_470",
+     "type": "TEXT_BOX",
+     "preview": "Title"
+    },
+    {
+     "id": "g3ddc97de995_1_471",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    },
+    {
+     "id": "g3ddc97de995_1_472",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    },
+    {
+     "id": "g3ddc97de995_1_473",
+     "type": "TEXT_BOX",
+     "preview": "Month DD, YYYY"
+    },
+    {
+     "id": "g3ddc97de995_1_474",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    }
+   ]
+  },
+  {
+   "slide_no": 4,
+   "id": "g3ddc97de995_1_623",
+   "purpose": "title",
+   "name": "Title - Kale + pepper/pomegranate illustration",
+   "background": "Kale #003D29",
+   "elements": [
+    {
+     "id": "g3ddc97de995_1_624",
+     "type": "TEXT_BOX",
+     "preview": "Title"
+    },
+    {
+     "id": "g3ddc97de995_1_626",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    },
+    {
+     "id": "g3ddc97de995_1_627",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    },
+    {
+     "id": "g3ddc97de995_1_628",
+     "type": "TEXT_BOX",
+     "preview": "Month DD, YYYY"
+    },
+    {
+     "id": "g3ddc97de995_1_629",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    },
+    {
+     "id": "g3ddc97de995_2_84",
+     "type": "TEXT_BOX",
+     "preview": "Presentation Template"
+    }
+   ]
+  },
+  {
+   "slide_no": 8,
+   "id": "g3ddc97de995_1_513",
+   "purpose": "title",
+   "name": "Long title (2-3 lines) - Kale",
+   "background": "Kale #003D29",
+   "elements": [
+    {
+     "id": "g3ddc97de995_1_514",
+     "type": "TEXT_BOX",
+     "preview": "Presentation Template"
+    },
+    {
+     "id": "g3ddc97de995_1_515",
+     "type": "TEXT_BOX",
+     "preview": "Longer title version max 2-3 lines"
+    },
+    {
+     "id": "g3ddc97de995_1_516",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    },
+    {
+     "id": "g3ddc97de995_1_517",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    },
+    {
+     "id": "g3ddc97de995_1_518",
+     "type": "TEXT_BOX",
+     "preview": "Month DD, YYYY"
+    },
+    {
+     "id": "g3ddc97de995_1_519",
+     "type": "TEXT_BOX",
+     "preview": "First Lastname/Title"
+    }
+   ]
+  },
+  {
+   "slide_no": 18,
+   "id": "g3d1d3e03454_0_18",
+   "purpose": "agenda",
+   "name": "Agenda 5 items - Kale",
+   "background": "Kale #003D29",
+   "elements": [
+    {
+     "id": "g3d1d3e03454_0_19",
+     "type": "TEXT_BOX",
+     "preview": "(empty, page-number slot)"
+    },
+    {
+     "id": "g3d1d3e03454_0_20",
+     "type": "TEXT_BOX",
+     "preview": "Agenda"
+    },
+    {
+     "id": "g3d1d3e03454_0_258",
+     "type": "RECTANGLE",
+     "preview": "01 Agenda item here"
+    },
+    {
+     "id": "g3d1d3e03454_0_26",
+     "type": "RECTANGLE",
+     "preview": "02 Agenda item here"
+    },
+    {
+     "id": "g3d1d3e03454_0_21",
+     "type": "RECTANGLE",
+     "preview": "03 Agenda item here"
+    },
+    {
+     "id": "g3d1d3e03454_0_22",
+     "type": "RECTANGLE",
+     "preview": "04 Agenda item here"
+    },
+    {
+     "id": "g3d1d3e03454_0_27",
+     "type": "RECTANGLE",
+     "preview": "05 Agenda item here"
+    },
+    {
+     "id": "g3d1d3e03454_0_23/24/25/28/259",
+     "type": "STRAIGHT_CONNECTOR_1",
+     "preview": "divider lines"
+    }
+   ]
+  },
+  {
+   "slide_no": 19,
+   "id": "g3c583a198fc_0_11",
+   "purpose": "agenda",
+   "name": "Agenda 5 items - Cashew, zebra rows",
+   "background": "Cashew 10 #FAF1E5",
+   "elements": [
+    {
+     "id": "g3c583a198fc_0_85",
+     "type": "TEXT_BOX",
+     "preview": "(empty, page-number slot)"
+    },
+    {
+     "id": "g3c583a198fc_0_86",
+     "type": "TEXT_BOX",
+     "preview": "Agenda"
+    },
+    {
+     "id": "g3c583a198fc_2_30",
+     "type": "TEXT_BOX",
+     "preview": "(empty)"
+    },
+    {
+     "id": "g3cec7d21da8_1_1/2",
+     "type": "RECTANGLE",
+     "preview": "row-shading bands"
+    },
+    {
+     "id": "g3cec7d21da8_1_8",
+     "type": "RECTANGLE",
+     "preview": "01 Agenda item here"
+    },
+    {
+     "id": "g3cec7d21da8_1_9",
+     "type": "RECTANGLE",
+     "preview": "02 Agenda item here"
+    },
+    {
+     "id": "g3cec7d21da8_1_3",
+     "type": "RECTANGLE",
+     "preview": "03 Agenda item here"
+    },
+    {
+     "id": "g3cec7d21da8_1_4",
+     "type": "RECTANGLE",
+     "preview": "04 Agenda item here"
+    },
+    {
+     "id": "g3cec7d21da8_1_11",
+     "type": "RECTANGLE",
+     "preview": "05 Agenda item here"
+    },
+    {
+     "id": "g3cec7d21da8_1_5/6/7/10/12",
+     "type": "STRAIGHT_CONNECTOR_1",
+     "preview": "divider lines"
+    }
+   ]
+  },
+  {
+   "slide_no": 22,
+   "id": "g3c583a198fc_0_1300",
+   "purpose": "statement",
+   "name": "Executive summary / big statement",
+   "background": "Spinach #3A682F",
+   "elements": [
+    {
+     "id": "g3cea868f3d3_0_242",
+     "type": "TEXT_BOX",
+     "preview": "Executive summary"
+    },
+    {
+     "id": "g3c583a198fc_0_1301",
+     "type": "RECTANGLE",
+     "preview": "To drive insight-led product..."
+    },
+    {
+     "id": "g3c583a198fc_0_1302",
+     "type": "TEXT_BOX",
+     "preview": "(empty, page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 27,
+   "id": "g3cec7d21da8_1_49",
+   "purpose": "section_divider",
+   "name": "Break slide - Cantaloupe",
+   "background": "Cantaloupe #FFBB6E",
+   "elements": [
+    {
+     "id": "g3cec7d21da8_1_52",
+     "type": "TEXT_BOX",
+     "preview": "Break slide"
+    },
+    {
+     "id": "g3d4cae52bba_0_227",
+     "type": "TEXT_BOX",
+     "preview": "Subtitle option here"
+    },
+    {
+     "id": "g3cec7d21da8_1_50",
+     "type": "TEXT_BOX",
+     "preview": "(empty)"
+    },
+    {
+     "id": "g3cec7d21da8_1_51",
+     "type": "TEXT_BOX",
+     "preview": "(empty)"
+    }
+   ]
+  },
+  {
+   "slide_no": 28,
+   "id": "g3cec7d21da8_1_55",
+   "purpose": "section_divider",
+   "name": "Break slide - Honeydew",
+   "background": "Honeydew #C5FF96",
+   "elements": [
+    {
+     "id": "g3cec7d21da8_1_58",
+     "type": "TEXT_BOX",
+     "preview": "Break slide"
+    },
+    {
+     "id": "g3d4cae52bba_0_224",
+     "type": "TEXT_BOX",
+     "preview": "Subtitle option here"
+    },
+    {
+     "id": "g3cec7d21da8_1_56",
+     "type": "TEXT_BOX",
+     "preview": "(empty)"
+    }
+   ]
+  },
+  {
+   "slide_no": 30,
+   "id": "g3d4cae52bba_1_13",
+   "purpose": "section_divider",
+   "name": "Break slide - Lime/Matcha",
+   "background": "Lime #0AAD0A",
+   "elements": [
+    {
+     "id": "g3d4cae52bba_1_15",
+     "type": "TEXT_BOX",
+     "preview": "Break slide"
+    },
+    {
+     "id": "g3d4cae52bba_0_237",
+     "type": "TEXT_BOX",
+     "preview": "Subtitle option here"
+    },
+    {
+     "id": "g3d4cae52bba_1_14",
+     "type": "TEXT_BOX",
+     "preview": "(empty)"
+    }
+   ]
+  },
+  {
+   "slide_no": 35,
+   "id": "h5dd2d203c9a55db4_0_36",
+   "purpose": "content",
+   "name": "Header + paragraph + bullets (1 col)",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "h5dd2d203c9a55db4_0_37",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_42",
+     "type": "TEXT_BOX",
+     "preview": "Lead paragraph + 3 bullets"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_39",
+     "type": "TEXT_BOX",
+     "preview": "(empty, page-number slot)"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_66",
+     "type": "TEXT_BOX",
+     "preview": "(no text)"
+    }
+   ]
+  },
+  {
+   "slide_no": 37,
+   "id": "h5dd2d203c9a55db4_0_74",
+   "purpose": "two_col",
+   "name": "Narrow text col + tinted card",
+   "background": "Cashew 10 + Cashew 20 card",
+   "elements": [
+    {
+     "id": "h5dd2d203c9a55db4_0_75",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_77",
+     "type": "TEXT_BOX",
+     "preview": "Left narrow col lead + 2 bullets"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_78",
+     "type": "TEXT_BOX",
+     "preview": "Right card lead + 3 bullets"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_76",
+     "type": "TEXT_BOX",
+     "preview": "(empty, page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 39,
+   "id": "h3e0e9d65fddd9736_1_8",
+   "purpose": "two_col",
+   "name": "Narrow left / wide tinted right panel",
+   "background": "Cashew 10 | Cashew 20",
+   "elements": [
+    {
+     "id": "h3e0e9d65fddd9736_1_9",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "h3e0e9d65fddd9736_1_11",
+     "type": "TEXT_BOX",
+     "preview": "Narrow left lead"
+    },
+    {
+     "id": "h3e0e9d65fddd9736_1_43",
+     "type": "TEXT_BOX",
+     "preview": "Wide right panel lead + 3 bullets"
+    },
+    {
+     "id": "h3e0e9d65fddd9736_1_10",
+     "type": "TEXT_BOX",
+     "preview": "(empty, page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 44,
+   "id": "g3cea868f3d3_0_261",
+   "purpose": "content",
+   "name": "4 numbered cards (filled)",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g3d4cae52bba_1_58",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g3d4cae52bba_1_59",
+     "type": "TEXT_BOX",
+     "preview": "Subheader"
+    },
+    {
+     "id": "g3cea868f3d3_0_264..267",
+     "type": "ROUND_RECTANGLE",
+     "preview": "cards 1-4 (n / 00X / body) [filled tint]"
+    },
+    {
+     "id": "g3cea868f3d3_0_262",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 57,
+   "id": "g396fd92fe40_1_2707",
+   "purpose": "content",
+   "name": "3 dark list tiles with pills",
+   "background": "Cashew 10 + Kale/Spinach/Cashew 80 tiles",
+   "elements": [
+    {
+     "id": "g396fd92fe40_1_2709",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g396fd92fe40_1_2710",
+     "type": "TEXT_BOX",
+     "preview": "Subheader"
+    },
+    {
+     "id": "g396fd92fe40_1_2711",
+     "type": "ROUND_RECTANGLE",
+     "preview": "List first item two lines"
+    },
+    {
+     "id": "g396fd92fe40_1_2712",
+     "type": "ROUND_RECTANGLE",
+     "preview": "List second item"
+    },
+    {
+     "id": "g396fd92fe40_1_2713",
+     "type": "ROUND_RECTANGLE",
+     "preview": "List third item"
+    },
+    {
+     "id": "g396fd92fe40_1_2715/2716/2717",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Pill title x3"
+    },
+    {
+     "id": "g396fd92fe40_1_2708",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 62,
+   "id": "g396fd92fe40_1_2512",
+   "purpose": "content",
+   "name": "2 Point -> Outcome pairs",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g396fd92fe40_1_2514",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g396fd92fe40_1_2515",
+     "type": "TEXT_BOX",
+     "preview": "Subheader"
+    },
+    {
+     "id": "g3ddc97de995_1_212",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Point 1 / body (outline)"
+    },
+    {
+     "id": "g3ddc97de995_1_213",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Point 2 / body"
+    },
+    {
+     "id": "g3ddc97de995_1_214",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Outcome 1 / body (Matcha fill)"
+    },
+    {
+     "id": "g3ddc97de995_1_215",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Outcome 2 / body (Cantaloupe fill)"
+    },
+    {
+     "id": "g396fd92fe40_1_2519/2521",
+     "type": "TEXT_BOX",
+     "preview": "down-arrow glyphs"
+    },
+    {
+     "id": "g396fd92fe40_1_2513",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 63,
+   "id": "g3ddc97de995_1_197",
+   "purpose": "content",
+   "name": "3 Point -> Outcome pairs",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g3ddc97de995_1_199",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g3ddc97de995_1_200",
+     "type": "TEXT_BOX",
+     "preview": "Subheader"
+    },
+    {
+     "id": "g3ddc97de995_1_201/202/203",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Point 1-3"
+    },
+    {
+     "id": "g3ddc97de995_1_207/208/209",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Outcome 1-3"
+    },
+    {
+     "id": "g3ddc97de995_1_204/205/206",
+     "type": "TEXT_BOX",
+     "preview": "arrows"
+    },
+    {
+     "id": "g3ddc97de995_1_198",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 64,
+   "id": "g3ddc97de995_1_216",
+   "purpose": "content",
+   "name": "4 Point -> Outcome pairs",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g3ddc97de995_1_218",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g3ddc97de995_1_219",
+     "type": "TEXT_BOX",
+     "preview": "Subheader"
+    },
+    {
+     "id": "g3ddc97de995_1_220/221/222/235",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Point 1-4"
+    },
+    {
+     "id": "g3ddc97de995_1_226/227/228/237",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Outcome 1-4"
+    },
+    {
+     "id": "g3ddc97de995_1_223/224/225/236",
+     "type": "TEXT_BOX",
+     "preview": "arrows"
+    },
+    {
+     "id": "g3ddc97de995_1_217",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 69,
+   "id": "g3ddc97de995_1_715",
+   "purpose": "insights_recs",
+   "name": "Insights -> Recommendations (2 rows)",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g3ddc97de995_1_722",
+     "type": "TEXT_BOX",
+     "preview": "headline"
+    },
+    {
+     "id": "g3ddc97de995_1_724",
+     "type": "TEXT_BOX",
+     "preview": "Insights"
+    },
+    {
+     "id": "g3ddc97de995_1_725",
+     "type": "TEXT_BOX",
+     "preview": "Recommendations"
+    },
+    {
+     "id": "g3ddc97de995_1_716/718",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Insight rows 1-2"
+    },
+    {
+     "id": "g3ddc97de995_1_717/719",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Recommendation rows 1-2"
+    },
+    {
+     "id": "g3ddc97de995_1_720/721",
+     "type": "CUSTOM",
+     "preview": "arrows"
+    },
+    {
+     "id": "g3ddc97de995_1_723",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 70,
+   "id": "g3ddc97de995_1_326",
+   "purpose": "insights_recs",
+   "name": "Insights -> Recommendations (3 rows)",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g3ddc97de995_1_330",
+     "type": "TEXT_BOX",
+     "preview": "headline"
+    },
+    {
+     "id": "g3ddc97de995_1_338",
+     "type": "TEXT_BOX",
+     "preview": "Insights"
+    },
+    {
+     "id": "g3ddc97de995_1_339",
+     "type": "TEXT_BOX",
+     "preview": "Recommendations"
+    },
+    {
+     "id": "g3ddc97de995_1_332/334/336",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Insight rows 1-3"
+    },
+    {
+     "id": "g3ddc97de995_1_333/335/337",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Recommendation rows 1-3"
+    },
+    {
+     "id": "g3ddc97de995_1_327/328/329",
+     "type": "CUSTOM",
+     "preview": "arrows"
+    },
+    {
+     "id": "g3ddc97de995_1_331",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 71,
+   "id": "g3ddc97de995_1_728",
+   "purpose": "insights_recs",
+   "name": "Insights -> Recommendations (4 rows)",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g3ddc97de995_1_732",
+     "type": "TEXT_BOX",
+     "preview": "headline"
+    },
+    {
+     "id": "g3ddc97de995_1_740",
+     "type": "TEXT_BOX",
+     "preview": "Insights"
+    },
+    {
+     "id": "g3ddc97de995_1_741",
+     "type": "TEXT_BOX",
+     "preview": "Recommendations"
+    },
+    {
+     "id": "g3ddc97de995_1_734/736/738/744",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Insight rows 1-4"
+    },
+    {
+     "id": "g3ddc97de995_1_735/737/739/745",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Recommendation rows 1-4"
+    },
+    {
+     "id": "g3ddc97de995_1_729/730/731/747",
+     "type": "CUSTOM",
+     "preview": "arrows"
+    },
+    {
+     "id": "g3ddc97de995_1_733",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 74,
+   "id": "g396fd92fe40_1_2769",
+   "purpose": "data",
+   "name": "Metric headline + 1 big + 2 small stats",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g396fd92fe40_1_3083",
+     "type": "TEXT_BOX",
+     "preview": "headline sums key metrics"
+    },
+    {
+     "id": "g396fd92fe40_1_3084",
+     "type": "TEXT_BOX",
+     "preview": "Subtitle"
+    },
+    {
+     "id": "g396fd92fe40_1_2772",
+     "type": "ROUND_RECTANGLE",
+     "preview": "XX% big (outline)"
+    },
+    {
+     "id": "g396fd92fe40_1_2773",
+     "type": "ROUND_RECTANGLE",
+     "preview": "XX% small (filled)"
+    },
+    {
+     "id": "g396fd92fe40_1_2774",
+     "type": "ROUND_RECTANGLE",
+     "preview": "XX% small (filled)"
+    },
+    {
+     "id": "g396fd92fe40_1_2770",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 77,
+   "id": "g3cea868f3d3_0_197",
+   "purpose": "screenshot",
+   "name": "Text + 1 phone screenshot",
+   "background": "Cashew 10 | Cashew 20 panel",
+   "elements": [
+    {
+     "id": "g3d1d3e03454_0_334",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g3d4cae52bba_0_192",
+     "type": "TEXT_BOX",
+     "preview": "Body title + body + 4 bullets"
+    },
+    {
+     "id": "g3ddc97de995_1_106",
+     "type": "UNKNOWN(image",
+     "preview": " phone screenshot slot)"
+    },
+    {
+     "id": "g3ddc97de995_1_813",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Optional label"
+    },
+    {
+     "id": "g397a24d8f1a_0_2",
+     "type": "TEXT_BOX",
+     "preview": "(no text, right panel bg)"
+    },
+    {
+     "id": "g3cea868f3d3_0_198",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 85,
+   "id": "g3cea868f3d3_0_1729",
+   "purpose": "content",
+   "name": "3 numbered points on Spinach",
+   "background": "Spinach #3A682F",
+   "elements": [
+    {
+     "id": "g3d4cae52bba_1_81",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g3d4cae52bba_1_82",
+     "type": "TEXT_BOX",
+     "preview": "Subheader"
+    },
+    {
+     "id": "g3d1d3e03454_0_277/278/279",
+     "type": "ROUND_RECTANGLE",
+     "preview": "01/02/03 / 00X / body (on Spinach bg)"
+    },
+    {
+     "id": "g3cea868f3d3_0_1737",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 86,
+   "id": "g3d1d3e03454_0_260",
+   "purpose": "timeline",
+   "name": "Timeline 3 quarters on Spinach",
+   "background": "Spinach #3A682F",
+   "elements": [
+    {
+     "id": "g3d4cae52bba_1_83",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g3d4cae52bba_1_84",
+     "type": "TEXT_BOX",
+     "preview": "Subheader"
+    },
+    {
+     "id": "g3d1d3e03454_0_271/272/273",
+     "type": "TEXT_BOX",
+     "preview": "Q1/Q2/Q3 '26"
+    },
+    {
+     "id": "g3d1d3e03454_0_261/266/267",
+     "type": "TEXT_BOX",
+     "preview": "1/2/3 milestone text"
+    },
+    {
+     "id": "g3d1d3e03454_0_263/264/265",
+     "type": "ELLIPSE",
+     "preview": "timeline dots"
+    },
+    {
+     "id": "g3d1d3e03454_0_262",
+     "type": "STRAIGHT_CONNECTOR_1",
+     "preview": "timeline axis"
+    },
+    {
+     "id": "g3d1d3e03454_0_268",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 94,
+   "id": "g3cea868f3d3_0_1773",
+   "purpose": "data",
+   "name": "Text + vertical bar chart",
+   "background": "Cashew 10 + Cashew 20 card",
+   "elements": [
+    {
+     "id": "g3cea868f3d3_0_1776",
+     "type": "TEXT_BOX",
+     "preview": "Text + bar chart data slide (header)"
+    },
+    {
+     "id": "g3cea868f3d3_0_3039",
+     "type": "TEXT_BOX",
+     "preview": "Left body text"
+    },
+    {
+     "id": "g3cea868f3d3_0_1779",
+     "type": "TEXT_BOX",
+     "preview": "Name of chart placed here"
+    },
+    {
+     "id": "g3cea868f3d3_0_3045",
+     "type": "UNKNOWN(chart",
+     "preview": " vertical grouped bar)"
+    },
+    {
+     "id": "g3cea868f3d3_0_1774",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 97,
+   "id": "g3cea868f3d3_0_1841",
+   "purpose": "table",
+   "name": "Data table 7x7 with highlighted rows",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "g396fd92fe40_1_3087",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "g3cea868f3d3_0_1844",
+     "type": "TABLE 7x7",
+     "preview": "Title placed here | Spend | Attributed Sales | ROAS | Impressions | CTR | Average CPC"
+    },
+    {
+     "id": "g3cea868f3d3_0_1842/1847",
+     "type": "ROUND_RECTANGLE",
+     "preview": "row-highlight frames (Tangerine outline)"
+    },
+    {
+     "id": "g3cea868f3d3_0_1843",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    },
+    {
+     "id": "g396fd92fe40_1_3088",
+     "type": "TEXT_BOX",
+     "preview": "(no text)"
+    }
+   ]
+  },
+  {
+   "slide_no": 102,
+   "id": "h5dd2d203c9a55db4_0_51",
+   "purpose": "table",
+   "name": "Status table 5x4 (Owner/Status/Update)",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "h5dd2d203c9a55db4_0_54",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_69",
+     "type": "TABLE 5x4",
+     "preview": "Title placed here | Owner | Status | Update"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_70/71/72/73",
+     "type": "ROUND_RECTANGLE",
+     "preview": "status pills On track/At risk/On track/Off track"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_52",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    },
+    {
+     "id": "h5dd2d203c9a55db4_0_55",
+     "type": "TEXT_BOX",
+     "preview": "(no text)"
+    }
+   ]
+  },
+  {
+   "slide_no": 103,
+   "id": "h3e0e9d65fddd9736_1_46",
+   "purpose": "table",
+   "name": "Tracker table 7x6 (Target/Current/Owner/Status/Update)",
+   "background": "Cashew 10",
+   "elements": [
+    {
+     "id": "h3e0e9d65fddd9736_1_47",
+     "type": "TEXT_BOX",
+     "preview": "Header here"
+    },
+    {
+     "id": "h3e0e9d65fddd9736_1_53",
+     "type": "TABLE 7x6",
+     "preview": "Title placed here | Target | Current | Owner | Status | Update"
+    },
+    {
+     "id": "h3e0e9d65fddd9736_1_55/56/57",
+     "type": "ROUND_RECTANGLE",
+     "preview": "legend pills At risk/On track/Off track"
+    },
+    {
+     "id": "h3e0e9d65fddd9736_1_58..63",
+     "type": "ELLIPSE",
+     "preview": "status dots (6 rows)"
+    },
+    {
+     "id": "h3e0e9d65fddd9736_1_49",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    },
+    {
+     "id": "h3e0e9d65fddd9736_1_48",
+     "type": "TEXT_BOX",
+     "preview": "(no text)"
+    }
+   ]
+  },
+  {
+   "slide_no": 105,
+   "id": "g3cea868f3d3_0_1767",
+   "purpose": "closing",
+   "name": "Thank you + contacts + CTA",
+   "background": "Kale #003D29",
+   "elements": [
+    {
+     "id": "g3cea868f3d3_0_1768",
+     "type": "TEXT_BOX",
+     "preview": "Thank you!"
+    },
+    {
+     "id": "g3ddc97de995_1_907",
+     "type": "TEXT_BOX",
+     "preview": "closing paragraph"
+    },
+    {
+     "id": "g3ddc97de995_2_203",
+     "type": "TEXT_BOX",
+     "preview": "4x contact (Name/Title/email)"
+    },
+    {
+     "id": "g3ddc97de995_1_908",
+     "type": "ROUND_RECTANGLE",
+     "preview": "Call to Action ->"
+    },
+    {
+     "id": "g3cea868f3d3_0_1769",
+     "type": "TEXT_BOX",
+     "preview": "(page-number slot)"
+    }
+   ]
+  },
+  {
+   "slide_no": 106,
+   "id": "g3ddc97de995_1_898",
+   "purpose": "closing",
+   "name": "Logo end card - Kale",
+   "background": "Kale #003D29",
+   "elements": [
+    {
+     "note": "(0 elements"
+    },
+    {
+     "note": "logo end-card on Kale background - logo lives on layout)"
+    }
+   ]
+  }
+ ]
+}

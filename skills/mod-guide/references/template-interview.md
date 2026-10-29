@@ -75,14 +75,14 @@ Diary/photo pre-work and participant artifact collection are off unless the appr
 
 ## [Study Title]
 
-*[Source-approved study period or TBD — fill in]*
+Study period: [Source-approved study period or TBD — fill in]
 
 - **Responsible:** [TBD — fill in] ([TBD — fill in])
 - **Accountable:** [TBD — fill in] ([TBD — fill in])
 - **Consulted:** [TBD — fill in]
 - **Informed:** [TBD — fill in]
 
----
+**Links:** [Approved study links accessible to this guide's audience — omit this line when there are none]
 
 | Parameter | Detail |
 |-----------|--------|
@@ -239,7 +239,7 @@ Emergent topics not yet covered, grouped for later rounds:
 
 ## House-style notes (interview guides)
 
-- Title: `# Moderation Guide`, then `## [Study Title]`, then study period in italics.
+- Top matter: `# Moderation Guide`, then `## [Study Title]`, then a `Study period: …` line, the RACI bullets, an optional `**Links:**` line, and the parameter table. The formatter renders the study title as a plain paragraph and the study period in italic gray.
 - RACI stakeholder block at the top. Participant operations live in a separate restricted artifact.
 - Every timed heading, including Consent, sums to the approved session length. Render Consent as its own 1-minute row/heading and render Introduction as the remaining post-consent minutes only. For a 3-minute opening allocation, write `Consent 1 + Introduction 2`, never `Consent 1 + Introduction 3`. The theme budget may be non-additive only when conditional blocks cannot all fire for one participant.
 - Verbatim read-aloud scripts are quoted/italic and visually distinct from un-quoted question prompts.
