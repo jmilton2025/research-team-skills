@@ -499,6 +499,12 @@ Run the bundled formatter in place; its visual contract resolves package-relativ
 11. **Capture-verbatim flags** go in prose above the relevant block.
 12. **Traceability.** Every objective/RQ/supplied hypothesis maps to a guide block and, for prototype studies, to the required construct-matched evidence-collection element defined in Step 2d. Never invent a task solely to make the crosswalk look complete.
 13. **Protocol fidelity.** Never invent recording, observation, privacy, retention, deletion, clip-sharing, anonymity, or incentive commitments.
+14. **Tier for time.** Mark each core question or task as must-have or nice-to-have in a prose moderator note above it (`*Nice-to-have — skip if behind time.*`); must-haves carry no marker. Put must-haves early in each block, and the most important task or theme early in the session, so a long-running participant doesn't push them off the end. When time runs short, cut probes first, then nice-to-haves, never a must-have. Aim for about 4–6 must-have core questions per 60 minutes of interview; more than that means the rest are nice-to-haves (Great Question; GitLab handbook).
+15. **Write core lines word for word; write probes as conditions.** Several moderators may share a guide, so the read-aloud line is exact. Probes name the trigger: `If they haven't mentioned [priority topic], ask: "…"` or `If they say "[vague word]", ask: "What do you mean by [word]?"` — not "probe for detail."
+16. **Keep recall recent.** Anchor past-behavior questions to roughly the last two months unless the approved construct needs a longer window; older memories are reconstructed (GitLab handbook).
+17. **Don't spend session time on what the screener or analytics already answered.** Warm-up builds rapport and calibrates vocabulary; it is not data collection in disguise ("How long have you used the app?" is screener data). Remove any question whose answer is already in the approved screener or plan.
+18. **Prototype tasks carry a moderator-only expected path.** Under each task, a prose line (never read aloud) states what success looks like and the expected path, so the moderator can score the task and rescue a participant who fails a prerequisite task (GitLab handbook). Before a task, ask how the participant would normally do it and reuse their words in the task line when the approved wording allows it.
+19. **Lint every task against NN/g's task mistakes:** no interface words, no revealed steps, no bundled tasks ("sign up, create a list, and share it" is three tasks), no role-play the participant can't inhabit, no emotional triggers or jokes, no stale dates, and no "How would you…" talk-instead-of-do phrasing. Specific is not leading: give the details the participant needs to act (NN/g, *Better Usability Tasks*).
 
 ---
 
@@ -592,6 +598,9 @@ Before declaring this part passed, build an audit-only inventory of every partic
 | **Past-behavior anchoring** | [Interview] | Interview Core questions tied to a concrete, recent incident — not "typically"/"in general." *Do NOT apply to prototype task rows* (they are present-tense observed actions by design — check instead that the task's **scenario** grounds a realistic situation). (AIxUXR §Prompt A.4; NN/g CIT) |
 | **Construct-matched phase framing** | [Prototype] | Usability tasks describe the goal, not the interface ("find a way to add these items", never "click the green Add button") and carry a scenario. Concept prompts measure the approved reaction/comprehension/relevance construct without inventing a task. P8 follows the subtype-aware gate. (AIxUXR §Use Cases 2–3) |
 | **Inclusivity & cultural assumptions** | [Both] | Questions don't assume a household structure, income level, cooking frequency, dietary pattern, or tech proficiency. (AIxUXR §RAI "Equity and Fairness") |
+| **Opposite-answer test** | [Both] | Read each question aloud: could a reasonable participant give the opposite answer without feeling corrected? If not, it's leading. Balanced pairs ("How easy or difficult…") and "if at all" suffixes fix most failures. Questions that put blame on the participant ("Why couldn't you find…?") also fail. (Great Question; NN/g *Leading Questions*) |
+| **Closed frequency framing** | [Interview] | "How often…" and "How many…" are closed questions too. Replace them with the neutral incident gate, or move frequency to the screener. (Teresa Torres, *Story-Based Customer Interviews*) |
+| **Task wording lint** | [Prototype] | Each task passes Rule 19: one action, no UI words or revealed steps, no role-play, no emotional triggers, current dates, enough specifics to act. |
 
 ### Part 3 — Probing & Moderator Guidance Audit
 
@@ -604,6 +613,8 @@ Before declaring this part passed, build an audit-only inventory of every partic
 | **Task framing: goal not UI** | [Prototype] | Tasks describe the goal, not the UI ("find a way to…" not "click the red button"). (AIxUXR §Use Case 2 Critical Rule) |
 | **Priming → Expectation → Action → Alignment** | [Prototype] | Each task includes the four-part sequence (set context → what do you expect → do it → did it match?). (AIxUXR §Use Case 4; NN/g) |
 | **Problem validation before reveal** | [Prototype — concept only] | Blind-need questions precede the concept reveal to avoid biasing desirability. (AIxUXR §Use Case 3 "The Reveal technique") |
+| **Expected path noted** | [Prototype] | Every task has a moderator-only expected-path / success line in prose (Rule 18), never inside the read-aloud list. |
+| **Priority tiering** | [Both] | Must-haves are unmarked and placed early; nice-to-haves carry the skip marker (Rule 14); the cut order is probes → nice-to-haves. |
 
 ### Part 4 — Strategic & Efficiency Audit
 
@@ -611,6 +622,8 @@ Before declaring this part passed, build an audit-only inventory of every partic
 |-------|----------------|
 | **Coverage of research objectives** | Every objective/RQ/hypothesis maps to at least one required Core question, prompt, comparison, or executable task appropriate to its construct. No orphan objective, no orphan evidence-producing guide item, and no task invented to satisfy traceability. |
 | **Source-grounding check** | Walk every claim against the source plan: preserve denominators, hedges, surfaces, dates, sample, and method. A talk-only guide cannot inherit a prototype plan's hypotheses or session dates as though it tested the artifact. |
+| **Two-way coverage** | Orphan questions (mapping to no objective, RQ, or hypothesis) are cut; uncovered objectives get a question. (Lyssna/Ronsen; NN/g *Writing an Effective Guide*) |
+| **Session load** | Must-have content fits the approved duration with the format's Core share; an interview over ~4–6 must-have core questions per 60 minutes is re-tiered, not rushed. |
 | **Redundancy check** | Scan for questions that probe the same underlying construct twice. Consolidate to save session time. (AIxUXR §V2 Prompt B Part 4 "Redundancy & Efficiency Report") |
 | **Gaps / additional questions** | Are there adjacent insights the guide misses? Suggest 1-3 generative additions tied to objectives. (AIxUXR §V2 Prompt B Part 3) |
 | **Scope discipline** | Critique stays methodological/strategic. Do NOT suggest UI copy changes, design decisions, or product strategy. (AIxUXR §V2 Prompt B role: "NOT a UI/UX copywriter") |
@@ -696,7 +709,7 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 - **references/template-prototype-usability.md** — **load in Section 1 when the format is Prototype/Usability.** Holds the prototype Section 1 params, Section 2 blocks, OUTPUT TEMPLATE, and generation rules.
 - **references/template-interview.md** — **load in Section 1 when the format is Interview.** Holds the interview Section 1 params, Section 2 blocks, OUTPUT TEMPLATE, and generation rules. (Only the format-neutral shared scaffolding is inline in Step 4; the interview body template lives here.)
 - **references/source-and-delivery-safety.md** — load before non-public source access, reviewer handoff, or any Google Doc creation.
-- **references/mod-guide-methodology.md** — load on demand for probes/bias, and automatically for concept tests, diary check-ins, and focus groups.
+- **references/mod-guide-methodology.md** — load on demand for probes/bias, and automatically for concept tests, diary check-ins, and focus groups. §7–9 hold the session recovery playbook, observer/note-taker brief, and pilot, calibration, and mid-study-change rules: point to them in the Step 6 summary as moderator prep, and never paste them into the guide itself.
 
 ---
 

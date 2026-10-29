@@ -155,6 +155,29 @@ NNG, Portigal, and Hall all implicitly or explicitly call for surfacing risk. In
 - Flags timeline dependencies (content not yet built, prototype unstable)
 - Lists questions the team may ask at readout that the study is not designed to answer (managing stakeholder expectations pre-fieldwork)
 
+## 11. Practitioner patterns adopted from public team handbooks (2026-10 market comparison)
+
+Open, citable practice from teams that publish their research operations. Use these when a stakeholder asks "why this many objectives / this much analysis time / this many participants".
+
+| Pattern | Rule in this skill | Source |
+|---|---|---|
+| Researchability triage | Split the ask into study / analytics or instrumentation / already-made decision before planning; close what isn't research. | Great Question, *Research brief writer* skill description; GitLab Research Issue template ("closed::will not do") |
+| Decision + owner with a bad example | "Decision: Help us make decisions on designing the side bar" is the bad example; name a fork and an owner. | GitLab Research Issue template |
+| Objective cap | No more than 4 objectives; each becomes up to a dozen guide questions, and sessions run 30–60 min. | GitLab handbook, *Defining goals, objectives, and hypotheses* |
+| Output verbs | Use describe / evaluate / quantify / identify; avoid understand / explore. (GitLab permits "understand"; this skill follows 18F's stricter rule.) | 18F UX Guide, *Plan* |
+| Facts, opinions, guesses | Kickoff sorts team beliefs into the three before writing hypotheses. | User Interviews, *A framework for decision-driven research* |
+| Will / won't tell us | Every method states its blind spot; rejected alternatives are named. | Great Question; NN/g, *Planning research with generative AI* |
+| Methods mapped to questions | Cite which research question each method answers; don't default to triangulation. | NN/g, *Planning research with generative AI* |
+| Small rounds | 4–8 participants per round; if findings aren't clear, run another round rather than one big one. | GOV.UK Service Manual, *Plan user research for your service* |
+| No-show buffer | Plan 20–30% no-shows (recruit 7 to seat 5). | rampstackco `ux-research` skill |
+| Analysis time | About 2× session time (18F) vs. 1 hour per 2 hours of sessions (GOV.UK); state which the plan uses. | 18F UX Guide; GOV.UK, *Plan a round of user research* |
+| Session load | At most 6 one-hour lab sessions a day with 15-min gaps; at most 4 in the field with 30-min gaps. | GOV.UK, *Plan a round of user research* |
+| Decision-date anchoring | Note when the team will decide and make the readout land before it. | 18F UX Guide, *Plan* |
+| Pilot | Run 1–2 pilot sessions before the main batch. | rampstackco `ux-research` skill; GOV.UK |
+| Conclusiveness risks | List what could leave the study inconclusive and what to do about each. | Great Question, *Research brief writer* |
+
+Where sources disagree (objective caps from 1–2 to 4; analysis-time ratios; whether to triangulate by default), this skill picks the stricter, more testable rule and says so.
+
 ## Sources Cited in Plan Output
 
 - Nielsen, J. (2000). *Why You Only Need to Test with 5 Users.* Nielsen Norman Group.
@@ -166,3 +189,8 @@ NNG, Portigal, and Hall all implicitly or explicitly call for surfacing risk. In
 - Portigal, S. (2023). *Interviewing Users: How to Uncover Compelling Insights*, 2nd ed. Rosenfeld Media.
 - Guest, G., Bunce, A., & Johnson, L. (2006). How many interviews are enough? *Field Methods*, 18(1).
 - Sauro, J., & Lewis, J. R. (2012). *Quantifying the User Experience.*
+- 18F. *UX Guide — Plan.* https://guides.18f.org/ux-guide/research/plan/
+- GitLab. *Defining goals, objectives, and hypotheses* and *Research Issue template.* https://handbook.gitlab.com/handbook/product/ux/ux-research/defining-goals-objectives-and-hypotheses/
+- GOV.UK Service Manual. *Plan user research for your service*; *Plan a round of user research*; *Capturing research questions.* https://www.gov.uk/service-manual/user-research
+- Nielsen Norman Group. *Planning Research with Generative AI.* https://www.nngroup.com/articles/plan-research-ai/
+- User Interviews. *A Framework for Decision-Driven Research.* https://www.userinterviews.com/blog/a-framework-for-decision-driven-research

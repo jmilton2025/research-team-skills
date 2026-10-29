@@ -38,6 +38,10 @@ Run this gate on every proposed claim before showing findings for approval.
 | **Claim fit** | Wording matches sample, evidence type, and method; no population leap or causal claim is introduced. |
 | **Confidence dimensions** | Every major claim has reasoned dimension ratings, not an unexplained overall label. |
 | **Privacy** | No direct/contextual identifier is reproduced, and unexpected PII triggered the stop rule. |
+| **Speaker separation** | No evidence ID points to a moderator, facilitator, or observer turn, except as tagged elicitation context. |
+| **Participant coverage** | Every in-scope participant appears in the evidence ledger, and patterns weren't built from the first few transcripts and fitted to the rest. A participant with no retained evidence is listed with the reason (off-topic, excluded scope, data quality). |
+| **Claim-to-quote meaning** | Beyond string match, each claim keeps the quote's polarity and direction (the quote didn't say "no change" while the claim says "change"), and every number counts the same thing in the claim and the source. |
+| **No fabricated numbers** | Every count, percentage, or metric traces to the ledger or the supplied data; none was estimated to fill a gap. |
 
 ### Mechanical quote check
 
@@ -47,7 +51,20 @@ Run this gate on every proposed claim before showing findings for approval.
 4. For `normalized`, document only harmless transcript normalization such as corrected spacing; do not silently repair meaning.
 5. A `not found` quote is a failure: replace it with verified verbatim text, mark a paraphrase without quotation marks, or remove it.
 
-Do not count repeated uses of one quote as independent evidence. Do not use an analyst-created title in quotation marks if it could be mistaken for participant language.
+Do not count repeated uses of one quote as independent evidence. Do not use an analyst-created title in quotation marks if it could be mistaken for participant language. When two non-adjacent lines are joined, mark the join with an ellipsis and confirm the meaning survives.
+
+### Red-flag scan for fabricated synthesis
+
+Before showing the draft, scan for signs that synthesis drifted from the data (GoTranscript AI-QA checklist; Hill et al., 2025):
+
+- quotes that read as written rather than spoken;
+- uniformly positive or uniformly negative sentiment;
+- counts nobody asked for, or vague quantifiers ("most", "many") with no count behind them;
+- people, tools, features, or competitors that don't appear in the source;
+- no outliers, no "it depends", no contradictions anywhere;
+- pain points attributed to the wrong role (for example, an admin's problem reported as a shopper's).
+
+Each hit is checked against the ledger and either fixed or explained.
 
 ### Early-QA outcome
 
@@ -92,6 +109,8 @@ After researcher approval, check every retained claim and the analysis as a whol
 | **H.E.A.R.T.** | Human authority, participant grounding, privacy, responsible limitations, and AI transparency are visible. |
 | **Process transparency** | Method, analysis passes, AI role, researcher approvals, deviations, and limitations are documented. |
 | **Safety/severity** | Low-frequency evidence with serious harm was not suppressed by pattern thresholds. |
+| **Plan crosswalk** | When a plan exists, every key research question, hypothesis, and decision outcome has a status with evidence IDs (SKILL.md §5a); "Not answered" items say why. |
+| **Counterevidence** | Every pattern or theme has its "But consider" note; leftovers stay visible as single-source signals. |
 
 ## Mode-aware QA
 
@@ -119,6 +138,8 @@ Apply only the row for the selected mode. Mark other modes `N/A` with the reason
 - Exact participant counts and denominators are reported; the agreed pattern rule is documented.
 - Outliers and below-threshold evidence remain visible as outliers, hypotheses, or safety flags.
 - Observation, pattern, insight, and implication follow a traceable ladder without skipping rungs.
+- Cluster names are claims, not topics, and not truisms: a reader who sees only the name can guess the implication, and nobody could have written it before the research.
+- Each cluster was boundary-tested (could this note sit in another cluster?) across at least two clustering passes.
 
 ### Thematic Analysis, usually n=10–30
 
@@ -127,13 +148,17 @@ Apply only the row for the selected mode. Mark other modes `N/A` with the reason
 - Theme construction is traceable through familiarization, coding, generation, review, definition/naming, and write-up.
 - Reflexive work uses active construction language and does not claim IRR; agreement checks appear only for compatible variants.
 - Boundary cases, researcher reflexivity, and theme relationships are documented.
+- Themes cut across the discussion guide rather than mirroring its questions one-to-one.
+- The "cover the extracts" test passes: with every quote hidden, the analytic commentary still reads as an argument, not a paraphrase.
+- The analytic decisions (semantic vs. latent, inductive vs. deductive) stated in the method match the claims actually made.
+- The count is disciplined — usually 4–8 themes; three solid themes beat six weak ones.
 
 ### Tagging, usually n=30+
 
 - Every tag has a name, definition, inclusion criteria, exclusion criteria, and verified example.
 - Deductive, inductive, or hybrid orientation and tag-evolution decisions are documented.
 - Counts use the correct unit and denominator; excerpt frequency is not presented as participant prevalence.
-- Multi-coder reliability is reported only when actually run, with sample, metric, and disagreement handling.
+- Multi-coder reliability is reported only when actually run, with sample, metric, and disagreement handling. When codes are rare, report Gwet's AC1 or raw agreement alongside kappa, because low prevalence depresses kappa even at high agreement.
 - Overlap, vague/other codes, uncoded material, cold tags, and drift were checked.
 
 ## Independent review

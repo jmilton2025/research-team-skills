@@ -69,11 +69,11 @@ A run is complete only when all of the following are true:
 1. Report inputs have been gathered, and any referenced source material has been read (or the researcher has pasted it in).
 2. The primary-audience variant has been picked and the structure and style approved.
 3. The researcher has approved every applicable content item — each finding, each insight, each recommendation — one at a time (unless the whole-draft override was explicitly invoked).
-4. The critique pass (Report Critic self-critique) and the multi-agent review have both run, with fixes folded in.
+4. The critique pass (Report Critic self-critique) has run, and the multi-agent review has run when it is installed, reviewer processing is authorized, and the researcher didn't skip it (otherwise the run is disclosed as critique-only with the exact status in Step 7), with fixes folded in.
 5. The deliverable destination has been confirmed. **Polished markdown is a valid final deliverable here** — a Google Doc upload is offered, not required. If a Doc is created, the Drive destination is confirmed first.
 6. The final deliverable has been produced **last** — after both quality checks — and handed back: the polished markdown, and a working Google Doc link when upload was chosen, with verification status.
 
-Both quality checks run before the final report is produced. When a Google Doc is created, Drive destination confirmation must happen before document creation.
+The critique pass, and the multi-agent review or its disclosed critique-only status, both come before the final report is produced. When a Google Doc is created, Drive destination confirmation must happen before document creation.
 
 Markdown is a valid final deliverable — unlike a research plan, this skill does not require a Google Doc. A mock or demo is labeled per the test-artifact conventions and stays out of Drive unless the tester explicitly asks for a test document.
 
@@ -85,11 +85,11 @@ Markdown is a valid final deliverable — unlike a research plan, this skill doe
 | **2** | **Section 1 — Setup & Framing:** propose structure from the primary-audience variant (single-select) | Structure proposed |
 | **3** | Researcher reviews & approves the structure | Structure approved |
 | **3.5** | Confirm output style | Style confirmed |
-| **3.6** | Confirm authorship / Responsible (verify names via people-search) → draft & lock the BLUF | Section 1 locked |
+| **3.6** | Confirm authorship / Responsible (names from the researcher, no people search) → draft & lock the BLUF | Section 1 locked |
 | **4** | **Section 2 — Findings & Evidence**, **Section 3 — Insights**, **Section 4 — Recommendations & Business Case**: draft → approve → lock, one item at a time; transition announced after each lock | All content items approved across all three sections |
 | **5** | Assemble the approved content into the intermediate draft | Content complete; mock/test warning applied when relevant |
 | **6** | Auto-run the Report Critic self-critique (announced at end of Section 4) | Gaps fixed or explicitly accepted |
-| **7** | Auto-run the multi-agent review on the fixed content — before the deliverable | Review complete; confirmed fixes folded in |
+| **7** | Offer the multi-agent review once on the fixed content — before the deliverable | Review complete, or critique-only disclosed with its reason; confirmed fixes folded in |
 | **8** | Produce the final deliverable last: confirm destination, polished markdown, and — if chosen — a formatted Google Doc read back and verified | Deliverable returned with status |
 
 ## Interaction contract
@@ -107,7 +107,7 @@ Use native `AskUserQuestion` checklist pop-ups when available.
 
 If native pop-ups are unavailable, state **"Inline fallback — native checklist unavailable in this environment"** and reproduce the same numbered options and selection instructions in chat. Do not silently substitute an unlabeled prose question. This is the canonical fallback for every pop-up site in this skill (Steps 1, 2, 3, 3.5, 3.6, and each content step in Step 4).
 
-The number of options per pop-up should match the content — no fixed cap. Show all relevant items; if there are many, show the most important ones first and include an "Other / see more" slot.
+Native `AskUserQuestion` allows **at most 4 options per pop-up**, and "Brainstorm with me" takes one slot, so show up to 3 content options. When there are more items than fit (six findings, eight quotes), list them all, numbered, in chat first; then offer grouped options (e.g. "Keep all 6 (Recommended)", "Keep 1–4, drop 5–6"), and let the researcher name specific items in the comments field. Never drop items silently to fit the limit. This matches `/research-plan` and `/mod-guide`.
 
 ## Portable deliverable contract
 
@@ -132,7 +132,11 @@ Ask the researcher for the raw material. Accept any format: Google Doc URL, past
 
 **Authorship check:** If the person driving this conversation is not the researcher who ran the study (a PM or designer relaying someone else's finished analysis is a normal, supported case), confirm the named researcher for the "Responsible" field rather than defaulting to whoever is typing. Note in the delivery message (Step 8) that the named researcher should review and sign off before this ships as final — "Responsible" should never imply a review that didn't happen.
 
-**People-search verification for RACI / stakeholder names:** Before carrying any name into the Responsible / Consulted / Informed block, verify it is current using the directory / people-search tool. Stored context and project files go stale (a named team member may have left or changed roles). If there is any doubt about who belongs in a role, ask the researcher directly: *"I see [Name] listed as [Role] — is that still accurate?"* Never trust a name from memory or a stale file without a live check. *(Current-session caveat: the people / Glean MCPs may require auth and may be unavailable in this session — if so, say the live check could not run and confirm each name with the researcher instead of assuming.)*
+**Ask the researcher for RACI / stakeholder names instead of looking people up** (the same rule as `/research-plan` and `/mod-guide`). The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run — in the plan, analysis, or notes they shared, or in their answers so far. Don't run a people or directory search, and don't carry names over from memory or older project files. When a supplied file names someone, confirm it: *"The plan lists [Name] as [Role] — is that still accurate?"* A role left blank stays `[TBD — fill in]`.
+
+**Source authorization — before opening any non-public material.** Connector access is not authorization. Before reading a linked doc, analysis, transcript, or clip, confirm that the researcher may use it for AI-assisted drafting, that participant data is de-identified, and who the report's audience is. Quotes, links, and clips in the report must not reach a wider audience than their source allows. Prefer the approved `/analysis` output, its evidence ledger, and plan crosswalk over raw transcripts. If raw, identifiable data is pasted, don't repeat it; ask for a de-identified version, as `/analysis` §1 describes.
+
+**Connection check — first message.** If the run will read Google Docs or Glean, or create a Doc, check those connections before asking anything, and flag any that need sign-in in your first message, so the researcher can sign in while answering the input questions.
 
 **Batch 1 — Study basics:**
 
@@ -149,8 +153,9 @@ Ask the researcher for the raw material. Accept any format: Google Doc URL, past
 
 **Q3 — Study method & sample size** (e.g., "8 moderated usability sessions, Instacart weekly shoppers")
 
-**Q4 — Source material**
-- Let the researcher paste raw analysis notes, affinity clusters, themes, quotes, or link a Google Doc
+**Q4 — Source material and the plan**
+- Best input: the approved `/analysis` output (evidence ledger, confidence ratings, plan crosswalk). Otherwise the researcher can paste analysis notes, affinity clusters, themes, or quotes, or link a Google Doc.
+- Ask for the research plan too, when one exists. Its key research questions, hypotheses, and decision-outcome terms (e.g. go / narrow / no-go) are what the report must answer, in the plan's exact words.
 - If Google Doc URL: read via Glean (`mcp__glean__read_document`) or the `google-docs:fetch-google-doc` skill
 - If both read paths fail or aren't available in this session, don't block — ask the researcher to paste the relevant content directly instead
 
@@ -302,7 +307,7 @@ After style is confirmed, say: *"Style locked. Two more setup items — authorsh
 
 Two decisions, one pop-up each (per the interaction contract — one decision per pop-up).
 
-**Authorship / RACI.** Show the drafted RACI block — Responsible, Consulted, Informed — and confirm every name is current. Use the people-search verification from Step 1: a name is only carried forward once it's people-search verified, or confirmed directly with the researcher when the live check can't run. Consulted and Informed are `multiSelect: true` (several people legitimately belong in each); Responsible is single (one accountable author). Pop-up label: **"Section 1 > Step 3 of 4: Authorship / RACI"**. Last option always **"Brainstorm with me"**. After lock, say: *"Authorship locked. Moving on to the BLUF."*
+**Authorship / RACI.** Show the drafted RACI block — Responsible, Consulted, Informed — and confirm every name is current. Use only names the researcher gave or confirmed in this run (Step 1); never a people search. Consulted and Informed are `multiSelect: true` (several people legitimately belong in each); Responsible is single (one accountable author). Pop-up label: **"Section 1 > Step 3 of 4: Authorship / RACI"**. Last option always **"Brainstorm with me"**. After lock, say: *"Authorship locked. Moving on to the BLUF."*
 
 **BLUF.** Draft the three-sentence Bottom Line Up Front per the BLUF discipline above (sentence 1: what we learned · sentence 2: what it means for the business · sentence 3: the single most important ask — no methodology). Show it, then accept / brainstorm. Single-select — the BLUF is one exclusive statement, though each of its three sentences can be brainstormed. Pop-up label: **"Section 1 > Step 4 of 4: BLUF"**. Last option always **"Brainstorm with me"**.
 
@@ -350,10 +355,10 @@ After Section 4 is locked, tell the researcher exactly what happens next so they
 > Everything's approved — I now have all the content I need. Here's what I'll do before I hand you the final report:
 >
 > 1. **Run it through the critique pass** — the Report Critic self-review (three personas: Staff Sparring Partner → PM → Senior Leadership) pressure-tests it for weak logic, unsupported claims, and audience-fit gaps.
-> 2. **Run it through the multi-agent review** — two researchers review it in parallel: an Evidence checker (is every claim true to the data?) and a Stakeholder reader (can your audience understand it and act on it?).
+> 2. **Offer the multi-agent review** — two researchers review it in parallel: an Evidence checker (is every claim true to the data?) and a Stakeholder reader (can your audience understand it and act on it?). I'll show you what each reviewer sees and ask once: run it, or skip it and go critique-only.
 > 3. **Then I'll produce your report** — the polished markdown, and (if you want it) a formatted Google Doc in your confirmed Drive folder.
 >
-> Running the critique and multi-agent checks now — I'll fold in any fixes before I produce the report.
+> Running the critique pass now — I'll fold in any fixes before the review question.
 
 **Whole-draft override:** if the researcher explicitly asks to see the whole report drafted at once instead of item-by-item, skip the per-item approval loop but still show the complete draft for approval, then run the same critique → multi-agent → produce-deliverable sequence. The override changes *how content is approved*, not the quality gate or the deliverable steps.
 
@@ -391,6 +396,16 @@ Last updated: [Month Year]
 | **Bottom Line** | **[3 sentences max. Sentence 1: what we learned. Sentence 2: what it means for the business. Sentence 3: the single most important ask.]** |
 | **Top Findings** | 🔴 **P0 — [Finding 1 in one line]**<br><br>🔴 **P0 — [Finding 2 in one line]**<br><br>🟡 **P1 — [Finding 3 in one line]**<br><br>🟡 **P1 — [Finding 4 in one line]**<br><br>🟢 **P2 — [Finding 5 in one line]** |
 | **Decision Needed** | [Single clear ask — "Approve X" / "Fund Y" / "Accept Z risk"] |
+
+## What We Set Out to Answer
+
+[Include when a research plan exists. Use the plan's exact research-question wording and decision terms, carried from the `/analysis` plan crosswalk.]
+
+| Label | Detail |
+|-------|--------|
+| **Research questions** | - **[RQ 1, verbatim]** — [Answered / Partially answered / Not answered]: [one-line answer]. See Findings [N].<br><br>- **[RQ 2]** — … |
+| **Hypotheses** | - **H1 [statement]** — [Supported / Challenged / Mixed / Not testable with this data]. [One line on the evidence, including what contradicted it.] |
+| **Decision readout** | [The plan's outcome term — e.g. **narrow** — and why, or "Not decision-ready: [what's missing]".] |
 
 ## Methodology
 
@@ -503,7 +518,7 @@ Last updated: [Month Year]
 
 ## Bottom Line
 
-**[3 sentences. What we learned. What it means for the business (metric impact). What to do.]**
+**[3 sentences. What we learned. What it means for the business (metric impact). What to do — using the plan's decision term (e.g. go / narrow / no-go) when a plan exists.]**
 
 ## What We Found
 
@@ -591,6 +606,16 @@ Last updated: [Month Year]
 13. **Imperative recommendations** — "Move the badge," not "consider moving the badge."
 14. **Curate evidence** — Strongest 3 quotes per finding in body. Rest to appendix.
 15. **Traceability** — Every rec cites an insight #. Every insight cites finding #s. Every finding cites evidence. NNG: the chain must be visible.
+16. **Headings are claims** — Every finding and insight heading is a statement a reader could agree or disagree with ("Shoppers give up on substitutions before they see the replacement"), not a topic label ("Substitutions"). If anyone could have written the heading before the study, it's a truism: sharpen it to the specific moment and cause, or cut it.
+17. **Answer the plan in its own words** — When a plan exists, the report answers each of its research questions, gives each hypothesis a verdict, and uses the plan's decision terms (go / narrow / no-go or the study's own) unchanged. Don't introduce synonyms.
+18. **Confidence sets the wording** — Carry each claim's confidence from `/analysis`. High: state it directly. Medium: attribute or bound it ("among the 5 weekly shoppers…"). Low: it may appear only as a limitation or an open question. Unverified: leave it out, and name the missing evidence if the gap matters.
+19. **Treat evaluative and causal words as claims** — "significant", "most", "only", "improves", "because", "leads to" each need evidence. Don't join two co-occurring observations with "because" unless the data establishes the link. "Significant" means statistically significant or is cut.
+20. **Order by decision impact** — Order findings by how much each should change the reader's next action, not by the order of the guide or the sessions. Synthesize across participants; never structure the body by session.
+21. **Surface dissent** — For each finding, say whether any participant contradicted it and how. Contradictions often reveal a segment; they belong in the report, not the appendix.
+22. **"Don't act" is a valid recommendation** — When a pattern affects too few people, reflects segment misfit, or would displace a higher priority, recommend not acting (or monitoring) and say why. A list of 20 recommendations with no cost or priority is a wishlist.
+23. **Severity isn't priority** — Usability severity (0–4, from `/analysis`) describes the problem. P0/P1/P2 is a business call that also weighs reach, cost, and strategy. Show both when both exist.
+24. **Evaluative studies may stop at findings** — When a finding already answers an evaluative question ("4 of 6 couldn't find Replace"), don't manufacture an insight to fill the Insights section. Generative questions need insights; evaluative ones often don't (AnswerLab). Every recommendation still traces to a finding or insight.
+25. **A length limit is a maximum, not a target** — Don't pad to a page count or add empty boilerplate sections.
 
 ---
 
@@ -608,6 +633,10 @@ Last updated: [Month Year]
 | No open questions | Report reads as final word | Every study has follow-ons. List them. |
 | Rec-to-insight inflation | 12 recs from 6 insights | Cut to ≤1:1 ratio. |
 | Sanitized quotes | Every quote perfect grammar | Restore verbatim. Authenticity matters. |
+| Topic-label headings | "Onboarding", "Pricing" | Rewrite as a claim (Rule 16). |
+| Guide-order report | Findings follow the discussion guide question by question | Re-order by decision impact (Rule 20). |
+| Causal leaps | "Shoppers abandon because fees are hidden" with no evidence linking the two | Report co-occurrence as co-occurrence, or cite the evidence for the link (Rule 19). |
+| Plan ignored | The report never says whether the plan's questions were answered | Add What We Set Out to Answer (Rule 17). |
 
 ---
 
@@ -645,6 +674,11 @@ Adopt three personas in sequence (Staff/Sr Sparring Partner → Product Manager 
 | **Transparency (H.E.A.R.T. "T")** | AI assist is attributable. The researcher is the accountable human author. The report does not pretend to be anything other than a researcher-validated deliverable. |
 | **Confidence calibration** | Where data is thin or ambiguous, the report says so. "Indicative, not statistically generalizable" beats false precision. |
 | **Open questions surfaced** | Every study has follow-ons. If the Open Questions section is empty, the report is over-claiming. |
+| **Claim headings** | A skimmer who reads only the headings gets the argument; no heading is a topic label or a truism (Rule 16). |
+| **Plan answered** | When a plan exists, every research question has an answer status, every hypothesis has a verdict, and the decision readout uses the plan's exact terms (Rule 17). |
+| **Confidence-to-wording** | No Low or Unverified claim is stated as fact; no "because", "significant", or "most" lacks evidence (Rules 18–19). |
+| **Dissent visible** | Each finding says whether anyone contradicted it (Rule 21). |
+| **Decision test** | Three months from now, could the team name the decision this report informed? If the report would be remembered but not used, it's "insight theater"; if it's a pile of observations, it's a data dump. Fix whichever applies. (rampstackco `discovery-research-synthesis`) |
 
 ### Critic personas to apply
 
@@ -664,20 +698,24 @@ Do not append this internal critique to the stakeholder report. Once fixes are f
 
 ## Step 7: Multi-Agent Review
 
-Run the multi-agent review on the fixed report content — before the final deliverable is produced. This is automatic; do not ask permission. The researcher was already told this is coming (the end-of-Section-4 announcement).
+Offer the multi-agent review on the fixed report content before the final deliverable is produced, and ask about it exactly once (the same pattern as `/research-plan` Step 5).
 
-- Say in chat: *"Running the multi-agent review now — two researchers read the report in parallel: an Evidence checker against the data, and a Stakeholder reader reading it as [audience]."*
-- Check the live skill list, then invoke `/multi-agent-check` when it is installed. Pass it the fixed report, the source data, and the audience; called from here, it doesn't ask the researcher anything.
-- If `multi-agent-check` is not installed, disclose that the parallel review cannot run in this environment and proceed on the critique-only pass.
-- Fold any confirmed fixes into the assembled draft before producing the deliverable.
+1. **When not to ask.** If `multi-agent-check` isn't installed, or the Step 1 source authorization doesn't cover sending de-identified extracts to reviewers, don't ask: proceed critique-only and record the matching status below. If the researcher already said to skip it, don't ask again.
+2. **Show the review plan in chat.** Name the reviewers the installed check runs and the minimum necessary, de-identified extracts each receives: the fixed report, the evidence ledger or source excerpts it cites, and the audience. No complete source file unless the authorization covers it.
+3. **Ask one pop-up**, labeled **"Step 7: Multi-agent review"**: **"Run the review (Recommended)"**, **"Skip review (critique-only)"**, and **"Brainstorm with me"** last.
+4. After **Run the review**, say: *"Running the multi-agent review now — two researchers read the report in parallel: an Evidence checker against the data, and a Stakeholder reader reading it as [audience]."* Invoke `/multi-agent-check`; called from here, it doesn't ask the researcher anything else.
+5. If the review fails or rate-limits, rerun only the failed reviewer, once. If that fails too, record the failure status and fold in any completed reviewer's fixes.
+6. Fold confirmed fixes into the assembled draft, checking each fix against the evidence first. Ask the researcher only about fixes that change meaning.
 
-The expected sequence is **approved content → assemble → critique → multi-agent → fixes → produce the deliverable → share**. Never describe the report as stakeholder-final before both checks have run.
+Record exactly one status and repeat it when you return the report: `multi-agent review complete` · `critique-only review — multi-agent review skipped at researcher's request` · `critique-only review — multi-agent-check not installed` · `critique-only review — reviewer processing not authorized` · `critique-only review — multi-agent review failed`.
+
+The expected sequence is **approved content → assemble → critique → multi-agent (or disclosed critique-only) → fixes → produce the deliverable → share**. Never describe the report as stakeholder-final before the critique has run and the review status is recorded.
 
 ---
 
 ## Step 8: Produce the Final Deliverable
 
-This is the last step — the deliverable is produced only after the critique (Step 6) and multi-agent review (Step 7) have run and fixes are folded in. The polished markdown is a valid final deliverable; a Google Doc is offered, not required.
+This is the last step — the deliverable is produced only after the critique (Step 6) and multi-agent review (Step 7, or its disclosed critique-only status) have run and fixes are folded in. The polished markdown is a valid final deliverable; a Google Doc is offered, not required.
 
 ### 8.1 Confirm the destination
 
@@ -713,18 +751,29 @@ For Jedida's personal environment specifically, her pipeline is preserved as an 
 
 ### 8.4 Return
 
-Return the deliverable with status: the markdown and/or the Google Doc link, "content complete, formatting checked, links checked," any verification limitation, and — per the authorship check — the note that the named Responsible researcher should review and sign off before this ships as final when someone else supplied the inputs.
+Return the deliverable with status: the markdown and/or the Google Doc link, "content complete, formatting checked, links checked," the Step 7 review status, any verification limitation, and — per the authorship check — the note that the named Responsible researcher should review and sign off before this ships as final when someone else supplied the inputs.
+
+### 8.5 Close the loop (offer, don't do unasked)
+
+A report that changes nothing has failed, however good it is. After returning it, offer — in one short message — the follow-ups that make the research count:
+
+- **Fill the plan's TL;DR row.** The research plan's "TL;DR summary of findings" row was left *"To be filled out at the end of the study."* Offer the BLUF as that text, so the plan becomes the record of what was learned.
+- **Track actionable recommendations.** Offer each P0/P1 recommendation as a ticket-ready line (action, owner, linked finding). When one closes, record why and whether it was acted on (GitLab handbook, *Research insights*).
+- **Schedule a decision check.** Suggest a check in about three months: can the team name the decision this report informed? Log real outcomes (a roadmap change, a shipped fix, a cited strategy), not praise (Sprig, *A framework for demonstrating research impact*).
+- **Open questions → next study.** Offer `/research-plan` for the top open question.
+
+Don't update trackers, plans, or tickets unless the researcher asks.
 
 ---
 
 ## Tool usage
 
 - **AskUserQuestion** — gather inputs and drive every draft → approve → lock pop-up (Steps 1–4), per the interaction contract. If unavailable in this session, use the inline fallback noted in the interaction contract and at the top of Step 1.
-- **Directory / people-search** — verify current stakeholder identities before carrying any name into the RACI block (Steps 1 and 3.6). The people / Glean MCPs may require auth and may be unavailable in this session; if so, confirm names with the researcher instead.
+- **RACI names come from the researcher** (Steps 1 and 3.6), not from a directory or people search.
 - **`mcp__glean__read_document` (Glean)** — read any Google Doc the researcher references (PRD, prior reports, analysis docs)
 - **google-docs:fetch-google-doc** — alternative Google Doc reader, if that skill is installed in this session (not guaranteed everywhere); if neither this nor Glean is available, fall back to asking the researcher to paste the content directly
 - **Read** — read pasted content or local files
-- **`/multi-agent-check`** — the automatic multi-agent review (Step 7); check the live skill list and invoke when installed, disclose and continue on critique-only if not.
+- **`/multi-agent-check`** — the multi-agent review (Step 7), offered once; check the live skill list and invoke when installed, authorized, and not skipped; otherwise disclose the critique-only status.
 - **Native Google Docs / Drive tools (default deliverable path)** — create, format with standard Docs styles, read back, and verify the Doc in the confirmed folder (Step 8.2). No personal template, script, or hardcoded folder.
 - **`gws` CLI + `style-gdoc-full.py` / `apply_jedida_reporting.py` (optional Instacart / Jedida variant only)** — create and style the Doc via Jedida's personal pipeline; use only on that setup when asked (Step 8.3), not as the default.
 - The polished markdown is a valid final deliverable — it must be polished enough to ship as-is whether or not a Doc upload follows.

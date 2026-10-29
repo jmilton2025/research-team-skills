@@ -128,6 +128,7 @@ Ask what decision the study will inform, then challenge it before reading prior 
 - Is there one primary “must answer” decision?
 - Is it a real fork—a different finding leads to a different action?
 - Is the decision still open, answerable in the available time, and owned by a named person?
+- **Is it researchable?** Split the ask into three parts before planning: what a study can answer, what needs instrumentation, analytics, or a data partner instead, and what is a product decision that no study will change. Plan only the first part; name the other two in Dependencies & guardrails so the requester can route them. If nothing researchable remains, say so with reasoning the researcher can forward, and use the closed-decision branch below.
 
 If the request is only a goal such as “inform strategy” or “understand users,” propose a sharper decision and ask for approval. If the answer has already been chosen, do not run discovery under confirmatory framing. Offer three explicit branches in one single-select pop-up labeled **“Decision audit”**, with **“Brainstorm with me”** last. Recommend **Reopen or reframe** when the requester is open to changing the direction; otherwise recommend **Measure implementation risk**:
 
@@ -258,6 +259,14 @@ Choose the method family based on the evidence need:
 - **Evaluative:** moderated or unmoderated usability, concept test, or benchmark review for a specific solution.
 - **Causal:** randomized experiments or defensible quasi-experiments when the decision requires causal inference. Mixed methods may explain mechanisms but are not inherently causal.
 - **Human/model evaluation:** calibration, independent evaluation, adjudication, and separate blind validation when adoption depends on agreement or quality evidence.
+
+Make the recommendation arguable:
+
+- **Name what each method will and won't tell the team.** Every method has a blind spot (interviews don't show actual behavior or reliable willingness to pay; analytics don't explain why). State it in the method-direction pop-up so the researcher can weigh it.
+- **Name the alternatives you passed over and why**, so the choice can be challenged in review.
+- **Map each method to the key research questions it answers.** A method that answers none is cut; a question no method answers is a gap to fix now.
+- **Don't add methods by reflex.** Recommend a second method only when one method cannot answer an approved question. When a plan mixes generative and evaluative work, keep the two strands visibly separate.
+- **Recommend inside the stated constraints** (budget, panel access, unmoderated-only), and say when a constraint is what forces a weaker design.
 
 Resolve conflicts between the minimum valid design and the deadline; do not merely flag them. Present three paths: descope the decision or evidence need, extend the timeline, or pause/escalate because the study cannot validly answer the decision as scoped. Record the approved tradeoff in Dependencies & guardrails. Never compress a method below validity without explicit disclosure.
 
@@ -452,6 +461,10 @@ Start from the Step 4 `lint` output: every `FIX OR ACCEPT` line is either fixed 
 | **Deliverable fit** | Each artifact helps a named decision-maker act. |
 | **Ethics and Responsible AI** | Consent, privacy, fairness, accessibility, security, attribution, and human authority are protected. |
 | **Misinterpretation risk** | The plan names the most important limitation, assumption, and over-generalization risk. |
+| **Researchability** | Parts of the ask that need analytics or instrumentation, or that are already-made product decisions, are named and routed rather than planned as research. |
+| **Method limits** | Method & approach says what the chosen method won't tell the team; every method maps to at least one key research question, and every question has a method. |
+| **Conclusiveness risk** | Dependencies & guardrails names what could leave the study inconclusive (no-shows, a low-incidence segment, an unstable prototype, a segment the decision depends on but the sample won't cover), each with a mitigation, and says what happens if results are mixed. |
+| **Field readiness** | Participant studies budget for no-shows, a pilot session, and analysis time that is not squeezed into the readout week. |
 
 Do not append this internal critique to the stakeholder plan unless the researcher asks. Fold clear fixes into the assembled plan, then move to the multi-agent review before creating the Doc.
 

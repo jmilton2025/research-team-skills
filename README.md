@@ -54,6 +54,8 @@ See [INSTALL.md](./INSTALL.md).
 
 ## Contributing
 
+The October 2026 comparison against published research skills and public team handbooks, with the full source catalog, is in [docs/market-scan-2026-10](./docs/market-scan-2026-10/README.md).
+
 Found a better methodology? Want to add a new skill? Open a PR. Each skill lives in `skills/{skill-name}/SKILL.md`. Heavy methodology references live in `skills/{skill-name}/references/`.
 
 Before changing `/research-plan`, run its contract test:

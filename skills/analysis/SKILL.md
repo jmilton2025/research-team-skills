@@ -73,6 +73,8 @@ After the gate passes, inspect the approved source and record:
 
 Define scope with stable locators: task or section IDs, question IDs, response IDs, timestamps, page/paragraph IDs, row IDs, or line ranges. If the source has none, assign stable IDs before analysis. Record exclusions explicitly. Do not draw evidence from material outside the approved scope, even when it is present in the same file.
 
+**Separate moderator speech before analysis.** Tag every moderator, facilitator, or observer turn as elicitation context. These turns explain a response (the prompt that produced it) but are never participant evidence. In a blinded comparison of LLM and human analysts, coding facilitator speech as participant data was the largest LLM error, even with clearly labeled speakers (Hill et al., 2025).
+
 Minor transcription uncertainty may remain if it is flagged at the affected evidence item. Material ambiguity, uncertain speaker attribution, or residual identifiers block analysis of that passage.
 
 ## 3. Route by sample and research objective
@@ -95,6 +97,11 @@ When n=1, read [single-session-analysis.md](references/single-session-analysis.m
 - Coding-reliability or codebook approaches may use agreement checks when the objective requires coder convergence.
 - Tagging requires explicit definitions, inclusion criteria, exclusion criteria, and examples.
 - Safety- or harm-relevant evidence is surfaced regardless of frequency and labeled low-n/high-severity.
+
+### Overlays that apply across routes
+
+- **Task-based usability sessions.** When the data come from a usability or prototype test, also read [usability-analysis.md](references/usability-analysis.md). It adds a participant × task observation grid, an issue inventory, and severity ratings, on top of the route the sample size selected. Severity never substitutes for the route's claim limits: one session with a severe issue is still n=1.
+- **Large corpora.** Above about 15 transcripts, work in batches of 10–12. Develop codes or clusters per batch, verify them, and only then merge across batches in a separate pass. Only verified output from one batch may seed the next, and a merge that silently drops a batch or a participant fails QA.
 
 ### Pilot Signals, n=2–4
 
@@ -139,6 +146,22 @@ Develop claims upward from this ledger:
 
 Do not skip a rung. Actively seek negative, contradictory, and boundary evidence. Keep participant context separate from findings unless it directly answers the research question.
 
+Every pattern, cluster, or theme carries a **But consider** note: the contradicting cases, the segment or context where it doesn't hold, and the participants it doesn't cover. A pattern with no countervailing evidence was probably not looked for hard enough. Leftover observations that fit no cluster stay visible as single-source signals ("interesting, not validated"), never silently dropped. Implications may include **not acting** — when a pattern affects too few people, reflects segment misfit, or would compromise a higher priority, saying so is honest synthesis.
+
+Never fabricate, estimate, or interpolate a quote or a number to complete the output. Where a claim needs a quote the source doesn't provide, write `[QUOTE NEEDED]` and downgrade the claim; a stated gap is a complete answer.
+
+## 5a. Answer the plan
+
+When an approved research plan exists (for example from `/research-plan`), record its key research questions, hypotheses, and decision-outcome definitions verbatim before coding, and re-read them at the start of each pass. Close the analysis with a crosswalk:
+
+| Plan item | Status | Evidence IDs | Note |
+|---|---|---|---|
+| Key research question | `Answered` / `Partially answered` / `Not answered — [why]` | E-… | |
+| Hypothesis H1… | `Supported` / `Challenged` / `Mixed` / `Not testable with this data` | E-… | Name the contradicting evidence |
+| Decision outcome | Which of the plan's own outcome terms (e.g. go / narrow / no-go) the evidence points to, or `Not decision-ready` | E-… | Use the plan's exact terms |
+
+Small samples still answer questions — at the claim strength the route allows. A theme that is coherent but answers no plan question goes to a short "Also observed" list, not the main findings. Themes must cut across the guide's questions; a theme list that mirrors the guide one-to-one is a topic summary, not analysis. With no plan, record the researcher's approved research question in the same way.
+
 ## 6. Confidence is multidimensional
 
 Do not attach an unexplained single `High / Medium / Low` label to a finding. For each major claim, rate and justify:
@@ -180,7 +203,7 @@ A run is complete only when:
 1. pre-ingestion authorization, reuse, and deidentification were confirmed before the source was opened;
 2. source quality, provenance, and exact scope were recorded;
 3. the researcher approved the framing, method, and scope;
-4. the evidence ledger supports every retained claim;
+4. the evidence ledger supports every retained claim, and the plan crosswalk (§5a) is complete when a plan exists;
 5. early evidence QA ran before findings approval;
 6. the researcher approved the QA-checked analysis;
 7. final mode-aware QA ran, material fixes were reapproved, and no applicable check failed;
@@ -192,5 +215,5 @@ If a required step could not run, say so precisely. Never report a blocked or sk
 
 - Use `/research-plan` upstream when the research question or study design is not yet defined.
 - Use `/mod-guide` for a discussion or usability-session guide.
-- Use `/report` after the analysis is approved when the task is stakeholder storytelling rather than evidence synthesis.
+- Use `/report` after the analysis is approved when the task is stakeholder storytelling rather than evidence synthesis. Hand it the approved evidence ledger, confidence ratings, and plan crosswalk, so the report reuses verified quotes and the plan's decision terms instead of re-deriving them.
 - Use a structured-data analysis workflow for large quantitative tables; this skill is for qualitative evidence.

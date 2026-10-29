@@ -215,7 +215,49 @@ Diary studies close the say-do gap structurally — you probe *recorded* behavio
 
 ---
 
-## 7. Sources — Full List
+## 7. Session Recovery Playbook
+
+Moderator-facing moves for the moments a guide can't script. Keep them in the moderator's prep, not inside read-aloud lines.
+
+| Situation | Move | Source |
+|---|---|---|
+| Participant is stuck on a task | Wait at least 30 seconds — real struggle is data. Then a neutral nudge ("What are you looking for?"). Offer a hint only as a last resort, and note that the task was assisted. | rampstackco `usability-testing`; NN/g *Talking with Users* |
+| Participant says "I give up" | Acknowledge it, end the task without judgment, then anchor to real life: "When something like this has happened outside a session like this, what have you done, if anything?" Record the task as not completed unassisted. | slgoodrich `usability-frameworks` think-aloud guide (adapted to a past-behavior prompt) |
+| Participant asks you a question | Boomerang ("What do you think?") or defer: "I want to hear your thoughts first — I'm happy to answer at the end." Pre-empt this in the intro. | NN/g *Talking with Users*; Krug test script |
+| Participant blames themselves | "If it was confusing, that's exactly what we need to know — it's the design we're testing, not you." | slgoodrich think-aloud guide |
+| Participant redesigns the screen | "That's a helpful idea — I'll note it." Then refocus on the task as they'd do it now. Suggestions are not findings. | slgoodrich think-aloud guide; rampstackco |
+| Participant drifts off-topic | Let a tangent run only while it serves an objective. Then acknowledge and steer: "That's really useful. I want to make sure we get to [topic] — can we come back to [question]?" | slgoodrich interviewing guide; IxDF |
+| Participant gets emotional | Pause. Acknowledge ("That sounds really hard — take your time"). Offer to skip or stop; don't rush to the next question. | rampstackco interview-guide template |
+| You realize you asked a leading question | Recover neutrally: "Let me ask that differently — in your own words, what was that like?" Flag the segment in notes so analysis can discount it. | rampstackco; NN/g *Thinking Aloud* |
+| Answers sound polite rather than true | "You seem to be weighing something — what's going through your mind?" | slgoodrich interviewing guide |
+| Participant jumps between the story and generalities | At a natural pause, guide them back to the specific instance they named. | Torres, *Story-Based Customer Interviews* |
+
+**Think-aloud nudges.** Rotate neutral prompts after 10–15 seconds of silence: "What are you looking at?", "What are you looking for?", "Keep thinking out loud for me." Never: "Are you confused?", "Did you see the button?", "Is this hard?" — each suggests an answer.
+
+**Why-chains.** Stop after two or three "why"s in a row; it starts to feel like an interrogation. "What were you thinking there?" beats "Why did you do that?"
+
+## 8. Observer and Note-Taker Brief
+
+Share before the first session, outside the guide:
+
+- **At most two people from the team in the room**; the moderator is the only one who talks to the participant.
+- **Observers stay muted and off camera**, and route questions to the moderator through a side channel. The moderator collects them before the wrap-up ("I'm going to check whether the team has any follow-up questions").
+- **Give each observer a lens** — quotes, usability problems, or one business question — so notes don't overlap.
+- **Notes separate what happened from what it means** (two columns: observation | interpretation), with a timestamp per note.
+- **Per task:** start/end time, Complete / Partial / Fail, assists given, errors, path taken.
+- **No solutioning during sessions**; save it for the debrief.
+
+Sources: Lyssna, *How to Observe User Interviews*; thoughtbot, *User Testing Gone Wild*; Krug, *Rocket Surgery Made Easy* test script.
+
+## 9. Running the Study: Pilot, Calibration, and Mid-Study Changes
+
+- **Pilot** with a teammate, or a friendly participant without internal access (or in an incognito window), so you catch prototype permissions and stale data. Re-check task dates and prototype links the day before.
+- **Remote task delivery.** Paste each task into chat and ask the participant to read it aloud. You know they read all of it, and they can't look ahead (NN/g, *Remote Moderated Usability Tests*).
+- **Calibrate moderators.** When several moderators share a guide, run one session together and debrief before fieldwork starts.
+- **Change the guide mid-study only deliberately.** Ask: is the question broken because of wording, or because the objective was unclear? Have I asked it enough times to know it isn't working? If I change it, can I still compare sessions? Log every change with the session number it took effect from (Great Question).
+- **Moderator self-check after each session.** Did I talk more than about 20% of the time? Did I ask anything leading? Did I probe surface answers? Did I use silence? Capture the 3–5 most vivid moments within the hour.
+
+## 10. Sources — Full List
 
 **Books (primary canon):**
 - Portigal, S. (2023). *Interviewing Users: How to Uncover Compelling Insights* (2nd ed.). Rosenfeld Media.
@@ -241,3 +283,12 @@ Diary studies close the say-do gap structurally — you probe *recorded* behavio
 - Anderson, N. — [User Research Academy](https://www.userresearchacademy.com/) / [UXR Strategist Substack](https://www.uxrstrategist.com/)
 - dscout *People Nerds* — [17 Pro Tips to Perfect One-on-One Interviews](https://dscout.com/people-nerds/tips-master-researcher-participant-interviews), [Dig Deeper with Follow-Up Questions](https://dscout.com/people-nerds/generative-research-questions)
 - Hall, E. — [Interviewing Humans (Medium)](https://medium.com/research-things/interviewing-humans-fa198f809c40)
+
+**Added in the 2026-10 market comparison:**
+- NN/g — [Leading Questions](https://www.nngroup.com/articles/leading-questions/), [Better Usability Tasks](https://www.nngroup.com/articles/better-usability-tasks/), [Task Scenarios](https://www.nngroup.com/articles/task-scenarios-usability-testing/), [Remote Moderated Usability Tests](https://www.nngroup.com/articles/moderated-remote-usability-test/)
+- Torres, T. — [Story-Based Customer Interviews](https://www.producttalk.org/2022/09/story-based-customer-interviews/)
+- GitLab handbook — [Discussion guide for user interviews](https://handbook.gitlab.com/handbook/product/ux/ux-research/discussion-guide-user-interviews/), [Writing a usability testing script](https://handbook.gitlab.com/handbook/upstream-studios/experience-research/writing-usability-testing-script/)
+- Great Question — [How to write a discussion guide for user interviews](https://greatquestion.co/blog/how-to-write-a-discussion-guide-for-user-interviews)
+- Ronsen, M. via Lyssna — [UX research discussion guide template](https://www.lyssna.com/blog/ux-research-discussion-guide-template/), [How to observe user interviews](https://www.lyssna.com/blog/how-to-observe-user-interviews/)
+- Krug, S. — [Usability test script](https://sensible.com/downloads/test-script-web.pdf)
+- Community Claude skills reviewed: [rampstackco/claude-skills](https://github.com/rampstackco/claude-skills) (`usability-testing`, `ux-research`), [slgoodrich/agents](https://github.com/slgoodrich/agents) (`interview-frameworks`, `usability-frameworks`), [deanpeters/Product-Manager-Skills](https://github.com/deanpeters/Product-Manager-Skills) (`discovery-interview-prep`)
