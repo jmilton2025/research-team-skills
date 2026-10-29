@@ -4,91 +4,140 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap">
 <style>
-/* Layout: one reading column of review cards under a sticky progress bar; the sticky footer holds the single "Send to Claude" action. */
+/* Layout: one reading column of color-coded review cards (green = context, orange = design, olive = outputs, cantaloupe = decisions) under a sticky progress bar; a fixed footer holds Send to Claude. */
 :root {
-  --bg: #F7F8F5;
-  --surface: #FFFFFF;
-  --ink: #1C2420;
-  --muted: #5B665F;
-  --line: #DCE2DC;
-  --brand: #003D29;
-  --brand-ink: #FFFFFF;
-  --accent: #0AAD0A;
-  --accent-soft: #E6F4E1;
-  --warn: #8A5A00;
-  --warn-soft: #FFF4CC;
-  --focus: #0A7D3E;
+  --bg: #FAF6EF; --surface: #FFFFFF; --ink: #1E2421; --muted: #5E6660; --line: #E4DDD1;
+  --kale: #003D29; --kale-ink: #FFFFFF; --lime: #0AAD0A; --honeydew: #E5F8D2;
+  --t-context: #0A8A0A; --t-context-soft: #E6F6DD; --t-design: #D95A00; --t-design-soft: #FFEADB;
+  --t-outputs: #3A682F; --t-outputs-soft: #EAF1C8; --t-choice: #B86A00; --t-choice-soft: #FFF0D6;
+  --t-setup: #4D5A8A; --t-setup-soft: #E6E9F5;
+  --keep: #E9F8E1; --edit: #FFF6C7; --edit-ink: #7A5A00; --drop: #F4F1EC; --drop-ink: #8E877D; --new: #E3F0FF; --new-ink: #1D4F91;
+  --sage: #F2F7EE; --focus: #0A7D3E;
   --font-display: "DM Serif Display", Georgia, "Times New Roman", serif;
   --font-body: "DM Sans", "Helvetica Neue", Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0F1512; --surface: #18211C; --ink: #E7EDE8; --muted: #A3B0A7; --line: #2C3A32;
-    --brand: #3FB37A; --brand-ink: #06140D; --accent: #5BD35B; --accent-soft: #1D3324;
-    --warn: #F2C14E; --warn-soft: #3A2F12; --focus: #7FE0A6; color-scheme: dark;
+    --bg: #101512; --surface: #18201B; --ink: #E8EEE9; --muted: #A2ADA5; --line: #2D3A32;
+    --kale: #12553C; --kale-ink: #F2FFF6; --lime: #5BD35B; --honeydew: #1F3A24;
+    --t-context: #6FD66F; --t-context-soft: #1C3320; --t-design: #FF9A55; --t-design-soft: #3A2416;
+    --t-outputs: #B5D36A; --t-outputs-soft: #2B3318; --t-choice: #FFC266; --t-choice-soft: #3A2C14;
+    --t-setup: #A9B6EA; --t-setup-soft: #22273D;
+    --keep: #1D3322; --edit: #3A3214; --edit-ink: #F2D27A; --drop: #23262A; --drop-ink: #8C949B; --new: #17283F; --new-ink: #9CC3FF;
+    --sage: #18241C; --focus: #7FE0A6; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0F1512; --surface: #18211C; --ink: #E7EDE8; --muted: #A3B0A7; --line: #2C3A32;
-  --brand: #3FB37A; --brand-ink: #06140D; --accent: #5BD35B; --accent-soft: #1D3324;
-  --warn: #F2C14E; --warn-soft: #3A2F12; --focus: #7FE0A6; color-scheme: dark;
+  --bg: #101512; --surface: #18201B; --ink: #E8EEE9; --muted: #A2ADA5; --line: #2D3A32;
+  --kale: #12553C; --kale-ink: #F2FFF6; --lime: #5BD35B; --honeydew: #1F3A24;
+  --t-context: #6FD66F; --t-context-soft: #1C3320; --t-design: #FF9A55; --t-design-soft: #3A2416;
+  --t-outputs: #B5D36A; --t-outputs-soft: #2B3318; --t-choice: #FFC266; --t-choice-soft: #3A2C14;
+  --t-setup: #A9B6EA; --t-setup-soft: #22273D;
+  --keep: #1D3322; --edit: #3A3214; --edit-ink: #F2D27A; --drop: #23262A; --drop-ink: #8C949B; --new: #17283F; --new-ink: #9CC3FF;
+  --sage: #18241C; --focus: #7FE0A6; color-scheme: dark;
 }
+[hidden] { display: none !important; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--brand); }
-.wrap { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 120px; }
-header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--brand); color: var(--brand-ink); }
-header.top .wrap { padding-block: 14px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--kale); }
+.wrap { max-width: 780px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 140px; }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--kale); color: var(--kale-ink); }
+header.top .wrap { padding-block: 14px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
 .eyebrow { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
 h1 { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15; margin: 2px 0 0; text-wrap: balance; }
-.progress { font-size: 13px; font-variant-numeric: tabular-nums; background: rgba(255,255,255,.14); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
-.intro { margin: 24px 0 8px; color: var(--muted); max-width: 65ch; }
-.banner { margin: 16px 0 0; padding: 10px 14px; background: var(--warn-soft); color: var(--warn); font-weight: 700; border-radius: 6px; }
-.round { font-family: var(--font-display); font-size: 20px; margin: 28px 0 12px; color: var(--ink); }
-.items { display: grid; gap: 16px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; gap: 12px; min-width: 0; }
-.card[data-state="done"] { border-color: var(--accent); }
-.step { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-.card h2 { font-family: var(--font-display); font-weight: 400; font-size: 20px; margin: 0; text-wrap: balance; }
+.meter { display: flex; align-items: center; gap: 10px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.meter .bar { width: 120px; height: 8px; border-radius: 999px; background: rgba(255,255,255,.2); overflow: hidden; }
+.meter .fill { height: 100%; width: 0; background: var(--lime); transition: width .2s ease; }
+.intro { margin: 22px 0 6px; color: var(--muted); max-width: 65ch; }
+.banner { margin: 16px 0 0; padding: 10px 14px; background: var(--edit); color: var(--edit-ink); font-weight: 700; border-radius: 6px; }
+.round { font-family: var(--font-display); font-size: 22px; margin: 24px 0 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.items { display: grid; gap: 18px; }
+.card { --tone: var(--t-context); --tone-soft: var(--t-context-soft); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; min-width: 0; }
+.card[data-tone="design"] { --tone: var(--t-design); --tone-soft: var(--t-design-soft); }
+.card[data-tone="outputs"] { --tone: var(--t-outputs); --tone-soft: var(--t-outputs-soft); }
+.card[data-tone="choice"] { --tone: var(--t-choice); --tone-soft: var(--t-choice-soft); }
+.card[data-tone="setup"] { --tone: var(--t-setup); --tone-soft: var(--t-setup-soft); }
+.card-head { background: var(--tone-soft); padding: 14px 18px 12px; display: grid; gap: 4px; border-bottom: 1px solid var(--line); }
+.step { display: inline-flex; width: fit-content; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--surface); background: var(--tone); padding: 3px 8px; border-radius: 999px; }
+.card h2 { font-family: var(--font-display); font-weight: 400; font-size: 21px; margin: 2px 0 0; text-wrap: balance; color: var(--ink); }
 .why { margin: 0; color: var(--muted); font-size: 14px; }
-label.lbl { font-size: 13px; font-weight: 700; color: var(--muted); }
-textarea { width: 100%; box-sizing: border-box; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; resize: vertical; line-height: 1.5; }
-textarea.draft { min-height: 140px; }
-textarea:read-only { opacity: .85; }
-.sources { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
-.sources a { color: var(--focus); }
+.card-body { padding: 14px 18px 18px; display: grid; gap: 12px; }
+.done-note { display: none; font-weight: 700; color: var(--tone); }
+.card[data-state="done"] { border-color: var(--tone); box-shadow: 0 0 0 1px var(--tone) inset; }
+.card[data-state="done"] .done-note { display: block; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.link { font: inherit; font-size: 13px; background: none; border: 0; padding: 4px 6px; color: var(--tone); font-weight: 700; cursor: pointer; border-radius: 4px; }
+.count { margin-left: auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+ul.bullets { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.b { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; align-items: start; padding: 10px 12px; border-radius: 8px; background: var(--keep); border: 1px solid transparent; }
+.b input[type=checkbox] { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--kale); }
+.b .txt { min-width: 0; overflow-wrap: anywhere; }
+.b .src { grid-column: 2 / 4; font-size: 12px; color: var(--muted); }
+.b .src a { color: var(--focus); }
+.b .pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.b[data-s="edited"] { background: var(--edit); } .b[data-s="edited"] .pill { color: var(--edit-ink); border: 1px solid currentColor; }
+.b[data-s="new"] { background: var(--new); } .b[data-s="new"] .pill { color: var(--new-ink); border: 1px solid currentColor; }
+.b[data-s="removed"] { background: var(--drop); color: var(--drop-ink); } .b[data-s="removed"] .txt { text-decoration: line-through; } .b[data-s="removed"] .pill { color: var(--drop-ink); border: 1px solid currentColor; }
+.b .acts { display: flex; gap: 4px; }
+.b textarea { grid-column: 2 / 4; }
+textarea { width: 100%; box-sizing: border-box; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; resize: vertical; line-height: 1.5; }
+.plain { white-space: pre-wrap; background: var(--sage); border-radius: 8px; padding: 10px 12px; }
 .choices { display: grid; gap: 8px; }
-.opt { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
-.opt:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-.opt input { margin-top: 4px; accent-color: var(--brand); }
-.opt .t { font-weight: 700; }
-.opt .d { grid-column: 2; font-size: 13px; color: var(--muted); }
-.rec { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--brand); }
-.seg { display: flex; flex-wrap: wrap; gap: 8px; }
-.seg button { font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
-button:focus-visible, textarea:focus-visible, .opt:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+.opt { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: start; padding: 12px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; background: var(--surface); }
+.opt:has(input:checked) { border-color: var(--tone); background: var(--tone-soft); }
+.opt input { margin-top: 4px; accent-color: var(--kale); }
+.opt .t { font-weight: 700; } .opt .d { grid-column: 2; font-size: 13px; color: var(--muted); }
+.rec { margin-left: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--surface); background: var(--lime); padding: 2px 7px; border-radius: 999px; }
+.actions-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: inherit; font-size: 14px; font-weight: 700; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--tone); background: var(--tone); color: var(--surface); cursor: pointer; }
+.btn.ghost { background: var(--surface); color: var(--tone); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+details.cm summary { font-size: 13px; color: var(--muted); cursor: pointer; }
+details.cm textarea { margin-top: 6px; }
+.bs { border: 1px dashed var(--tone); border-radius: 10px; background: var(--sage); padding: 14px; display: grid; gap: 10px; }
+.bs-head { display: flex; gap: 10px; align-items: center; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--kale); color: var(--kale-ink); display: grid; place-items: center; font-family: var(--font-display); font-size: 15px; flex: none; }
+.bs-head .who { font-weight: 700; } .bs-head .role { font-size: 12px; color: var(--muted); }
+.msg { padding: 10px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); }
+.msg.me { background: var(--tone-soft); border-color: transparent; justify-self: end; max-width: 90%; }
+.msg p { margin: 0 0 6px; } .msg p:last-child { margin-bottom: 0; }
+.idea { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 8px 10px; border-radius: 8px; background: var(--tone-soft); margin-top: 6px; }
+.idea .it { font-weight: 700; } .idea .iw { grid-column: 1; font-size: 13px; color: var(--muted); }
+.idea button { grid-row: 1 / 3; grid-column: 2; align-self: center; }
+.q { font-style: italic; }
+.watch { font-size: 13px; color: var(--edit-ink); background: var(--edit); padding: 6px 10px; border-radius: 6px; }
+.thinking { color: var(--muted); font-style: italic; }
 footer.bar { position: fixed; inset: auto 0 0; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 5; }
 footer.bar .wrap { padding-block: 12px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
-.status { font-size: 14px; color: var(--muted); min-width: 0; }
-.primary { font: inherit; font-weight: 700; padding: 10px 18px; border-radius: 6px; border: 0; background: var(--brand); color: var(--brand-ink); cursor: pointer; }
-.primary[disabled] { opacity: .45; cursor: not-allowed; }
-.secondary { font: inherit; padding: 10px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.copybox { width: 100%; min-height: 120px; }
-@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s ease; } }
+.status { font-size: 14px; color: var(--muted); min-width: 0; flex: 1 1 240px; }
+.primary { font: inherit; font-weight: 700; padding: 11px 20px; border-radius: 999px; border: 0; background: var(--kale); color: var(--kale-ink); cursor: pointer; }
+.primary[disabled] { opacity: .4; cursor: not-allowed; }
+.secondary { font: inherit; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.foot-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.copybox { width: 100%; min-height: 140px; }
+button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, .opt:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .meter .fill { transition: none; } }
 </style>
 
-<script type="application/json" id="review-state">{"skill":"research-plan","study":"Example study — replace via review_page.py","round":"Section 1 — Context & Foundation","intro":"Edit any draft directly. Mark each item Accept, Edit, or Brainstorm with me, then send it back to Claude.","banner":"","status":"awaiting_review","submitted_at":null,"items":[{"id":"background","step":"Section 1 > Step 1 of 3","title":"Background & Context","kind":"content","why":"Example item. Claude replaces this whole state when it builds a real review page.","draft":"- **Why now:** [TBD — fill in] **Strategic fit:** [TBD — fill in]","sources":[],"decision":null,"edited":null,"comment":""}]}</script>
+<script type="application/json" id="review-state">{"skill":"research-plan","study":"Example study","round":"Section 1 — Context & Foundation","intro":"","banner":"","status":"awaiting_review","submitted_at":null,"items":[{"id":"background","step":"Section 1 > Step 1 of 3","title":"Background & Context","kind":"content","tone":"context","why":"Example item. Claude replaces this whole state when it builds a real review page.","bullets":[{"id":"b1","text":"**Why now:** [TBD — fill in]","keep":true,"edited":null,"added":false,"sources":[]}],"decision":null,"comment":"","brainstorm":[]}]}</script>
 
 <header class="top"><div class="wrap">
   <div><div class="eyebrow" id="eyebrow">Research review</div><h1 id="study">Research review</h1></div>
-  <div class="progress" id="progress" aria-live="polite">0 of 0 reviewed</div>
+  <div class="meter"><span id="progress" aria-live="polite">0 of 0 reviewed</span><span class="bar" aria-hidden="true"><span class="fill" id="fill"></span></span></div>
 </div></header>
 
 <main class="wrap">
   <div class="banner" id="banner" hidden></div>
   <p class="intro" id="intro"></p>
   <div class="round" id="round"></div>
+  <div class="legend" aria-label="Bullet colors">
+    <span><i style="background: var(--keep)"></i>Keeping</span>
+    <span><i style="background: var(--edit)"></i>Edited</span>
+    <span><i style="background: var(--new)"></i>Added</span>
+    <span><i style="background: var(--drop)"></i>Removed</span>
+  </div>
   <div class="items" id="items"></div>
   <section id="fallback" hidden>
     <div class="round">Copy your review back to Claude</div>
@@ -98,8 +147,8 @@ footer.bar .wrap { padding-block: 12px; display: flex; flex-wrap: wrap; gap: 10p
 </main>
 
 <footer class="bar"><div class="wrap">
-  <div class="status" id="status">Review each item to send it back.</div>
-  <div class="actions">
+  <div class="status" id="status">Review each card, then send it back to Claude.</div>
+  <div class="foot-actions">
     <button class="secondary" id="copy" type="button">Copy review</button>
     <button class="primary" id="send" type="button" disabled>Send to Claude</button>
   </div>
@@ -110,10 +159,24 @@ footer.bar .wrap { padding-block: 12px; display: flex; flex-wrap: wrap; gap: 10p
   // Snapshot the page source before rendering, so a save republishes the page exactly as written, with only the state block replaced.
   var SOURCE = document.body.innerHTML;
   var HEAD = document.head.innerHTML;
-  var stateEl = document.getElementById("review-state");
-  var state = JSON.parse(stateEl.textContent);
+  var state = JSON.parse(document.getElementById("review-state").textContent);
   var submitted = state.status === "submitted";
-  var CHOICE_BRAINSTORM = "__brainstorm__";
+  var BRAINSTORM = "__brainstorm__";
+  var samplePromise = null;
+  var seq = 0;
+
+  var SENIOR = [
+    "You are a senior UX researcher with 15+ years of experience leading research at large consumer-tech and marketplace companies.",
+    "A colleague is reviewing one part of a research deliverable and asked to brainstorm with you. Act like a generous, opinionated senior partner in a 1:1:",
+    "- Lead with your point of view in 2-3 sentences: what's strong, what's missing, what you'd change first.",
+    "- Then give 2-4 concrete ideas, each with the tradeoff or reason, written so the colleague could paste them in as a bullet.",
+    "- Ask 1-2 sharp questions that would change your advice.",
+    "- Name one risk to watch (bias, scope creep, an over-claim, a recruiting trap), if there is one.",
+    "- Stay grounded in the material below. Never invent facts, sources, numbers, quotes, or names; when something is unknown, say what you'd find out and how, or use [TBD — fill in].",
+    "- Keep the house rules: count first, then percentage (\"5 of 8 (63%)\"); objectives are statements; research questions are broad, not interview prompts; hypotheses are falsifiable and labeled with their origin.",
+    "Reply with ONLY a JSON object: {\"take\": string, \"ideas\": [{\"title\": string, \"why\": string, \"bullet\": string}], \"questions\": [string], \"watch_out\": string}.",
+    "\"bullet\" is ready-to-use text for this item (may use **bold** lead-ins), or \"\" when the idea is advice rather than content."
+  ].join("\n");
 
   function $(id) { return document.getElementById(id); }
   function el(tag, attrs, text) {
@@ -122,60 +185,110 @@ footer.bar .wrap { padding-block: 12px; display: flex; flex-wrap: wrap; gap: 10p
     if (text != null) n.textContent = text;
     return n;
   }
+  // Minimal inline markdown: **bold** and *italic*, rendered as DOM nodes (never innerHTML).
+  function rich(text) {
+    var frag = document.createDocumentFragment();
+    var re = /(\*\*[^*]+\*\*|\*[^*]+\*)/g, last = 0, m;
+    while ((m = re.exec(text))) {
+      if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var tok = m[0];
+      frag.appendChild(tok.slice(0, 2) === "**" ? el("strong", null, tok.slice(2, -2)) : el("em", null, tok.slice(1, -1)));
+      last = m.index + tok.length;
+    }
+    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    return frag;
+  }
+  function finalText(b) { return b.edited != null ? b.edited : b.text; }
+  function bState(b) { if (!b.keep) return "removed"; if (b.added) return "new"; if (b.edited != null) return "edited"; return "kept"; }
   function decided(item) {
     if (item.kind === "choice") return Array.isArray(item.decision) ? item.decision.length > 0 : !!item.decision;
     return !!item.decision;
   }
+  function useSample() {
+    if (!samplePromise) samplePromise = window.claude && window.claude.use ? Promise.resolve(window.claude.use("sample")) : Promise.resolve(null);
+    return samplePromise;
+  }
+  function reopen(item) { if (item.decision && item.decision !== BRAINSTORM) { item.decision = null; } }
 
-  function renderContent(item, card) {
-    var tid = "draft-" + item.id;
-    card.appendChild(el("label", { "class": "lbl", "for": tid }, "Draft — edit directly"));
-    var ta = el("textarea", { id: tid, "class": "draft" });
-    ta.value = item.edited != null ? item.edited : item.draft;
-    if (submitted) ta.readOnly = true;
-    ta.addEventListener("input", function () {
-      item.edited = ta.value === item.draft ? null : ta.value;
-      if (item.edited != null && item.decision !== "brainstorm") { item.decision = "edit"; syncSeg(); }
-      update();
-    });
-    card.appendChild(ta);
-    var seg = el("div", { "class": "seg", role: "group", "aria-label": "Decision for " + item.title });
-    var choices = [["accept", "Accept"], ["edit", "Edit — use my changes"], ["brainstorm", "Brainstorm with me"]];
-    function syncSeg() {
-      Array.prototype.forEach.call(seg.children, function (b) { b.setAttribute("aria-pressed", String(b.dataset.v === item.decision)); });
+  function renderBullets(item, body, card) {
+    var tools = el("div", { "class": "tools" });
+    var all = el("button", { "class": "link", type: "button", id: "all-" + item.id }, "Select all");
+    var none = el("button", { "class": "link", type: "button", id: "none-" + item.id }, "Clear all");
+    var add = el("button", { "class": "link", type: "button", id: "add-" + item.id }, "+ Add a bullet");
+    var count = el("span", { "class": "count" });
+    [all, none, add].forEach(function (b) { if (submitted) b.disabled = true; tools.appendChild(b); });
+    tools.appendChild(count);
+    body.appendChild(tools);
+    var ul = el("ul", { "class": "bullets" });
+    body.appendChild(ul);
+
+    function draw() {
+      ul.textContent = "";
+      item.bullets.forEach(function (b) {
+        var li = el("li", { "class": "b", id: "b-" + item.id + "-" + b.id, "data-s": bState(b) });
+        var cb = el("input", { type: "checkbox", id: "cb-" + item.id + "-" + b.id, "aria-label": "Keep this bullet" });
+        cb.checked = !!b.keep; if (submitted) cb.disabled = true;
+        cb.addEventListener("change", function () { b.keep = cb.checked; reopen(item); draw(); update(); });
+        li.appendChild(cb);
+        var txt = el("label", { "class": "txt", "for": cb.id }); txt.appendChild(rich(finalText(b))); li.appendChild(txt);
+        var acts = el("div", { "class": "acts" });
+        var st = bState(b);
+        if (st !== "kept") acts.appendChild(el("span", { "class": "pill" }, st === "new" ? "Added" : st === "edited" ? "Edited" : "Removed"));
+        var eb = el("button", { "class": "link", type: "button", id: "edit-" + item.id + "-" + b.id }, "Edit");
+        if (submitted) eb.disabled = true;
+        acts.appendChild(eb);
+        li.appendChild(acts);
+        (b.sources || []).forEach(function (s) {
+          var src = el("div", { "class": "src" });
+          if (s.url && /^https:\/\//.test(s.url)) src.appendChild(el("a", { href: s.url, target: "_blank", rel: "noopener" }, "Source: " + (s.label || s.url)));
+          else src.textContent = "Source: " + (s.label || "");
+          li.appendChild(src);
+        });
+        eb.addEventListener("click", function () {
+          if (li.querySelector("textarea")) return;
+          var ta = el("textarea", { id: "ta-" + item.id + "-" + b.id, rows: "3", "aria-label": "Edit bullet" });
+          ta.value = finalText(b);
+          var done = el("button", { "class": "btn ghost", type: "button" }, "Done");
+          var wrapDiv = el("div", { "class": "actions-row" }); wrapDiv.style.gridColumn = "2 / 4"; wrapDiv.appendChild(done);
+          li.appendChild(ta); li.appendChild(wrapDiv); ta.focus();
+          done.addEventListener("click", function () {
+            var v = ta.value.trim();
+            if (b.added) { b.text = v || b.text; } else { b.edited = (v === b.text || !v) ? null : v; }
+            b.keep = true; reopen(item); draw(); update();
+          });
+        });
+        ul.appendChild(li);
+      });
+      var kept = item.bullets.filter(function (b) { return b.keep; }).length;
+      count.textContent = kept + " of " + item.bullets.length + " selected";
+      var acc = $("accept-" + item.id); if (acc) acc.textContent = "Accept selected (" + kept + ")";
     }
-    choices.forEach(function (c) {
-      var b = el("button", { type: "button", "data-v": c[0], id: "dec-" + item.id + "-" + c[0] }, c[1]);
-      if (submitted) b.disabled = true;
-      b.addEventListener("click", function () { item.decision = c[0]; syncSeg(); update(); });
-      seg.appendChild(b);
+    all.addEventListener("click", function () { item.bullets.forEach(function (b) { b.keep = true; }); reopen(item); draw(); update(); });
+    none.addEventListener("click", function () { item.bullets.forEach(function (b) { b.keep = false; }); reopen(item); draw(); update(); });
+    add.addEventListener("click", function () {
+      item.bullets.push({ id: "n" + Date.now().toString(36) + (seq++), text: "New bullet — click Edit to write it", keep: true, edited: null, added: true, sources: [] });
+      reopen(item); draw(); update();
+      var last = item.bullets[item.bullets.length - 1]; var btn = $("edit-" + item.id + "-" + last.id); if (btn) btn.click();
     });
-    syncSeg();
-    card.appendChild(seg);
+    card._redraw = draw;
+    draw();
   }
 
-  function renderChoice(item, card) {
+  function renderChoice(item, body) {
     var box = el("div", { "class": "choices", role: item.multi ? "group" : "radiogroup", "aria-label": item.title });
-    var opts = (item.options || []).concat([{ id: CHOICE_BRAINSTORM, label: "Brainstorm with me", description: "Talk this one through with Claude before deciding." }]);
-    opts.forEach(function (o) {
+    (item.options || []).forEach(function (o) {
       var id = "opt-" + item.id + "-" + o.id;
       var lab = el("label", { "class": "opt", "for": id });
-      var inp = el("input", { type: item.multi && o.id !== CHOICE_BRAINSTORM ? "checkbox" : "radio", name: "opt-" + item.id, id: id, value: o.id });
-      var current = item.decision;
-      inp.checked = Array.isArray(current) ? current.indexOf(o.id) >= 0 : current === o.id;
+      var inp = el("input", { type: item.multi ? "checkbox" : "radio", name: "opt-" + item.id, id: id, value: o.id });
+      var cur = item.decision;
+      inp.checked = Array.isArray(cur) ? cur.indexOf(o.id) >= 0 : cur === o.id;
       if (submitted) inp.disabled = true;
       inp.addEventListener("change", function () {
-        if (item.multi && o.id !== CHOICE_BRAINSTORM) {
-          var picked = Array.isArray(item.decision) ? item.decision.filter(function (v) { return v !== CHOICE_BRAINSTORM; }) : [];
+        if (item.multi) {
+          var picked = Array.isArray(item.decision) ? item.decision.filter(function (v) { return v !== BRAINSTORM; }) : [];
           if (inp.checked) picked.push(o.id); else picked = picked.filter(function (v) { return v !== o.id; });
           item.decision = picked;
-          var bs = $("opt-" + item.id + "-" + CHOICE_BRAINSTORM); if (bs) bs.checked = false;
-        } else if (item.multi) {
-          item.decision = [CHOICE_BRAINSTORM];
-          box.querySelectorAll("input[type=checkbox]").forEach(function (c) { c.checked = false; });
-        } else {
-          item.decision = o.id;
-        }
+        } else item.decision = o.id;
         update();
       });
       lab.appendChild(inp);
@@ -185,14 +298,107 @@ footer.bar .wrap { padding-block: 12px; display: flex; flex-wrap: wrap; gap: 10p
       if (o.description) lab.appendChild(el("span", { "class": "d" }, o.description));
       box.appendChild(lab);
     });
-    if (item.draft) {
-      var pid = "draft-" + item.id;
-      card.appendChild(el("label", { "class": "lbl", "for": pid }, "Proposed content"));
-      var pre = el("textarea", { id: pid, "class": "draft", readonly: "" });
-      pre.value = item.draft;
-      card.appendChild(pre);
+    body.appendChild(box);
+  }
+
+  function contextFor(item) {
+    var lines = ["Deliverable: /" + state.skill + " for \"" + state.study + "\"", "Section: " + (state.round || ""), "Item: " + (item.step ? item.step + " — " : "") + item.title];
+    if (item.why) lines.push("Why it's drafted this way: " + item.why);
+    if (item.kind === "choice") {
+      lines.push("Options:");
+      (item.options || []).forEach(function (o) { lines.push("- " + o.label + (o.recommended ? " (recommended)" : "") + (o.description ? ": " + o.description : "")); });
+    } else if (item.bullets) {
+      lines.push("Current bullets (state in brackets):");
+      item.bullets.forEach(function (b) { lines.push("- [" + bState(b) + "] " + finalText(b) + ((b.sources || []).length ? " (source: " + b.sources.map(function (s) { return s.label; }).join("; ") + ")" : "")); });
+    } else if (item.draft) lines.push("Current draft:\n" + item.draft);
+    if (item.comment) lines.push("Colleague's note: " + item.comment);
+    return lines.join("\n");
+  }
+
+  function renderBrainstorm(item, body, card) {
+    var panel = el("div", { "class": "bs", id: "bs-" + item.id });
+    panel.hidden = !(item.brainstorm && item.brainstorm.length);
+    var head = el("div", { "class": "bs-head" });
+    head.appendChild(el("div", { "class": "avatar", "aria-hidden": "true" }, "SR"));
+    var who = el("div"); who.appendChild(el("div", { "class": "who" }, "Senior researcher")); who.appendChild(el("div", { "class": "role" }, "Brainstorming " + item.title));
+    head.appendChild(who); panel.appendChild(head);
+    var log = el("div", { style: "display:grid;gap:8px" }); panel.appendChild(log);
+    var ta = el("textarea", { id: "bs-in-" + item.id, rows: "2", placeholder: "Reply, push back, or ask for another angle…" });
+    var row = el("div", { "class": "actions-row" });
+    var send = el("button", { "class": "btn", type: "button", id: "bs-send-" + item.id }, "Send");
+    var chat = el("button", { "class": "btn ghost", type: "button", id: "bs-chat-" + item.id }, "Continue in chat with Claude instead");
+    row.appendChild(send); row.appendChild(chat);
+    panel.appendChild(ta); panel.appendChild(row);
+    if (submitted) { ta.disabled = true; send.disabled = true; chat.disabled = true; }
+    body.appendChild(panel);
+    item.brainstorm = item.brainstorm || [];
+
+    function drawLog() {
+      log.textContent = "";
+      item.brainstorm.forEach(function (turn) {
+        if (turn.role === "user") { if (turn.shown) log.appendChild(el("div", { "class": "msg me" }, turn.shown)); return; }
+        var m = el("div", { "class": "msg" });
+        var data = turn.data || {};
+        if (data.take) m.appendChild(el("p", null, data.take));
+        (data.ideas || []).forEach(function (idea) {
+          var d = el("div", { "class": "idea" });
+          d.appendChild(el("div", { "class": "it" }, idea.title || "Idea"));
+          d.appendChild(el("div", { "class": "iw" }, idea.why || ""));
+          if (idea.bullet) {
+            var b = el("button", { "class": "btn ghost", type: "button" }, item.kind === "choice" ? "Use this" : "Add as bullet");
+            if (submitted) b.disabled = true;
+            b.addEventListener("click", function () {
+              if (item.kind === "choice") {
+                var oid = "idea" + (seq++);
+                item.options.push({ id: oid, label: idea.title || "Brainstormed option", description: idea.bullet });
+                item.decision = item.multi ? [oid] : oid; render(); return;
+              }
+              item.bullets.push({ id: "n" + Date.now().toString(36) + (seq++), text: idea.bullet, keep: true, edited: null, added: true, sources: [] });
+              reopen(item); if (card._redraw) card._redraw(); update(); b.disabled = true; b.textContent = "Added";
+            });
+            d.appendChild(b);
+          }
+          m.appendChild(d);
+        });
+        (data.questions || []).forEach(function (q) { m.appendChild(el("p", { "class": "q" }, q)); });
+        if (data.watch_out) m.appendChild(el("div", { "class": "watch" }, "Watch out: " + data.watch_out));
+        if (!data.take && turn.content) m.appendChild(el("p", null, turn.content));
+        log.appendChild(m);
+      });
     }
-    card.appendChild(box);
+
+    function ask(userText) {
+      panel.hidden = false;
+      var shown = userText || null;
+      var first = item.brainstorm.length === 0;
+      var content = first ? SENIOR + "\n\n" + contextFor(item) + (userText ? "\n\nColleague: " + userText : "\n\nColleague: What would you do with this?") : (userText + "\n\n(Updated item for reference)\n" + contextFor(item));
+      item.brainstorm.push({ role: "user", content: content, shown: shown });
+      drawLog();
+      var wait = el("div", { "class": "msg thinking" }, "Thinking…"); log.appendChild(wait);
+      send.disabled = true;
+      useSample().then(function (sample) {
+        if (!sample) throw { code: "not_granted" };
+        var turns = item.brainstorm.map(function (t) { return { role: t.role, content: t.role === "assistant" ? JSON.stringify(t.data || {}) : t.content }; });
+        return sample.json(turns, { cache: false });
+      }).then(function (data) {
+        if (!data || typeof data !== "object") data = { take: String(data || "") };
+        item.brainstorm.push({ role: "assistant", data: { take: String(data.take || ""), ideas: Array.isArray(data.ideas) ? data.ideas.slice(0, 4) : [], questions: Array.isArray(data.questions) ? data.questions.slice(0, 2) : [], watch_out: String(data.watch_out || "") } });
+        drawLog();
+      }).catch(function (e) {
+        item.brainstorm.pop();
+        drawLog();
+        var code = e && e.code;
+        var msg = code === "not_granted" || code === "sampling_disabled" || code === "capability_disabled" || code === "not_declared"
+          ? "Brainstorming on this page isn't available here. Choose “Continue in chat” and Claude will brainstorm with you in the chat."
+          : code === "rate_limited" ? "Too many requests just now. Try again in a minute, or continue in chat."
+          : code === "cancelled" ? "" : "That didn't come through. Try again, or continue in chat.";
+        if (msg) log.appendChild(el("div", { "class": "watch" }, msg));
+      }).then(function () { send.disabled = submitted; });
+    }
+    send.addEventListener("click", function () { var v = ta.value.trim(); if (!v) return; ta.value = ""; ask(v); });
+    chat.addEventListener("click", function () { item.decision = BRAINSTORM; panel.hidden = false; update(); });
+    card._ask = ask;
+    drawLog();
   }
 
   function render() {
@@ -201,90 +407,101 @@ footer.bar .wrap { padding-block: 12px; display: flex; flex-wrap: wrap; gap: 10p
     $("round").textContent = state.round || "";
     $("intro").textContent = state.intro || "";
     if (state.banner) { $("banner").textContent = state.banner; $("banner").hidden = false; }
-    var list = $("items");
-    list.textContent = "";
+    var list = $("items"); list.textContent = "";
     state.items.forEach(function (item) {
-      var card = el("article", { "class": "card", id: "item-" + item.id });
-      if (item.step) card.appendChild(el("div", { "class": "step" }, item.step));
-      card.appendChild(el("h2", null, item.title));
-      if (item.why) card.appendChild(el("p", { "class": "why" }, item.why));
-      if (item.kind === "choice") renderChoice(item, card); else renderContent(item, card);
-      if (item.sources && item.sources.length) {
-        var ul = el("ul", { "class": "sources" });
-        item.sources.forEach(function (s) {
-          var li = el("li");
-          if (s.url && /^https:\/\//.test(s.url)) { var a = el("a", { href: s.url, target: "_blank", rel: "noopener" }, s.label || s.url); li.appendChild(a); }
-          else li.textContent = s.label || "";
-          ul.appendChild(li);
-        });
-        card.appendChild(ul);
+      var card = el("article", { "class": "card", id: "item-" + item.id, "data-tone": item.tone || (item.kind === "choice" ? "choice" : "context") });
+      var head = el("div", { "class": "card-head" });
+      if (item.step) head.appendChild(el("span", { "class": "step" }, item.step));
+      head.appendChild(el("h2", null, item.title));
+      if (item.why) head.appendChild(el("p", { "class": "why" }, item.why));
+      card.appendChild(head);
+      var body = el("div", { "class": "card-body" });
+      body.appendChild(el("div", { "class": "done-note", id: "done-" + item.id }));
+      if (item.kind === "choice") renderChoice(item, body);
+      else if (item.bullets) renderBullets(item, body, card);
+      else if (item.draft) { var p = el("div", { "class": "plain" }); p.appendChild(rich(item.draft)); body.appendChild(p); }
+      var row = el("div", { "class": "actions-row" });
+      if (item.kind !== "choice") {
+        var acc = el("button", { "class": "btn", type: "button", id: "accept-" + item.id }, "Accept selected");
+        if (!item.bullets) acc.textContent = "Accept";
+        if (submitted) acc.disabled = true;
+        acc.addEventListener("click", function () { item.decision = "accept"; update(); });
+        row.appendChild(acc);
       }
-      var cid = "comment-" + item.id;
-      card.appendChild(el("label", { "class": "lbl", "for": cid }, "Comments for Claude (optional)"));
-      var c = el("textarea", { id: cid, rows: "2" });
-      c.value = item.comment || "";
-      if (submitted) c.readOnly = true;
+      var bsb = el("button", { "class": "btn ghost", type: "button", id: "brainstorm-" + item.id }, "Brainstorm with me");
+      if (submitted) bsb.disabled = true;
+      row.appendChild(bsb);
+      body.appendChild(row);
+      var cm = el("details", { "class": "cm" }); if (item.comment) cm.open = true;
+      cm.appendChild(el("summary", null, "Add a note for Claude"));
+      var c = el("textarea", { id: "comment-" + item.id, rows: "2" }); c.value = item.comment || ""; if (submitted) c.readOnly = true;
       c.addEventListener("input", function () { item.comment = c.value; });
-      card.appendChild(c);
+      cm.appendChild(c); body.appendChild(cm);
+      card.appendChild(body);
       list.appendChild(card);
+      renderBrainstorm(item, body, card);
+      if (item.bullets && card._redraw) card._redraw();
+      bsb.addEventListener("click", function () {
+        var panel = $("bs-" + item.id);
+        if (item.brainstorm.length === 0) card._ask(""); else { panel.hidden = false; $("bs-in-" + item.id).focus(); }
+      });
     });
     update();
   }
 
   function update() {
-    var done = state.items.filter(decided).length;
-    $("progress").textContent = done + " of " + state.items.length + " reviewed";
+    var done = state.items.filter(decided).length, total = state.items.length;
+    $("progress").textContent = done + " of " + total + " reviewed";
+    $("fill").style.width = (total ? Math.round(done / total * 100) : 0) + "%";
     state.items.forEach(function (item) {
-      var card = $("item-" + item.id); if (card) card.dataset.state = decided(item) ? "done" : "open";
+      var card = $("item-" + item.id); if (!card) return;
+      card.dataset.state = decided(item) ? "done" : "open";
+      var note = $("done-" + item.id);
+      if (note) {
+        if (item.decision === BRAINSTORM) note.textContent = "Marked to brainstorm with Claude in chat.";
+        else if (item.decision === "accept" && item.bullets) note.textContent = "Accepted — " + item.bullets.filter(function (b) { return b.keep; }).length + " bullets.";
+        else if (item.decision === "accept") note.textContent = "Accepted.";
+        else if (item.kind === "choice" && decided(item)) note.textContent = "Choice made.";
+        else note.textContent = "";
+      }
     });
-    var ready = done === state.items.length;
+    var ready = done === total;
     $("send").disabled = submitted || !ready;
-    if (submitted) $("status").textContent = "Sent to Claude. Go back to the chat; Claude picks up your review from here.";
-    else $("status").textContent = ready ? "All items reviewed. Send your review back to Claude." : "Review each item to send it back.";
+    $("status").textContent = submitted ? "Sent to Claude. Go back to the chat and say “done” — Claude picks up from here."
+      : ready ? "Everything's reviewed. Send it back to Claude." : "Review each card — " + (total - done) + " to go.";
   }
 
   function summary() {
     var lines = ["Review for " + (state.study || "study") + " — " + (state.round || "")];
     state.items.forEach(function (item) {
-      var d = Array.isArray(item.decision) ? item.decision.join(", ") : (item.decision || "not reviewed");
+      var d = Array.isArray(item.decision) ? item.decision.join(", ") : (item.decision === BRAINSTORM ? "brainstorm in chat" : item.decision || "not reviewed");
       lines.push("", (item.step ? item.step + ": " : "") + item.title + " — " + d);
-      if (item.edited != null) lines.push("Edited text:", item.edited);
-      if (item.comment) lines.push("Comment: " + item.comment);
+      (item.bullets || []).forEach(function (b) { lines.push("  [" + bState(b) + "] " + finalText(b)); });
+      if (item.comment) lines.push("  Note: " + item.comment);
     });
     return lines.join("\n");
   }
-
   function pageHtml() {
     var json = JSON.stringify(state).replace(/</g, "\\u003c");
     var body = SOURCE.replace(/(<script type="application\/json" id="review-state">)[\s\S]*?(<\/script>)/, function (_, a, b) { return a + json + b; });
     return "<!doctype html><html><head>" + HEAD + "</head><body>" + body + "</body></html>";
   }
-
-  function showFallback() {
-    $("copybox").value = summary();
-    $("fallback").hidden = false;
-  }
+  function showFallback() { $("copybox").value = summary(); $("fallback").hidden = false; }
 
   $("copy").addEventListener("click", function () {
     var text = summary();
-    try {
-      navigator.clipboard.writeText(text).then(function () { $("status").textContent = "Review copied. Paste it into your chat with Claude."; }, showFallback);
-    } catch (e) { showFallback(); }
+    try { navigator.clipboard.writeText(text).then(function () { $("status").textContent = "Review copied. Paste it into your chat with Claude."; }, showFallback); }
+    catch (e) { showFallback(); }
   });
-
   $("send").addEventListener("click", function () {
-    var btn = $("send");
-    btn.disabled = true;
-    $("status").textContent = "Sending…";
+    $("send").disabled = true; $("status").textContent = "Sending…";
     var use = window.claude && window.claude.use ? window.claude.use("artifact") : Promise.resolve(null);
     Promise.resolve(use).then(function (artifact) {
       if (!artifact) { showFallback(); $("status").textContent = "This view can't save. Copy your review below instead."; update(); return; }
-      state.status = "submitted";
-      state.submitted_at = new Date().toISOString();
+      state.status = "submitted"; state.submitted_at = new Date().toISOString();
       return artifact.publish(pageHtml()).catch(function (err) {
         state.status = "awaiting_review"; state.submitted_at = null;
-        var code = err && err.code;
-        if (code === "conflict") $("status").textContent = "Someone else saved this page first. It has reloaded; review again and resend.";
+        if (err && err.code === "conflict") $("status").textContent = "Someone else saved this page first. It has reloaded; review again and resend.";
         else { showFallback(); $("status").textContent = "Couldn't save the page. Copy your review below instead."; }
         update();
       });

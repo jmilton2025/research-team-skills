@@ -66,7 +66,7 @@ Before creation, record the confirmed folder, exact approved title, and attempt 
 
 Reuse one verified match. If there is no match, more than one plausible match, or no safe inspection path, block and report the uncertainty. **Never blindly retry a create or update.**
 
-If import loses the required horizontal rule or produces another malformed structure, mark the Doc partial and perform approved cleanup or quarantine before a new import attempt. Make at most one new attempt, through a different import route when one exists (for example, the connector's import instead of `gws`, or the reverse). If that is malformed too, block.
+If import loses a required horizontal rule or produces another malformed structure, mark the Doc partial and perform approved cleanup or quarantine before a new import attempt. Make at most one new attempt, through a different import route when one exists (for example, the connector's import instead of `gws`, or the reverse). If that is malformed too, block.
 
 ## 6. Bind and reconcile writes
 

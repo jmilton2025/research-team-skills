@@ -30,7 +30,7 @@ Markdown is an intermediate representation, not the completed deliverable. A tes
 | **1.5** | **Section 1 — Context & Foundation:** discover background, existing insights, and hypotheses → three sequential pop-ups (Step 1 of 3, 2 of 3, 3 of 3), each checked against the content rules before it's shown and locked before the next | Background, Existing insights, and Hypotheses approved, and rule-compliant or recorded as an accepted exception |
 | **1.6** | Fill only unresolved logistics; auto-draft title, date, and Topic; ask the researcher to confirm the key RACI people, then offer to add more | Opening approved |
 | **2** | Recommend the minimum valid method direction and the conditional rows the study needs | Method direction picked (the rows are approved in Step 3) |
-| **3** | **Section 2 — Research Design** (4 labeled steps: Objectives, Key research questions, Decisions, Method & approach) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, "Brainstorm with me" always offered, transition announced after each lock; the Timeline step runs the `timeline` check before its pop-up | All remaining rows approved; no row approved twice; timeline rows fit on one line |
+| **3** | **Section 2 — Research Design** (4 labeled steps: Objectives, Key research questions, Decisions, Method & approach) + **Section 3 — Outputs** (4 labeled steps) — one pop-up per step, "Brainstorm with me" always offered, transition announced after each lock; the Timeline step runs the `timeline` check before its pop-up | All remaining rows approved; no row approved twice; the timeline grid passes the `timeline` check |
 | **3.5** | Confirm the Google Drive destination | Exact folder confirmed |
 | **4** | Assemble the approved plan (markdown intermediate, saved in a persistent working folder) and run the `lint` check | Content complete; layout checks pass; the warning banner matches the run type |
 | **4.5** | Auto-run critique checklist, starting from the `lint` results (announced at end of Step 3) | Gaps fixed or explicitly accepted |
@@ -66,7 +66,7 @@ Load `references/research-plan-methodology.md` when method choice is disputed, s
 
 ### Review surface — HTML review page first
 
-When the Artifact tool is available, show drafts on the **editable HTML review page** in [`../../references/review-page/README.md`](../../references/review-page/README.md) instead of pop-ups. Build it with that folder's `review_page.py`, publish it with `capabilities: {"artifact": {}}`, and republish the same file for each section (Section 1 — Context & Foundation, Section 2 — Research Design, Section 3 — Outputs), plus the gates between them (decision audit, method direction, Drive destination, review permission), so the researcher keeps one link. Each step or gate becomes one page item, with its step label unchanged. The researcher edits text inline, marks each item Accept / Edit / Brainstorm with me, and clicks **Send to Claude**, then says **done** in chat. Read the page back and apply every decision under the same approval rules this skill sets for pop-ups: an edit is still checked against the content rules, and a missing decision is never approval. Quick yes/no confirmations may stay as pop-ups. When the Artifact tool isn't available, use the pop-ups below. Say which surface the run is using right after intake.
+When the Artifact tool is available, show drafts on the **editable HTML review page** in [`../../references/review-page/README.md`](../../references/review-page/README.md) instead of pop-ups. Build it with that folder's `review_page.py`, publish it with `capabilities: {"artifact": {}, "sample": {}}`, and republish the same file for each section (Section 1 — Context & Foundation, Section 2 — Research Design, Section 3 — Outputs), plus the gates between them (decision audit, method direction, Drive destination, review permission), so the researcher keeps one link. Each step or gate becomes one page item, with its step label unchanged. List-shaped rows (Background, Existing insights, Hypotheses, objectives, questions, guide blocks, findings, recommendations) are **bullet checklists**: present every proposed bullet first, with its source, then let the researcher keep, edit, remove, or add bullets (Select all / Clear all) and click **Accept selected**, or **Brainstorm with me** to work the card with a senior researcher on the page. Then they click **Send to Claude** and say **done** in chat. Read the page back and apply every decision under the same approval rules this skill sets for pop-ups: an edit is still checked against the content rules, and a missing decision is never approval. Quick yes/no confirmations may stay as pop-ups. When the Artifact tool isn't available, use the pop-ups below. Say which surface the run is using right after intake.
 
 Use native `AskUserQuestion` checklist pop-ups when available, within the tool's limits:
 
@@ -76,7 +76,7 @@ Use native `AskUserQuestion` checklist pop-ups when available, within the tool's
 - Put the **Recommended** option first, with “(Recommended)” in its label. Base it on the PRD and discovered evidence.
 - Keep the built-in **Other / comments** field so researchers can add, correct, or rewrite. The tool adds it automatically; don't add your own “Other” option.
 - Show the proposed content in chat before the pop-up. Options are short labels, not the content itself.
-- **Offer “Brainstorm with me” as the last option in every approval pop-up.** It opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing.
+- **Offer “Brainstorm with me” as the last option in every approval pop-up.** It opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. In that exchange, talk like a **senior UX researcher brainstorming with a colleague**: lead with a point of view, offer 2–4 concrete ideas with their tradeoffs, ask 1–2 sharp questions, and name one risk to watch, grounded only in the run's sources ([`../../references/review-page/README.md`](../../references/review-page/README.md) § Brainstorm with me).
 - Label every pop-up with its section and step in the question text: **“Section 1 > Step 2 of 3: Existing Insights”**. The researcher must always know exactly where they are. Pop-ups outside the three sections use their own short name instead, such as **“Opening: Title, Date & RACI”**, **“Method direction”**, or **“Drive destination”**. (The short header chip holds at most 12 characters, so the full label goes in the question.)
 - Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Step 3.
 
@@ -84,15 +84,15 @@ If native pop-ups are unavailable, state **“Inline fallback — native checkli
 
 ## Option 4 — Leadership Google Docs contract
 
-The skill must produce the same leadership-ready visual system for every researcher. Runtime access to Jedida's private reference Doc is neither assumed nor required.
+The skill must produce the same leadership-ready visual system for every researcher. It matches the visual design of the approved International retailer research plan (Q3 2025); runtime access to that private Doc is neither assumed nor required.
 
 - **This layout is the default, not a choice.** Every real run's final Doc uses this layout automatically. Don't ask the researcher which style or template to use, and don't apply any other template on top, even one the researcher's own settings name as their default for new Google Docs; that default covers their other Docs, not research plans.
 - Use the bundled machine-readable contract in `references/option4-style-contract.json` and the executable pipeline in `scripts/option4_layout.py`.
-- Build the exact hierarchy: concise opening → separate five-row leadership timeline under **Research Timeline** → **Project Plan Overview** table.
-- Apply DM Serif Display and DM Sans, the exact colors, pageless editing mode with landscape-letter export geometry, one-inch print margins, fixed table widths, pale-yellow warning treatment, white body cells, and dark-green two-cell section bands.
-- Keep adaptive study content and milestones; never copy wording, dates, week labels, people, or findings from the historical reference plan.
+- Build the exact hierarchy: concise opening → native rule → **Research Timeline** Gantt grid (`Phase | Activity | one column per week`) with its color legend → native rule → **Project Plan Overview** table.
+- Apply DM Serif Display and DM Sans, the exact colors, pageless editing mode with landscape-letter export geometry, one-inch print margins, fixed table widths, the green / yellow / red week fills, pale-yellow warning treatment, white body cells with 0.75pt black borders, and merged dark-green Title Case section bands.
+- Keep adaptive study content, phases, and week labels; never copy wording, dates, week labels, people, or findings from the reference plan.
 - Run the bundled verifier and inspect rendered pages. Structural similarity or a successful API response is not enough.
-- If the connected environment cannot apply or verify the exact contract, preserve the approved draft and **block completion**. Do not return a standard-font, one-table, generic-color, merged-band, or structural-only fallback as final.
+- If the connected environment cannot apply or verify the exact contract, preserve the approved draft and **block completion**. Do not return a standard-font, one-table, generic-color, list-style timeline, unmerged-band, or structural-only fallback as final.
 - This visual gate is not researcher-, stakeholder-, or leadership-waivable. An instruction to accept a downgrade still blocks final delivery; return the approved draft as blocked, not an approximate Google Doc as final.
 
 ## Step 1: Gather study inputs and orient the researcher
@@ -325,13 +325,13 @@ Approve in this order:
 
 1. **What does success look like? + Dependencies & guardrails** — Pop-up label: **“Section 3 > Step 1 of 4: Success & Guardrails”**. After lock: *“Success & Guardrails locked. Moving on to Deliverables.”*
 2. **Deliverables** — Pop-up label: **“Section 3 > Step 2 of 4: Deliverables”**. After lock: *“Deliverables locked. Moving on to Timeline.”*
-3. **Timeline** — Draft the detailed Timeline row and the four leadership milestones together (format in Step 4's output contract). Save the draft milestone table in the private working folder (the working-file rules in Step 4 apply from here), then run:
+3. **Timeline** — Draft the detailed Timeline row and the Research Timeline grid together (format in Step 4's output contract). The grid has one row per activity, grouped into numbered phases, and one column per week of the study, labeled with the week's start date (`Nov. 3`), or `Week N` until dates are set. Mark each week cell `[target]`, `[spillover]`, or `[event]`, or leave it blank, and derive every mark from the detailed row. Save the draft grid in the private working folder (the working-file rules in Step 4 apply from here), then run:
 
    ```bash
    python3 scripts/option4_layout.py timeline TIMELINE.md
    ```
 
-   Resolve `scripts/…` from the directory containing this `SKILL.md`; `TIMELINE.md` is the draft in the working folder. The file may hold just the `Timing | Leadership milestone` table. The check prints one line per milestone (`OK` or `WRAP`, with the measured width) and a `FAIL:` line for each label or milestone that would wrap. Fix every reported line without changing its meaning, tell the researcher what you shortened, and rerun until it prints `PASS`. Then show both the detailed row and the milestones in chat for one approval. Pop-up label: **“Section 3 > Step 3 of 4: Timeline”**. After lock: *“Timeline locked. Moving on to Next Steps & Appendix.”*
+   Resolve `scripts/…` from the directory containing this `SKILL.md`; `TIMELINE.md` is the draft in the working folder. The file may hold just the grid table. The check prints one line per week label, phase, activity, and week note (`OK` or `WRAP`, with its measured fit) and a `FAIL:` line for each problem: a label too wide for its column, a Phase cell that isn't `Phase N: Name` in order, a week cell that isn't blank or a status token, or an `[event]` week that doesn't cover every row. Fix every reported line without changing its meaning, tell the researcher what you shortened, and rerun until it prints `PASS`. Then show both the detailed row and the grid in chat for one approval. Pop-up label: **“Section 3 > Step 3 of 4: Timeline”**. After lock: *“Timeline locked. Moving on to Next Steps & Appendix.”*
 4. **Next steps + Additional UXR documents + Resources from XFN** — Pop-up label: **“Section 3 > Step 4 of 4: Next Steps & Appendix”**. Auto-sort every relevant kickoff document into Additional UXR documents or Resources from XFN. Existing documents use real links; future artifacts are labeled “to be created” without fake links.
 
 After all three sections are locked, tell the researcher exactly what happens next so they know what to expect:
@@ -388,7 +388,17 @@ The opening order is:
 5. Warning banner, when applicable.
 6. Optional short context note, only when the plan needs a historical or interpretation caveat (styled as a small italic gray line).
 
-Then add the separate Option 4 leadership timeline and the Project Plan Overview. The leadership timeline has the header `Timing | Leadership milestone` plus four study-specific milestones derived from the approved detailed Timeline row. Each left-hand label starts with its timing, then a short name: `Week 1: Setup & rubric`. Use `Weeks 2–3:` for a span, and `Day N:` or `Month N:` only when the study runs in days or months. Two milestones may share a week. Each label must fit on one line, because a wrapped label can split the timeline across pages. The builder measures each label's printed width in bold DM Sans 10pt and allows at most 134pt, the usable width of the 144pt column. That is usually 24 to 27 characters, depending on the letters: `Week 1: Setup & definitions` fits, but `Week 2: Baseline comparison` does not. When a label is too wide, shorten the name after the colon yourself without changing its meaning (`Week 2: Baseline comparison` becomes `Week 2: Compare baseline`), then tell the researcher what changed; don't ask them to count characters. A shortening that keeps the meaning isn't a material change and needs no reapproval; if no short name keeps it, ask the researcher. Each right-hand milestone is one sentence that also fits on one line: at most 544.4pt in regular DM Sans 10pt (bold words count at their bold width), usually about 110 to 120 characters, with 160 characters as a hard cap. A milestone that wraps to two lines makes its row taller and can split the timeline across pages just as a wrapped label does. The `timeline` check at Section 3 > Step 3 measures both columns, so the approved milestones should already fit. The old reference study's four-week schedule is never reused.
+Then a `---` rule, the **Research Timeline** grid with its legend note, a second `---` rule, and the Project Plan Overview. Each `---` needs a blank line above it; the import turns each into a native horizontal rule.
+
+The Research Timeline is a Gantt grid derived from the approved detailed Timeline row, in this Markdown form:
+
+- **Header:** `Phase | Activity`, then one column per week, labeled with the week's start date (`Nov. 3`) or `Week N`. The grid holds at most 12 week columns (54pt each, so 900pt at most). For a longer study, keep the weeks that matter and replace one run of middle weeks with a single `…` column, never the first or last.
+- **Phase cell:** `**Phase 1:** Short name` on the first row of a phase. Leave the Phase cell blank on the phase's later rows; the Doc merges the Phase cell down across them. Number phases 1, 2, 3 in order.
+- **Activity cell:** a short plain name (`Calibration`). It may wrap to two lines of the 72pt column, but no word may be wider than the column.
+- **Week cell:** blank (white), or a status token, optionally followed by a short note of one or two words: `[target]` (green, a target week), `[spillover]` (yellow, possible spillover), `[event]` (red, a fixed event), or `[target] Human raters`. An `[event]` week marks every row of that week.
+- **Legend note:** the italic line under the grid ends with `; Green = target dates; Yellow = possible spillover`, plus `; Red = <the fixed event>` when the grid has `[event]` weeks. The Doc shades the words Green, Yellow, and Red with their colors.
+
+The builder measures every label in DM Sans 10pt against its column: week labels on one line of 50pt (bold), phase names on one line of 170pt (bold), activities in at most two lines of 62pt, and week notes in at most two lines of 44pt. When a label is too wide, shorten it yourself without changing its meaning (the activity `Recruit & screen participants` needs three lines and becomes `Recruit & screen`), then tell the researcher what changed; don't ask them to count characters. A shortening that keeps the meaning isn't a material change and needs no reapproval; if no short name keeps it, ask the researcher. The `timeline` check at Section 3 > Step 3 runs these checks, so the approved grid should already pass. Never reuse a reference study's phases, weeks, or schedule.
 
 After assembling, run the layout check on the whole draft:
 
@@ -396,19 +406,20 @@ After assembling, run the layout check on the whole draft:
 python3 scripts/option4_layout.py lint APPROVED.md
 ```
 
-It prints `FAIL:` for layout problems the builder would reject (missing sections, a timeline row that would wrap, an unrecognized banner); fix those before moving on. `FIX OR ACCEPT:` lines are content-rule gaps (for example, Background without a Why now bullet, or a hypothesis without an origin label), and `CONFIRM QUOTE:` lines list every quoted phrase of four or more words. Both feed the Step 4.5 critique. It prints `PASS` when there is nothing to report.
+It prints `FAIL:` for layout problems the builder would reject (missing sections or rules, a timeline grid problem, a legend that doesn't match the grid, an unrecognized banner); fix those before moving on. `FIX OR ACCEPT:` lines are content-rule gaps (for example, Background without a Why now bullet, or a hypothesis without an origin label), and `CONFIRM QUOTE:` lines list every quoted phrase of four or more words. Both feed the Step 4.5 critique. It prints `PASS` when there is nothing to report.
 
 ```markdown
+---
+
 # Research Timeline
 
-| Timing | Leadership milestone |
-|---|---|
-| Week [N]: [Short name] | [Concise study-specific summary.] |
-| Week [N]: [Short name] | [Concise study-specific summary.] |
-| Week [N]: [Short name] | [Concise study-specific summary.] |
-| Week [N]: [Short name] | [Concise study-specific summary.] |
+| Phase | Activity | [Mon. D] | [Mon. D] | [Mon. D] | [Mon. D] |
+|---|---|---|---|---|---|
+| **Phase 1:** [Short name] | [Activity] | [target] | [target] | [event] | |
+| | [Activity] | | [target] [Note] | [event] | [spillover] |
+| **Phase 2:** [Short name] | [Activity] | | | [event] | [target] |
 
-*[One-sentence timing dependency or decision-point note.]*
+*Note: [Timing dependency or caveat]; Green = target dates; Yellow = possible spillover; Red = [fixed event]*
 
 ---
 
@@ -418,30 +429,30 @@ It prints `FAIL:` for layout problems the builder would reject (missing sections
 |---|---|
 | **Topic** | [One-sentence leadership framing.] |
 | **TL;DR summary of findings** | *To be filled out at the end of the study.* |
-| **KEY INFORMATION** | |
+| **Key Information** | |
 | **Background** | [True bullet paragraphs.] |
 | **Existing insights** | [Sourced bullet paragraphs.] |
 | **Objectives** | [True bullet paragraphs.] |
 | **Key research questions** | [True bullet paragraphs.] |
 | **Hypotheses** | [True bullet paragraphs.] |
 | **What decisions will be made with this research?** | [True bullet paragraphs.] |
-| **PROJECT DETAILS** | |
+| **Project Details** | |
 | **Method & approach** | [True bullet paragraphs for methods or phases.] |
 | **[Conditional row]** | [Include only when relevant.] |
 | **What does success look like?** | [Contextual decision-readiness or evidence definition.] |
 | **Dependencies & guardrails** | [True bullet paragraphs.] |
-| **DELIVERABLES & NEXT STEPS** | |
+| **Deliverables & Next Steps** | |
 | **Deliverables** | [True bullet paragraphs.] |
 | **Timeline** | [True bullet paragraphs.] |
 | **Next steps** | [True bullet paragraphs.] |
-| **APPENDIX** | |
+| **Appendix** | |
 | **Additional UXR documents** | [Relevant UX research–owned links/artifacts only.] |
 | **Resources from XFN** | [Relevant partner-owned links/resources only.] |
 ```
 
-Use separate markdown list lines in multi-item cells during assembly. In Google Docs, convert and verify them as true Google Docs bullet paragraphs. Do not use arrow chains, typed bullet glyphs, or dense run-on sentences as a substitute.
+Use separate markdown list lines in multi-item cells during assembly: `- ` items separated by `<br>`, with two leading spaces after the `<br>` for each nesting level (`<br>  - Sub-point`), or `1. ` items for a numbered list where order matters. In Google Docs, convert and verify them as true Google Docs bullet paragraphs (`●` `○` `■`), or numbered list paragraphs (`1.` / `1.1.`), 36pt deeper per level. Do not use arrow chains, typed bullet glyphs, or dense run-on sentences as a substitute.
 
-The generic `Section / element | Approved content` row is a conversion aid only. Remove it from the Google Doc so Topic is the first visible overview row. Do not remove the visible leadership-timeline header.
+The generic `Section / element | Approved content` row is a conversion aid only. Remove it from the Google Doc so Topic is the first visible overview row. Do not remove the visible timeline header row.
 
 The bundled normalizer rebuilds every multi-item table cell as clean paragraphs before native bullets and links are applied. Use it instead of accepting conversion artifacts or simplifying the layout. The durable executable example is `tests/fixtures/leadership-plan.md`; the contract validators are `tests/validate_contract.py` and `tests/test_option4_layout.py`.
 
@@ -516,7 +527,7 @@ Copyedit the approved Markdown for clarity, grammar, complete sentences, consist
 python3 scripts/option4_layout.py manifest APPROVED.md manifest.json
 ```
 
-The manifest command is a preflight gate. It fails when the required headings or sections are missing, the Appendix has extra rows, the timeline does not have four milestones, its header is not `Timing | Leadership milestone`, a label does not start with its timing or is wider than 134pt, a milestone is wider than 544.4pt or longer than 160 characters, or the warning banner isn't one of the two approved lines. A too-wide error lists every row that would wrap, with its measured width; shorten each one as described in Step 4, tell the researcher, and rerun the command.
+The manifest command is a preflight gate. It fails when the required headings, rules, or sections are missing, a section band isn't Title Case, the Appendix has extra rows, the timeline header isn't `Phase | Activity` plus 1 to 12 week columns, a Phase cell isn't `Phase N: Name` in order, a week cell isn't blank or a status token, an `[event]` week doesn't cover every row, a grid label is too wide for its column, the legend note doesn't match the grid, or the warning banner isn't one of the two approved lines. A too-wide error lists every label that doesn't fit, with its measured width; shorten each one as described in Step 4, tell the researcher, and rerun the command.
 
 The manifest also records a fingerprint of the layout script and style contract. The later `normalize`, `format`, and `verify` steps fail with “Skill files changed since this manifest was generated” if either file changed mid-run, because a different builder could produce a different Doc. Don't pull, update, or edit the skill during a run. If you see that error, tell the researcher the skill was updated mid-run and re-read the changed skill files, since the update may change later steps too. Then rerun the `lint` check and the manifest command (the update may have changed the rules either one applies), fix anything they now flag and tell the researcher what changed (re-confirm only a change that alters meaning, as in Step 4), and regenerate every batch from a fresh fetch. If those fixes change text the Doc already holds, the Doc no longer matches the plan: handle it under the partial-document policy in `references/source-and-delivery-safety.md` and create a new Doc from the updated plan. Rerun the critique pass on any row whose meaning changed; the review status stands unless a fix adds a claim the reviewers didn't see, in which case say so when you return the Doc.
 
@@ -526,7 +537,7 @@ Run the preflight in `references/source-and-delivery-safety.md`. Before creation
 
 ### 6.2 Create in the confirmed folder
 
-Record the confirmed folder, approved title, and attempt time. Import the Markdown as a dedicated one-tab Doc in that folder; capture the ID, URL, active tab, and raw JSON. Confirm two tables and one native horizontal rule. If import is malformed, apply the safety reference's partial-document policy, then make at most one more attempt (§5 of the safety reference).
+Record the confirmed folder, approved title, and attempt time. Import the Markdown as a dedicated one-tab Doc in that folder; capture the ID, URL, active tab, and raw JSON. Confirm two tables and two native horizontal rules. If import is malformed, apply the safety reference's partial-document policy, then make at most one more attempt (§5 of the safety reference).
 
 For an ambiguous create/import result, follow the idempotency procedure in `references/source-and-delivery-safety.md`: reconcile the known ID or the exact folder, title, and attempt-time window. **Never blindly retry a create or update.**
 
@@ -541,7 +552,7 @@ python3 scripts/option4_layout.py normalize imported-doc.json manifest.json norm
   --required-revision-id "$IMPORTED_REVISION_ID"
 ```
 
-The normalizer validates the manifest version and digest, confirms that the imported leadership timeline plus every Project Plan Overview label and body still match the approved Markdown, rebuilds clean overview-cell paragraphs, removes the generic conversion header, and restores two physical cells for section bands. It blocks rather than rewriting pre-overview timeline text, because a length change there would invalidate later Google Docs table indices in the same native batch.
+The normalizer validates the manifest version and digest, confirms that the imported timeline grid plus every Project Plan Overview label and body still match the approved Markdown, rebuilds clean cell paragraphs (status tokens become cell fills, so only the short notes stay as text, and each Phase cell becomes `Phase N:` above its name), removes the generic conversion header, merges each section band into one cell and each Phase cell down across its rows, and adds or removes empty spacer paragraphs so there is exactly one before each rule and one between each H1 and its table. One native batch can only use the fetched snapshot's indices, so it writes from the end of the document toward the start: overview text and merges first, then the spacers after the timeline, then the timeline's text and merges, then the spacers before it.
 
 Immediately before each normalization or formatting write, fetch fresh raw JSON and its revision, bind the batch to that **required revision ID**, apply it through a protected request body (in the order set in the safety reference's §2: a connector tool's request-body parameter that takes these native, revision-bound requests unchanged, then a CLI file or stdin option, then the bundled `send` helper), then re-fetch and verify. With `gws`, which has no file option, apply each batch with the helper rather than pasting JSON into a shell command:
 
@@ -558,7 +569,7 @@ python3 scripts/option4_layout.py format normalized-doc.json manifest.json forma
   --required-revision-id "$NORMALIZED_REVISION_ID"
 ```
 
-Apply `format-batch.json` with the same revision-bound sequence, then re-fetch again. This step must produce DM Serif Display/DM Sans typography, pageless editing mode with landscape-letter export geometry, one-inch print margins, the exact Option 4 colors and spacing, fixed 144pt / 554.4pt table columns, a repeating dark-green timeline header, a gray milestone column, white overview body cells, true bullets, active links, and dark-green two-cell section bands. The two columns intentionally total 698.4pt and extend 50.4pt beyond the 648pt paragraph text area; this matches the approved source and must not be “corrected” by shrinking the table.
+Apply `format-batch.json` with the same revision-bound sequence, then re-fetch again. This step must produce DM Serif Display/DM Sans typography on the reference's named-style roles (SUBTITLE breadcrumb, TITLE, HEADING_1 headings, HEADING_4 bands, HEADING_5 labels), pageless editing mode with landscape-letter export geometry, one-inch print margins, and the exact Option 4 colors and spacing. The timeline grid gets fixed 180pt / 72pt / 54pt-per-week columns, an unpinned dark-green header row (week labels bottom-right with 2pt padding), gray Phase and Activity columns, 20pt minimum activity rows, and the status fills; the legend's swatch words get their colors. The overview table gets fixed 144pt / 554.4pt columns, 0.75pt black borders, 25.75pt minimum rows, white body cells at 115% line spacing, merged dark-green section bands, native `●` `○` `■` bullets and `1.` / `1.1.` numbers, and `#1155CC` underlined links. Both tables intentionally extend past the 648pt paragraph text area (the timeline by up to 252pt, the overview by 50.4pt); this matches the reference and must not be “corrected” by shrinking them. List creation consumes the leading tabs that set each item's level, so those writes come last in the batch, from the highest index to the lowest. Google Docs has no batch request that edits a named style's definition, so the formatter applies the reference's named-style values directly to each paragraph that uses the style.
 
 The script emits native Google Docs API requests. An equivalent connected integration may apply the same operations directly. If the environment cannot apply an essential operation, **block completion**—do not simplify the design.
 
@@ -572,8 +583,8 @@ The script emits native Google Docs API requests. An equivalent connected integr
 python3 scripts/option4_layout.py verify final-doc.json manifest.json
 ```
 
-4. Export or render the Google Doc and inspect **every page**, not a sample. The verifier cannot see page breaks: in the 2026-10-02 mock it passed while the render showed the timeline split onto a second page and a section band orphaned at the foot of a later page.
-5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. Every leadership-timeline label and milestone must sit on one line; the `timeline` and `manifest` checks measure both, so a wrapped row means the text changed after the check. A wrapped row makes the table taller and can push it across a page break, which shifts everything below it, including the section bands. Shorten any wrapped row without changing its meaning. If every row sits on one line and the timeline still splits, tighten the opening and the timing note first, then shorten RACI lines; preserve the approved detailed Timeline row. Don't reach for the row setting `preventOverflow` instead: it only stops a single row from breaking across a page, which a one-line row can't do anyway, and it can't keep the five rows together. Re-render to confirm the band rejoined its rows.
+4. Export or render the Google Doc and inspect **every page**, not a sample. The verifier cannot see page breaks: in the 2026-10-02 mock it passed while the render showed the timeline split onto a second page and a section band orphaned at the foot of a later page. A grid wider than the 648pt text area prints scaled down in a PDF export (the reference's 900pt grid prints at about 78%); that is expected.
+5. Confirm no clipping, illegible wrapping, orphaned section band, awkward timeline split, low contrast, or excess blank page. Every week label and phase name must sit on one line, and no activity or week note may break inside a word; the `timeline` and `manifest` checks measure them, so a wrapped label means the text changed after the check. A taller row can push the grid across a page break, which shifts everything below it, including the section bands. Shorten any wrapped label without changing its meaning. If every label fits and the timeline still splits, tighten the opening and the legend note first, then shorten RACI lines; preserve the approved detailed Timeline row. Don't reach for the row setting `preventOverflow` instead: it only stops a single row from breaking across a page and can't keep the grid's rows together. Re-render to confirm the band rejoined its rows.
 6. Correct every issue with the same fresh-fetch, revision-bound, regenerate-on-conflict sequence; then re-fetch, rerun the verifier, and re-render. Repeat until all checks pass, for at most three rounds (a round is one correction batch followed by re-fetch, verify, and render; the first format pass doesn't count); if checks still fail after the third, handle the Doc under the partial-document policy and give the blocked result (below). For a text correction after formatting (for example, shortening a timeline label):
    1. Edit `APPROVED.md` first and regenerate `manifest.json`, so the verifier checks the new text. A material content change needs researcher reapproval; shortening a timeline label without changing its meaning is not one.
    2. Fetch fresh raw JSON and its revision. For each change, build a `deleteContentRange` for the old text, then an `insertText` of the new text at the same start index; both carry the active `tabId`.

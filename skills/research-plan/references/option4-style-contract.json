@@ -1,6 +1,7 @@
 {
   "name": "Option 4 — Leadership",
-  "version": "2026-10-02",
+  "version": "2026-10-29",
+  "reference": "the approved International retailer research plan (Q3 2025)",
   "reference_usage": "Visual audit source only; the runtime does not require access to this private document.",
   "page": {
     "document_mode": "PAGELESS",
@@ -18,8 +19,9 @@
     "use_custom_header_footer_margins": true
   },
   "structure": {
-    "native_horizontal_rules": 1,
-    "top_level_tables": 2
+    "native_horizontal_rules": 2,
+    "top_level_tables": 2,
+    "spacer_paragraphs": "one empty NORMAL_TEXT paragraph before each rule and one between each H1 and its table; the rule paragraph sits directly above its H1"
   },
   "colors": {
     "dark_green": "#003D29",
@@ -28,36 +30,127 @@
     "gray_cell": "#D9D9D9",
     "gray_text": "#666666",
     "white": "#FFFFFF",
-    "black": "#000000"
+    "black": "#000000",
+    "link_blue": "#1155CC",
+    "status_target": "#D9EAD3",
+    "status_spillover": "#FFF2CC",
+    "status_event": "#F4CCCC",
+    "border_black": "#000000"
   },
+  "named_styles": {
+    "NORMAL_TEXT": {
+      "font": "DM Sans",
+      "size_pt": 10,
+      "bold": false,
+      "color": "#000000",
+      "line_spacing_percent": 115,
+      "space_above_pt": 0,
+      "space_below_pt": 0,
+      "keep_with_next": false,
+      "keep_lines_together": false
+    },
+    "TITLE": {
+      "font": "DM Serif Display",
+      "size_pt": 26,
+      "bold": true,
+      "color": "#003D29",
+      "line_spacing_percent": 115,
+      "space_above_pt": 0,
+      "space_below_pt": 3,
+      "keep_with_next": true,
+      "keep_lines_together": true
+    },
+    "SUBTITLE": {
+      "font": "DM Serif Display",
+      "size_pt": 16,
+      "bold": true,
+      "color": "#666666",
+      "line_spacing_percent": 115,
+      "space_above_pt": 0,
+      "space_below_pt": 16,
+      "keep_with_next": true,
+      "keep_lines_together": true
+    },
+    "HEADING_1": {
+      "font": "DM Serif Display",
+      "size_pt": 20,
+      "bold": true,
+      "color": "#000000",
+      "line_spacing_percent": 115,
+      "space_above_pt": 20,
+      "space_below_pt": 6,
+      "keep_with_next": true,
+      "keep_lines_together": true
+    },
+    "HEADING_4": {
+      "font": "DM Serif Display",
+      "size_pt": 14,
+      "bold": true,
+      "color": "#003D29",
+      "line_spacing_percent": 115,
+      "space_above_pt": 14,
+      "space_below_pt": 4,
+      "keep_with_next": true,
+      "keep_lines_together": true
+    },
+    "HEADING_5": {
+      "font": "DM Sans",
+      "size_pt": 10,
+      "bold": true,
+      "color": "#000000",
+      "line_spacing_percent": 115,
+      "space_above_pt": 0,
+      "space_below_pt": 0,
+      "keep_with_next": true,
+      "keep_lines_together": true
+    }
+  },
+  "named_styles_application": "The Docs batchUpdate API has no request that edits a named-style definition, so the formatter applies these values as direct paragraph and text styles on every paragraph that uses the named style, and the verifier checks the effective values.",
   "typography": {
     "breadcrumb": {
+      "named_style": "SUBTITLE",
       "font": "DM Serif Display",
       "size_pt": 16,
       "bold": true,
       "color": "#666666"
     },
     "title": {
+      "named_style": "TITLE",
       "font": "DM Serif Display",
       "size_pt": 26,
       "bold": true,
       "color": "#003D29"
     },
     "heading": {
+      "named_style": "HEADING_1",
       "font": "DM Serif Display",
       "size_pt": 20,
       "bold": true,
       "color": "#000000"
     },
     "section_band": {
+      "named_style": "HEADING_4",
       "font": "DM Serif Display",
       "size_pt": 14,
       "bold": true,
       "color": "#FFFFFF"
     },
+    "label": {
+      "named_style": "HEADING_5",
+      "font": "DM Sans",
+      "size_pt": 10,
+      "bold": true,
+      "color": "#000000"
+    },
     "body": {
       "font": "DM Sans",
       "size_pt": 10,
+      "color": "#000000"
+    },
+    "timeline_legend": {
+      "font": "DM Sans",
+      "size_pt": 10,
+      "italic": true,
       "color": "#000000"
     },
     "context_note": {
@@ -65,6 +158,10 @@
       "size_pt": 9,
       "italic": true,
       "color": "#666666"
+    },
+    "link": {
+      "color": "#1155CC",
+      "underline": true
     }
   },
   "warning": {
@@ -79,19 +176,145 @@
       "test_run": "⚠️ TEST RUN — real, authorized inputs, created to test the workflow. Not a stakeholder deliverable."
     }
   },
-  "tables": {
+  "lists": {
+    "bullet_preset": "BULLET_DISC_CIRCLE_SQUARE",
+    "bullet_glyphs": [
+      "●",
+      "○",
+      "■"
+    ],
+    "number_preset": "NUMBERED_DECIMAL_NESTED",
+    "number_glyph_type": "DECIMAL",
+    "indent_step_pt": 36,
+    "first_line_hang_pt": 18,
+    "max_nesting_level": 8,
+    "markdown_indent_spaces_per_level": 2
+  },
+  "timeline_table": {
+    "header": [
+      "Phase",
+      "Activity"
+    ],
+    "column_widths_pt": {
+      "phase": 180,
+      "activity": 72,
+      "week": 54
+    },
+    "max_week_columns": 12,
+    "max_total_width_pt": 900,
+    "filler_label": "…",
+    "borders": "unset; Docs default grid",
+    "header_row": {
+      "background": "#003D29",
+      "pinned": false,
+      "min_row_height_pt": 0,
+      "text": {
+        "font": "DM Sans",
+        "size_pt": 10,
+        "bold": true,
+        "color": "#FFFFFF"
+      },
+      "label_cells": {
+        "padding_pt": 5,
+        "content_alignment": "TOP",
+        "alignment": "START",
+        "line_spacing_percent": 100
+      },
+      "week_cells": {
+        "padding_pt": 2,
+        "content_alignment": "BOTTOM",
+        "alignment": "END",
+        "line_spacing_percent": 115
+      }
+    },
+    "body_rows": {
+      "min_row_height_pt": 20,
+      "padding_pt": 5,
+      "content_alignment": "TOP",
+      "alignment": "START",
+      "line_spacing_percent": 100
+    },
+    "phase_column": {
+      "background": "#D9D9D9",
+      "bold": true,
+      "label_pattern": "^Phase (\\d+): (\\S.*)$",
+      "max_lines": 1
+    },
+    "activity_column": {
+      "background": "#D9D9D9",
+      "bold": false,
+      "max_lines": 2
+    },
+    "week_cells": {
+      "default_background": "#FFFFFF",
+      "statuses": {
+        "target": "#D9EAD3",
+        "spillover": "#FFF2CC",
+        "event": "#F4CCCC"
+      },
+      "event_fills_whole_week": true,
+      "note_max_lines": 2
+    },
+    "legend": {
+      "suffix": "; Green = target dates; Yellow = possible spillover",
+      "event_suffix": "; Red = ",
+      "swatches": {
+        "Green": "target",
+        "Yellow": "spillover",
+        "Red": "event"
+      }
+    }
+  },
+  "overview_table": {
     "columns": 2,
-    "column_widths_pt": [144, 554.4],
+    "column_widths_pt": [
+      144,
+      554.4
+    ],
     "total_width_pt": 698.4,
     "intentional_text_area_overflow_pt": 50.4,
     "cell_padding_pt": 5,
-    "timeline_rows": 5,
-    "timeline_header_rows": 1,
-    "timeline_body_rows": 4,
-    "timeline_header": ["Timing", "Leadership milestone"],
-    "timeline_left_label_pattern": "^(?:Weeks?|Days?|Months?) \\d+(?:[–-]\\d+)?: \\S",
-    "timeline_left_label_max_width_pt": 134,
-    "timeline_left_label_font": {
+    "content_alignment": "TOP",
+    "min_row_height_pt": 25.75,
+    "pinned_header": false,
+    "border": {
+      "color": "#000000",
+      "width_pt": 0.75,
+      "dash_style": "SOLID"
+    },
+    "body_cell_background": "#FFFFFF",
+    "line_spacing_percent": 115,
+    "section_rows": [
+      "Key Information",
+      "Project Details",
+      "Deliverables & Next Steps",
+      "Appendix"
+    ],
+    "section_band": {
+      "merged": true,
+      "column_span": 2,
+      "background": "#003D29",
+      "named_style": "HEADING_4",
+      "text_color": "#FFFFFF"
+    },
+    "label_named_style": "HEADING_5",
+    "plain_bold_labels": [
+      "Topic",
+      "TL;DR summary of findings"
+    ]
+  },
+  "spacing": {
+    "line_spacing_percent": 115,
+    "timeline_line_spacing_percent": 100,
+    "updated_space_above_pt": 12,
+    "updated_space_below_pt": 12,
+    "raci_space_above_pt": 12,
+    "raci_space_below_pt": 12,
+    "raci_indent_start_pt": 36,
+    "raci_indent_first_line_pt": 18
+  },
+  "font_metrics": {
+    "dm_sans_bold": {
       "font": "DM Sans",
       "size_pt": 10,
       "bold": true,
@@ -109,8 +332,7 @@
         "—": 918, "’": 255, "‘": 255, "“": 453, "”": 453, "…": 687, "·": 252, "×": 579, "≠": 579
       }
     },
-    "timeline_right_cell_max_width_pt": 544.4,
-    "timeline_right_cell_font": {
+    "dm_sans_regular": {
       "font": "DM Sans",
       "size_pt": 10,
       "bold": false,
@@ -127,30 +349,6 @@
         "t": 392, "u": 573, "v": 527, "w": 763, "x": 496, "y": 556, "z": 458, "{": 427, "|": 234, "}": 427, "~": 550, "–": 669,
         "—": 873, "’": 210, "‘": 210, "“": 367, "”": 367, "…": 566, "·": 198, "×": 550, "≠": 550
       }
-    },
-    "timeline_right_cell_max_characters": 160,
-    "overview_section_rows": [
-      "KEY INFORMATION",
-      "PROJECT DETAILS",
-      "DELIVERABLES & NEXT STEPS",
-      "APPENDIX"
-    ],
-    "section_rows_keep_two_cells": true,
-    "body_cell_background": "#FFFFFF",
-    "timeline_header_background": "#003D29",
-    "timeline_first_column_background": "#D9D9D9",
-    "section_background": "#003D29"
-  },
-  "spacing": {
-    "line_spacing_percent": 115,
-    "table_line_spacing_percent": 100,
-    "breadcrumb_space_below_pt": 16,
-    "title_space_below_pt": 3,
-    "heading_space_above_pt": 20,
-    "heading_space_below_pt": 6,
-    "raci_indent_start_pt": 36,
-    "raci_indent_first_line_pt": 18,
-    "cell_bullet_indent_start_pt": 36,
-    "cell_bullet_indent_first_line_pt": 18
+    }
   }
 }

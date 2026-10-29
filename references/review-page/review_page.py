@@ -18,7 +18,9 @@ HERE = Path(__file__).resolve().parent
 TEMPLATE = HERE / "template.html"
 STATE_RE = re.compile(r'(<script type="application/json" id="review-state">)(.*?)(</script>)', re.S)
 KINDS = {"content", "choice"}
-DECISIONS = {"accept", "edit", "brainstorm"}
+TONES = ("context", "design", "outputs", "setup", "choice")
+SECTION_TONES = {"1": "context", "2": "design", "3": "outputs", "4": "setup"}
+BRAINSTORM = "__brainstorm__"
 
 
 class StateError(ValueError):
@@ -42,8 +44,20 @@ def validate(state: dict) -> None:
         ids.add(item["id"])
         if item["kind"] not in KINDS:
             raise StateError(f"{where}.kind must be one of {sorted(KINDS)}")
-        if item["kind"] == "content" and not item.get("draft"):
-            raise StateError(f"{where}.draft is required for content items")
+        if item["kind"] == "content" and not (item.get("bullets") or item.get("draft")):
+            raise StateError(f"{where} needs bullets (list rows) or draft (single text)")
+        if item.get("tone") and item["tone"] not in TONES:
+            raise StateError(f"{where}.tone must be one of {list(TONES)}")
+        bullet_ids = set()
+        for j, b in enumerate(item.get("bullets") or []):
+            if not b.get("text"):
+                raise StateError(f"{where}.bullets[{j}].text is required")
+            if b["id"] in bullet_ids:
+                raise StateError(f"{where}.bullets[{j}].id duplicates {b['id']}")
+            bullet_ids.add(b["id"])
+            for src in b.get("sources") or []:
+                if src.get("url") and not src["url"].startswith("https://"):
+                    raise StateError(f"{where}.bullets[{j}] source URLs must be https")
         if item["kind"] == "choice":
             options = item.get("options") or []
             if len(options) < 2:
@@ -67,9 +81,25 @@ def build(state_path: Path, out_path: Path) -> None:
     state["submitted_at"] = None
     for item in state["items"]:
         item.setdefault("decision", None)
-        item.setdefault("edited", None)
         item.setdefault("comment", "")
-        item.setdefault("sources", [])
+        item.setdefault("brainstorm", [])
+        if not item.get("tone"):
+            if item.get("kind") == "choice":
+                item["tone"] = "choice"
+            else:
+                m = re.match(r"Section (\d)", item.get("step") or "")
+                item["tone"] = SECTION_TONES.get(m.group(1), "setup") if m else "setup"
+        bullets = []
+        for j, b in enumerate(item.get("bullets") or []):
+            b = {"text": b} if isinstance(b, str) else dict(b)
+            b.setdefault("id", f"b{j + 1}")
+            b.setdefault("keep", True)
+            b.setdefault("edited", None)
+            b.setdefault("added", False)
+            b.setdefault("sources", [])
+            bullets.append(b)
+        if bullets:
+            item["bullets"] = bullets
     validate(state)
     payload = json.dumps(state, ensure_ascii=False).replace("<", "\\u003c")
     html = TEMPLATE.read_text(encoding="utf-8")
@@ -82,15 +112,39 @@ def build(state_path: Path, out_path: Path) -> None:
     print(f"PASS: wrote {out_path} with {len(state['items'])} items")
 
 
+def bullet_state(b: dict) -> str:
+    if not b.get("keep"):
+        return "removed"
+    if b.get("added"):
+        return "added"
+    return "edited" if b.get("edited") is not None else "kept"
+
+
 def read(page_path: Path) -> None:
     match = STATE_RE.search(page_path.read_text(encoding="utf-8"))
     if not match:
         raise StateError("no review-state block found in the page")
     state = json.loads(match.group(2))
-    pending = [i["id"] for i in state["items"] if not i.get("decision")]
     print(json.dumps(state, ensure_ascii=False, indent=2))
-    print(f"\nSTATUS: {state.get('status')} · {len(state['items']) - len(pending)} of {len(state['items'])} reviewed"
-          + (f" · pending: {', '.join(pending)}" if pending else ""), file=sys.stderr)
+    lines = [f"STATUS: {state.get('status')} · submitted_at: {state.get('submitted_at')}"]
+    pending = []
+    for item in state["items"]:
+        decision = item.get("decision")
+        if not decision:
+            pending.append(item["id"])
+        label = "brainstorm in chat" if decision == BRAINSTORM else decision or "NOT REVIEWED"
+        lines.append(f"\n{item.get('step', '')} {item['title']} -> {label}")
+        for b in item.get("bullets") or []:
+            text = b["edited"] if b.get("edited") is not None else b["text"]
+            lines.append(f"  [{bullet_state(b)}] {text}")
+        turns = [t for t in item.get("brainstorm") or [] if t.get("role") == "assistant"]
+        if turns:
+            lines.append(f"  brainstorm: {len(turns)} senior-researcher replies on the page")
+        if item.get("comment"):
+            lines.append(f"  note: {item['comment']}")
+    if pending:
+        lines.append(f"\nPENDING (not approval): {', '.join(pending)}")
+    print("\n".join(lines), file=sys.stderr)
 
 
 def main(argv: list[str]) -> int:

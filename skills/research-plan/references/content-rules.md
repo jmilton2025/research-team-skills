@@ -2,12 +2,12 @@
 
 This file is the content source of truth for `/research-plan`. Every final Google Doc uses the exact **Option 4 — Leadership** hierarchy: concise opening, separate leadership timeline, and the two-column Project Plan Overview.
 
-**Current contract: 2026-10-02.** It preserves the research rigor added in the June team workshops—decision audit before discovery, sourced existing insights, and minimum evidence to move the decision—while enforcing the verified Option 4 visual system for every researcher.
+**Current contract: 2026-10-29.** It preserves the research rigor added in the June team workshops—decision audit before discovery, sourced existing insights, and minimum evidence to move the decision—while enforcing the verified Option 4 visual system for every researcher.
 
 ## Canonical order
 
 1. Opening block: breadcrumb, title, last-updated date, RACI roles (Responsible, Accountable, Consulted, Informed), a warning banner when applicable, and an optional short context note.
-2. **Research Timeline** heading, five-row leadership timeline, and one-sentence timing note.
+2. A native rule, the **Research Timeline** heading, the Gantt timeline grid, and its legend note, then a second native rule.
 3. **Project Plan Overview** heading.
 4. Topic.
 5. TL;DR summary of findings: *“To be filled out at the end of the study.”*
@@ -16,7 +16,7 @@ This file is the content source of truth for `/research-plan`. Every final Googl
 8. **Deliverables & Next Steps**.
 9. **Appendix**.
 
-The four named overview sections must stay in that order. The leadership timeline summarizes the approved detailed Timeline row; it never imports dates or week labels from an older study. The interactive approval walk in `SKILL.md` approves each row once, grouped by section (context first, then design, then outputs); assembly puts every row back in this canonical order.
+The four named overview sections must stay in that order. The timeline grid charts the approved detailed Timeline row week by week; it never imports phases, dates, or week labels from an older study. The interactive approval walk in `SKILL.md` approves each row once, grouped by section (context first, then design, then outputs); assembly puts every row back in this canonical order.
 
 ## Source-use, disclosure, and provenance boundary
 
@@ -76,17 +76,30 @@ At planning time, insert exactly:
 
 Do not ask the researcher to predict findings before the study.
 
-## 3. Leadership timeline
+## 3. Research Timeline grid
 
-Every plan includes a separate at-a-glance timeline above Project Plan Overview:
+Every plan includes a separate at-a-glance Gantt grid above Project Plan Overview, in the reference's form:
 
-- exactly two columns and five rows: the header `Timing | Leadership milestone` plus four study-specific milestones;
-- left labels that start with their timing, then a short name (`Week 1: Setup & rubric`, `Weeks 2–3: Calibration`, `Week 4: Decision readout`), each short enough to stay on one line: at most 134pt wide in bold DM Sans 10pt, which the parser measures (usually 24 to 27 characters, depending on the letters; shorten an over-width label and tell the researcher); use `Day N:` or `Month N:` only when the study runs in days or months;
-- one-sentence leadership summaries in the right column, each short enough to stay on one line: at most 544.4pt wide in DM Sans 10pt (bold words measured at bold width), which the parser measures (usually about 110–120 characters; 160 characters is a hard cap);
-- milestones derived from the approved detailed Timeline row, never copied from a reference study; two milestones may share a week, and the week numbers must match the detailed row;
-- an italic one-sentence timing note immediately below the table.
+- the header `Phase | Activity`, then one column per week of the study, labeled with the week's start date (`Nov. 3`) or `Week N` until dates are set; at most 12 week columns, and a longer study replaces one run of middle weeks with a single `…` column;
+- one row per activity, grouped into numbered phases: the first row of each phase reads `**Phase N:** Short name` in the Phase cell, and its later rows leave the Phase cell blank, which the Doc merges down into one cell;
+- week cells that are blank or carry one status token, optionally followed by a one- or two-word note: `[target]` for a target week (green), `[spillover]` for possible spillover (yellow), and `[event]` for a fixed event week such as a company summit or holiday (red), which marks every row of that week;
+- labels short enough for their columns, which the parser measures in DM Sans 10pt: week labels on one line of 50pt, phase names on one line of 170pt, activities in at most two lines of 62pt, and notes in at most two lines of 44pt, with no word split (shorten an over-width label and tell the researcher);
+- an italic legend note immediately below the grid: one timing caveat, then `; Green = target dates; Yellow = possible spillover`, plus `; Red = <the fixed event>` when the grid has `[event]` weeks.
 
-The four milestones should cover the study's meaningful leadership checkpoints, such as setup, fieldwork or evaluation, synthesis or validation, and decision/readout. Keep detailed dependencies, dates, and contingencies in the Timeline row. Run the `timeline` check (`scripts/option4_layout.py timeline`) before the Timeline approval; it measures every label and milestone, and a row that fails it must be shortened before the researcher sees it. If the rendered table still splits across pages, tighten the opening and the timing note first, then the RACI lines, without changing the approved detailed timeline.
+For example:
+
+```markdown
+| Phase | Activity | Nov. 2 | Nov. 9 | Nov. 16 | Nov. 23 | Nov. 30 |
+|---|---|---|---|---|---|---|
+| **Phase 1:** Setup & calibration | Rubric & sample | [target] | | | [event] | |
+| | Calibration | | [target] Human raters | [target] | [event] | [spillover] |
+| **Phase 2:** Validation & decision | Blind validation | | | | [event] | [target] |
+| | Readout | | | | [event] | [target] Decision |
+
+*Note: Timing depends on finalized inputs and evaluator capacity; Green = target dates; Yellow = possible spillover; Red = US holiday week*
+```
+
+Derive every phase, activity, and mark from the approved detailed Timeline row, never from a reference study; the week labels and phase boundaries must match that row. Mark spillover only where the detailed row names a real risk of slipping, and a fixed event only where a source names it. Keep detailed dependencies, dates, and contingencies in the Timeline row. Run the `timeline` check (`scripts/option4_layout.py timeline`) before the Timeline approval; it checks the grid's shape, phases, and tokens and measures every label, and a grid that fails it must be fixed before the researcher sees it. If the rendered grid still splits across pages, tighten the opening and the legend note first, then the RACI lines, without changing the approved detailed timeline.
 
 ## 4. Key Information
 
@@ -224,7 +237,7 @@ Use true bullet paragraphs for phases or dated milestones. Choose the level of d
 
 Anchor the timeline to the date the decision will be made (a planning cycle, launch review, or roadmap lock), not only to fieldwork; if the readout lands after that date, the design must change (18F UX Guide). For participant studies, the detailed row includes a pilot session before the main fieldwork and an analysis phase sized to the fieldwork rather than squeezed into the readout week. 18F's conservative default is analysis taking about twice as long as the sessions themselves; GOV.UK's lighter rule is one hour of analysis per two hours of research. Choose one and state it.
 
-Do not force generic week labels or recruiting milestones into the detailed Timeline row. The separate leadership table always contains four concise study-specific milestones, while this row carries the dates and operational detail the study actually needs. If the minimum valid design cannot fit the requested deadline, require a choice: descope the decision or evidence need, extend the timeline, or pause/escalate the study. Record the accepted tradeoff in Dependencies & guardrails; do not silently compress the design below validity.
+Do not force generic week labels or recruiting milestones into the detailed Timeline row. The separate timeline grid charts the study's phases and activities week by week, while this row carries the dates and operational detail the study actually needs. If the minimum valid design cannot fit the requested deadline, require a choice: descope the decision or evidence need, extend the timeline, or pause/escalate the study. Record the accepted tradeoff in Dependencies & guardrails; do not silently compress the design below validity.
 
 ### Next steps
 
@@ -252,7 +265,7 @@ Nothing follows these two Appendix rows.
 ## 8. Bullet and prose rules
 
 - Use actual list paragraphs in the Google Doc—true Google Docs bullets—not typed bullet glyphs, arrow chains, or dense sentences separated by semicolons.
-- In the intermediate markdown, use separate `- ` lines. After import, apply and verify list formatting inside table cells with Google Docs editing tools.
+- In the intermediate markdown, use separate `- ` lines (in a table cell, `- ` items separated by `<br>`). Nest a point under the one above with two leading spaces per level after its `<br>` (`<br>  - Sub-point`); each level indents 36pt more and its bullets run `●` `○` `■`. Use a numbered list (`1. ` items, numbered `1.`, `1.1.`) only where order matters, such as sequential steps; a cell's list is all bullets or all numbers. After import, apply and verify list formatting inside table cells with Google Docs editing tools.
 - Methods, phases, sample criteria, measures, analysis steps, dependencies, guardrails, deliverables, timeline phases, and next steps each receive separate bullets when there is more than one item.
 - Every bullet must make sense on its own.
 - Use bold lead-ins sparingly to support scanning. Bold the decision-driving words, not every label or full paragraph.
@@ -275,18 +288,20 @@ Nothing follows these two Appendix rows.
 
 ## 10. Option 4 — Leadership visual contract
 
-Every final Google Doc must match [`option4-leadership-style.md`](option4-leadership-style.md) and pass the machine-readable contract in [`option4-style-contract.json`](option4-style-contract.json):
+Every final Google Doc must match [`option4-leadership-style.md`](option4-leadership-style.md) and pass the machine-readable contract in [`option4-style-contract.json`](option4-style-contract.json). Both follow the visual design of the approved International retailer research plan (Q3 2025), not its content:
 
 - pageless editing mode with landscape-letter export geometry and one-inch print margins;
-- DM Serif Display breadcrumb, title, headings, and section bands;
-- DM Sans body, RACI, labels, timeline, and table content;
-- a separate five-row Research Timeline headed `Timing | Leadership milestone` and a Project Plan Overview table, both with fixed 144pt / 554.4pt columns;
+- DM Serif Display breadcrumb, title, headings, and section bands, on the reference's named-style roles (SUBTITLE, TITLE, HEADING_1, HEADING_4);
+- DM Sans body, RACI, labels (HEADING_5), timeline, and table content;
+- two native horizontal rules, one before **Research Timeline** and one before **Project Plan Overview**, each with an empty paragraph above it;
+- the Research Timeline as a Gantt grid (180pt Phase, 72pt Activity, 54pt per week): an unpinned dark-green header row, gray Phase and Activity columns with merged Phase cells, and green `#D9EAD3` / yellow `#FFF2CC` / red `#F4CCCC` week fills, with the legend note's swatch words shaded to match;
+- a Project Plan Overview table with fixed 144pt / 554.4pt columns, 0.75pt black borders, and 25.75pt minimum rows;
 - pale-yellow full-paragraph warning banner (TEST ARTIFACT or TEST RUN) when applicable;
-- white ordinary cells and dark-green `#003D29` two-cell section bands;
+- white ordinary cells and merged dark-green `#003D29` Title Case section bands (`Key Information`, `Project Details`, `Deliverables & Next Steps`, `Appendix`);
 - Topic as the first visible overview row, with no generic conversion header;
-- true native bullet paragraphs, active links, and restrained emphasis.
+- true native list paragraphs (`●` `○` `■` bullets, `1.` / `1.1.` numbers), `#1155CC` underlined links, and restrained emphasis; no review highlights, person chips, or file chips.
 
-Use `scripts/option4_layout.py` to parse, normalize, format, and verify the document. The historical private Option 4 reference is an audit source only; colleagues do not need access to it. If the connected Google Docs environment cannot apply or verify the exact contract, **block completion** and preserve the approved draft for retry. A standard-font, one-table, generic-color, merged-band, or structural-only fallback is not a finished research plan.
+Use `scripts/option4_layout.py` to parse, normalize, format, and verify the document. The reference plan is an audit source only; colleagues do not need access to it. If the connected Google Docs environment cannot apply or verify the exact contract, **block completion** and preserve the approved draft for retry. A standard-font, one-table, generic-color, list-style timeline, unmerged-band, or structural-only fallback is not a finished research plan.
 
 ## Source history
 
@@ -299,4 +314,5 @@ Use `scripts/option4_layout.py` to parse, normalize, format, and verify the docu
 - 2026-10-02 (same-day revision, after review of the approved Doc): the 24-character label cap would have rejected the approved Doc's own 27-character first label, which fit on one line. The parser now measures printed width (134pt maximum) instead of counting characters. The researcher now confirms the key RACI people and can add more, replacing the directory search. The connection check moved to the start of the run so that a signed-out connection, such as Glean, is flagged immediately.
 - 2026-10-03 (live test run on real, authorized inputs): a TEST RUN banner joined the TEST ARTIFACT banner, chosen by a run-type question asked only for tests. Timeline milestones are now measured against the 544.4pt cell width, and a `timeline` check runs before the Timeline approval instead of at Doc creation. Background and hypothesis rules are checked before each pop-up and again by a `lint` check at assembly, and a Background with no sourced reason for the timing opens with `**Why now:** [TBD — fill in]`; quote marks now require the source artifact itself, never internal notes. The multi-agent review is offered once, with a skip option and a standard critique-only disclosure. A `send` helper applies Google Docs batches through `gws` without putting them in a shell command, and the manifest now fails if the skill files change mid-run.
 - 2026-10-29 (market comparison against published research-plan skills and public team handbooks — GitLab, 18F, GOV.UK, NN/g, Great Question): the decision audit adds a researchability split (study / analytics / product decision); objectives are capped at four and lead with output verbs; key research questions get open-word rules and weak→stronger rewrites; hypotheses start from a facts / opinions / guesses sort; Method & approach maps methods to questions and ends with a **Won't tell us** bullet; Dependencies & guardrails names risks to a conclusive answer with mitigations; Sample & evaluators sizes per segment, plans for no-shows, and sets screener hygiene; the Timeline anchors to the decision date and includes a pilot and a stated analysis-time ratio. These are content rules only; the Option 4 layout contract is unchanged.
+- 2026-10-29 (visual match to the approved International retailer research plan, Q3 2025): the five-row `Timing | Leadership milestone` table became the reference's Gantt grid (`Phase | Activity | <weeks>`, merged Phase cells, `[target]` / `[spillover]` / `[event]` week fills, and a legend note with shaded swatch words); a second native rule now precedes Project Plan Overview, with an empty paragraph above each rule; section bands became merged Title Case HEADING_4 cells; overview labels use HEADING_5, body cells 115% line spacing, 0.75pt black borders, and 25.75pt minimum rows; links are `#1155CC`; and cell lists support nesting and `1.` / `1.1.` numbering. The reference's yellow review highlights, Arial week dates, near-white band variant, and person and file chips were not carried over.
 - 2026-10-05: the run-type question was removed; a run is a test only when the person starting it says so, and the banner follows from that. The Option 4 — Leadership layout is stated as the automatic default for every final Doc, never replaced by a researcher's personal default template. Recovery rules gained explicit limits: one rerun of a failed reviewer, one re-import after a malformed import, three correction rounds, then a standard blocked result.
