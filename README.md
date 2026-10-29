@@ -10,15 +10,15 @@ Each skill is grounded in methodology from the most trusted voices in UX researc
 |---------|-------|--------------|
 | `/research-plan` | Research Plan | Generates a structured research plan and delivers it as an edited, verified Google Doc in the exact Option 4 — Leadership visual system |
 | `/mod-guide` | Moderation Guide | Builds interview or prototype/usability guides, audits them for protocol and method safety, and delivers a verified Option 4 Google Doc |
-| `/analysis` | Analysis | Thematic analysis, tagging, and pattern recognition for qualitative and quantitative data |
-| `/report` | Research Report | Research reports with executive summaries, findings, recommendations, and next steps |
+| `/analysis` | Analysis | Thematic analysis, tagging, and pattern recognition for qualitative data, delivered as a deck in Instacart's brand Slides template |
+| `/report` | Research Report | Stakeholder readouts with a BLUF, findings, recommendations, and next steps, delivered as a deck in Instacart's brand Slides template |
 | `/multi-agent-check` | Multi-Agent Check | Before anything is shared, two researcher reviewers check the finished deliverable in parallel — an Evidence checker (quotes, numbers, claim strength) and a Stakeholder reader (clarity, actionability) — and return one fix list with a Ready / Fix-first verdict |
 | `/usertesting-plan` | UserTesting Plan | Designs the study-level structure for an unmoderated UserTesting study — task count, ordering, coverage levels, stimulus type per task, synthesis tail |
 | `/usertesting-script` | UserTesting Script | Writes the question-level script handed to the UserTesting programmer — 4-way platform tagging, action ladders, choice-order rules, warm closing card |
 | `/usertesting-html` | UserTesting HTML | Builds the visual stimuli HTML — dual-phone / two-cart / single-row card patterns, design tokens, image labels, subtotal audit, image-quality QA |
 | `/usertesting-orchestrator` | UserTesting Orchestrator | Coordinates the full plan → script → HTML pipeline end-to-end, owns shared-context handoffs, runs the 3-layer triangulation audit |
 
-All skills use collaborative approval gates: Claude recommends starting content, the researcher can accept, edit, or brainstorm alternatives, and nothing advances until the current decision is approved.
+All skills review drafts on an editable, color-coded HTML review page when artifacts are available (bullet checklists to keep, edit, remove, or add; an on-page senior-researcher brainstorm), with pop-ups as the fallback. See [references/review-page](./references/review-page/README.md). Each skill also works on its own; see [references/skill-handoffs.md](./references/skill-handoffs.md) for how they connect when used together. All skills use collaborative approval gates: Claude recommends starting content, the researcher can accept, edit, or brainstorm alternatives, and nothing advances until the current decision is approved.
 
 **`/research-plan` contract:**
 
@@ -28,7 +28,7 @@ All skills use collaborative approval gates: Claude recommends starting content,
 4. Confirm the exact Google Drive destination.
 5. Copyedit, create, normalize, apply the exact Option 4 layout, verify, render, and only then return the Google Doc link.
 
-Every final plan uses **Option 4 — Leadership** automatically, with no styling question, and no personal default template is applied on top: pageless editing with landscape-letter export geometry, DM Serif Display/DM Sans typography, a separate at-a-glance Research Timeline, a pale-yellow test banner when applicable, and the two-column Project Plan Overview with white body cells and dark-green two-cell section bands. The bundled formatter and verifier make this consistent for colleagues without requiring access to a private reference Doc. Final delivery requires a write-capable Google Docs integration that can apply native batch updates, return raw document structure, and export/render the result; `gws` is the documented command-line path. If the exact contract cannot be applied and rendered, the skill blocks completion instead of returning a downgraded document. Project Details remains adaptive: **Method & approach**, **What does success look like?**, and **Dependencies & guardrails** are core; fields such as **Sample & evaluators** and **Measures & analysis** appear only when the study needs them. The Appendix contains only **Additional UXR documents** and **Resources from XFN**.
+Every final plan uses **Option 4 — Leadership** automatically, with no styling question, and no personal default template is applied on top: pageless editing with landscape-letter export geometry, DM Serif Display/DM Sans typography, a Gantt-style Research Timeline (phase and activity rows, week columns, green/yellow/red status cells, and a color legend), two divider rules, a pale-yellow test banner when applicable, and the two-column Project Plan Overview with thin black borders, white body cells, and merged dark-green Title Case section bands, matching the team's approved reference plan. The bundled formatter and verifier make this consistent for colleagues without requiring access to a private reference Doc. Final delivery requires a write-capable Google Docs integration that can apply native batch updates, return raw document structure, and export/render the result; `gws` is the documented command-line path. If the exact contract cannot be applied and rendered, the skill blocks completion instead of returning a downgraded document. Project Details remains adaptive: **Method & approach**, **What does success look like?**, and **Dependencies & guardrails** are core; fields such as **Sample & evaluators** and **Measures & analysis** appear only when the study needs them. The Appendix contains only **Additional UXR documents** and **Resources from XFN**.
 
 A run is a test only when the researcher says so (for example, “this is a mock test”); otherwise it's treated as a real study, with no question asked. Test runs keep artifacts out of Drive unless the tester explicitly asks for a test document, and always carry a test banner: **TEST ARTIFACT** for invented inputs, **TEST RUN** for any other test, including one on real, authorized inputs. The multi-agent review is offered once before the Doc is created; a researcher can skip it, and the returned Doc then states that the run was critique-only and why.
 
@@ -53,6 +53,8 @@ The lighter, self-serve pipeline (`/diy-triage`, `/diy-research-plan`, `/screene
 See [INSTALL.md](./INSTALL.md).
 
 ## Contributing
+
+The October 2026 comparison against published research skills and public team handbooks, with the full source catalog, is in [docs/market-scan-2026-10](./docs/market-scan-2026-10/README.md).
 
 Found a better methodology? Want to add a new skill? Open a PR. Each skill lives in `skills/{skill-name}/SKILL.md`. Heavy methodology references live in `skills/{skill-name}/references/`.
 

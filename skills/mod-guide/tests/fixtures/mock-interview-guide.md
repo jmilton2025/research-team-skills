@@ -1,10 +1,10 @@
-<!-- Structural fixture: a mock INTERVIEW / IDI moderation guide. TEST ARTIFACT, never a real study. Canonical Moderation Guide + Study Title header, extended RACI, prose-bullet themes with indented probes, and a 3-col Participants Log table AFTER the Post-Session Debrief. -->
+<!-- Structural fixture: a mock INTERVIEW / IDI moderation guide. TEST ARTIFACT, never a real study. Canonical top matter (title, study title, study period, extended RACI, Links line), prose-bullet themes with indented probes, and a 3-col Participants Log table AFTER the Post-Session Debrief. -->
 
 # Moderation Guide
 
 ## Mock Expert Interviews
 
-*[Q3 · September 2026]*
+Study period: Q3 · September 2026
 
 - **Responsible:** Example Researcher (UX Research)
 - **Accountable:** Example Decision Owner (Product)
@@ -13,6 +13,8 @@
 - **External:** Example Expert Network (GLG)
 - **Informed:** Example Research Leader (UX Research)
 - **Session Summaries:** [Master doc](https://example.com/summaries)
+
+**Links:** [Research plan](https://example.com/plan) · [Discussion notes](https://example.com/notes)
 
 > ⚠️ **TEST ARTIFACT — generated for a mock-run / demo, not a real deliverable. Do not file or share as real research.**
 

@@ -34,33 +34,51 @@ The deterministic cross-file gate verifies:
 - the source-and-delivery safety reference is wired into the skill and contains
   authorization, minimization, consent, ACL, capability, idempotency,
   revision-reconciliation, and partial-artifact gates;
-- both current OUTPUT TEMPLATE fences parse to the canonical `# Moderation Guide`
-  plus `## Study Title` schema;
+- both current OUTPUT TEMPLATE fences, and the SKILL.md shared scaffolding,
+  use the canonical top matter: `# Moderation Guide`, `## Study Title`, a
+  `Study period:` line, RACI, an optional `**Links:**` line, then the
+  parameter table;
 - interview and prototype templates retain their format-correct Objectives section,
   use a neutral incident gate before incident-specific follow-ups, and contain no
   unsafe `internal research only`, unconditional `Recording armed`, or Participant
   Grid defaults;
 - the interview template keeps only Parameter and Consent tables, while the
-  prototype template keeps only Parameter and `Phase | Time` tables;
+  prototype template keeps only Parameter and `Phase | Description` tables,
+  with the approved minutes in every Session Flow phase label;
+- prototype topic bullets use italic `*Objective:*` / `*Key Questions:*` labels;
 - participant-grid/log content stays outside the broadly shared guide; and
 - the machine-readable visual contract describes the current template shapes
-  and the wide-Phase/compact-Time geometry.
+  and carries the reference-guide tokens (study period, 36pt list step, spacer
+  rhythm, Links line, `[144, 554.4]` Session Flow); and
+- the style reference names its reference guide without a Google Doc ID, and no
+  skill file contains one.
 
 ### `test_option4_guide_layout.py`
 
 The formatter suite constructs synthetic raw Google Docs JSON and exercises the
 real parse, normalize, format, and verify functions. Coverage includes:
 
-- the canonical title/study-title top matter, RACI, warning, parameter dashboard,
-  sections, lists, tables, and links;
+- the canonical top matter (title, study title, study period, RACI, Links line),
+  warning, parameter dashboard, sections, lists, tables, and links;
+- the reference vertical rhythm: one empty spacer paragraph between block
+  groups, none after a band or H3, none before an H3, none between the Session
+  Flow band and its table, and verifier rejection of a missing, extra, or
+  styled spacer;
+- an offline batch simulator (`apply_batch`) that applies each normalize batch,
+  refuses edits Google Docs would refuse (such as deleting the newline before a
+  table), and runs both fixtures, both templates, and noisy imports through
+  normalize → re-fetch → repeat-normalize no-op → format → verify;
+- study-period styling (DM Serif 16pt bold italic gray, 0/16pt), the study title
+  as a NORMAL_TEXT paragraph, black underlined Links, italic Objective / Key
+  Questions labels, bold topic lines as body text, and ☐ checklist bullets;
 - rejection of a noncanonical H1 or a missing immediate Study Title H2;
 - both current OUTPUT TEMPLATE fences through the complete offline pipeline;
 - literal placeholders before links (`[TBD — fill in] · [Research plan](...)`),
   balanced brackets/parentheses, entities, and UTF-16 indices;
 - ordered binding for exact duplicate prompts across separate phase lists, so the
   second occurrence cannot silently reuse the first paragraph;
-- nested bullet geometry (36/18pt top level, 54/36pt first nested level) and
-  verifier rejection when a nested probe is flattened;
+- nested bullet geometry at a 36pt step (36/18, 72/54, 108/90pt) and verifier
+  rejection when a nested probe is flattened or uses the old 18pt step;
 - revision-bound normalize and format payloads, including rejection of missing,
   blank, stale, or mismatched revisions;
 - a repeat normalize pass as an empty, revision-bound no-op;
@@ -70,20 +88,21 @@ real parse, normalize, format, and verify functions. Coverage includes:
 - private atomic JSON outputs that refuse overwrite, reject repository paths,
   and require an owner-only working directory;
 - table geometry for `# | Ask`, Parameter, Consent, 3-column tables, and the
-  `Phase | Time` exception (`[554.4, 144]`);
+  `Phase | Description` Session Flow (`[144, 554.4]`, regular weight, white);
 - every required formatting operation family, page geometry, section-band
   styling, bullet/numbered presets, and visual-drift rejection; and
 - tables after the debrief, variable section names, and variable table counts.
 
 ## Fixtures
 
-- `fixtures/mock-interview-guide.md` uses the canonical Moderation Guide + Study
-  Title header, a mock warning, extended ownership, nested interview probes, and
+- `fixtures/mock-interview-guide.md` uses the canonical top matter with a
+  Links line, a mock warning, extended ownership, nested interview probes, and
   additional table shapes used to pressure-test the structure-agnostic formatter.
-- `fixtures/mock-prototype-guide.md` uses the same canonical header, a
-  `Phase | Time` Session Flow, H3 flow headings, task tables, and vendor
-  back-matter. It intentionally omits the mock-warning paragraph to exercise the
-  no-warning path.
+- `fixtures/mock-prototype-guide.md` uses the same canonical top matter, a
+  timed `Phase | Description` Session Flow, Objective / Key Questions topic
+  bullets, H3 flow headings, task tables, and vendor back-matter. It
+  intentionally omits the mock-warning paragraph to exercise the no-warning
+  path.
 
 Every fixture is a **TEST ARTIFACT**, never a real study.
 

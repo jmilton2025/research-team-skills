@@ -1,12 +1,10 @@
-<!-- Structural fixture: a mock PROTOTYPE / USABILITY moderation guide (vendor-run). TEST ARTIFACT, never a real study. Canonical Moderation Guide + Study Title header, month breadcrumb + Last updated line, '#|Ask / Do' task tables under '### Flow' sub-headings, and a 3-col Timeline table in the vendor back-matter AFTER the Post-Session Debrief. No TEST ARTIFACT warning, to exercise the no-warning path. -->
+<!-- Structural fixture: a mock PROTOTYPE / USABILITY moderation guide (vendor-run). TEST ARTIFACT, never a real study. Canonical top matter (title, study title, study period, RACI, Links line), a Phase | Description Session Flow with timed labels, Objective / Key Questions topic bullets, '#|Ask / Do' task tables under '### Flow' sub-headings, and a 3-col Timeline table in the vendor back-matter AFTER the Post-Session Debrief. No TEST ARTIFACT warning, to exercise the no-warning path. -->
 
 # Moderation Guide
 
 ## Mock Checkout Confirmation Usability Test
 
-*[September 2026]*
-
-Last updated: September 2026
+Study period: September 2026
 
 - **Responsible:** Example Researcher (UX Research)
 - **Accountable:** Example Product Owner (Product)
@@ -27,12 +25,14 @@ Last updated: September 2026
 
 ## Session Flow Overview
 
-| Phase | Time |
-|-------|------|
-| Introduction and consent | 3 min |
-| Background warm-up | 5 min |
-| Prototype tasks across both flows | 40 min |
-| Wrap-up and thank-you | 2 min |
+| Phase | Description |
+|-------|-------------|
+| Introduction and consent (3 min) | Welcome, think-aloud, consent |
+| Background warm-up (5 min) | A recent checkout; open the prototype |
+| Prototype tasks (40 min) | Flow 1 then Flow 2, fixed order |
+| Wrap-up (2 min) | Reflection, questions, thanks |
+
+All participants follow the same fixed order.
 
 ---
 
@@ -42,9 +42,9 @@ This round follows a redesign of the checkout confirmation step.
 
 **Topic 1 — Confirmation clarity**
 
+- *Objective:* Priority-1 — Determine whether the banner is noticed unaided.
 - *Hypothesis:* Shoppers miss the new confirmation banner.
-- **[Priority-1]** Determine whether the banner is noticed unaided.
-- **[Priority-2]** Capture the language shoppers use for the banner.
+- *Key Questions:* What do shoppers notice on the confirmation step? What words do they use for the banner?
 
 ---
 

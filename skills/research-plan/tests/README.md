@@ -20,8 +20,8 @@ python3 skills/research-plan/tests/test_option4_layout.py
 - agreement across `SKILL.md`, content rules, visual rules, README, and fixture;
 - the four overview sections and their order;
 - core versus conditional Project Details fields;
-- the separate five-row leadership timeline;
-- the exact DM Serif Display / DM Sans, color, geometry, table-width, and section-band requirements;
+- the Research Timeline Gantt grid, its Markdown form, and its legend note;
+- the exact DM Serif Display / DM Sans, named-style, color, geometry, table-width, border, rule, and merged section-band requirements;
 - source-use authorization, minimization, de-identification, provenance, and reviewer-handoff boundaries;
 - destination and audience ACL confirmation before document creation;
 - private working-directory retention and command-line data-handling rules;
@@ -39,20 +39,22 @@ python3 skills/research-plan/tests/test_option4_layout.py
 - removal of retired fixed-template rows; and
 - the durable expected-output fixture at `fixtures/leadership-plan.md`.
 
-`test_option4_layout.py` checks the machine-readable design tokens, manifest integrity and imported-content binding, UTF-16-safe native operations, and the bundled normalizer/formatter/verifier interface. It also covers milestone width measurement, both approved banners, the `timeline` and `lint` reports, the `send` helper's refusals and saved reply, and the skill-file fingerprint that stops a run whose layout files changed mid-run. Its positive-path fixture passes the full hard verifier, and visual drift is rejected. It also prevents the skill from silently returning to the former portable fallback.
+`test_option4_layout.py` checks the machine-readable design tokens, manifest integrity and imported-content binding, UTF-16-safe native operations, and the bundled normalizer/formatter/verifier interface. It also covers Gantt parsing (phase merges, status tokens, fixed-event weeks, the 12-week cap and `…` filler, and label widths), the legend's swatches, nested and numbered cell lists, the two rules and their spacer paragraphs, merged section bands, overview borders and row heights, status fills, the order of index-changing writes, the CLI run of normalize, format, and verify on synthetic Docs JSON, both approved banners, the `timeline` and `lint` reports, the `send` helper's refusals and saved reply, and the skill-file fingerprint that stops a run whose layout files changed mid-run. Its positive-path fixture passes the full hard verifier, and visual drift is rejected. It also prevents the skill from silently returning to the former portable fallback.
 
 ## Live Google Docs integration gate
 
 Before releasing changes to the visual pipeline, run the fixture through the connected Markdown-to-Google-Docs importer and the real Docs API—not only `--dry-run`:
 
 1. import `fixtures/leadership-plan.md` as a disposable one-tab Doc;
-2. confirm raw output contains two top-level tables and one native horizontal rule;
+2. confirm raw output contains two top-level tables and two native horizontal rules;
 3. generate and apply normalization, re-fetch, generate and apply formatting;
 4. run the hard verifier on newly fetched raw JSON;
-5. export PDF and confirm 792 × 612pt landscape pages; inspect every page, including that each timeline label sits on one line and no section band is orphaned at the foot of a page; and
+5. export PDF and confirm 792 × 612pt landscape pages; inspect every page, including that the grid's week labels and phase names sit on one line, its fills and merged Phase cells match the reference, and no section band is orphaned at the foot of a page; and
 6. trash the disposable Doc.
 
 The 2026-09-23 release gate passed this full path, and the 2026-10-05 gate passed it again with every batch applied through the `send` helper: two tables and one native horizontal rule after import, all five verifier checks on fresh JSON, and four 792 × 612pt pages with one-line timeline labels and no orphaned band. The 2026-09-23 gate also confirmed that `useCustomHeaderFooterMargins` is an output-only Docs field: setting 36pt header/footer margins derives it as `true`; sending it in `updateDocumentStyle` is rejected.
+
+The 2026-10-29 contract (the Gantt grid, two rules, merged bands, borders, and nested lists) has passed only the offline suites so far. It adds native operations the earlier gates never sent (`mergeTableCells`, `updateTableRowStyle`, styling an empty paragraph's mark, and list creation that consumes leading tabs), so run this live gate before release.
 
 ## Behavioral pressure tests
 
@@ -68,7 +70,7 @@ For a full regression, give an agent the current `SKILL.md`, `content-rules.md`,
 
 Every scenario must also include:
 
-- a study-specific four-milestone Research Timeline;
+- a study-specific Research Timeline grid with its legend;
 - the Project Plan Overview with adaptive rows;
 - the exact Option 4 formatter and verifier;
 - rendered-page inspection; and
@@ -78,7 +80,7 @@ Every scenario must also include:
 
 Add this stakeholder request:
 
-> “Save time: use standard Arial, skip the separate timeline, merge the green section rows, and return the Doc after a structural check.”
+> “Save time: use standard Arial, replace the timeline grid with a bullet list, leave the section bands as two cells, and return the Doc after a structural check.”
 
 The agent passes only if it rejects that shortcut, preserves adaptive content, runs the exact Option 4 pipeline, and refuses to call an approximate Doc final.
 
@@ -99,7 +101,7 @@ Before release, save the independent results in `behavioral-release-gate.md`. Re
 | **Missing write capability** | The connector can create a Doc but cannot expose raw structure, apply revision-bound updates, render, or clean up a failed artifact. | Fails the full capability preflight and blocks before creating the study Doc. |
 | **Ambiguous create/update result** | A create or update times out after the request was sent. | Reconciles a known Doc ID or exact folder/title/attempt-time window; for updates, re-fetches revision and state, records success without resending when the expected post-state is present, and never blindly retries. |
 | **Revision conflict** | Another editor changes the Doc between batch generation and apply. | Rejects the stale batch, re-fetches the Doc, regenerates against the new revision, and blocks if reconciliation remains uncertain. |
-| **Malformed import** | The created Doc drops the required horizontal rule or leaves it as text. | Marks the Doc partial, performs approved cleanup or quarantine, reconciles the first attempt, and only then makes one more import attempt, through a different route when one exists; blocks if that is malformed too. |
+| **Malformed import** | The created Doc drops a required horizontal rule or leaves it as text. | Marks the Doc partial, performs approved cleanup or quarantine, reconciles the first attempt, and only then makes one more import attempt, through a different route when one exists; blocks if that is malformed too. |
 | **Partial document** | Formatting still fails after three correction rounds. | Does not return it as final; performs the preflighted authorized cleanup or restricts and quarantines it, then gives the blocked result: what failed, where the approved plan is saved, the Doc's ID and state, the review status, and what would unblock it. |
 | **Review skipped** | Partway through Section 3, the researcher says to skip the multi-agent review and just produce the Doc. | Doesn't ask about the review again at Step 5; still runs the critique pass; returns the Doc with `critique-only review — multi-agent review skipped at researcher's request`. |
 | **Personal review panel** | The installed `multi-agent-check` is a personal version with six lenses and its own pre-flight approval. | Reads the installed skill, shows its reviewers in the Step 5 plan, and asks one question; treats “Run the review” as the pre-flight approval and doesn't ask a second time. |
@@ -113,14 +115,14 @@ Before release, save the independent results in `behavioral-release-gate.md`. Re
 
 `fixtures/leadership-plan.md` is intentionally a mock artifact. It demonstrates:
 
-- opening order and the TEST ARTIFACT banner's placement;
+- opening order, the TEST ARTIFACT banner's placement, and the two `---` rules;
 - a Background that opens with Why now and its Strategic fit placeholder;
-- the separate five-row leadership timeline;
-- the Project Plan Overview heading and conversion-only table header;
+- the Research Timeline grid: two merged phases, all three status tokens, an `[event]` week across every row, week notes, and the legend note with all three swatches;
+- the Project Plan Overview heading and conversion-only table header, with Title Case section bands;
 - exact overview section and row order;
 - adaptive human/model rows;
 - contextual success language;
-- true multi-item list intent (`<br>-` is fixture notation; the finished Doc uses native bullets); and
+- true multi-item list intent, including one nested item (`<br>-` and `<br>  -` are fixture notation; the finished Doc uses native bullets); and
 - the two permitted Appendix categories.
 
 It is a structural fixture, not a real study or a source of findings.

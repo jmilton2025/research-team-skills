@@ -10,19 +10,23 @@ different documents — an Interview / IDI guide and a Prototype / Usability gui
 and this pass applies the Option 4 visual tokens by ELEMENT ROLE inferred
 generically, not by a fixed sequence of named semantic sections. It handles:
 
-  * the canonical ``# Moderation Guide`` title followed immediately by a
-    required ``## Study Title`` top-matter line;
-  * an optional "Last updated:" line;
+  * the canonical ``# Moderation Guide`` title (TITLE style) followed
+    immediately by a required ``## Study Title`` line, rendered as a
+    NORMAL_TEXT paragraph rather than a heading;
+  * a ``Study period: …`` line (DM Serif Display 16pt bold italic gray);
   * an extended, variable RACI / ownership block (any "**Label:** …" bullets:
     Responsible / Accountable / Consulted / Contributor / External / Informed /
     Session Summaries / POC / …);
-  * an optional TEST ARTIFACT warning paragraph;
+  * an optional ``**Links:**`` line with black, underlined links;
+  * an optional TEST ARTIFACT warning paragraph (test runs only);
   * EVERY section Heading-2 after Study Title rendered as a dark-green band;
   * EVERY Heading-3 rendered as a green-on-white sub-phase heading;
-  * EVERY table styled with Option 4 tokens, including the wide-Phase /
-    narrow-Time Session Flow geometry;
+  * EVERY table styled with Option 4 tokens (two-column tables, including the
+    Phase | Description Session Flow, use 144 / 554.4pt);
   * EVERY list (bulleted or numbered, including indented probe sub-bullets),
-    preserving nesting.
+    preserving nesting with a 36pt step per level;
+  * the reference guide's vertical rhythm: one empty spacer paragraph between
+    block groups, none after a band or H3 and none before an H3.
 
 Pipeline (same four stages as the research-plan formatter):
     option4_guide_layout.py manifest APPROVED.md manifest.json
@@ -117,16 +121,30 @@ def load_contract() -> dict[str, Any]:
     for key in ("narrow_first_column_pt", "label_first_column_pt"):
         if not 0 < tables[key] < tables["total_width_pt"]:
             raise ContractError(f"Table {key} is out of range for the shared table width")
+    # The list geometry table and the spacing tokens must describe the same indents.
+    lists = contract["lists"]
+    spacing = contract["spacing"]
+    step = spacing["list_indent_level_step_pt"]
+    for level, (start, first) in enumerate(
+        zip(lists["indent_start_pt_by_level"], lists["indent_first_line_pt_by_level"])
+    ):
+        if (start, first) != (
+            spacing["list_indent_start_pt"] + level * step,
+            spacing["list_indent_first_line_pt"] + level * step,
+        ):
+            raise ContractError("List indent tokens are inconsistent with the per-level step")
+    if (lists["bullet_preset"], lists["numbered_preset"]) != (BULLET_PRESET, NUMBERED_PRESET):
+        raise ContractError("List presets in the contract do not match the formatter")
     return contract
 
 
 def table_column_widths(contract: dict[str, Any], header: list[str]) -> list[float]:
     """Distribute the shared 698.4pt total from a table's complete header.
 
-    ``Phase | Time`` reserves the narrow label width for Time so the phase
-    description remains scannable. Legacy ``#``-first tables retain the older
-    narrow-first-column rule. Other shapes reserve the label width for the first
-    column and split the remainder evenly.
+    Every two-column label/content table, including the ``Phase | Description``
+    Session Flow, gets ``[144, 554.4]``. Legacy ``#``-first tables retain the
+    older narrow-first-column rule. Wider tables reserve the label width for the
+    first column and split the remainder evenly.
     """
     tables = contract["tables"]
     total = tables["total_width_pt"]
@@ -135,10 +153,6 @@ def table_column_widths(contract: dict[str, Any], header: list[str]) -> list[flo
         raise ContractError("A table must have at least one column")
     if ncols == 1:
         return [total]
-    normalized = [cell.strip().casefold() for cell in header]
-    if normalized == ["phase", "time"]:
-        compact = tables["label_first_column_pt"]
-        return [round(total - compact, 3), compact]
     if header[0].strip() == tables["narrow_first_column_trigger"]:
         first = tables["narrow_first_column_pt"]
     else:
@@ -479,6 +493,14 @@ def _parse_top_matter(lines: list[str], title_index: int, first_h2: int) -> list
             items.append({"role": "warning", "text": WARNING, "inline": inline})
             i += 1
             continue
+        if inline["text"].startswith("Study period:"):
+            items.append({"role": "study_period", "inline": inline})
+            i += 1
+            continue
+        if inline["text"].startswith("Links:"):
+            items.append({"role": "links_line", "inline": inline})
+            i += 1
+            continue
         if candidate.startswith("Last updated:"):
             items.append({"role": "context_note", "inline": inline})
             i += 1
@@ -649,6 +671,190 @@ def expected_sequence(
         for block in section["blocks"]:
             seq.extend(_iter_block_paragraphs(block))
     return seq
+
+
+# ---------------------------------------------------------------------------
+# Vertical rhythm: which adjacent content elements get one empty spacer
+# ---------------------------------------------------------------------------
+
+# The header lines stack tightly: title, study title, study period.
+HEADER_KINDS = frozenset({"pre_title", "title", "study_title", "study_period"})
+
+
+def layout_elements(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    """Every content element in document order with its rhythm kind.
+
+    The order matches ``expected_sequence``. Kinds: ``pre_title``, ``title``,
+    ``study_title``, ``study_period``, ``raci``, ``list``, ``table``, ``band``,
+    ``h3`` and ``block`` (any other paragraph). List items and RACI rows carry
+    a ``group`` shared by the items of one block, so no spacer separates them.
+    """
+    elements: list[dict[str, Any]] = []
+    groups = 0
+
+    def new_group() -> int:
+        nonlocal groups
+        groups += 1
+        return groups
+
+    def add_blocks(blocks: list[dict[str, Any]]) -> None:
+        for block in blocks:
+            if block["type"] == "prose":
+                elements.append({"kind": "block"})
+            elif block["type"] == "list":
+                group = new_group()
+                elements.extend({"kind": "list", "group": group} for _ in block["items"])
+            elif block["type"] == "table":
+                elements.append({"kind": "table"})
+            elif block["type"] == "sub_phase":
+                elements.append({"kind": "h3"})
+                add_blocks(block["blocks"])
+
+    top = manifest["top"]
+    elements.extend({"kind": "pre_title"} for _ in top["pre_title"])
+    elements.append({"kind": "title"})
+    raci_group: int | None = None
+    for index, item in enumerate(top["items"]):
+        role = item.get("role")
+        if role != "raci":
+            raci_group = None
+        if item.get("type") == "table":
+            elements.append({"kind": "table"})
+        elif role == "raci":
+            if raci_group is None:
+                raci_group = new_group()
+            elements.append({"kind": "raci", "group": raci_group})
+        elif role == "list":
+            group = new_group()
+            elements.extend({"kind": "list", "group": group} for _ in item["items"])
+        elif role == "phase_subtitle" and index == 0:
+            elements.append({"kind": "study_title"})
+        elif role == "study_period":
+            elements.append({"kind": "study_period"})
+        else:
+            elements.append({"kind": "block"})
+    for section in manifest["sections"]:
+        elements.append({"kind": "band"})
+        add_blocks(section["blocks"])
+    return elements
+
+
+def wants_spacer(previous: dict[str, Any] | None, following: dict[str, Any]) -> bool:
+    """True when the reference rhythm puts one empty paragraph between two elements."""
+    if previous is None:
+        return False
+    if previous["kind"] in HEADER_KINDS and following["kind"] in HEADER_KINDS:
+        return False
+    if previous["kind"] in ("band", "h3") or following["kind"] == "h3":
+        return False
+    group = previous.get("group")
+    if group is not None and group == following.get("group"):
+        return False
+    return True
+
+
+def _filler_state(element: dict[str, Any]) -> str:
+    """Classify a top-level paragraph: ``content``, ``empty`` or ``rule``.
+
+    An empty paragraph holds only whitespace text runs. A rule paragraph is an
+    imported ``---`` (a horizontal rule plus its newline). An otherwise empty
+    paragraph with any other element (an image, a chip) is refused so cleanup
+    can never delete content the manifest does not describe.
+    """
+    children = element["paragraph"].get("elements", [])
+    text = "".join(child.get("textRun", {}).get("content", "") for child in children)
+    if text.strip():
+        return "content"
+    others = [child for child in children if "textRun" not in child]
+    if not others:
+        return "empty"
+    if all("horizontalRule" in child for child in others):
+        return "rule"
+    raise ContractError(
+        f"Paragraph at index {element.get('startIndex')} holds a non-text element the approved Markdown does not describe"
+    )
+
+
+def layout_gaps(tab: dict[str, Any], manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    """Pair the document's content elements with the manifest and list every gap.
+
+    Returns one gap before each content element plus a trailing gap. Each gap
+    has ``previous``/``following`` (document elements or None), ``fillers`` (the
+    empty or rule paragraphs between them) and ``want`` (spacers required: 0 or 1,
+    or None for the trailing gap).
+    """
+    elements = layout_elements(manifest)
+    content: list[dict[str, Any]] = []
+    fillers: list[list[dict[str, Any]]] = [[]]
+    for position, element in enumerate(tab["body"]["content"]):
+        if "sectionBreak" in element and position == 0:
+            continue
+        if "table" in element:
+            content.append(element)
+            fillers.append([])
+        elif "paragraph" in element:
+            if _filler_state(element) == "content":
+                content.append(element)
+                fillers.append([])
+            else:
+                fillers[-1].append(element)
+        else:
+            raise ContractError(
+                f"Unsupported top-level element at index {element.get('startIndex')}: {sorted(element)}"
+            )
+    if len(content) != len(elements):
+        raise ContractError("Document hierarchy does not match the approved mod-guide manifest")
+    gaps: list[dict[str, Any]] = []
+    for index, gap_fillers in enumerate(fillers):
+        previous = content[index - 1] if index > 0 else None
+        following = content[index] if index < len(content) else None
+        if following is None:
+            want = None
+        else:
+            want = int(wants_spacer(elements[index - 1] if index > 0 else None, elements[index]))
+        gaps.append(
+            {
+                "previous": previous,
+                "following": following,
+                "previous_kind": elements[index - 1]["kind"] if index > 0 else None,
+                "following_kind": elements[index]["kind"] if index < len(elements) else None,
+                "fillers": gap_fillers,
+                "want": want,
+            }
+        )
+    return gaps
+
+
+def _describe(element: dict[str, Any] | None, kind: str | None) -> str:
+    if element is None:
+        return "the document edge"
+    if "table" in element:
+        return "a table"
+    return f"{kind} {paragraph_text(element['paragraph']).strip()[:40]!r}"
+
+
+def assert_spacer_layout(tab: dict[str, Any], manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    """Require the exact reference rhythm: one plain empty paragraph where wanted, none elsewhere."""
+    gaps = layout_gaps(tab, manifest)
+    for gap in gaps:
+        fillers = gap["fillers"]
+        for filler in fillers:
+            if _filler_state(filler) == "rule":
+                raise ContractError("Native horizontal rule found; mod-guide bands replace all rules")
+            if paragraph_text(filler["paragraph"]) != "\n":
+                raise ContractError(f"Spacer paragraph at index {filler['startIndex']} is not empty")
+        if gap["want"] is None:
+            allowed = 1 if gap["previous"] is not None and "table" in gap["previous"] else 0
+            if len(fillers) > allowed:
+                raise ContractError("Vertical rhythm drift: empty paragraphs after the last element")
+            continue
+        if len(fillers) != gap["want"]:
+            raise ContractError(
+                f"Vertical rhythm drift: expected {gap['want']} spacer(s) between "
+                f"{_describe(gap['previous'], gap['previous_kind'])} and "
+                f"{_describe(gap['following'], gap['following_kind'])}, found {len(fillers)}"
+            )
+    return gaps
 
 
 # ---------------------------------------------------------------------------
@@ -1234,6 +1440,49 @@ def resolve_required_revision_id(
     return resolved
 
 
+def _delete(tab_id: str, start: int, end: int) -> dict[str, Any]:
+    return {"deleteContentRange": {"range": docs_range(tab_id, start, end)}}
+
+
+def _gap_edits(tab_id: str, gap: dict[str, Any]) -> list[tuple[int, int, list[dict[str, Any]]]]:
+    """Reconcile one gap to its required spacer count (rules always go).
+
+    Every range keeps the newline that sits directly before a table, because the
+    Docs API refuses to delete it: surplus fillers are removed up to that newline
+    or merged into the preceding paragraph instead.
+    """
+    fillers = gap["fillers"]
+    previous, following, want = gap["previous"], gap["following"], gap["want"]
+
+    def span(start: int, end: int) -> list[tuple[int, int, list[dict[str, Any]]]]:
+        return [(start, 0, [_delete(tab_id, start, end)])] if end > start else []
+
+    if want is None:  # trailing gap: keep only the segment's mandatory final newline
+        if not fillers:
+            return []
+        if previous is not None and "paragraph" in previous:
+            return span(previous["endIndex"] - 1, fillers[-1]["endIndex"] - 1)
+        return span(fillers[0]["startIndex"], fillers[-1]["endIndex"] - 1)
+    if want == 1:
+        if fillers:  # collapse to one empty paragraph: the last filler's newline
+            return span(fillers[0]["startIndex"], fillers[-1]["endIndex"] - 1)
+        if "paragraph" in following:
+            at = following["startIndex"]
+        elif previous is not None and "paragraph" in previous:
+            at = previous["endIndex"] - 1
+        else:
+            raise ContractError("Cannot place a spacer between two adjacent tables")
+        return [(at, 0, [{"insertText": {"location": {"index": at, "tabId": tab_id}, "text": "\n"}}])]
+    if not fillers:
+        return []
+    if "paragraph" in following:
+        return span(fillers[0]["startIndex"], fillers[-1]["endIndex"])
+    if previous is None or "paragraph" not in previous:
+        raise ContractError("Cannot remove the paragraph that must precede a table")
+    # Merge the preceding paragraph into the newline the table needs.
+    return span(previous["endIndex"] - 1, fillers[-1]["endIndex"] - 1)
+
+
 def build_normalize_requests(
     doc: dict[str, Any],
     manifest: dict[str, Any],
@@ -1244,10 +1493,13 @@ def build_normalize_requests(
 
     Cleanup covers: uppercasing each ## band heading (length-preserving), dropping
     every native horizontal rule the importer created from ``---`` (target: zero
-    rules), and deleting each table's conversion header row so the first content
-    row becomes the first visible row. Every index-shifting operation is emitted
-    in strictly descending document position so earlier (higher) indices stay
-    valid as later ones are applied. Table binding is column-count agnostic.
+    rules), reconciling the empty spacer paragraphs to the reference rhythm
+    (see ``wants_spacer``), and deleting each table's conversion header row so the
+    first content row becomes the first visible row. Every index-shifting
+    operation is emitted in strictly descending document position so earlier
+    (higher) indices stay valid as later ones are applied; at a shared position
+    the length-preserving band rewrite runs before a spacer insert. Table binding
+    is column-count agnostic.
     """
     validate_manifest(manifest)
     resolved_revision_id = resolve_required_revision_id(
@@ -1271,8 +1523,9 @@ def build_normalize_requests(
             f"Imported table count {len(tables)} does not match {len(manifest_table_specs)} approved tables"
         )
 
-    # Collect (document_position, ops) so we can emit strictly bottom-first.
-    edits: list[tuple[int, list[dict[str, Any]]]] = []
+    # Collect (document_position, priority, ops) so we can emit strictly
+    # bottom-first; at one position the higher priority applies first.
+    edits: list[tuple[int, int, list[dict[str, Any]]]] = []
 
     # 1. Uppercase every band heading paragraph (length-preserving replacement).
     section_binder = ParagraphBinder(body)
@@ -1287,19 +1540,11 @@ def build_normalize_requests(
                 {"deleteContentRange": {"range": docs_range(tab_id, start, end)}},
                 {"insertText": {"location": {"index": start, "tabId": tab_id}, "text": section["band_label"]}},
             ]
-            edits.append((start, ops))
+            edits.append((start, 1, ops))
 
-    # 2. Delete any native horizontal rules (want zero).
-    for element in body:
-        if "paragraph" not in element:
-            continue
-        if any("horizontalRule" in child for child in element["paragraph"].get("elements", [])):
-            edits.append(
-                (
-                    element["startIndex"],
-                    [{"deleteContentRange": {"range": docs_range(tab_id, element["startIndex"], element["endIndex"])}}],
-                )
-            )
+    # 2. Drop every native horizontal rule and reconcile the spacer paragraphs.
+    for gap in layout_gaps(tab, manifest):
+        edits.extend(_gap_edits(tab_id, gap))
 
     # 3. Per table: verify content binds to the manifest, then drop the
     #    conversion header row if the importer kept one. No fixed header is
@@ -1315,6 +1560,7 @@ def build_normalize_requests(
             edits.append(
                 (
                     table_element["startIndex"],
+                    0,
                     [
                         {
                             "deleteTableRow": {
@@ -1330,7 +1576,7 @@ def build_normalize_requests(
             )
 
     requests: list[dict[str, Any]] = []
-    for _, ops in sorted(edits, key=lambda pair: pair[0], reverse=True):
+    for _, _, ops in sorted(edits, key=lambda edit: (edit[0], edit[1]), reverse=True):
         requests.extend(ops)
     return _batch_payload(requests, resolved_revision_id)
 
@@ -1433,7 +1679,7 @@ def _style_list(
     body_color: dict[str, Any],
 ) -> None:
     spacing = contract["spacing"]
-    step = spacing.get("list_indent_level_step_pt", 18)
+    step = spacing["list_indent_level_step_pt"]
     items = list_block["items"]
     elements = [binder.take(item["inline"]["text"]) for item in items]
 
@@ -1510,6 +1756,10 @@ def build_format_requests(
             spec,
             allow_conversion_header=False,
         )
+    try:
+        gaps = assert_spacer_layout(tab, manifest)
+    except ContractError as error:
+        raise ContractError(f"Normalize the document first: {error}") from error
 
     colors = {name: hex_color(value) for name, value in contract["colors"].items()}
     spacing = contract["spacing"]
@@ -1586,7 +1836,7 @@ def build_format_requests(
             for element, entry in zip(elements, run):
                 style_paragraph(
                     requests, tab_id, element, font=body_font, size=body_size, color=body_color,
-                    space_above=12, space_below=12,
+                    space_above=spacing["raci_space_above_pt"], space_below=spacing["raci_space_below_pt"],
                     indent_start=spacing["raci_indent_start_pt"],
                     indent_first=spacing["raci_indent_first_line_pt"],
                 )
@@ -1602,8 +1852,8 @@ def build_format_requests(
                         "indentStart": {"magnitude": spacing["raci_indent_start_pt"], "unit": "PT"},
                         "indentFirstLine": {"magnitude": spacing["raci_indent_first_line_pt"], "unit": "PT"},
                         "lineSpacing": 115,
-                        "spaceAbove": {"magnitude": 12, "unit": "PT"},
-                        "spaceBelow": {"magnitude": 12, "unit": "PT"},
+                        "spaceAbove": {"magnitude": spacing["raci_space_above_pt"], "unit": "PT"},
+                        "spaceBelow": {"magnitude": spacing["raci_space_below_pt"], "unit": "PT"},
                     },
                     "indentStart,indentFirstLine,lineSpacing,spaceAbove,spaceBelow",
                 )
@@ -1635,6 +1885,28 @@ def build_format_requests(
                 space_below=spacing["phase_subtitle_space_below_pt"], keep_next=True,
             )
             apply_inline_styles(requests, tab_id, element, item["inline"], link_color=color)
+            i += 1
+            continue
+        if role == "study_period":
+            element = binder.take(item["inline"]["text"])
+            font, size, bold, italic, color = _text_style(contract, "study_period")
+            style_paragraph(
+                requests, tab_id, element, font=font, size=size, bold=bold, italic=italic, color=color,
+                space_below=spacing["study_period_space_below_pt"], keep_next=True,
+            )
+            apply_inline_styles(requests, tab_id, element, item["inline"], link_color=color)
+            i += 1
+            continue
+        if role == "links_line":
+            element = binder.take(item["inline"]["text"])
+            links = contract["typography"]["links_line"]
+            style_paragraph(
+                requests, tab_id, element, font=links["font"], size=links["size_pt"],
+                color=hex_color(links["color"]),
+            )
+            apply_inline_styles(
+                requests, tab_id, element, item["inline"], link_color=hex_color(links["link_color"])
+            )
             i += 1
             continue
         if role == "breadcrumb":
@@ -1704,7 +1976,51 @@ def build_format_requests(
         )
         style_blocks(section["blocks"])
 
+    # 6. Spacers last, so no later bullet or paragraph request can touch them.
+    for gap in gaps:
+        for filler in gap["fillers"]:
+            requests.extend(_spacer_requests(tab_id, filler, contract))
+
     return _batch_payload(requests, resolved_revision_id)
+
+
+SPACER_TEXT_FIELDS = "bold,italic,underline,strikethrough,smallCaps,fontSize,weightedFontFamily,foregroundColor,backgroundColor,link"
+
+
+def _spacer_requests(tab_id: str, element: dict[str, Any], contract: dict[str, Any]) -> list[dict[str, Any]]:
+    """Style one empty paragraph exactly like the reference spacer.
+
+    A spacer that ``normalize`` split off a list item or heading carries that
+    paragraph's style; this clears it to a plain NORMAL_TEXT line with no direct
+    text style, so it inherits the named style's font like the reference does.
+    """
+    spacer = contract["vertical_rhythm"]["spacer_style"]
+    start, end = element["startIndex"], element["endIndex"]
+    requests: list[dict[str, Any]] = []
+    if "bullet" in element["paragraph"]:
+        requests.append({"deleteParagraphBullets": {"range": docs_range(tab_id, start, end)}})
+    requests.append(
+        update_paragraph(
+            tab_id, start, end,
+            {
+                "namedStyleType": spacer["named_style"],
+                "alignment": spacer["alignment"],
+                "lineSpacing": spacer["line_spacing_percent"],
+                "spaceAbove": {"magnitude": spacer["space_above_pt"], "unit": "PT"},
+                "spaceBelow": {"magnitude": spacer["space_below_pt"], "unit": "PT"},
+                "indentStart": {"magnitude": spacer["indent_start_pt"], "unit": "PT"},
+                "indentFirstLine": {"magnitude": spacer["indent_first_line_pt"], "unit": "PT"},
+                "keepWithNext": spacer["keep_with_next"],
+                "avoidWidowAndOrphan": spacer["avoid_widow_and_orphan"],
+            },
+            # "shading" is in the mask but absent from the style, which clears it.
+            "namedStyleType,alignment,lineSpacing,spaceAbove,spaceBelow,indentStart,indentFirstLine,"
+            "keepWithNext,avoidWidowAndOrphan,shading",
+        )
+    )
+    # Fields in the mask but absent from the style reset to the inherited value.
+    requests.append(update_text(tab_id, start, end, {}, SPACER_TEXT_FIELDS))
+    return requests
 
 
 # ---------------------------------------------------------------------------
@@ -1830,6 +2146,62 @@ def _magnitude(style: dict[str, Any], key: str, default: float = 0) -> float:
     return style.get(key, {}).get("magnitude", default)
 
 
+def _assert_named_style(element: dict[str, Any], expected: str) -> None:
+    actual = element["paragraph"].get("paragraphStyle", {}).get("namedStyleType", "NORMAL_TEXT")
+    if actual != expected:
+        label = paragraph_text(element["paragraph"]).strip()
+        raise ContractError(f"{label!r} uses the {actual} style; expected {expected}")
+
+
+def _assert_link_runs(element: dict[str, Any], named: dict[str, dict[str, Any]], color: str) -> None:
+    """Every linked run is underlined and keeps the line's color (never Google blue)."""
+    label = paragraph_text(element["paragraph"]).strip()
+    for child in element["paragraph"].get("elements", []):
+        run = child.get("textRun")
+        if run is None or not run.get("content", "").rstrip("\n"):
+            continue
+        style = _effective_style(element["paragraph"], run, named)
+        if not (style.get("link") or {}).get("url"):
+            continue
+        if not style.get("underline", False):
+            raise ContractError(f"Link in {label!r} is not underlined")
+        if _rgb(style.get("foregroundColor"), default_black=True) != _hex_tuple(color):
+            raise ContractError(f"Link in {label!r} is not {color}")
+
+
+SPACER_FORBIDDEN_TEXT_KEYS = (
+    "weightedFontFamily", "fontSize", "bold", "italic", "underline", "link", "foregroundColor", "backgroundColor",
+)
+
+
+def _assert_spacer_style(element: dict[str, Any], contract: dict[str, Any]) -> None:
+    spacer = contract["vertical_rhythm"]["spacer_style"]
+    index = element["startIndex"]
+    if "bullet" in element["paragraph"]:
+        raise ContractError(f"Spacer paragraph at index {index} is a list item")
+    _assert_named_style(element, spacer["named_style"])
+    style = element["paragraph"].get("paragraphStyle", {})
+    if style.get("lineSpacing", spacer["line_spacing_percent"]) != spacer["line_spacing_percent"]:
+        raise ContractError(f"Spacer paragraph at index {index} has the wrong line spacing")
+    for key, token in (
+        ("spaceAbove", "space_above_pt"),
+        ("spaceBelow", "space_below_pt"),
+        ("indentStart", "indent_start_pt"),
+        ("indentFirstLine", "indent_first_line_pt"),
+    ):
+        if _magnitude(style, key) != spacer[token]:
+            raise ContractError(f"Spacer paragraph at index {index} has the wrong {key}")
+    if bool(style.get("keepWithNext", False)) != spacer["keep_with_next"]:
+        raise ContractError(f"Spacer paragraph at index {index} has the wrong keep-with-next setting")
+    if _rgb(style.get("shading", {}).get("backgroundColor")) is not None:
+        raise ContractError(f"Spacer paragraph at index {index} is shaded")
+    for child in element["paragraph"].get("elements", []):
+        text_style = child.get("textRun", {}).get("textStyle", {})
+        direct = [key for key in SPACER_FORBIDDEN_TEXT_KEYS if text_style.get(key) not in (None, {}, False)]
+        if direct:
+            raise ContractError(f"Spacer paragraph at index {index} carries direct text style {direct}")
+
+
 def _assert_cell_padding(cell: dict[str, Any], expected: float) -> None:
     # Google Docs omits the default 5pt padding from read responses.
     style = cell.get("tableCellStyle", {})
@@ -1904,8 +2276,9 @@ def _verify_table(
 def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
     """Validate content fidelity and every machine-checkable VISUAL invariant.
 
-    Visual-only: page geometry + margins; document title / Study Title / H2-band /
-    H3 / body font+size+color; warning shading when present; every section H2
+    Visual-only: page geometry + margins; document title / Study Title / study
+    period / Links line / H2-band / H3 / body font+size+color and named styles;
+    the spacer rhythm; warning shading when present; every section H2
     after Study Title shaded dark-green with white DM Serif 14pt; every table's padding, white body
     cells, DM Sans 10pt text, and column-count-appropriate widths. It does NOT
     enforce a terminal section, does NOT reject a table after the debrief, and
@@ -1947,6 +2320,9 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
     if actual != expected:
         raise ContractError("Document hierarchy does not match the approved mod-guide manifest")
     assert_paragraph_link_fidelity(tab, manifest, imported=False)
+    for gap in assert_spacer_layout(tab, manifest):
+        for filler in gap["fillers"]:
+            _assert_spacer_style(filler, contract)
 
     # 2. Document style.
     document_style = tab.get("documentStyle", {})
@@ -1985,6 +2361,7 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
 
     # 4. Title.
     title = binder.take(top["title"]["text"])
+    _assert_named_style(title, contract["typography"]["title"]["named_style"])
     _assert_text_style(title, named, contract["typography"]["title"])
     _assert_paragraph_metrics(
         title, line_spacing=115, space_below=contract["spacing"]["title_space_below_pt"], keep_next=True
@@ -2002,7 +2379,9 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
             _assert_base_text_style(element, named, contract["typography"]["body"])
             _assert_inline_exact(element, item["inline"], named)
             _assert_paragraph_metrics(
-                element, line_spacing=115, space_above=12, space_below=12,
+                element, line_spacing=115,
+                space_above=contract["spacing"]["raci_space_above_pt"],
+                space_below=contract["spacing"]["raci_space_below_pt"],
                 indent_start=contract["spacing"]["raci_indent_start_pt"],
                 indent_first=contract["spacing"]["raci_indent_first_line_pt"],
             )
@@ -2023,8 +2402,37 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
                 raise ContractError("TEST ARTIFACT warning does not use full-paragraph pale-yellow shading")
         elif role == "phase_subtitle":
             element = binder.take(item["inline"]["text"])
+            _assert_named_style(element, contract["typography"]["phase_subtitle"]["named_style"])
             _assert_text_style(element, named, contract["typography"]["phase_subtitle"])
             _assert_base_text_style(element, named, contract["typography"]["phase_subtitle"])
+            _assert_paragraph_metrics(
+                element, line_spacing=115,
+                space_below=contract["spacing"]["phase_subtitle_space_below_pt"], keep_next=True,
+            )
+        elif role == "study_period":
+            element = binder.take(item["inline"]["text"])
+            period = contract["typography"]["study_period"]
+            _assert_named_style(element, period["named_style"])
+            _assert_text_style(element, named, period)
+            _assert_base_text_style(element, named, period)
+            _assert_inline_exact(
+                element, item["inline"], named,
+                base_bold=period.get("bold", False), base_italic=period.get("italic", False),
+            )
+            _assert_paragraph_metrics(
+                element, line_spacing=115,
+                space_below=contract["spacing"]["study_period_space_below_pt"], keep_next=True,
+            )
+        elif role == "links_line":
+            element = binder.take(item["inline"]["text"])
+            links = contract["typography"]["links_line"]
+            if "bullet" in element["paragraph"]:
+                raise ContractError("The Links line rendered as a bullet")
+            _assert_named_style(element, links["named_style"])
+            _assert_base_text_style(element, named, links)
+            _assert_inline_exact(element, item["inline"], named)
+            _assert_link_runs(element, named, links["link_color"])
+            _assert_paragraph_metrics(element, line_spacing=115)
         elif role == "breadcrumb":
             element = binder.take(item["inline"]["text"])
             _assert_base_text_style(element, named, contract["typography"]["breadcrumb"])
@@ -2052,6 +2460,7 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
                 _verify_list(block, binder, named, contract)
             elif block["type"] == "sub_phase":
                 heading = binder.take(block["heading"]["text"])
+                _assert_named_style(heading, contract["typography"]["sub_phase_heading"]["named_style"])
                 _assert_text_style(heading, named, contract["typography"]["sub_phase_heading"])
                 _assert_paragraph_metrics(
                     heading, line_spacing=115,
@@ -2063,6 +2472,7 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
 
     for section in manifest["sections"]:
         band = binder.take(section["band_label"])
+        _assert_named_style(band, contract["typography"]["section_band"]["named_style"])
         _assert_text_style(band, named, contract["typography"]["section_band"])
         _assert_base_text_style(band, named, contract["typography"]["section_band"])
         _assert_paragraph_metrics(
@@ -2080,11 +2490,12 @@ def verify_document(doc: dict[str, Any], manifest: dict[str, Any]) -> list[str]:
         _verify_table(table_element, spec, contract, named)
 
     return [
-        "Option 4 page geometry, opening typography, and RACI/ownership bullets",
+        "Option 4 page geometry and top matter: title, study title, study period, RACI bullets, and Links line",
         "dark-green section bands with white DM Serif labels for every section H2 after Study Title",
-        "green-on-white sub-phase (H3) headings and nested lists",
+        "green-on-white sub-phase (H3) headings and nested lists at a 36pt step",
         "every table styled with Option 4 tokens (any column count, any position)",
         "warning shading when a TEST ARTIFACT warning is present, and zero horizontal rules",
+        "the reference vertical rhythm: one plain spacer between block groups, none after a band or H3",
     ]
 
 
@@ -2093,7 +2504,7 @@ def _verify_list(
     contract: dict[str, Any],
 ) -> None:
     spacing = contract["spacing"]
-    step = spacing.get("list_indent_level_step_pt", 18)
+    step = spacing["list_indent_level_step_pt"]
     elements = [binder.take(item["inline"]["text"]) for item in list_block["items"]]
     for item, element in zip(list_block["items"], elements):
         if "bullet" not in element["paragraph"]:

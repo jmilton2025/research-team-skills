@@ -316,7 +316,7 @@ class ModGuideCrossFileContractTest(unittest.TestCase):
     def test_templates_share_the_canonical_header_and_safe_top_level_schema(self) -> None:
         expected_headers = {
             "interview": [["Parameter", "Detail"], ["Cue", "Read aloud"]],
-            "prototype": [["Parameter", "Detail"], ["Phase", "Time"]],
+            "prototype": [["Parameter", "Detail"], ["Phase", "Description"]],
         }
         required_objectives = {
             "interview": "Research Objectives",
@@ -331,6 +331,11 @@ class ModGuideCrossFileContractTest(unittest.TestCase):
                 self.assertEqual(manifest["top"]["title"]["text"], "Moderation Guide")
                 self.assertEqual(manifest["top"]["pre_title"], [])
                 self.assertEqual(manifest["top"]["items"][0]["role"], "phase_subtitle")
+                # Title, study title, study period, RACI, optional Links line, parameter table.
+                self.assertEqual(
+                    [item.get("role") for item in manifest["top"]["items"]],
+                    ["phase_subtitle", "study_period", "raci", "raci", "raci", "raci", "links_line", "table"],
+                )
                 self.assertEqual(
                     [table["header"] for table in self.layout.manifest_tables(manifest)],
                     expected_headers[name],
@@ -678,9 +683,95 @@ class ModGuideCrossFileContractTest(unittest.TestCase):
         self.assertNotIn("single breadcrumb", shapes)
         self.assertNotIn("#|ask", shapes)
         width_rule = self.contract["tables"]["column_width_rule"]
-        self.assertRegex(width_rule, r"Phase\s*\|\s*Time")
-        self.assertIn("wide", width_rule.casefold())
-        self.assertIn("144", width_rule)
+        self.assertRegex(width_rule, r"Phase\s*\|\s*Description")
+        self.assertIn("[144, 554.4]", width_rule)
+        self.assertNotRegex(width_rule, r"Phase\s*\|\s*Time")
+        session_flow = self.contract["tables"]["session_flow"]
+        self.assertEqual(session_flow["header"], ["Phase", "Description"])
+        self.assertEqual(session_flow["widths_pt"], [144, 554.4])
+        self.assertFalse(session_flow["label_bold"])
+        self.assertEqual(session_flow["label_background"], "#FFFFFF")
+        self.assertEqual(self.layout.table_column_widths(self.contract, ["Phase", "Description"]), [144, 554.4])
+
+    def test_machine_contract_carries_the_reference_tokens(self) -> None:
+        typography = self.contract["typography"]
+        self.assertEqual(typography["title"]["named_style"], "TITLE")
+        self.assertEqual(typography["phase_subtitle"]["named_style"], "NORMAL_TEXT")
+        self.assertEqual(
+            {key: typography["study_period"][key] for key in ("font", "size_pt", "bold", "italic", "color")},
+            {"font": "DM Serif Display", "size_pt": 16, "bold": True, "italic": True, "color": "#666666"},
+        )
+        self.assertEqual(typography["links_line"]["link_color"], "#000000")
+        self.assertTrue(typography["links_line"]["link_underline"])
+        self.assertEqual(self.contract["inline_roles"]["italic_label_bullet"]["label"], {"italic": True, "bold": False})
+        spacing = self.contract["spacing"]
+        self.assertEqual(spacing["study_period_space_below_pt"], 16)
+        self.assertEqual((spacing["raci_space_above_pt"], spacing["raci_space_below_pt"]), (12, 12))
+        self.assertEqual(spacing["list_indent_level_step_pt"], 36)
+        self.assertEqual(self.contract["lists"]["indent_start_pt_by_level"], [36, 72, 108])
+        self.assertEqual(self.contract["lists"]["indent_first_line_pt_by_level"], [18, 54, 90])
+        self.assertEqual(
+            self.contract["structure"]["top_matter_order"],
+            ["title", "study_title", "study_period", "raci", "links_line (optional)", "parameter_table"],
+        )
+        rhythm = self.contract["vertical_rhythm"]
+        self.assertEqual(rhythm["spacers_per_gap"], 1)
+        self.assertEqual(rhythm["spacer_style"]["named_style"], "NORMAL_TEXT")
+        self.assertIn("after a section band (H2), including between the Session Flow band and its table", rhythm["no_spacer"])
+        self.assertIn("before a sub-phase heading (H3)", rhythm["no_spacer"])
+
+    def test_style_reference_names_the_reference_guide_without_its_id(self) -> None:
+        self.assertIn("the approved Meals MVP moderation guide (October 2026)", self.style_md)
+        for heading in ("## Top matter, in order", "## Vertical rhythm", "## Lists"):
+            self.assertIn(heading, self.style_md)
+        self.assertIn("16pt bold italic", self.style_md)
+        self.assertIn("36pt per level", self.style_md)
+        self.assertIn("**italic, not bold**", self.style_md)
+        # The repository is public: no Google Doc ID may appear anywhere in the skill.
+        doc_id = re.compile(r"(?<![A-Za-z0-9_-])1[A-Za-z0-9_-]{43}(?![A-Za-z0-9_-])")
+        for path in SKILL_DIR.rglob("*"):
+            if path.is_file() and path.suffix in {".md", ".py", ".json"}:
+                with self.subTest(path=path.name):
+                    text = path.read_text(encoding="utf-8")
+                    self.assertNotIn("docs.google.com" + "/document/d/", text)
+                    self.assertIsNone(doc_id.search(text))
+
+    def test_shared_scaffolding_matches_the_template_top_matter(self) -> None:
+        scaffold = self.skill.split("### Shared scaffolding (both formats)", 1)[1].split("```", 2)[1]
+        lines = [line for line in scaffold.splitlines() if line.strip()]
+        self.assertEqual(lines[0], "# Moderation Guide")
+        self.assertTrue(lines[1].startswith("## [Study Title"))
+        self.assertEqual(lines[2], "Study period: [Source-approved study period or TBD — fill in]")
+        self.assertTrue(lines[3].startswith("- **Responsible:**"))
+        links = next(i for i, line in enumerate(lines) if line.startswith("**Links:**"))
+        table = next(i for i, line in enumerate(lines) if line.startswith("| Parameter | Detail |"))
+        self.assertEqual(links, 7)
+        self.assertLess(links, table)
+        self.assertIn("The Links line is optional on both formats", scaffold)
+        for source in (self.interview_output, self.prototype_output):
+            self.assertIn("Study period: [Source-approved study period or TBD — fill in]", source)
+            self.assertNotIn("*[Source-approved study period", source)
+
+    def test_prototype_session_flow_keeps_timed_phase_labels(self) -> None:
+        manifest = self.layout.parse_markdown(self.prototype_output)
+        session_flow = next(
+            table for table in self.layout.manifest_tables(manifest)
+            if table["header"] == ["Phase", "Description"]
+        )
+        labels = [row["cells"][0]["text"] for row in session_flow["rows"]]
+        self.assertEqual(labels[0], "Introduction & Think-Aloud Setup ([X] min)")
+        for label in labels:
+            self.assertRegex(label, r"\(\[X\] min\)$")
+        self.assertFalse(session_flow["first_col_bold"])
+        self.assertIn("each phase label ends with its approved minutes", self.skill)
+        self.assertIn("Session Flow phase label", self.prototype)
+
+    def test_prototype_topics_use_italic_objective_and_key_question_labels(self) -> None:
+        objectives = self.prototype_output.split("## Objectives & Research Questions", 1)[1].split("---", 1)[0]
+        self.assertIn("**Topic 1 — [feature/flow]**", objectives)
+        self.assertIn("- *Objective:*", objectives)
+        self.assertIn("- *Key Questions:*", objectives)
+        self.assertNotIn("- **[Priority", objectives)
 
 
 if __name__ == "__main__":

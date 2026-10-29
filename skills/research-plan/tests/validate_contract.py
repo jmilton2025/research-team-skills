@@ -128,12 +128,42 @@ for name in ("skill", "rules", "style"):
 for term in (
     "#003D29",
     "#FFF2CC",
+    "#D9EAD3",
+    "#F4CCCC",
+    "#1155CC",
     "144pt / 554.4pt",
-    "two physical cells",
+    "**180pt**",
+    "**54pt**",
+    "**900pt**",
+    "0.75pt solid",
+    "**25.75pt**",
+    "merged down",
+    "one merged cell",
+    "HEADING_4",
+    "HEADING_5",
     "full-paragraph",
+    "no request that edits a named style",
 ):
     require("style", term)
-require_regex("skill", r"five-row leadership timeline", "five-row leadership timeline")
+# The reference is named, never linked or identified by its document ID (the repo is public).
+REFERENCE_NAME = "the approved International retailer research plan (Q3 2025)"
+for name in ("skill", "rules", "style"):
+    require(name, REFERENCE_NAME)
+for name, text in texts.items():
+    if "1K7IgFKKxiinsDY4lrhG5lAI3argJMELjqT2QHuBJP-4" in text or "Jedida's private reference" in text:
+        failures.append(f"{name}: names the reference by document ID or owner instead of its approved name")
+# The Gantt timeline replaces the five-row milestone table everywhere it is described.
+require_regex("skill", r"Research Timeline\*\* Gantt grid", "Gantt Research Timeline in the hierarchy")
+for name in ("skill", "rules", "style"):
+    for term in ("Phase | Activity", "[target]", "[spillover]", "[event]", "Green = target dates; Yellow = possible spillover"):
+        require(name, term)
+    # Content rules keep a dated source history, which may name what earlier contracts used.
+    current = texts[name].split("## Source history")[0]
+    for retired in ("Timing | Leadership milestone", "five-row leadership timeline", "two physical cells", "| **KEY INFORMATION** |", "134pt"):
+        if retired in current:
+            failures.append(f"{name}: contains retired contract text: {retired!r}")
+for name in ("rules", "style"):
+    require_regex(name, r"blank Phase cell|leave the Phase cell blank|later rows leave the Phase cell blank", "blank Phase cell merges down")
 require_regex("skill", r"raw.{0,120}verif.{0,120}render|verif.{0,120}render", "machine plus visual verification gate")
 require_regex("skill", r"not researcher-.{0,80}leadership-waivable", "non-waivable visual gate")
 for name in ("skill", "rules"):
@@ -328,8 +358,9 @@ for name in ("skill", "rules"):
         "quotes come word for word from the source artifact",
     )
 require_regex("rules", r"check these rules before the background pop-up", "Background rules checked before its pop-up")
-for name in ("rules", "style"):
-    require(name, "544.4pt")
+for name in ("skill", "rules", "style"):
+    require_regex(name, r"`…`", "the … filler column for long studies")
+    require_regex(name, r"two leading spaces", "Markdown nesting for cell lists")
 require_regex(
     "safety",
     r"request-body parameter.{0,300}file or standard-input option.{0,600}`send` helper",
@@ -490,10 +521,36 @@ for name in ("skill", "rules"):
 try:
     visual = json.loads(texts["style_json"])
     expected = {
+        ("version",): "2026-10-29",
+        ("reference",): REFERENCE_NAME,
         ("page", "document_mode"): "PAGELESS",
         ("page", "orientation"): "LANDSCAPE",
         ("colors", "dark_green"): "#003D29",
         ("colors", "warning_background"): "#FFF2CC",
+        ("colors", "gray_cell"): "#D9D9D9",
+        ("colors", "link_blue"): "#1155CC",
+        ("colors", "status_target"): "#D9EAD3",
+        ("colors", "status_spillover"): "#FFF2CC",
+        ("colors", "status_event"): "#F4CCCC",
+        ("typography", "section_band", "color"): "#FFFFFF",
+        ("typography", "section_band", "named_style"): "HEADING_4",
+        ("typography", "label", "named_style"): "HEADING_5",
+        ("timeline_table", "max_week_columns"): 12,
+        ("timeline_table", "max_total_width_pt"): 900,
+        ("timeline_table", "filler_label"): "…",
+        ("timeline_table", "header_row", "pinned"): False,
+        ("timeline_table", "header_row", "week_cells", "padding_pt"): 2,
+        ("timeline_table", "header_row", "week_cells", "content_alignment"): "BOTTOM",
+        ("timeline_table", "header_row", "week_cells", "alignment"): "END",
+        ("timeline_table", "header_row", "text", "font"): "DM Sans",
+        ("timeline_table", "body_rows", "min_row_height_pt"): 20,
+        ("timeline_table", "body_rows", "line_spacing_percent"): 100,
+        ("overview_table", "min_row_height_pt"): 25.75,
+        ("overview_table", "line_spacing_percent"): 115,
+        ("overview_table", "section_band", "column_span"): 2,
+        ("lists", "indent_step_pt"): 36,
+        ("lists", "first_line_hang_pt"): 18,
+        ("lists", "number_preset"): "NUMBERED_DECIMAL_NESTED",
     }
     for path, value in expected.items():
         actual = visual
@@ -505,54 +562,62 @@ try:
         failures.append("style_json: margins must be 72pt on all sides")
     if visual["page"]["use_custom_header_footer_margins"] is not True:
         failures.append("style_json: custom header/footer margins must be enabled")
-    if visual["structure"] != {"native_horizontal_rules": 1, "top_level_tables": 2}:
-        failures.append("style_json: structure must require one native rule and two top-level tables")
-    if visual["tables"]["column_widths_pt"] != [144, 554.4]:
-        failures.append("style_json: table widths must be 144pt / 554.4pt")
-    if visual["tables"]["total_width_pt"] != 698.4:
-        failures.append("style_json: table total must remain 698.4pt")
-    if visual["tables"]["intentional_text_area_overflow_pt"] != 50.4:
-        failures.append("style_json: intentional table overflow must remain 50.4pt")
-    if visual["tables"]["cell_padding_pt"] != 5:
-        failures.append("style_json: table cell padding must be 5pt")
-    if visual["tables"]["timeline_rows"] != 5:
-        failures.append("style_json: timeline must have five rows")
-    if visual["tables"]["timeline_header"] != ["Timing", "Leadership milestone"]:
-        failures.append("style_json: leadership timeline header must be Timing | Leadership milestone")
-    if not re.match(visual["tables"]["timeline_left_label_pattern"], "Week 1: Setup & rubric"):
-        failures.append("style_json: leadership timeline label pattern must accept 'Week N: Name'")
-    tables = visual["tables"]
-    usable_width = tables["column_widths_pt"][0] - 2 * tables["cell_padding_pt"]
-    if "timeline_left_cell_max_characters" in tables:
-        failures.append("style_json: leadership timeline labels are limited by printed width, not characters")
-    if tables["timeline_left_label_max_width_pt"] != usable_width:
-        failures.append("style_json: leadership timeline label width must equal the first column less padding")
-    label_font = tables["timeline_left_label_font"]
-    if (label_font["font"], label_font["size_pt"], label_font["bold"]) != (
-        visual["typography"]["body"]["font"], visual["typography"]["body"]["size_pt"], True
-    ):
-        failures.append("style_json: leadership timeline label widths must describe bold body text")
-    missing_glyphs = [chr(code) for code in range(0x20, 0x7F) if chr(code) not in label_font["advance_widths"]]
-    if missing_glyphs or "–" not in label_font["advance_widths"]:
-        failures.append(f"style_json: leadership timeline label widths missing {missing_glyphs + ['–']}")
+    structure = visual["structure"]
+    if (structure["native_horizontal_rules"], structure["top_level_tables"]) != (2, 2):
+        failures.append("style_json: structure must require two native rules and two top-level tables")
+    named = visual["named_styles"]
+    for style, values in {
+        "TITLE": ("DM Serif Display", 26, True, "#003D29", 0, 3),
+        "SUBTITLE": ("DM Serif Display", 16, True, "#666666", 0, 16),
+        "HEADING_1": ("DM Serif Display", 20, True, "#000000", 20, 6),
+        "HEADING_4": ("DM Serif Display", 14, True, "#003D29", 14, 4),
+        "HEADING_5": ("DM Sans", 10, True, "#000000", 0, 0),
+    }.items():
+        actual = tuple(named[style][key] for key in ("font", "size_pt", "bold", "color", "space_above_pt", "space_below_pt"))
+        if actual != values:
+            failures.append(f"style_json: named style {style} is {actual!r}, expected the reference's {values!r}")
+    overview = visual["overview_table"]
+    if overview["column_widths_pt"] != [144, 554.4]:
+        failures.append("style_json: overview widths must be 144pt / 554.4pt")
+    if (overview["total_width_pt"], overview["intentional_text_area_overflow_pt"]) != (698.4, 50.4):
+        failures.append("style_json: overview total must remain 698.4pt, 50.4pt past the text area")
+    if overview["cell_padding_pt"] != 5:
+        failures.append("style_json: overview cell padding must be 5pt")
+    if overview["border"] != {"color": "#000000", "width_pt": 0.75, "dash_style": "SOLID"}:
+        failures.append("style_json: overview borders must be 0.75pt solid black")
+    if overview["section_rows"] != ["Key Information", "Project Details", "Deliverables & Next Steps", "Appendix"]:
+        failures.append("style_json: section bands must be the four Title Case bands")
+    timeline = visual["timeline_table"]
+    if timeline["header"] != ["Phase", "Activity"]:
+        failures.append("style_json: timeline header must start Phase | Activity")
+    widths = timeline["column_widths_pt"]
+    if widths != {"phase": 180, "activity": 72, "week": 54}:
+        failures.append("style_json: timeline widths must be 180 / 72 / 54pt per week")
+    if widths["phase"] + widths["activity"] + timeline["max_week_columns"] * widths["week"] != timeline["max_total_width_pt"]:
+        failures.append("style_json: twelve weeks must total the 900pt maximum grid width")
+    if timeline["week_cells"]["statuses"] != {"target": "#D9EAD3", "spillover": "#FFF2CC", "event": "#F4CCCC"}:
+        failures.append("style_json: week statuses must be target, spillover, and event with the reference fills")
+    if not re.match(timeline["phase_column"]["label_pattern"], "Phase 1: Setup & calibration"):
+        failures.append("style_json: phase label pattern must accept 'Phase N: Name'")
+    for weight, bold in (("dm_sans_bold", True), ("dm_sans_regular", False)):
+        font = visual["font_metrics"][weight]
+        if (font["font"], font["size_pt"], font["bold"]) != (visual["typography"]["body"]["font"], visual["typography"]["body"]["size_pt"], bold):
+            failures.append(f"style_json: {weight} widths must describe body text")
+        missing = [chr(code) for code in range(0x20, 0x7F) if chr(code) not in font["advance_widths"]]
+        if missing or "…" not in font["advance_widths"]:
+            failures.append(f"style_json: {weight} widths missing {missing + ['…']}")
+        if font["unknown_character_width"] != max(font["advance_widths"].values()):
+            failures.append(f"style_json: {weight} must count unknown characters at the widest glyph")
+    bold_font = visual["font_metrics"]["dm_sans_bold"]
 
     def label_width(text: str) -> float:
-        units = sum(label_font["advance_widths"].get(char, label_font["unknown_character_width"]) for char in text)
-        return units * label_font["size_pt"] / label_font["units_per_em"]
+        units = sum(bold_font["advance_widths"].get(char, bold_font["unknown_character_width"]) for char in text)
+        return units * bold_font["size_pt"] / bold_font["units_per_em"]
 
-    # Rendered calibration: the first label fit on one line, the second wrapped.
-    if not label_width("Week 1: Setup & definitions") <= usable_width < label_width("Week 2: Baseline comparison"):
-        failures.append("style_json: leadership timeline label widths no longer match the rendered calibration")
-    if visual["tables"]["timeline_right_cell_max_characters"] != 160:
-        failures.append("style_json: leadership timeline summaries must be capped at 160 characters")
-    right_usable_width = tables["column_widths_pt"][1] - 2 * tables["cell_padding_pt"]
-    if round(tables["timeline_right_cell_max_width_pt"], 6) != round(right_usable_width, 6):
-        failures.append("style_json: leadership milestone width must equal the second column less padding")
-    milestone_font = tables["timeline_right_cell_font"]
-    if (milestone_font["font"], milestone_font["size_pt"], milestone_font["bold"]) != (
-        visual["typography"]["body"]["font"], visual["typography"]["body"]["size_pt"], False
-    ):
-        failures.append("style_json: leadership milestone widths must describe regular body text")
+    week_usable = widths["week"] - 2 * timeline["header_row"]["week_cells"]["padding_pt"]
+    # Every short month-and-day label fits a week column on one line; a spelled-out month does not.
+    if not label_width("Sept. 29") <= week_usable < label_width("November 30"):
+        failures.append("style_json: week-label widths no longer fit 'Sept. 29' while rejecting 'November 30'")
     banners = visual["warning"]["variants"]
     if set(banners) != {"simulated", "test_run"}:
         failures.append("style_json: warning variants must be exactly simulated and test_run")
@@ -577,29 +642,41 @@ require_order(
     "fixture",
     (
         "TEST ARTIFACT",
+        "\n---\n",
         "# Research Timeline",
-        "| Timing | Leadership milestone |",
+        "| Phase | Activity |",
+        "Green = target dates; Yellow = possible spillover; Red = ",
         "# Project Plan Overview",
         "| Section / element | Approved content |",
-        "| **KEY INFORMATION** |",
-        "| **PROJECT DETAILS** |",
-        "| **DELIVERABLES & NEXT STEPS** |",
-        "| **APPENDIX** |",
+        "| **Key Information** |",
+        "| **Project Details** |",
+        "| **Deliverables & Next Steps** |",
+        "| **Appendix** |",
     ),
     "fixture hierarchy",
 )
+if texts["fixture"].count("\n---\n") != 2:
+    failures.append("fixture: needs exactly two '---' rules, before Research Timeline and before Project Plan Overview")
+if not re.search(r"\n---\n\n# Project Plan Overview", texts["fixture"]):
+    failures.append("fixture: the second rule must sit right before Project Plan Overview")
 
 timeline_match = re.search(
-    r"# Research Timeline\s+\| Timing \| Leadership milestone \|\s+\|---\|---\|\s+(.*?)\n\s*\*",
+    r"# Research Timeline\s+(\| Phase \| Activity \|.*?)\n\s*\*",
     texts["fixture"],
     flags=re.DOTALL,
 )
 if not timeline_match:
-    failures.append("fixture: cannot parse leadership timeline")
+    failures.append("fixture: cannot parse the Research Timeline grid")
 else:
-    rows = [line for line in timeline_match.group(1).splitlines() if line.strip().startswith("|")]
-    if len(rows) != 4:
-        failures.append(f"fixture: leadership timeline has {len(rows)} body rows; expected four")
+    grid = [line for line in timeline_match.group(1).splitlines() if line.strip().startswith("|")]
+    body = grid[2:]
+    if len(body) < 2 or not any(line.startswith("| |") for line in body):
+        failures.append("fixture: the grid must show a phase that continues onto a row with a blank Phase cell")
+    for token in ("[target]", "[spillover]", "[event]"):
+        if token not in timeline_match.group(1):
+            failures.append(f"fixture: the grid must use {token}")
+    if not re.search(r"\[target\] [A-Z][a-z]+", timeline_match.group(1)):
+        failures.append("fixture: the grid must show a week note after a status token")
 
 for label in (
     "Topic",
@@ -626,13 +703,14 @@ for label in (
 require("fixture", "\n---\n")
 require("fixture", "To be filled out at the end of the study.")
 require("fixture", "The finished Google Doc uses native bullet paragraphs")
-for retired in ("→", "Deliverable Format", "Research Priorities", "Additional → Documents"):
+for retired in ("→", "Deliverable Format", "Research Priorities", "Additional → Documents", "Timing | Leadership milestone", "KEY INFORMATION"):
     forbid("fixture", retired)
+require_regex("fixture", r"<br>  - ", "a nested fixture bullet")
 
-appendix_position = texts["fixture"].find("| **APPENDIX** |")
+appendix_position = texts["fixture"].find("| **Appendix** |")
 appendix_text = texts["fixture"][appendix_position:] if appendix_position >= 0 else ""
 appendix_labels = re.findall(r"^\| \*\*(.+?)\*\* \|", appendix_text, flags=re.MULTILINE)
-if appendix_labels != ["APPENDIX", "Additional UXR documents", "Resources from XFN"]:
+if appendix_labels != ["Appendix", "Additional UXR documents", "Resources from XFN"]:
     failures.append("fixture: Appendix must contain exactly the two approved document rows")
 
 for label in ("Method & approach", "Measures & analysis", "Deliverables", "Timeline", "Next steps"):

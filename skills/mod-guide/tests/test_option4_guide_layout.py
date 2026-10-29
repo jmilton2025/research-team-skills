@@ -10,7 +10,10 @@ No Google Docs API call is made. Every test builds a synthetic raw-Docs JSON tre
 in Python and exercises the same parse/normalize/format/verify code paths the live
 pipeline uses. Two fixtures are covered — an Interview / IDI guide and a
 Prototype / Usability guide — because the formatter must handle both shapes.
-The ``send`` tests run against a stand-in gws, never the real one.
+``apply_batch`` applies a normalize batch to the synthetic JSON offline, so the
+pipeline runs end to end (manifest → import → normalize → re-fetch → format →
+verify) without Google. The ``send`` tests run against a stand-in gws, never
+the real one.
 """
 
 from __future__ import annotations
@@ -160,18 +163,41 @@ def _table_value_rows(spec: dict) -> list[list[str]]:
     return [[cell["text"] for cell in row["cells"]] for row in spec["rows"]]
 
 
-def synthetic_document(module, manifest: dict, *, imported: bool) -> dict:
+def synthetic_document(module, manifest: dict, *, imported: bool, noise: bool = False) -> dict:
     """Build a raw one-tab Docs JSON tree from a manifest.
 
     imported=True reproduces the just-imported doc: title-case band headings, a
-    conversion header row on every table, and native ``---`` rules. imported=False
-    reproduces the normalized doc: UPPERCASE bands, no conversion headers, no rules.
+    conversion header row on every table, native ``---`` rules, and no spacer
+    paragraphs. noise=True adds stray empty paragraphs the normalizer must
+    reconcile (after the title, after every band, and after every table).
+    imported=False reproduces the normalized doc: UPPERCASE bands, no conversion
+    headers, no rules, one empty spacer paragraph wherever the reference rhythm
+    puts one, and the empty paragraph Google Docs keeps after a final table.
     """
     cursor = 1
     body = [{"startIndex": 0, "endIndex": 1, "sectionBreak": {"sectionStyle": {}}}]
+    layout = module.layout_elements(manifest)
+    position = 0
+
+    def add_spacer_if_wanted() -> None:
+        nonlocal position, cursor
+        if not imported:
+            previous = layout[position - 1] if position else None
+            if module.wants_spacer(previous, layout[position]):
+                item, cursor = paragraph("", cursor)
+                body.append(item)
+        position += 1
+
+    def add_noise(count: int = 1) -> None:
+        nonlocal cursor
+        if imported and noise:
+            for _ in range(count):
+                item, cursor = paragraph("", cursor)
+                body.append(item)
 
     def add_paragraph(text: str) -> None:
         nonlocal cursor
+        add_spacer_if_wanted()
         item, cursor = paragraph(text, cursor)
         body.append(item)
 
@@ -182,11 +208,13 @@ def synthetic_document(module, manifest: dict, *, imported: bool) -> dict:
 
     def add_table(spec: dict) -> None:
         nonlocal cursor
+        add_spacer_if_wanted()
         rows = _table_value_rows(spec)
         if imported:
             rows = [list(spec["header"])] + rows
         item, cursor = table(rows, cursor)
         body.append(item)
+        add_noise()
 
     def add_blocks(blocks: list[dict]) -> None:
         for block in blocks:
@@ -205,6 +233,7 @@ def synthetic_document(module, manifest: dict, *, imported: bool) -> dict:
     for pre in top["pre_title"]:
         add_paragraph(pre["text"])
     add_paragraph(top["title"]["text"])
+    add_noise(2)
     for item in top["items"]:
         if item.get("type") == "table":
             add_table(item)
@@ -222,9 +251,14 @@ def synthetic_document(module, manifest: dict, *, imported: bool) -> dict:
 
     for section in manifest["sections"]:
         add_paragraph(section["source_label"] if imported else section["band_label"])
+        add_noise()
         add_blocks(section["blocks"])
         if imported:
             add_rule()
+    assert position == len(layout)
+    if not imported and "table" in body[-1]:
+        item, cursor = paragraph("", cursor)
+        body.append(item)
 
     return {
         "revisionId": "fixture-revision-imported" if imported else "fixture-revision-normalized",
@@ -357,7 +391,7 @@ def formatted_document(module, manifest: dict) -> dict:
     def plain(text: str) -> dict:
         return {"text": text, "bold": [], "italic": [], "links": []}
 
-    step = spacing.get("list_indent_level_step_pt", 18)
+    step = spacing["list_indent_level_step_pt"]
 
     def style_list_items(items: list[dict]) -> None:
         for entry in items:
@@ -396,7 +430,7 @@ def formatted_document(module, manifest: dict) -> dict:
                 binder.take(item["inline"]["text"]), item["inline"],
                 contract["typography"]["body"],
                 pstyle(
-                    line=115, above=12, below=12,
+                    line=115, above=spacing["raci_space_above_pt"], below=spacing["raci_space_below_pt"],
                     indent_start=spacing["raci_indent_start_pt"],
                     indent_first=spacing["raci_indent_first_line_pt"],
                 ),
@@ -421,6 +455,18 @@ def formatted_document(module, manifest: dict) -> dict:
                 contract["typography"]["phase_subtitle"],
                 pstyle(line=115, below=spacing["phase_subtitle_space_below_pt"], keep=True),
                 base_bold=True,
+            )
+        elif role == "study_period":
+            style_element(
+                binder.take(item["inline"]["text"]), item["inline"],
+                contract["typography"]["study_period"],
+                pstyle(line=115, below=spacing["study_period_space_below_pt"], keep=True),
+                base_bold=True, base_italic=True,
+            )
+        elif role == "links_line":
+            style_element(
+                binder.take(item["inline"]["text"]), item["inline"],
+                contract["typography"]["links_line"], pstyle(line=115),
             )
         elif role == "breadcrumb":
             style_element(
@@ -512,7 +558,137 @@ def formatted_document(module, manifest: dict) -> dict:
                     pstyle(line=contract["spacing"]["table_line_spacing_percent"]),
                     base_bold=(col_index == 0 and bool(spec.get("first_col_bold"))),
                 )
+
+    # Spacers: plain NORMAL_TEXT empty lines with no direct text style.
+    spacer = contract["vertical_rhythm"]["spacer_style"]
+    for gap in module.layout_gaps(tab, manifest):
+        for filler in gap["fillers"]:
+            filler["paragraph"]["paragraphStyle"] = pstyle(
+                line=spacer["line_spacing_percent"],
+                indent_start=spacer["indent_start_pt"],
+                indent_first=spacer["indent_first_line_pt"],
+            )
+            filler["paragraph"]["elements"][0]["textRun"]["textStyle"] = {}
     return doc
+
+
+# ---------------------------------------------------------------------------
+# Offline batch application (normalize only: text, rule, and table-row edits).
+# ---------------------------------------------------------------------------
+
+
+def _doc_slots(doc: dict) -> list:
+    """One slot per Docs index: a character, a rule, or a table (token + padding)."""
+    slots: list = []
+    for element in doc["tabs"][0]["documentTab"]["body"]["content"]:
+        if "sectionBreak" in element:
+            slots.append(("SECTION",))
+        elif "table" in element:
+            rows = [
+                [
+                    "\n".join(
+                        piece["paragraph"]["elements"][0]["textRun"]["content"].rstrip("\n")
+                        for piece in cell["content"]
+                    )
+                    for cell in row["tableCells"]
+                ]
+                for row in element["table"]["tableRows"]
+            ]
+            token = {"rows": rows, "length": element["endIndex"] - element["startIndex"]}
+            slots.append(token)
+            slots.extend([("PAD", id(token))] * (token["length"] - 1))
+        else:
+            for child in element["paragraph"]["elements"]:
+                if "horizontalRule" in child:
+                    slots.append(("RULE",))
+                    continue
+                for character in child["textRun"]["content"]:
+                    assert len(character.encode("utf-16-le")) == 2, "fixtures use BMP text only"
+                    slots.append(character)
+    return slots
+
+
+def apply_batch(doc: dict, payload: dict, *, revision: str) -> dict:
+    """Apply a normalize batch the way Google Docs would, refusing illegal edits."""
+    slots = _doc_slots(doc)
+
+    def is_table_slot(slot) -> bool:
+        return isinstance(slot, dict) or (isinstance(slot, tuple) and slot[0] == "PAD")
+
+    for request in payload["requests"]:
+        (kind, value), = request.items()
+        if kind == "insertText":
+            at = value["location"]["index"]
+            if at < 1 or at >= len(slots) or is_table_slot(slots[at]) or slots[at] == ("RULE",):
+                raise AssertionError(f"insertText outside a paragraph at {at}")
+            slots[at:at] = list(value["text"])
+        elif kind == "deleteContentRange":
+            start, end = value["range"]["startIndex"], value["range"]["endIndex"]
+            if not 1 <= start < end < len(slots):
+                raise AssertionError(f"illegal delete range {start}..{end} (final newline or out of range)")
+            if any(is_table_slot(slot) for slot in slots[start:end]):
+                raise AssertionError("delete range touches a table")
+            for index in range(start, end):
+                if slots[index] == "\n" and isinstance(slots[index + 1], dict):
+                    raise AssertionError("delete removes the newline before a table")
+            del slots[start:end]
+        elif kind == "deleteTableRow":
+            at = value["tableCellLocation"]["tableStartLocation"]["index"]
+            token = slots[at]
+            assert isinstance(token, dict), "deleteTableRow must point at a table start"
+            row = value["tableCellLocation"]["rowIndex"]
+            rows = token["rows"][:row] + token["rows"][row + 1:]
+            _, length = table(rows, 0)
+            replacement = {"rows": rows, "length": length}
+            slots[at:at + token["length"]] = [replacement] + [("PAD", id(replacement))] * (length - 1)
+        else:
+            raise AssertionError(f"unexpected normalize request {kind}")
+
+    body = [{"startIndex": 0, "endIndex": 1, "sectionBreak": {"sectionStyle": {}}}]
+    cursor, pending, rule, index = 1, [], False, 1
+    while index < len(slots):
+        slot = slots[index]
+        if isinstance(slot, dict):
+            assert not pending and not rule, "a table must follow a complete paragraph"
+            item, cursor = table(slot["rows"], cursor)
+            body.append(item)
+            index += slot["length"]
+            continue
+        if slot == ("RULE",):
+            rule = True
+        elif slot == "\n":
+            text = "".join(pending)
+            if rule:
+                assert text == "", "a rule paragraph holds no text"
+                item, cursor = horizontal_rule(cursor)
+            else:
+                item, cursor = paragraph(text, cursor)
+            body.append(item)
+            pending, rule = [], False
+        else:
+            pending.append(slot)
+        index += 1
+    assert not pending, "the body must end with a newline"
+    result = json.loads(json.dumps(doc))
+    result["revisionId"] = revision
+    result["tabs"][0]["documentTab"]["body"]["content"] = body
+    return result
+
+
+def body_shape(doc: dict) -> list:
+    """The body as comparable (kind, text) pairs."""
+    shape = []
+    for element in doc["tabs"][0]["documentTab"]["body"]["content"]:
+        if "table" in element:
+            shape.append(("table", [
+                [piece["paragraph"]["elements"][0]["textRun"]["content"] for cell in row["tableCells"] for piece in cell["content"]]
+                for row in element["table"]["tableRows"]
+            ]))
+        elif "paragraph" in element:
+            rule = any("horizontalRule" in child for child in element["paragraph"]["elements"])
+            text = "".join(child.get("textRun", {}).get("content", "") for child in element["paragraph"]["elements"])
+            shape.append(("rule" if rule else "paragraph", text))
+    return shape
 
 
 # ---------------------------------------------------------------------------
@@ -548,6 +724,15 @@ class Option4GuideContractTest(unittest.TestCase):
         self.assertEqual(contract["tables"]["top_matter_label_background"], "#D9D9D9")
         self.assertEqual(contract["tables"]["section_label_background"], "#FFFFFF")
         self.assertNotIn("kinds", contract["tables"])
+        # Tokens matched to the approved reference guide.
+        self.assertEqual(contract["typography"]["title"]["named_style"], "TITLE")
+        self.assertEqual(contract["typography"]["phase_subtitle"]["named_style"], "NORMAL_TEXT")
+        self.assertEqual(contract["spacing"]["raci_space_above_pt"], 12)
+        self.assertEqual(contract["spacing"]["raci_space_below_pt"], 12)
+        self.assertEqual(contract["lists"]["bullet_glyphs"], ["●", "○", "■"])
+        self.assertEqual(contract["lists"]["numbered_preset"], "NUMBERED_DECIMAL_ALPHA_ROMAN")
+        self.assertEqual(contract["tables"]["session_flow"]["header"], ["Phase", "Description"])
+        self.assertEqual(contract["vertical_rhythm"]["spacers_per_gap"], 1)
 
     def test_contract_self_check_passes(self) -> None:
         contract = self.module.load_contract()
@@ -560,9 +745,10 @@ class Option4GuideContractTest(unittest.TestCase):
         # Label width otherwise, for 2-col and 3-col tables.
         self.assertEqual(self.module.table_column_widths(c, ["Parameter", "Detail"]), [144, 554.4])
         self.assertEqual(self.module.table_column_widths(c, ["Cue", "Read aloud"]), [144, 554.4])
-        # Session Flow is the exception: phase names need the wide column and
-        # compact durations use the trailing 144pt column.
-        self.assertEqual(self.module.table_column_widths(c, ["Phase", "Time"]), [554.4, 144])
+        # Session Flow follows the same label/content geometry as every 2-col table,
+        # including a legacy Phase | Time header.
+        self.assertEqual(self.module.table_column_widths(c, ["Phase", "Description"]), [144, 554.4])
+        self.assertEqual(self.module.table_column_widths(c, ["Phase", "Time"]), [144, 554.4])
         self.assertEqual(
             self.module.table_column_widths(c, ["Date & Time", "Panelist Bio", "Recording"]),
             [144, 277.2, 277.2],
@@ -582,8 +768,10 @@ class Option4GuideContractTest(unittest.TestCase):
         self.assertEqual(m["top"]["pre_title"], [])
         self.assertEqual(m["top"]["title"]["text"], "Moderation Guide")
         roles = [it.get("role") or it.get("type") for it in m["top"]["items"]]
-        self.assertEqual(roles[:2], ["phase_subtitle", "breadcrumb"])
+        self.assertEqual(roles[:2], ["phase_subtitle", "study_period"])
         self.assertEqual(m["top"]["items"][0]["inline"]["text"], "Mock Expert Interviews")
+        self.assertEqual(m["top"]["items"][1]["inline"]["text"], "Study period: Q3 · September 2026")
+        self.assertIn("links_line", roles)
         # Extended RACI: seven ownership rows with varied labels.
         raci_labels = [it["label"] for it in m["top"]["items"] if it.get("role") == "raci"]
         self.assertEqual(
@@ -606,9 +794,11 @@ class Option4GuideContractTest(unittest.TestCase):
         roles = [it.get("role") for it in m["top"]["items"]]
         self.assertIn("phase_subtitle", roles)
         self.assertEqual(m["top"]["items"][0]["inline"]["text"], "Mock Checkout Confirmation Usability Test")
-        self.assertIn("breadcrumb", roles)
-        self.assertIn("context_note", roles)
-        self.assertIn("body", roles)  # the "Links:" run-in line
+        self.assertEqual(
+            roles,
+            ["phase_subtitle", "study_period", "raci", "raci", "raci", "raci", "links_line", "table"],
+        )
+        self.assertEqual(m["top"]["items"][-1]["type"], "table")
         self.assertFalse(m["document_meta"]["is_test_artifact"])  # no warning in this fixture
         self.assertEqual(len(m["sections"]), 8)
         self.assertEqual(len(self.module.manifest_tables(m)), 7)
@@ -626,7 +816,7 @@ class Option4GuideContractTest(unittest.TestCase):
     def test_current_output_templates_parse_and_complete_the_offline_pipeline(self) -> None:
         expected_tables = {
             INTERVIEW_TEMPLATE: [["Parameter", "Detail"], ["Cue", "Read aloud"]],
-            PROTOTYPE_TEMPLATE: [["Parameter", "Detail"], ["Phase", "Time"]],
+            PROTOTYPE_TEMPLATE: [["Parameter", "Detail"], ["Phase", "Description"]],
         }
         for path, headers in expected_tables.items():
             with self.subTest(template=path.name):
@@ -635,6 +825,11 @@ class Option4GuideContractTest(unittest.TestCase):
                 self.assertEqual(manifest["top"]["pre_title"], [])
                 self.assertEqual(manifest["top"]["items"][0]["role"], "phase_subtitle")
                 self.assertTrue(manifest["top"]["items"][0]["inline"]["text"].startswith("[Study Title"))
+                roles = [item.get("role") or item.get("type") for item in manifest["top"]["items"]]
+                self.assertEqual(
+                    roles,
+                    ["phase_subtitle", "study_period", "raci", "raci", "raci", "raci", "links_line", "table"],
+                )
                 self.assertEqual(
                     [table["header"] for table in self.module.manifest_tables(manifest)],
                     headers,
@@ -655,7 +850,7 @@ class Option4GuideContractTest(unittest.TestCase):
                 )
                 self.assertEqual(
                     len(self.module.verify_document(formatted_document(self.module, manifest), manifest)),
-                    5,
+                    6,
                 )
 
     def test_canonical_study_title_keeps_top_matter_out_of_section_bands(self) -> None:
@@ -663,7 +858,7 @@ class Option4GuideContractTest(unittest.TestCase):
 
 ## Grocery Study
 
-*[October 2026]*
+Study period: October 2026
 
 - **Responsible:** [TBD — fill in] · [Research plan](https://example.com/plan)
 
@@ -681,6 +876,7 @@ class Option4GuideContractTest(unittest.TestCase):
         self.assertEqual(manifest["top"]["title"]["text"], "Moderation Guide")
         self.assertEqual(manifest["top"]["items"][0]["role"], "phase_subtitle")
         self.assertEqual(manifest["top"]["items"][0]["inline"]["text"], "Grocery Study")
+        self.assertEqual(manifest["top"]["items"][1]["role"], "study_period")
         self.assertEqual([section["source_label"] for section in manifest["sections"]], ["Research Objectives"])
         self.assertTrue(manifest["document_meta"]["is_test_artifact"])
         dashboard = next(item for item in manifest["top"]["items"] if item.get("type") == "table")
@@ -796,6 +992,11 @@ class Option4GuideContractTest(unittest.TestCase):
             self.assertIn("deleteTableRow", request_types)      # conversion headers removed
             self.assertIn("deleteContentRange", request_types)  # rules + band text replaced
             self.assertIn("insertText", request_types)          # uppercased band labels
+            spacer_inserts = [
+                request for request in payload["requests"]
+                if request.get("insertText", {}).get("text") == "\n"
+            ]
+            self.assertTrue(spacer_inserts)                     # reference spacers added
             # One deleteTableRow per table.
             self.assertEqual(request_types.count("deleteTableRow"), len(self.module.manifest_tables(manifest)))
 
@@ -1021,8 +1222,8 @@ class Option4GuideContractTest(unittest.TestCase):
         ]
         self.assertTrue(
             any(
-                style.get("indentStart", {}).get("magnitude") == 54
-                and style.get("indentFirstLine", {}).get("magnitude") == 36
+                style.get("indentStart", {}).get("magnitude") == 72
+                and style.get("indentFirstLine", {}).get("magnitude") == 54
                 for style in styles
             ),
             styles,
@@ -1033,7 +1234,7 @@ class Option4GuideContractTest(unittest.TestCase):
 
 ## Duplicate Prompt Study
 
-*[October 2026]*
+Study period: October 2026
 
 ## Phase 1
 
@@ -1077,13 +1278,19 @@ class Option4GuideContractTest(unittest.TestCase):
         with self.assertRaises(self.module.ContractError):
             self.module.verify_document(styled, manifest)
 
-    def test_session_flow_phase_column_is_wide_and_time_column_is_compact(self) -> None:
+    def test_session_flow_uses_label_and_description_widths(self) -> None:
         manifest = self.module.parse_markdown(output_template(PROTOTYPE_TEMPLATE))
         specs = self.module.manifest_tables(manifest)
         session_index = next(
             index for index, spec in enumerate(specs)
-            if spec["header"] == ["Phase", "Time"]
+            if spec["header"] == ["Phase", "Description"]
         )
+        session = specs[session_index]
+        self.assertFalse(session["first_col_bold"])   # phase labels stay regular weight
+        self.assertFalse(session["gray_label"])       # white cells, unlike the Parameter table
+        # The approved-duration timing stays visible in every phase label.
+        for row in session["rows"]:
+            self.assertRegex(row["cells"][0]["text"], r"\(\[X\] min\)$")
         doc = synthetic_document(self.module, manifest, imported=False)
         table = self.module.doc_tables(doc["tabs"][0]["documentTab"])[session_index]
         payload = self.module.build_format_requests(doc, manifest)
@@ -1097,7 +1304,22 @@ class Option4GuideContractTest(unittest.TestCase):
             and request["updateTableColumnProperties"]["tableStartLocation"]["index"]
             == table["startIndex"]
         )
-        self.assertEqual(widths, [(0, 554.4), (1, 144)])
+        self.assertEqual(widths, [(0, 144), (1, 554.4)])
+        # No gray label column and no bold on the phase labels.
+        gray = self.module.hex_color("#D9D9D9")
+        self.assertFalse(
+            any(
+                request["updateTableCellStyle"]["tableCellStyle"].get("backgroundColor") == gray
+                for request in payload["requests"]
+                if "updateTableCellStyle" in request
+                and request["updateTableCellStyle"]["tableRange"]["tableCellLocation"]["tableStartLocation"]["index"]
+                == table["startIndex"]
+            )
+        )
+        # The Session Flow table follows its band with no spacer in between.
+        gaps = self.module.layout_gaps(doc["tabs"][0]["documentTab"], manifest)
+        gap = next(gap for gap in gaps if gap["following"] is table)
+        self.assertEqual((gap["previous_kind"], gap["want"], gap["fillers"]), ("band", 0, []))
 
     # -- Verify (both shapes) --------------------------------------------
 
@@ -1105,7 +1327,7 @@ class Option4GuideContractTest(unittest.TestCase):
         for manifest in (self.interview, self.prototype):
             doc = formatted_document(self.module, manifest)
             checks = self.module.verify_document(doc, manifest)
-            self.assertEqual(len(checks), 5)
+            self.assertEqual(len(checks), 6)
 
     def test_verifier_accepts_a_table_after_the_debrief(self) -> None:
         # This is the whole point of the rework: the old verifier rejected any
@@ -1175,6 +1397,384 @@ class Option4GuideContractTest(unittest.TestCase):
         body.append(rule)
         with self.assertRaises(self.module.ContractError):
             self.module.verify_document(doc, self.prototype)
+
+    # -- Reference-guide tokens -------------------------------------------
+
+    RHYTHM_SOURCE = """# Moderation Guide
+
+## Rhythm Study
+
+Study period: October 2026
+
+- **Responsible:** Example Researcher (UX Research)
+- **Accountable:** Example Owner (Product)
+
+**Links:** [Plan](https://example.com/plan) · [Prototype](https://example.com/proto)
+
+| Parameter | Detail |
+|-----------|--------|
+| **Goal** | Learn how shoppers plan meals |
+
+## Pre-Session Checklist
+
+- ☐ Participant validated
+- ☐ Prototype loaded
+
+## Objectives & Research Questions
+
+This round looks at meal planning.
+
+**Topic 1 — Planning**
+
+- *Objective:* Understand planning.
+- *Key Questions:* How do they plan?
+
+## Session Flow
+
+| Phase | Description |
+|-------|-------------|
+| Introduction (5 min) | Welcome and consent |
+| Wrap-Up (5 min) | Questions and thanks |
+
+All participants follow the same order.
+
+## Feature Probes
+
+Ask these only after the journey.
+
+### Meals Hub
+
+- **Revisit:** "Let's go to the hub."
+  - *Probe:* "What stands out?"
+    - *Probe:* "What makes you say that?"
+
+**Observation cues:** How they read prices.
+
+### Meal Detail
+
+- **Revisit:** "Let's open a recipe."
+
+## Wrap-Up
+
+1. "What questions do you have for me?"
+"""
+
+    def rhythm_manifest(self) -> dict:
+        return self.module.parse_markdown(self.RHYTHM_SOURCE)
+
+    def _requests_for(self, payload: dict, element: dict, kind: str) -> list[dict]:
+        return [
+            request[kind]
+            for request in payload["requests"]
+            if kind in request and request[kind]["range"]["startIndex"] >= element["startIndex"]
+            and request[kind]["range"]["endIndex"] <= element["endIndex"]
+        ]
+
+    def test_vertical_rhythm_matches_the_reference_guide(self) -> None:
+        manifest = self.rhythm_manifest()
+        layout = self.module.layout_elements(manifest)
+        sequence = self.module.expected_sequence(manifest)
+        self.assertEqual(len(layout), len(sequence))
+        spacer_before = [
+            int(self.module.wants_spacer(layout[index - 1] if index else None, element))
+            for index, element in enumerate(layout)
+        ]
+        expected = [
+            ("Moderation Guide", 0),
+            ("Rhythm Study", 0),                       # header lines stack tightly
+            ("Study period: October 2026", 0),
+            ("Responsible: Example Researcher (UX Research)", 1),
+            ("Accountable: Example Owner (Product)", 0),  # same RACI block
+            ("Links: Plan · Prototype", 1),
+            ("<TABLE>", 1),
+            ("PRE-SESSION CHECKLIST", 1),              # before the next band
+            ("☐ Participant validated", 0),            # nothing after a band
+            ("☐ Prototype loaded", 0),
+            ("OBJECTIVES & RESEARCH QUESTIONS", 1),
+            ("This round looks at meal planning.", 0),
+            ("Topic 1 — Planning", 1),                 # body → body
+            ("Objective: Understand planning.", 1),    # body → list
+            ("Key Questions: How do they plan?", 0),
+            ("SESSION FLOW", 1),                       # list → band
+            ("<TABLE>", 0),                            # band → its table
+            ("All participants follow the same order.", 1),
+            ("FEATURE PROBES", 1),
+            ("Ask these only after the journey.", 0),
+            ("Meals Hub", 0),                          # nothing before an H3
+            ('Revisit: "Let\'s go to the hub."', 0),   # nothing after an H3
+            ('Probe: "What stands out?"', 0),
+            ('Probe: "What makes you say that?"', 0),
+            ("Observation cues: How they read prices.", 1),  # list → body
+            ("Meal Detail", 0),
+            ('Revisit: "Let\'s open a recipe."', 0),
+            ("WRAP-UP", 1),
+            ('"What questions do you have for me?"', 0),
+        ]
+        self.assertEqual(list(zip(sequence, spacer_before)), expected)
+
+        # The fully styled document verifies, and drift in either direction fails.
+        styled = formatted_document(self.module, manifest)
+        self.module.verify_document(styled, manifest)
+
+        missing = formatted_document(self.module, manifest)
+        body = missing["tabs"][0]["documentTab"]["body"]["content"]
+        observation = self.module.find_paragraph(body, "Observation cues: How they read prices.")
+        spacer = body[body.index(observation) - 1]
+        self.assertEqual(self.module.paragraph_text(spacer["paragraph"]), "\n")
+        body.remove(spacer)
+        with self.assertRaisesRegex(self.module.ContractError, "Vertical rhythm drift"):
+            self.module.verify_document(missing, manifest)
+
+        extra = formatted_document(self.module, manifest)
+        body = extra["tabs"][0]["documentTab"]["body"]["content"]
+        band = self.module.find_paragraph(body, "FEATURE PROBES")
+        filler, _ = paragraph("", band["endIndex"])
+        body.insert(body.index(band) + 1, filler)
+        with self.assertRaisesRegex(self.module.ContractError, "Vertical rhythm drift"):
+            self.module.verify_document(extra, manifest)
+
+        styled_spacer = formatted_document(self.module, manifest)
+        body = styled_spacer["tabs"][0]["documentTab"]["body"]["content"]
+        gap = next(gap for gap in self.module.layout_gaps(styled_spacer["tabs"][0]["documentTab"], manifest) if gap["fillers"])
+        gap["fillers"][0]["paragraph"]["elements"][0]["textRun"]["textStyle"] = {"bold": True}
+        with self.assertRaisesRegex(self.module.ContractError, "direct text style"):
+            self.module.verify_document(styled_spacer, manifest)
+
+        # format refuses a document whose spacers were never reconciled.
+        unreconciled = synthetic_document(self.module, manifest, imported=False)
+        body = unreconciled["tabs"][0]["documentTab"]["body"]["content"]
+        band = self.module.find_paragraph(body, "WRAP-UP")
+        body.remove(body[body.index(band) - 1])
+        with self.assertRaisesRegex(self.module.ContractError, "Normalize the document first"):
+            self.module.build_format_requests(unreconciled, manifest)
+
+    def test_format_styles_spacers_as_plain_empty_lines(self) -> None:
+        manifest = self.rhythm_manifest()
+        doc = synthetic_document(self.module, manifest, imported=False)
+        tab = doc["tabs"][0]["documentTab"]
+        first_raci = self.module.find_paragraph(
+            tab["body"]["content"], "Responsible: Example Researcher (UX Research)"
+        )
+        spacer = tab["body"]["content"][tab["body"]["content"].index(first_raci) - 1]
+        spacer["paragraph"]["bullet"] = {"listId": "fixture-list"}  # split off a list item
+        payload = self.module.build_format_requests(doc, manifest)
+        mine = [
+            request for request in payload["requests"]
+            if any(
+                key in request
+                and request[key]["range"] == {"startIndex": spacer["startIndex"], "endIndex": spacer["endIndex"], "tabId": "t.0"}
+                for key in ("deleteParagraphBullets", "updateParagraphStyle", "updateTextStyle")
+            )
+        ]
+        self.assertEqual([next(iter(request)) for request in mine], ["deleteParagraphBullets", "updateParagraphStyle", "updateTextStyle"])
+        paragraph_style = mine[1]["updateParagraphStyle"]["paragraphStyle"]
+        self.assertEqual(paragraph_style["namedStyleType"], "NORMAL_TEXT")
+        self.assertEqual(paragraph_style["lineSpacing"], 115)
+        self.assertEqual(paragraph_style["spaceAbove"]["magnitude"], 0)
+        self.assertEqual(paragraph_style["spaceBelow"]["magnitude"], 0)
+        self.assertFalse(paragraph_style["avoidWidowAndOrphan"])
+        self.assertIn("shading", mine[1]["updateParagraphStyle"]["fields"])
+        self.assertEqual(mine[2]["updateTextStyle"]["textStyle"], {})
+        self.assertIn("weightedFontFamily", mine[2]["updateTextStyle"]["fields"])
+
+    def test_normalize_then_format_runs_end_to_end_offline(self) -> None:
+        shapes = {
+            "interview fixture": self.interview,
+            "prototype fixture": self.prototype,
+            "interview template": self.module.parse_markdown(output_template(INTERVIEW_TEMPLATE)),
+            "prototype template": self.module.parse_markdown(output_template(PROTOTYPE_TEMPLATE)),
+            "rhythm source": self.rhythm_manifest(),
+        }
+        for name, manifest in shapes.items():
+            for noise in (False, True):
+                with self.subTest(shape=name, noise=noise):
+                    imported = synthetic_document(self.module, manifest, imported=True, noise=noise)
+                    batch = self.module.build_normalize_requests(imported, manifest)
+                    normalized = apply_batch(imported, batch, revision="fixture-revision-normalized")
+                    self.assertEqual(
+                        body_shape(normalized),
+                        body_shape(synthetic_document(self.module, manifest, imported=False)),
+                    )
+                    again = self.module.build_normalize_requests(normalized, manifest)
+                    self.assertEqual(again["requests"], [])
+                    formatted = self.module.build_format_requests(normalized, manifest)
+                    self.assertEqual(
+                        formatted["writeControl"], {"requiredRevisionId": "fixture-revision-normalized"}
+                    )
+                    self.assertEqual(
+                        len(self.module.verify_document(formatted_document(self.module, manifest), manifest)), 6
+                    )
+
+    def test_normalize_merges_a_stray_paragraph_before_a_table_instead_of_deleting_its_newline(self) -> None:
+        manifest = self.rhythm_manifest()
+        imported = synthetic_document(self.module, manifest, imported=True, noise=True)
+        body = imported["tabs"][0]["documentTab"]["body"]["content"]
+        band = self.module.find_paragraph(body, "Session Flow")
+        stray = body[body.index(band) + 1]
+        self.assertEqual(self.module.paragraph_text(stray["paragraph"]), "\n")
+        self.assertIn("table", body[body.index(band) + 2])
+        batch = self.module.build_normalize_requests(imported, manifest)
+        self.assertIn(
+            {"deleteContentRange": {"range": {"startIndex": band["endIndex"] - 1, "endIndex": stray["endIndex"] - 1, "tabId": "t.0"}}},
+            batch["requests"],
+        )
+
+    def test_study_period_line_uses_italic_gray_dm_serif(self) -> None:
+        contract = self.module.load_contract()
+        self.assertEqual(
+            {key: contract["typography"]["study_period"][key] for key in ("font", "size_pt", "bold", "italic", "color", "named_style")},
+            {"font": "DM Serif Display", "size_pt": 16, "bold": True, "italic": True, "color": "#666666", "named_style": "NORMAL_TEXT"},
+        )
+        self.assertEqual(contract["spacing"]["study_period_space_below_pt"], 16)
+
+        manifest = self.rhythm_manifest()
+        doc = synthetic_document(self.module, manifest, imported=False)
+        element = self.module.find_paragraph(doc["tabs"][0]["documentTab"]["body"]["content"], "Study period: October 2026")
+        payload = self.module.build_format_requests(doc, manifest)
+        paragraph_style = self._requests_for(payload, element, "updateParagraphStyle")[0]["paragraphStyle"]
+        self.assertEqual(paragraph_style["namedStyleType"], "NORMAL_TEXT")
+        self.assertEqual(paragraph_style["spaceAbove"]["magnitude"], 0)
+        self.assertEqual(paragraph_style["spaceBelow"]["magnitude"], 16)
+        self.assertTrue(paragraph_style["keepWithNext"])
+        text_style = self._requests_for(payload, element, "updateTextStyle")[0]["textStyle"]
+        self.assertEqual(text_style["weightedFontFamily"]["fontFamily"], "DM Serif Display")
+        self.assertEqual(text_style["fontSize"]["magnitude"], 16)
+        self.assertTrue(text_style["bold"] and text_style["italic"])
+        self.assertEqual(text_style["foregroundColor"], self.module.hex_color("#666666"))
+
+        # The study title stays a plain paragraph, not a heading.
+        title = self.module.find_paragraph(doc["tabs"][0]["documentTab"]["body"]["content"], "Rhythm Study")
+        self.assertEqual(self._requests_for(payload, title, "updateParagraphStyle")[0]["paragraphStyle"]["namedStyleType"], "NORMAL_TEXT")
+
+        upright = formatted_document(self.module, manifest)
+        element = self.module.find_paragraph(upright["tabs"][0]["documentTab"]["body"]["content"], "Study period: October 2026")
+        for child in element["paragraph"]["elements"]:
+            child["textRun"]["textStyle"]["italic"] = False
+        with self.assertRaisesRegex(self.module.ContractError, "italic"):
+            self.module.verify_document(upright, manifest)
+
+        heading = formatted_document(self.module, manifest)
+        element = self.module.find_paragraph(heading["tabs"][0]["documentTab"]["body"]["content"], "Rhythm Study")
+        element["paragraph"]["paragraphStyle"]["namedStyleType"] = "HEADING_2"
+        with self.assertRaisesRegex(self.module.ContractError, "NORMAL_TEXT"):
+            self.module.verify_document(heading, manifest)
+
+    def test_lists_step_36pt_per_level(self) -> None:
+        contract = self.module.load_contract()
+        self.assertEqual(contract["spacing"]["list_indent_level_step_pt"], 36)
+        self.assertEqual(contract["lists"]["indent_start_pt_by_level"], [36, 72, 108])
+        self.assertEqual(contract["lists"]["indent_first_line_pt_by_level"], [18, 54, 90])
+
+        manifest = self.rhythm_manifest()
+        doc = synthetic_document(self.module, manifest, imported=False)
+        body = doc["tabs"][0]["documentTab"]["body"]["content"]
+        payload = self.module.build_format_requests(doc, manifest)
+        for text, indents in (
+            ('Revisit: "Let\'s go to the hub."', (36, 18)),
+            ('Probe: "What stands out?"', (72, 54)),
+            ('Probe: "What makes you say that?"', (108, 90)),
+        ):
+            element = self.module.find_paragraph(body, text)
+            final = self._requests_for(payload, element, "updateParagraphStyle")[-1]["paragraphStyle"]
+            self.assertEqual(
+                (final["indentStart"]["magnitude"], final["indentFirstLine"]["magnitude"]), indents, text
+            )
+
+        flattened = formatted_document(self.module, manifest)
+        element = self.module.find_paragraph(flattened["tabs"][0]["documentTab"]["body"]["content"], 'Probe: "What makes you say that?"')
+        element["paragraph"]["paragraphStyle"]["indentStart"] = {"magnitude": 72, "unit": "PT"}  # old 18pt step
+        element["paragraph"]["paragraphStyle"]["indentFirstLine"] = {"magnitude": 54, "unit": "PT"}
+        with self.assertRaisesRegex(self.module.ContractError, "indent"):
+            self.module.verify_document(flattened, manifest)
+
+    def test_topic_labels_are_italic_and_topic_lines_are_bold_body(self) -> None:
+        manifest = self.module.parse_markdown(output_template(PROTOTYPE_TEMPLATE))
+        objectives = next(s for s in manifest["sections"] if s["source_label"] == "Objectives & Research Questions")
+        topic = next(b for b in objectives["blocks"] if b["type"] == "prose" and b["inline"]["text"].startswith("Topic 1"))
+        self.assertEqual(topic["inline"]["bold"], [[0, len(topic["inline"]["text"])]])  # bold body line
+        self.assertFalse(any(b["type"] == "sub_phase" for b in objectives["blocks"]))    # never a heading
+        topic_list = objectives["blocks"][objectives["blocks"].index(topic) + 1]
+        labels = {}
+        for item in topic_list["items"]:
+            inline = item["inline"]
+            label = inline["text"].split(":", 1)[0] + ":"
+            labels[label] = inline
+            self.assertEqual(inline["italic"][0], [0, len(label)], label)
+            self.assertEqual(inline["bold"], [], label)
+        self.assertIn("Objective:", labels)
+        self.assertIn("Key Questions:", labels)
+
+        source = self.rhythm_manifest()
+        doc = synthetic_document(self.module, source, imported=False)
+        element = self.module.find_paragraph(doc["tabs"][0]["documentTab"]["body"]["content"], "Objective: Understand planning.")
+        payload = self.module.build_format_requests(doc, source)
+        text_styles = self._requests_for(payload, element, "updateTextStyle")
+        self.assertIn(
+            {"range": {"startIndex": element["startIndex"], "endIndex": element["startIndex"] + 10, "tabId": "t.0"},
+             "textStyle": {"italic": True}, "fields": "italic"},
+            text_styles,
+        )
+        self.assertFalse(any(style["textStyle"].get("bold") for style in text_styles))
+
+        bolded = formatted_document(self.module, source)
+        element = self.module.find_paragraph(bolded["tabs"][0]["documentTab"]["body"]["content"], "Objective: Understand planning.")
+        element["paragraph"]["elements"][0]["textRun"]["textStyle"]["bold"] = True
+        with self.assertRaisesRegex(self.module.ContractError, "bold"):
+            self.module.verify_document(bolded, source)
+
+    def test_checklist_items_are_disc_bullets_starting_with_a_box(self) -> None:
+        manifest = self.rhythm_manifest()
+        checklist = next(s for s in manifest["sections"] if s["band_label"] == "PRE-SESSION CHECKLIST")
+        block = checklist["blocks"][0]
+        self.assertFalse(block["ordered"])
+        self.assertTrue(all(item["inline"]["text"].startswith("☐ ") for item in block["items"]))
+        doc = synthetic_document(self.module, manifest, imported=False)
+        first = self.module.find_paragraph(doc["tabs"][0]["documentTab"]["body"]["content"], "☐ Participant validated")
+        payload = self.module.build_format_requests(doc, manifest)
+        preset = next(
+            request["createParagraphBullets"]["bulletPreset"]
+            for request in payload["requests"]
+            if "createParagraphBullets" in request
+            and request["createParagraphBullets"]["range"]["startIndex"] == first["startIndex"]
+        )
+        self.assertEqual(preset, "BULLET_DISC_CIRCLE_SQUARE")
+
+    def test_links_line_is_black_and_underlined(self) -> None:
+        manifest = self.rhythm_manifest()
+        links = next(item for item in manifest["top"]["items"] if item.get("role") == "links_line")
+        self.assertEqual(links["inline"]["bold"], [[0, 6]])  # "Links:"
+        self.assertEqual([link["url"] for link in links["inline"]["links"]], ["https://example.com/plan", "https://example.com/proto"])
+        doc = synthetic_document(self.module, manifest, imported=False)
+        element = self.module.find_paragraph(doc["tabs"][0]["documentTab"]["body"]["content"], "Links: Plan · Prototype")
+        payload = self.module.build_format_requests(doc, manifest)
+        link_styles = [r["textStyle"] for r in self._requests_for(payload, element, "updateTextStyle") if "link" in r["textStyle"]]
+        self.assertEqual(len(link_styles), 2)
+        for style in link_styles:
+            self.assertTrue(style["underline"])
+            self.assertEqual(style["foregroundColor"], self.module.hex_color("#000000"))
+
+        blue = formatted_document(self.module, manifest)
+        element = self.module.find_paragraph(blue["tabs"][0]["documentTab"]["body"]["content"], "Links: Plan · Prototype")
+        run = next(child for child in element["paragraph"]["elements"] if "link" in child["textRun"]["textStyle"])
+        run["textRun"]["textStyle"]["foregroundColor"] = self.module.hex_color("#1155CC")
+        with self.assertRaises(self.module.ContractError):
+            self.module.verify_document(blue, manifest)
+
+    def test_legacy_top_matter_lines_still_parse(self) -> None:
+        source = """# Moderation Guide
+
+## Legacy Study
+
+*[October 2026]*
+
+Last updated: October 2026
+
+## Wrap-Up
+
+- What questions do you have for me?
+"""
+        roles = [item.get("role") for item in self.module.parse_markdown(source)["top"]["items"]]
+        self.assertEqual(roles, ["phase_subtitle", "breadcrumb", "context_note"])
 
     def test_layout_tool_exposes_required_pipeline(self) -> None:
         for name in (

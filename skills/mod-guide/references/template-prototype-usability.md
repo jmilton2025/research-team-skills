@@ -50,7 +50,7 @@ Walk these blocks in order, each shown as a draft → approved → locked before
 **Pop-up rule:** Pop-ups only for the Phases (core blocks). Background & Warm-Up and Wrap-Up are auto-generated — no pop-up, no approval gate.
 
 1. **Objectives & Research Questions** — study-background paragraph, one bold sub-header per topic/feature, then the approved objective and key questions. Carry a hypothesis or Priority-1/Priority-2 label only when the source plan or researcher supplied it; never invent either. **Auto-generated — no pop-up.**
-2. **Session Flow** — simple phase list (Introduction → Background & Warm-Up → Phase 1 → Phase 2 → Phase 3 → Wrap-Up). No minute-by-minute breakdown. **Auto-generated — no pop-up.** *(Rendered as a table — one of the two tables a prototype guide keeps.)*
+2. **Session Flow** — a two-column `Phase | Description` table in session order (Introduction → Background & Warm-Up → Phase 1 → Phase 2 → Phase 3 → Wrap-Up). Each phase label ends with its approved minutes, e.g. `Introduction & Think-Aloud Setup (5 min)`, and the minutes sum to the session length; the description is one line on what happens. No minute-by-minute breakdown. **Auto-generated — no pop-up.** *(One of the two tables a prototype guide keeps.)*
 3. **Introduction & Think-Aloud Setup (read aloud)** *(no pop-up)* — a short **bold-label list** (`- **Cue:** "read-aloud line"`), NOT a table: welcome, what-we'll-do, think-aloud ("brain on speakerphone"), prototype/stimulus caveat, control, and a recording/observation consent line whenever either is planned. Auto-generated only from approved protocol language.
 4. **Background & Warm-Up** *(no pop-up)* — simple numbered questions (Q1, Q2, Q3), no table format, no "Probes to use" header. Observation cues in prose at end. Auto-generated from template.
 5. **Phases (the core)** — **one block per phase / stimulus** from the approved P5 list. Named Phase 1, Phase 2, Phase 3 — simple, consistent. Each uses one construct-matched bold-label shape: **usability phase** = Scenario → P8-gated First impression → Expectation → executable Task → Alignment → approved rating; **reaction-led concept phase** = Stimulus reveal → P8-gated 5-second First impression → required neutral recall/comprehension prompt → reaction/relevance/desirability prompts → comparison/fit when applicable. Add a task to a concept phase only when an approved objective/RQ/hypothesis measures observable behavior with the concept. Observation cues stay in prose below. **Pop-up for each phase.**
@@ -74,7 +74,7 @@ Every supplied objective, RQ, or hypothesis must map to a required **construct-m
 
 ## [Study Title — e.g. "Checkout Confirmation Usability Test"]
 
-*[Source-approved study period or TBD — fill in]*
+Study period: [Source-approved study period or TBD — fill in]
 
 - **Responsible:** [TBD — fill in] ([TBD — fill in])
 - **Accountable:** [TBD — fill in] ([TBD — fill in])
@@ -95,14 +95,14 @@ Every supplied objective, RQ, or hypothesis must map to a required **construct-m
 
 ## Session Flow
 
-| Phase | Time |
-|-------|------|
-| Introduction & Think-Aloud Setup | [X] min |
-| Background & Warm-Up | [X] min |
-| Phase 1 — [Stimulus A name / description] | [X] min |
-| Phase 2 — [Stimulus B name / description] | [X] min |
-| [Phase 3 — if applicable] | [X] min |
-| Wrap-Up | [X] min |
+| Phase | Description |
+|-------|-------------|
+| Introduction & Think-Aloud Setup ([X] min) | [Welcome, think-aloud, consent] |
+| Background & Warm-Up ([X] min) | [Recent-incident warm-up; device or screen-share setup] |
+| Phase 1 — [Stimulus A name] ([X] min) | [One line: what the participant sees or does] |
+| Phase 2 — [Stimulus B name] ([X] min) | [One line: what the participant sees or does] |
+| [Phase 3 — if applicable] ([X] min) | [One line: what the participant sees or does] |
+| Wrap-Up ([X] min) | [Closing reflection, participant questions, thanks] |
 
 ---
 
@@ -111,16 +111,17 @@ Every supplied objective, RQ, or hypothesis must map to a required **construct-m
 [Study-background / problem paragraph — what prompted this round.]
 
 **Topic 1 — [feature/flow]**
+
+- *Objective:* [the approved objective; start it with "Priority-1 —" or "Priority-2 —" only when the plan supplies priorities]
 - *Hypothesis (only when supplied/approved):* [what the plan states]
-- **[Priority-1 — only when supplied/approved]** [prioritized objective]
-- **[Priority-2 — only when supplied/approved]** [secondary objective]
 - *Key Questions:* [the questions this topic answers — NOT read aloud]
 
 **Topic 2 — [feature/flow]**
-- *Hypothesis:* …
-- **[Priority-1]** …
 
-*(Omit hypotheses and priority tags when the plan does not contain them. When used, tags are "Priority-1/-2", never "P0/P1" — participant IDs can use P1–P12.)*
+- *Objective:* …
+- *Key Questions:* …
+
+*(Omit hypotheses and priority tags when the plan does not contain them. When used, tags are "Priority-1/-2", never "P0/P1" — participant IDs can use P1–P12. Topic lines are bold body lines, not headings; the Objective and Key Questions labels are italic, not bold.)*
 
 ---
 
@@ -283,8 +284,8 @@ Every supplied objective, RQ, or hypothesis must map to a required **construct-m
 6. **Experimental design is stated in prose in the task-section header**, not in list items: between-/within-subjects, counterbalanced order, or a numbered counterbalance grid in arrow notation when order matters.
 7. **Behavior forks and moderator/WoZ triggers** are bracketed stage directions in prose outside the bold-label participant read/do list: `[If they remove the item]`, `[Fork 1 / Fork 2]`, `[Mod: trigger the prompt]`.
 8. **Ratings are reused verbatim across applicable phases for comparability.** Use SUS/SEQ only when the researcher explicitly selected it in Row P7; otherwise use one lightweight approved, construct-matched scale or no numeric rating.
-9. **Prototype references are inline links labeled `[PROTOTYPE]`**, with a top **Links row** containing only approved study/prototype links accessible to the guide's audience. Never add participant grids, schedules, biographies, or recording links. Reference screens by `[Screen N]` tags in screen order.
-10. **Timing is annotated in every section heading** and the two-column **Session Flow** agenda up top sums to the session length.
+9. **Prototype references are inline links labeled `[PROTOTYPE]`**, with a top-matter **Links line** (`**Links:** [Label](url) · [Label](url)`) containing only approved study/prototype links accessible to the guide's audience. Never add participant grids, schedules, biographies, or recording links. Reference screens by `[Screen N]` tags in screen order.
+10. **Timing is annotated in every section heading and in every Session Flow phase label** (`Phase 1 — [name] ([X] min)`); the Session Flow minutes sum to the session length.
 11. **Traceability is mandatory:** build an internal objective/RQ/hypothesis → phase/evidence-item crosswalk. Every supplied objective, RQ, or hypothesis maps to a required **construct-matched evidence-collection element**: completion, discoverability, navigation, and use → executable task plus observation cue; comprehension, reaction, recall, relevance, desirability, trust, preference, and comparison → required neutral prompt, plus a P8 first-impression prompt only at approved first exposures. Split mixed constructs. Never convert a reaction, recall, comprehension, or desirability hypothesis into an invented behavioral task. If no valid guide item can test the construct, flag a method mismatch and block coverage approval. Every guide item maps back to an approved objective, question, or hypothesis. Record any change to the plan as a proposed amendment. Include hypotheses and Priority-1/Priority-2 labels only when the source plan or researcher supplied them; never invent them. They live in Objectives, never in participant-facing lists.
 
 ---

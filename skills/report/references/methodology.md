@@ -178,7 +178,7 @@ Options for making qualitative findings scannable:
 - **Present tense for insights.** "Shoppers rely on the image as the brand signal."
 - **Imperative for recommendations.** "Move the badge."
 - **Never apologize for the method** in the findings section. Caveat once in methodology.
-- **Numbers with denominator.** "7 of 10" not "70%" when n is small. Common qualitative-research guidance (NNG-aligned, exact threshold not independently verified — treat "n<20" as a reasonable working rule, not a citable NNG statistic): avoid percentages for small qualitative samples, use denominators instead.
+- **Count first, then percentage.** "7 of 10 (70%)", never a bare "70%"; n≤4 stays count-only. NN/g warns that a bare percentage from a small qualitative sample reads as more precise than it is; keeping the count beside it shows the denominator.
 
 ---
 
@@ -206,3 +206,23 @@ Before shipping any finding, insight, or recommendation, apply the So-What Test:
 - **Recommendation:** "Move the brand badge." → *So what happens if we don't?* → Forces the business-impact framing in the BLUF.
 
 If any row fails the So-What Test, it is not ready to ship in the readout. It either gets sharper or gets cut.
+
+---
+
+## 12. Patterns adopted from the 2026-10 market comparison
+
+| Pattern | Rule in `/report` | Source |
+|---|---|---|
+| Claim headings | Headings a reader could disagree with; no topic labels or truisms. | tyroneross `pyramid-principle` skill (slide-headline rules); Great Question *Theme quality auditor*; rampstackco `discovery-research-synthesis` |
+| Answer the plan | Each research question gets an answer status, each hypothesis a verdict, and the decision readout uses the plan's terms. | Koji report template (hypotheses in Background); rampstackco *writing for decisions, not decks* |
+| Confidence → wording | High stated directly; Medium attributed; Low only as a limitation; Unverified excluded. | tyroneross `pyramid-source-integrity` skill |
+| Evaluative and causal words are claims | "significant", "most", "because" need evidence. | tyroneross `pyramid-source-integrity` skill |
+| Order by decision impact | Not by guide or session order. | Versive, *Build a research report*; Dovetail report prompt guide |
+| Small-n numbers | Count first, then percentage ("1 of 6 (17%)"); individual values rather than averages. Team rule: percentages always sit next to their count. | NN/g, *Quantitative Metrics in Qualitative Studies* |
+| Don't-act recommendations | A pattern can justify not acting; a recommendation wishlist isn't synthesis. | rampstackco `discovery-research-synthesis` |
+| Evaluative studies may stop at findings | Don't manufacture insights for evaluative questions. | AnswerLab, *What are research insights?* |
+| Decision test | Three months on, can the team name the decision the report informed? | rampstackco `discovery-research-synthesis` |
+| Insight tracking | Actionable insights tracked to closure with a reason. | GitLab handbook, *Research insights* |
+| Impact log | Count actions, not praise. | Sprig, *A framework for demonstrating research impact* |
+
+Only about 17% of usability recommendations from professional teams were both useful and usable in Molich, Jeffries & Dumas (2007); the owner, priority, specificity, and trace rules exist to beat that base rate.

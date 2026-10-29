@@ -71,6 +71,10 @@ The skill must work for any researcher with a write-capable Google Docs integrat
 
 ## Interaction contract
 
+### Review surface — HTML review page first
+
+When the Artifact tool is available, show drafts on the **editable HTML review page** in [`../../references/review-page/README.md`](../../references/review-page/README.md) instead of pop-ups. Build it with that folder's `review_page.py`, publish it with `capabilities: {"artifact": {}, "sample": {}}`, and republish the same file for each section (Section 1 parameters in batches, Section 2 content blocks, Section 3 change approval and panel choice), so the researcher keeps one link. Each parameter row or content block becomes one page item, with its step label unchanged. List-shaped rows (Background, Existing insights, Hypotheses, objectives, questions, guide blocks, findings, recommendations) are **bullet checklists**: present every proposed bullet first, with its source, then let the researcher keep, edit, remove, or add bullets (Select all / Clear all) and click **Accept selected**, or **Brainstorm with me** to work the card with a senior researcher on the page. Then they click **Send to Claude** and say **done** in chat. Read the page back and apply every decision under the same approval rules this skill sets for pop-ups: an edit is still checked against the content rules, and a missing decision is never approval. Quick yes/no confirmations may stay as pop-ups. When the Artifact tool isn't available, use the pop-ups below. Say which surface the run is using right after intake.
+
 Use native `AskUserQuestion` checklist pop-ups when available.
 
 - Ask one decision per pop-up. (Section 1's upfront setup may still batch up to 4 of these decisions per `AskUserQuestion` call — each decision is still labeled and answered individually within the batch.)
@@ -78,7 +82,7 @@ Use native `AskUserQuestion` checklist pop-ups when available.
 - Number the options. Mark a **Recommended** option based on the inputs and discovered evidence — it is the source-grounded choice prepared internally in Step 2.
 - Preserve the built-in **Other / comments** field so researchers can add, correct, or rewrite (including custom durations, participant counts, or a Drive folder URL).
 - Show the proposed content before asking for approval.
-- **The last option in every pop-up must be "Brainstorm with me"** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. Never bury it mid-list. The one exception is the yes/no **Google Docs write route** approval in Section 1.
+- **The last option in every pop-up must be "Brainstorm with me"** — this opens a short chat exchange on that specific item, then re-shows the revised draft for approval before advancing. In that exchange, talk like a **senior UX researcher brainstorming with a colleague**: lead with a point of view, offer 2–4 concrete ideas with their tradeoffs, ask 1–2 sharp questions, and name one risk to watch, grounded only in the run's sources ([`../../references/review-page/README.md`](../../references/review-page/README.md) § Brainstorm with me). Never bury it mid-list. The one exception is the yes/no **Google Docs write route** approval in Section 1.
 - Label every pop-up with its section and step: **"Section 1 > Step 3 of 10: Duration"** / **"Section 2 > Step 2 of 5: Core — Task Flow"**. The researcher must always know exactly where they are.
 - Native `AskUserQuestion` allows **at most 4 questions per call and 4 options per question**, including "Brainstorm with me," and cannot pre-select. Therefore each question has one Recommended option, at most two alternatives, then "Brainstorm with me." For more than three drafted items, use a single "Accept the drafted set" option plus revise/add alternatives; never drop items or imply they were pre-selected. Keep dependent rows in separate batches and order them after their prerequisites.
 - Do not advance until the current item is approved, unless the researcher explicitly requests the whole-draft approval override in Step 4.
@@ -116,7 +120,7 @@ Continue with the source-authorization gate and the request for inputs while the
 
 Before opening or using non-public material, apply `references/source-and-delivery-safety.md`: confirm the researcher's authority and approved AI processing, source audience, minimum necessary content, and redaction. Do not request participant-level data. Pasting or attaching content does not establish the requester's authority or approved AI-processing status; apply the same gate before using pasted non-public material.
 
-Ask the researcher to paste or share the de-identified study inputs. Say:
+This skill works standalone; many researchers come here without a research plan. Ask once whether a plan exists. If it does, it is the primary input, and its approved RACI, hypotheses, and decision terms carry forward unchanged ([`../../references/skill-handoffs.md`](../../references/skill-handoffs.md)). If it doesn't, continue from the brief, PRD, notes, or description without asking again. Ask the researcher to paste or share the de-identified study inputs. Say:
 
 > "To build your moderation guide, share the de-identified study plan, brief, approved notes, or a plain-English description. Please leave out participant names, contact details, schedules, and recording links. **For a usability/prototype test, include the approved prototype link or a description of the flows.** I'll extract the parameters, recommend the guide format, and build from there."
 
@@ -259,6 +263,7 @@ The **Select** column says whether the pop-up is `multiSelect: true` (more than 
 
 **Row 9 (Stakeholders): Ask the researcher for the RACI instead of looking people up.** The researcher knows who is on the study today, so asking is faster and more accurate than a search. Pre-fill a role only with a name the researcher has given in this run: in the plan, brief, or notes they shared, or in their answers so far. Don't run a people or directory search, and don't carry names over from memory or older project files.
 
+0. **Pull every stakeholder from the supplied docs.** Before asking, extract every person the plan, brief, PRD, or notes name, including the research plan's approved RACI when one exists. Map each to the RACI role their source implies, and note where you found them (`from plan`). Capture as many names as the sources give. Mark the main DRI with `(DRI)` after their name; this is usually the Responsible researcher unless a source names someone else. Show the pre-filled RACI in chat so the researcher can confirm, add, edit, or move anyone.
 1. **Key people first.** If any of the four roles has no name yet, ask for it in chat before the Section 1 batch that holds Row 9, one name per role: Responsible (usually the researcher), Accountable (the decision owner), Consulted, and Informed. For Responsible and Accountable, also ask for each person's role.
 2. **Confirm once.** Show the complete RACI in chat, then ask Row 9 with the options **"Confirm as shown (Recommended)"**, **"Add more people"**, and **"Brainstorm with me"**. Corrections go in the comments field.
 3. **Then offer more people.** If the researcher picks "Add more people," collect the extra names and roles in chat (a role can hold more than one name), then show the updated RACI in chat and ask them to reply **confirm** or correct it. This finishes the same Row 9 approval; don't show the pop-up again.
@@ -354,7 +359,7 @@ Every content pop-up must be labeled with its section and step (e.g. **"Section 
 
 **If the format is Prototype/Usability** (`references/template-prototype-usability.md`):
 1. **Objectives & Research Questions** — preserve supplied hypotheses and priority labels; never invent them. Keep them separate from the script. **No pop-up — source-grounded.**
-2. **Session Flow** — a Phase/Time table whose minutes sum to the approved duration; no counterbalance grid here. **Auto-generated.**
+2. **Session Flow** — a `Phase | Description` table; each phase label ends with its approved minutes (e.g. `Introduction & Think-Aloud Setup (5 min)`) and the minutes sum to the approved duration; no counterbalance grid here. **Auto-generated.**
 3. **Background & Warm-Up** *(no pop-up, no approval gate)* — simple numbered questions (Q1, Q2, Q3), no table format, no "Probes to use:" header. Observation cues at the end. Auto-generated from template.
 4. **Phases (the core)** — **one block per phase / stimulus** from the approved Row-7 list, using the shape that matches the approved construct. A **usability phase** uses Scenario → P8-gated First impression → Expectation → executable Task → Alignment → approved rating. A **reaction-led concept phase** uses Stimulus reveal → P8-gated 5-second First impression → required neutral recall/comprehension prompt → reaction/relevance/desirability prompts → comparison/fit when applicable. Add a task to a concept phase only when an approved objective, RQ, or hypothesis measures observable behavior with the concept. Observation cues and probes stay in prose outside the bold-label list. **Pop-up for each phase.** Concept P8 = Task-only is invalid when an approved objective or hypothesis measures initial recall, comprehension, reaction, or desirability. Usability P8 = Task-only is invalid only when an approved objective or hypothesis measures unaided initial comprehension or reaction. When it is valid, P8 = Task-only means omit every First impression item and leave no placeholder. Never convert a reaction, recall, comprehension, or desirability hypothesis into an invented behavioral task.
 5. **Wrap-Up** *(no pop-up, no approval gate)* — standard three-question close plus a thank-you: one reflection, one open catch-all, and participant questions. Auto-generated.
@@ -390,7 +395,7 @@ Apply the approved parameters and blocks using the selected OUTPUT TEMPLATE. Int
 
 Both guide types wrap the **same spine** — header, ownership, parameter table, Pre-Session Checklist, and Post-Session Debrief. Insert exactly one approved consent pass from the selected template.
 
-**The document header is always "Moderation Guide."** Both formats use `# Moderation Guide` as the document title, followed by `## [Study Title]` and `*[Source-approved study period or TBD — fill in]*`. Do not use "UX Research | Research Plan | Q3/Q4 2026" or any breadcrumb format — the doc type is always "Moderation Guide." The ownership block is standardized as full RACI on both.
+**The document header is always "Moderation Guide."** Both formats use `# Moderation Guide` as the document title, followed by `## [Study Title]`, a `Study period: [Source-approved study period or TBD — fill in]` line, the RACI bullets, an optional `**Links:**` line, and the parameter table, in that order. Do not use "UX Research | Research Plan | Q3/Q4 2026" or any breadcrumb format — the doc type is always "Moderation Guide." The ownership block is standardized as full RACI on both.
 
 Populate each RACI field only from the approved Row 9 assignment. For Responsible and Accountable, the first placeholder is the person's name and the parenthetical placeholder is that person's role; fill each one separately from what the researcher gave. Never infer a role from a supplied name, and leave either unknown as the exact `[TBD — fill in]` placeholder.
 
@@ -403,14 +408,16 @@ Populate each RACI field only from the approved Row 9 assignment. For Responsibl
 
 ## [Study Title — derived from research goal]
 
-*[Source-approved study period or TBD — fill in]*
+Study period: [Source-approved study period or TBD — fill in]
 
 - **Responsible:** [TBD — fill in] ([TBD — fill in])
 - **Accountable:** [TBD — fill in] ([TBD — fill in])
 - **Consulted:** [TBD — fill in]
 - **Informed:** [TBD — fill in]
 
-[Prototype only — a Links row containing only audience-approved study/prototype links; never participant grids, schedules, biographies, or recording links]
+**Links:** [Approved link](URL) · [Approved link](URL)
+
+[The Links line is optional on both formats; omit it when there are no links. It holds only audience-approved study/prototype links, never participant grids, schedules, biographies, or recording links.]
 
 | Parameter | Detail |
 |-----------|--------|
@@ -473,7 +480,7 @@ The shared scaffolding above wraps this body identically for both formats.
 
 #### Visual
 
-**Default — Option 4 — Leadership:** use `scripts/option4_guide_layout.py` and `references/option4-guide-style.json`: landscape-letter export metadata, DM Serif Display/DM Sans, dark-green H2 bands, native lists, and aligned tables. Verify before delivery.
+**Default — Option 4 — Leadership:** use `scripts/option4_guide_layout.py` and `references/option4-guide-style.json`: landscape-letter export metadata, DM Serif Display/DM Sans, the title / study title / italic study period top matter, dark-green H2 bands, native lists at a 36pt step, aligned tables, and one empty spacer paragraph between block groups. Verify before delivery.
 
 **Plain-native fallback / explicit choice:** native Title/Heading/body styles and native tables only. Disclose that Option 4 was not applied.
 
@@ -499,6 +506,12 @@ Run the bundled formatter in place; its visual contract resolves package-relativ
 11. **Capture-verbatim flags** go in prose above the relevant block.
 12. **Traceability.** Every objective/RQ/supplied hypothesis maps to a guide block and, for prototype studies, to the required construct-matched evidence-collection element defined in Step 2d. Never invent a task solely to make the crosswalk look complete.
 13. **Protocol fidelity.** Never invent recording, observation, privacy, retention, deletion, clip-sharing, anonymity, or incentive commitments.
+14. **Tier for time.** Mark each core question or task as must-have or nice-to-have in a prose moderator note above it (`*Nice-to-have — skip if behind time.*`); must-haves carry no marker. Put must-haves early in each block, and the most important task or theme early in the session, so a long-running participant doesn't push them off the end. When time runs short, cut probes first, then nice-to-haves, never a must-have. Aim for about 4–6 must-have core questions per 60 minutes of interview; more than that means the rest are nice-to-haves (Great Question; GitLab handbook).
+15. **Write core lines word for word; write probes as conditions.** Several moderators may share a guide, so the read-aloud line is exact. Probes name the trigger: `If they haven't mentioned [priority topic], ask: "…"` or `If they say "[vague word]", ask: "What do you mean by [word]?"` — not "probe for detail."
+16. **Keep recall recent.** Anchor past-behavior questions to roughly the last two months unless the approved construct needs a longer window; older memories are reconstructed (GitLab handbook).
+17. **Don't spend session time on what the screener or analytics already answered.** Warm-up builds rapport and calibrates vocabulary; it is not data collection in disguise ("How long have you used the app?" is screener data). Remove any question whose answer is already in the approved screener or plan.
+18. **Prototype tasks carry a moderator-only expected path.** Under each task, a prose line (never read aloud) states what success looks like and the expected path, so the moderator can score the task and rescue a participant who fails a prerequisite task (GitLab handbook). Before a task, ask how the participant would normally do it and reuse their words in the task line when the approved wording allows it.
+19. **Lint every task against NN/g's task mistakes:** no interface words, no revealed steps, no bundled tasks ("sign up, create a list, and share it" is three tasks), no role-play the participant can't inhabit, no emotional triggers or jokes, no stale dates, and no "How would you…" talk-instead-of-do phrasing. Specific is not leading: give the details the participant needs to act (NN/g, *Better Usability Tasks*).
 
 ---
 
@@ -592,6 +605,9 @@ Before declaring this part passed, build an audit-only inventory of every partic
 | **Past-behavior anchoring** | [Interview] | Interview Core questions tied to a concrete, recent incident — not "typically"/"in general." *Do NOT apply to prototype task rows* (they are present-tense observed actions by design — check instead that the task's **scenario** grounds a realistic situation). (AIxUXR §Prompt A.4; NN/g CIT) |
 | **Construct-matched phase framing** | [Prototype] | Usability tasks describe the goal, not the interface ("find a way to add these items", never "click the green Add button") and carry a scenario. Concept prompts measure the approved reaction/comprehension/relevance construct without inventing a task. P8 follows the subtype-aware gate. (AIxUXR §Use Cases 2–3) |
 | **Inclusivity & cultural assumptions** | [Both] | Questions don't assume a household structure, income level, cooking frequency, dietary pattern, or tech proficiency. (AIxUXR §RAI "Equity and Fairness") |
+| **Opposite-answer test** | [Both] | Read each question aloud: could a reasonable participant give the opposite answer without feeling corrected? If not, it's leading. Balanced pairs ("How easy or difficult…") and "if at all" suffixes fix most failures. Questions that put blame on the participant ("Why couldn't you find…?") also fail. (Great Question; NN/g *Leading Questions*) |
+| **Closed frequency framing** | [Interview] | "How often…" and "How many…" are closed questions too. Replace them with the neutral incident gate, or move frequency to the screener. (Teresa Torres, *Story-Based Customer Interviews*) |
+| **Task wording lint** | [Prototype] | Each task passes Rule 19: one action, no UI words or revealed steps, no role-play, no emotional triggers, current dates, enough specifics to act. |
 
 ### Part 3 — Probing & Moderator Guidance Audit
 
@@ -604,6 +620,8 @@ Before declaring this part passed, build an audit-only inventory of every partic
 | **Task framing: goal not UI** | [Prototype] | Tasks describe the goal, not the UI ("find a way to…" not "click the red button"). (AIxUXR §Use Case 2 Critical Rule) |
 | **Priming → Expectation → Action → Alignment** | [Prototype] | Each task includes the four-part sequence (set context → what do you expect → do it → did it match?). (AIxUXR §Use Case 4; NN/g) |
 | **Problem validation before reveal** | [Prototype — concept only] | Blind-need questions precede the concept reveal to avoid biasing desirability. (AIxUXR §Use Case 3 "The Reveal technique") |
+| **Expected path noted** | [Prototype] | Every task has a moderator-only expected-path / success line in prose (Rule 18), never inside the read-aloud list. |
+| **Priority tiering** | [Both] | Must-haves are unmarked and placed early; nice-to-haves carry the skip marker (Rule 14); the cut order is probes → nice-to-haves. |
 
 ### Part 4 — Strategic & Efficiency Audit
 
@@ -611,6 +629,8 @@ Before declaring this part passed, build an audit-only inventory of every partic
 |-------|----------------|
 | **Coverage of research objectives** | Every objective/RQ/hypothesis maps to at least one required Core question, prompt, comparison, or executable task appropriate to its construct. No orphan objective, no orphan evidence-producing guide item, and no task invented to satisfy traceability. |
 | **Source-grounding check** | Walk every claim against the source plan: preserve denominators, hedges, surfaces, dates, sample, and method. A talk-only guide cannot inherit a prototype plan's hypotheses or session dates as though it tested the artifact. |
+| **Two-way coverage** | Orphan questions (mapping to no objective, RQ, or hypothesis) are cut; uncovered objectives get a question. (Lyssna/Ronsen; NN/g *Writing an Effective Guide*) |
+| **Session load** | Must-have content fits the approved duration with the format's Core share; an interview over ~4–6 must-have core questions per 60 minutes is re-tiered, not rushed. |
 | **Redundancy check** | Scan for questions that probe the same underlying construct twice. Consolidate to save session time. (AIxUXR §V2 Prompt B Part 4 "Redundancy & Efficiency Report") |
 | **Gaps / additional questions** | Are there adjacent insights the guide misses? Suggest 1-3 generative additions tied to objectives. (AIxUXR §V2 Prompt B Part 3) |
 | **Scope discipline** | Critique stays methodological/strategic. Do NOT suggest UI copy changes, design decisions, or product strategy. (AIxUXR §V2 Prompt B role: "NOT a UI/UX copywriter") |
@@ -681,6 +701,7 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 2. State verification status: content/crosswalk checked, links checked, parent and permissions checked, style verifier result, and render inspected—plus any explicit limitation or fallback.
 3. **Only after the link is shared** is the skill allowed to respond to follow-up questions or correction requests from the researcher.
 4. Do not update project trackers or progress files unless the researcher separately asks. Never update them for a demo/mock or for non-study personal content.
+5. End with one line offering the next step from [`../../references/skill-handoffs.md`](../../references/skill-handoffs.md): after fieldwork, `/analysis` takes the de-identified sessions plus this guide and the plan. The guide's must-haves and expected paths seed the analysis. Don't start it unless asked.
 
 ---
 
@@ -696,7 +717,7 @@ Status updates are welcome (a one-line "Creating the doc… Applying [style]…"
 - **references/template-prototype-usability.md** — **load in Section 1 when the format is Prototype/Usability.** Holds the prototype Section 1 params, Section 2 blocks, OUTPUT TEMPLATE, and generation rules.
 - **references/template-interview.md** — **load in Section 1 when the format is Interview.** Holds the interview Section 1 params, Section 2 blocks, OUTPUT TEMPLATE, and generation rules. (Only the format-neutral shared scaffolding is inline in Step 4; the interview body template lives here.)
 - **references/source-and-delivery-safety.md** — load before non-public source access, reviewer handoff, or any Google Doc creation.
-- **references/mod-guide-methodology.md** — load on demand for probes/bias, and automatically for concept tests, diary check-ins, and focus groups.
+- **references/mod-guide-methodology.md** — load on demand for probes/bias, and automatically for concept tests, diary check-ins, and focus groups. §7–9 hold the session recovery playbook, observer/note-taker brief, and pilot, calibration, and mid-study-change rules: point to them in the Step 6 summary as moderator prep, and never paste them into the guide itself.
 
 ---
 

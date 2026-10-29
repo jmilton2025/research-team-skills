@@ -362,7 +362,7 @@ Each step UP the ladder increases abstraction and interpretation. Each step must
 |------|------------|---------|
 | **Raw data** | Verbatim quote or observed behavior | *"I saw the $27 total and just closed the tab."* — P07 |
 | **Observation** | Factual summary of what was heard/seen, close to participant language | P07 abandoned checkout when seeing higher-than-expected total |
-| **Pattern** | Observation repeated across participants | 8 of 14 participants (57%) abandoned at least one session citing total cost surprise |
+| **Pattern** | Observation repeated across participants | 8 of 14 participants (57%; P01, P03, P04, P07, P08, P10, P12, P13) abandoned at least one session citing total cost surprise |
 | **Insight** | Interpretive claim about what the pattern MEANS | Sticker shock at checkout reflects a breakdown in trust — participants feel deceived rather than inconvenienced |
 | **Recommendation** | Actionable ask grounded in insight | Show estimated total (including fees + tip range) on cart screen, BEFORE checkout. Owner: Checkout PM. Target: Q3. Measure: cart abandonment rate |
 
@@ -383,7 +383,12 @@ Each step UP the ladder increases abstraction and interpretation. Each step must
 | **Themes as buckets / topic summaries** (Thematic) | Per Braun & Clarke, #1 pitfall in reflexive TA. "Pricing" is a topic, not a pattern of shared meaning. | Every theme must have a **central organizing concept** expressible in one sentence. If you can't write that sentence, you have a topic, not a theme. |
 | **"Themes emerged from the data"** (Thematic) | Per Braun & Clarke 2022, this language hides the analyst's interpretive work and is epistemologically incoherent in reflexive TA. | Use active, reflexive language: "I developed...", "I constructed...", "I generated from codes X, Y, Z..." |
 | **Quote cherry-picking** | Confirmation bias. Selecting only quotes that support your theme while ignoring disconfirming evidence. | Actively seek quotes that complicate or contradict each theme. Report them under "Contradictions / boundary cases." |
-| **Prevalence inflation** | "Most participants..." when actually 6 of 14. | Always report exact numbers: "6 of 14 (43%)". Use ~1/3 as minimum pattern threshold per Anderson. |
+| **Prevalence inflation** | "Most participants..." when actually 6 of 14. | Always report the exact count first, then the percentage, with the supporting participant IDs: "6 of 14 (43%; P02, P05, …)". This is the same number format `/report` uses. n=1 memos and n=2–4 pilot signals stay count-only. Use ~1/3 as minimum pattern threshold per Anderson, but prevalence isn't importance: a brief mention by many can matter less than a detailed account from a few, and harm-relevant evidence is surfaced regardless. |
+| **Moderator speech coded as evidence** (all) | The moderator's framing ends up quoted as what participants think — the largest LLM error source in Hill et al. (2025). | Tag moderator turns as elicitation context before coding; the Gate 1 speaker-separation check catches leaks. |
+| **Front-loaded patterns** (Affinity, Thematic) | Clusters built from the first one or two transcripts, with later ones fitted in retroactively. | Read everything before clustering; check that every participant appears in the output (Gate 1 participant coverage); batch large corpora. |
+| **Guide-mirroring themes** (Thematic) | One theme per discussion-guide question. | Themes must cut across questions; rebuild from codes, not from the guide's headings. |
+| **Truism patterns** (all) | "Users want it to be fast." | If anyone could have written the pattern before the research, it isn't a finding. Sharpen it to the specific moment and cause, or drop it. |
+| **Premature merging** (Tagging, Affinity) | Tags collapsed early to hit a target count. | Let granular tags proliferate first (80–150 is normal for a batch); merge only in the clustering pass. Merged tags can't be unmerged. |
 | **Tag proliferation** (Tagging) | 150 tags, most used 1-2 times. Makes analysis impossible. | Cap at 40 tags. Merge rare tags. Use hierarchy for granularity. |
 | **Codebook without exclusion criteria** (Tagging) | Coders disagree because tags are ambiguous. | Every tag needs explicit inclusion AND exclusion criteria. If you can't write them, the tag is too vague. |
 | **Skipping familiarization** (all) | Jumping to coding on first read anchors to early data. Misses cross-corpus patterns. | Read everything twice before coding anything. Take familiarization notes separately. |
@@ -417,3 +422,14 @@ Timeline                                Recommended mode
 1-2 weeks                               Thematic or Tagging
 Multi-week, publishable                 Thematic (reflexive, rigorous)
 ```
+
+---
+
+## 7. Sources added in the 2026-10 market comparison
+
+- Hill et al. (2025). Blinded comparison of LLM and human qualitative analysis of a healthcare focus group. *medRxiv.* https://www.medrxiv.org/content/10.64898/2025.12.25.25343031.full.pdf. Key results: strict hallucination 1.2%, comprehensive error 12.4% (mostly moderator speech coded as participant data); LLMs matched humans when applying a predefined codebook but varied on inductive theme generation; Gwet's AC1 0.93 vs. κ 0.34 under low code prevalence.
+- GoTranscript. *AI qual research QA checklist.* https://gotranscript.com/en/blog/ai-qual-research-qa-checklist-prevent-hallucinations-misattribution
+- Braun & Clarke thematic-analysis skill (keemanxp), via https://github.com/brycewang-stanford/auto-empirical-research-skills: research-question-first rule, guide-mirroring and "cover the extracts" pitfalls.
+- rampstackco `discovery-research-synthesis` skill: "But consider" blocks, not-act implications, truism test, tag proliferation before merging. https://github.com/rampstackco/claude-skills
+- owl-listener `affinity-diagram` and `qual-quant-triangulation` skills: participant-coverage guard, single-source flagging. https://github.com/owl-listener/designer-skills
+- Enterpret. *How to build a user-research Claude skill for PMs* (`[QUOTE NEEDED]` placeholder; back-testing on a past study). https://www.enterpret.com/blog/how-to-build-a-user-research-claude-skill-for-pms
