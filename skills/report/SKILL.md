@@ -94,6 +94,10 @@ Markdown is a valid final deliverable — unlike a research plan, this skill doe
 
 ## Interaction contract
 
+### Review surface — HTML review page first
+
+When the Artifact tool is available, show drafts on the **editable HTML review page** in [`../../references/review-page/README.md`](../../references/review-page/README.md) instead of pop-ups. Build it with that folder's `review_page.py`, publish it with `capabilities: {"artifact": {}}`, and republish the same file for each section (Section 1 — Setup & Framing through Section 4 — Recommendations & Business Case), so the researcher keeps one link. Each finding, insight, recommendation, or setup decision becomes one page item, with its step label unchanged. The researcher edits text inline, marks each item Accept / Edit / Brainstorm with me, and clicks **Send to Claude**, then says **done** in chat. Read the page back and apply every decision under the same approval rules this skill sets for pop-ups: an edit is still checked against the content rules, and a missing decision is never approval. Quick yes/no confirmations may stay as pop-ups. When the Artifact tool isn't available, use the pop-ups below. Say which surface the run is using right after intake.
+
 Use native `AskUserQuestion` checklist pop-ups when available.
 
 - Ask one decision per pop-up.
@@ -155,7 +159,7 @@ Ask the researcher for the raw material. Accept any format: Google Doc URL, past
 
 **Q4 — Source material and the plan**
 - Best input: the approved `/analysis` output (evidence ledger, confidence ratings, plan crosswalk). Otherwise the researcher can paste analysis notes, affinity clusters, themes, or quotes, or link a Google Doc.
-- Ask for the research plan too, when one exists. Its key research questions, hypotheses, and decision-outcome terms (e.g. go / narrow / no-go) are what the report must answer, in the plan's exact words.
+- Ask once whether a research plan exists; many reports have none, and the skill works standalone. When one exists, its key research questions, hypotheses, and decision-outcome terms (e.g. go / narrow / no-go) are what the report must answer, in the plan's exact words.
 - If Google Doc URL: read via Glean (`mcp__glean__read_document`) or the `google-docs:fetch-google-doc` skill
 - If both read paths fail or aren't available in this session, don't block — ask the researcher to paste the relevant content directly instead
 

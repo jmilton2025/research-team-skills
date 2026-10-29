@@ -64,6 +64,10 @@ Load `references/research-plan-methodology.md` when method choice is disputed, s
 
 ## Interaction contract
 
+### Review surface — HTML review page first
+
+When the Artifact tool is available, show drafts on the **editable HTML review page** in [`../../references/review-page/README.md`](../../references/review-page/README.md) instead of pop-ups. Build it with that folder's `review_page.py`, publish it with `capabilities: {"artifact": {}}`, and republish the same file for each section (Section 1 — Context & Foundation, Section 2 — Research Design, Section 3 — Outputs), plus the gates between them (decision audit, method direction, Drive destination, review permission), so the researcher keeps one link. Each step or gate becomes one page item, with its step label unchanged. The researcher edits text inline, marks each item Accept / Edit / Brainstorm with me, and clicks **Send to Claude**, then says **done** in chat. Read the page back and apply every decision under the same approval rules this skill sets for pop-ups: an edit is still checked against the content rules, and a missing decision is never approval. Quick yes/no confirmations may stay as pop-ups. When the Artifact tool isn't available, use the pop-ups below. Say which surface the run is using right after intake.
+
 Use native `AskUserQuestion` checklist pop-ups when available, within the tool's limits:
 
 - Ask one decision per pop-up.

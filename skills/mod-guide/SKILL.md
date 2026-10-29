@@ -71,6 +71,10 @@ The skill must work for any researcher with a write-capable Google Docs integrat
 
 ## Interaction contract
 
+### Review surface — HTML review page first
+
+When the Artifact tool is available, show drafts on the **editable HTML review page** in [`../../references/review-page/README.md`](../../references/review-page/README.md) instead of pop-ups. Build it with that folder's `review_page.py`, publish it with `capabilities: {"artifact": {}}`, and republish the same file for each section (Section 1 parameters in batches, Section 2 content blocks, Section 3 change approval and panel choice), so the researcher keeps one link. Each parameter row or content block becomes one page item, with its step label unchanged. The researcher edits text inline, marks each item Accept / Edit / Brainstorm with me, and clicks **Send to Claude**, then says **done** in chat. Read the page back and apply every decision under the same approval rules this skill sets for pop-ups: an edit is still checked against the content rules, and a missing decision is never approval. Quick yes/no confirmations may stay as pop-ups. When the Artifact tool isn't available, use the pop-ups below. Say which surface the run is using right after intake.
+
 Use native `AskUserQuestion` checklist pop-ups when available.
 
 - Ask one decision per pop-up. (Section 1's upfront setup may still batch up to 4 of these decisions per `AskUserQuestion` call — each decision is still labeled and answered individually within the batch.)
@@ -116,7 +120,7 @@ Continue with the source-authorization gate and the request for inputs while the
 
 Before opening or using non-public material, apply `references/source-and-delivery-safety.md`: confirm the researcher's authority and approved AI processing, source audience, minimum necessary content, and redaction. Do not request participant-level data. Pasting or attaching content does not establish the requester's authority or approved AI-processing status; apply the same gate before using pasted non-public material.
 
-If a `/research-plan` output exists, ask for it first. It is the primary input, and its approved RACI, hypotheses, and decision terms carry forward unchanged ([`../../references/skill-handoffs.md`](../../references/skill-handoffs.md)). Ask the researcher to paste or share the de-identified study inputs. Say:
+This skill works standalone; many researchers come here without a research plan. Ask once whether a plan exists. If it does, it is the primary input, and its approved RACI, hypotheses, and decision terms carry forward unchanged ([`../../references/skill-handoffs.md`](../../references/skill-handoffs.md)). If it doesn't, continue from the brief, PRD, notes, or description without asking again. Ask the researcher to paste or share the de-identified study inputs. Say:
 
 > "To build your moderation guide, share the de-identified study plan, brief, approved notes, or a plain-English description. Please leave out participant names, contact details, schedules, and recording links. **For a usability/prototype test, include the approved prototype link or a description of the flows.** I'll extract the parameters, recommend the guide format, and build from there."
 

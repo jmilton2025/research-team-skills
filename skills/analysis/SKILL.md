@@ -120,6 +120,8 @@ Before substantive analysis, show one compact proposal containing:
 
 Ask the researcher to approve or revise the proposal. For **n=1–4**, consolidate these decisions into one pre-analysis approval by default and plan one approval of the QA-checked draft. Offer unit-by-unit review when the researcher wants it or when risk and ambiguity make it useful. For larger studies, grouped or unit-by-unit approval is appropriate; a researcher may request one whole-draft review.
 
+**Review surface.** When the Artifact tool is available, put the framing proposal, and later the QA-checked draft claims, on the editable HTML review page in [`../../references/review-page/README.md`](../../references/review-page/README.md): one page per run, republished for each approval. Each claim becomes one item, with its evidence IDs and confidence in the draft text. Put only de-identified evidence on the page. The researcher edits, marks Accept / Edit / Brainstorm with me, sends, and says **done**. Read the page back, and apply edits under the same rules: an edited claim still passes evidence QA before it locks. Without the Artifact tool, present the approval in chat as before.
+
 Do not add a separate style-selection gate to the analysis method. Formatting and publication decisions happen only after the analysis is approved.
 
 ## 5. Build an evidence ledger before writing claims
@@ -213,7 +215,7 @@ If a required step could not run, say so precisely. Never report a blocked or sk
 
 ## Boundaries and handoffs
 
-- Follow [`../../references/skill-handoffs.md`](../../references/skill-handoffs.md) for what to ask from upstream skills (the plan and the guide) and what to pass to `/report`. At intake, ask for the plan and guide links before reconstructing their questions.
+- Follow [`../../references/skill-handoffs.md`](../../references/skill-handoffs.md) for what to ask from upstream skills (the plan and the guide) and what to pass to `/report`. At intake, ask once whether a plan or guide exists. If neither does, work standalone from the researcher's approved research question; never reconstruct a plan.
 - Use `/research-plan` upstream when the research question or study design is not yet defined.
 - Use `/mod-guide` for a discussion or usability-session guide.
 - Use `/report` after the analysis is approved when the task is stakeholder storytelling rather than evidence synthesis. Hand it the approved evidence ledger, confidence ratings, and plan crosswalk, so the report reuses verified quotes and the plan's decision terms instead of re-deriving them.

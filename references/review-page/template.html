@@ -1,0 +1,296 @@
+<title>Research Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap">
+<style>
+/* Layout: one reading column of review cards under a sticky progress bar; the sticky footer holds the single "Send to Claude" action. */
+:root {
+  --bg: #F7F8F5;
+  --surface: #FFFFFF;
+  --ink: #1C2420;
+  --muted: #5B665F;
+  --line: #DCE2DC;
+  --brand: #003D29;
+  --brand-ink: #FFFFFF;
+  --accent: #0AAD0A;
+  --accent-soft: #E6F4E1;
+  --warn: #8A5A00;
+  --warn-soft: #FFF4CC;
+  --focus: #0A7D3E;
+  --font-display: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --font-body: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1512; --surface: #18211C; --ink: #E7EDE8; --muted: #A3B0A7; --line: #2C3A32;
+    --brand: #3FB37A; --brand-ink: #06140D; --accent: #5BD35B; --accent-soft: #1D3324;
+    --warn: #F2C14E; --warn-soft: #3A2F12; --focus: #7FE0A6; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1512; --surface: #18211C; --ink: #E7EDE8; --muted: #A3B0A7; --line: #2C3A32;
+  --brand: #3FB37A; --brand-ink: #06140D; --accent: #5BD35B; --accent-soft: #1D3324;
+  --warn: #F2C14E; --warn-soft: #3A2F12; --focus: #7FE0A6; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--brand); }
+.wrap { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 120px; }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--brand); color: var(--brand-ink); }
+header.top .wrap { padding-block: 14px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; }
+.eyebrow { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15; margin: 2px 0 0; text-wrap: balance; }
+.progress { font-size: 13px; font-variant-numeric: tabular-nums; background: rgba(255,255,255,.14); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.intro { margin: 24px 0 8px; color: var(--muted); max-width: 65ch; }
+.banner { margin: 16px 0 0; padding: 10px 14px; background: var(--warn-soft); color: var(--warn); font-weight: 700; border-radius: 6px; }
+.round { font-family: var(--font-display); font-size: 20px; margin: 28px 0 12px; color: var(--ink); }
+.items { display: grid; gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; gap: 12px; min-width: 0; }
+.card[data-state="done"] { border-color: var(--accent); }
+.step { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.card h2 { font-family: var(--font-display); font-weight: 400; font-size: 20px; margin: 0; text-wrap: balance; }
+.why { margin: 0; color: var(--muted); font-size: 14px; }
+label.lbl { font-size: 13px; font-weight: 700; color: var(--muted); }
+textarea { width: 100%; box-sizing: border-box; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; resize: vertical; line-height: 1.5; }
+textarea.draft { min-height: 140px; }
+textarea:read-only { opacity: .85; }
+.sources { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
+.sources a { color: var(--focus); }
+.choices { display: grid; gap: 8px; }
+.opt { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+.opt:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.opt input { margin-top: 4px; accent-color: var(--brand); }
+.opt .t { font-weight: 700; }
+.opt .d { grid-column: 2; font-size: 13px; color: var(--muted); }
+.rec { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--brand); }
+.seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg button { font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+button:focus-visible, textarea:focus-visible, .opt:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+footer.bar { position: fixed; inset: auto 0 0; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 5; }
+footer.bar .wrap { padding-block: 12px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.status { font-size: 14px; color: var(--muted); min-width: 0; }
+.primary { font: inherit; font-weight: 700; padding: 10px 18px; border-radius: 6px; border: 0; background: var(--brand); color: var(--brand-ink); cursor: pointer; }
+.primary[disabled] { opacity: .45; cursor: not-allowed; }
+.secondary { font: inherit; padding: 10px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.copybox { width: 100%; min-height: 120px; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s ease; } }
+</style>
+
+<script type="application/json" id="review-state">{"skill":"research-plan","study":"Example study — replace via review_page.py","round":"Section 1 — Context & Foundation","intro":"Edit any draft directly. Mark each item Accept, Edit, or Brainstorm with me, then send it back to Claude.","banner":"","status":"awaiting_review","submitted_at":null,"items":[{"id":"background","step":"Section 1 > Step 1 of 3","title":"Background & Context","kind":"content","why":"Example item. Claude replaces this whole state when it builds a real review page.","draft":"- **Why now:** [TBD — fill in] **Strategic fit:** [TBD — fill in]","sources":[],"decision":null,"edited":null,"comment":""}]}</script>
+
+<header class="top"><div class="wrap">
+  <div><div class="eyebrow" id="eyebrow">Research review</div><h1 id="study">Research review</h1></div>
+  <div class="progress" id="progress" aria-live="polite">0 of 0 reviewed</div>
+</div></header>
+
+<main class="wrap">
+  <div class="banner" id="banner" hidden></div>
+  <p class="intro" id="intro"></p>
+  <div class="round" id="round"></div>
+  <div class="items" id="items"></div>
+  <section id="fallback" hidden>
+    <div class="round">Copy your review back to Claude</div>
+    <p class="intro">This view can't save the page. Copy the text below and paste it into your chat with Claude.</p>
+    <textarea class="copybox" id="copybox" readonly></textarea>
+  </section>
+</main>
+
+<footer class="bar"><div class="wrap">
+  <div class="status" id="status">Review each item to send it back.</div>
+  <div class="actions">
+    <button class="secondary" id="copy" type="button">Copy review</button>
+    <button class="primary" id="send" type="button" disabled>Send to Claude</button>
+  </div>
+</div></footer>
+
+<script>
+(function () {
+  // Snapshot the page source before rendering, so a save republishes the page exactly as written, with only the state block replaced.
+  var SOURCE = document.body.innerHTML;
+  var HEAD = document.head.innerHTML;
+  var stateEl = document.getElementById("review-state");
+  var state = JSON.parse(stateEl.textContent);
+  var submitted = state.status === "submitted";
+  var CHOICE_BRAINSTORM = "__brainstorm__";
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, attrs, text) {
+    var n = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function decided(item) {
+    if (item.kind === "choice") return Array.isArray(item.decision) ? item.decision.length > 0 : !!item.decision;
+    return !!item.decision;
+  }
+
+  function renderContent(item, card) {
+    var tid = "draft-" + item.id;
+    card.appendChild(el("label", { "class": "lbl", "for": tid }, "Draft — edit directly"));
+    var ta = el("textarea", { id: tid, "class": "draft" });
+    ta.value = item.edited != null ? item.edited : item.draft;
+    if (submitted) ta.readOnly = true;
+    ta.addEventListener("input", function () {
+      item.edited = ta.value === item.draft ? null : ta.value;
+      if (item.edited != null && item.decision !== "brainstorm") { item.decision = "edit"; syncSeg(); }
+      update();
+    });
+    card.appendChild(ta);
+    var seg = el("div", { "class": "seg", role: "group", "aria-label": "Decision for " + item.title });
+    var choices = [["accept", "Accept"], ["edit", "Edit — use my changes"], ["brainstorm", "Brainstorm with me"]];
+    function syncSeg() {
+      Array.prototype.forEach.call(seg.children, function (b) { b.setAttribute("aria-pressed", String(b.dataset.v === item.decision)); });
+    }
+    choices.forEach(function (c) {
+      var b = el("button", { type: "button", "data-v": c[0], id: "dec-" + item.id + "-" + c[0] }, c[1]);
+      if (submitted) b.disabled = true;
+      b.addEventListener("click", function () { item.decision = c[0]; syncSeg(); update(); });
+      seg.appendChild(b);
+    });
+    syncSeg();
+    card.appendChild(seg);
+  }
+
+  function renderChoice(item, card) {
+    var box = el("div", { "class": "choices", role: item.multi ? "group" : "radiogroup", "aria-label": item.title });
+    var opts = (item.options || []).concat([{ id: CHOICE_BRAINSTORM, label: "Brainstorm with me", description: "Talk this one through with Claude before deciding." }]);
+    opts.forEach(function (o) {
+      var id = "opt-" + item.id + "-" + o.id;
+      var lab = el("label", { "class": "opt", "for": id });
+      var inp = el("input", { type: item.multi && o.id !== CHOICE_BRAINSTORM ? "checkbox" : "radio", name: "opt-" + item.id, id: id, value: o.id });
+      var current = item.decision;
+      inp.checked = Array.isArray(current) ? current.indexOf(o.id) >= 0 : current === o.id;
+      if (submitted) inp.disabled = true;
+      inp.addEventListener("change", function () {
+        if (item.multi && o.id !== CHOICE_BRAINSTORM) {
+          var picked = Array.isArray(item.decision) ? item.decision.filter(function (v) { return v !== CHOICE_BRAINSTORM; }) : [];
+          if (inp.checked) picked.push(o.id); else picked = picked.filter(function (v) { return v !== o.id; });
+          item.decision = picked;
+          var bs = $("opt-" + item.id + "-" + CHOICE_BRAINSTORM); if (bs) bs.checked = false;
+        } else if (item.multi) {
+          item.decision = [CHOICE_BRAINSTORM];
+          box.querySelectorAll("input[type=checkbox]").forEach(function (c) { c.checked = false; });
+        } else {
+          item.decision = o.id;
+        }
+        update();
+      });
+      lab.appendChild(inp);
+      var t = el("span", { "class": "t" }, o.label);
+      if (o.recommended) t.appendChild(el("span", { "class": "rec" }, "Recommended"));
+      lab.appendChild(t);
+      if (o.description) lab.appendChild(el("span", { "class": "d" }, o.description));
+      box.appendChild(lab);
+    });
+    if (item.draft) {
+      var pid = "draft-" + item.id;
+      card.appendChild(el("label", { "class": "lbl", "for": pid }, "Proposed content"));
+      var pre = el("textarea", { id: pid, "class": "draft", readonly: "" });
+      pre.value = item.draft;
+      card.appendChild(pre);
+    }
+    card.appendChild(box);
+  }
+
+  function render() {
+    $("study").textContent = state.study || "Research review";
+    $("eyebrow").textContent = "/" + (state.skill || "research") + " review";
+    $("round").textContent = state.round || "";
+    $("intro").textContent = state.intro || "";
+    if (state.banner) { $("banner").textContent = state.banner; $("banner").hidden = false; }
+    var list = $("items");
+    list.textContent = "";
+    state.items.forEach(function (item) {
+      var card = el("article", { "class": "card", id: "item-" + item.id });
+      if (item.step) card.appendChild(el("div", { "class": "step" }, item.step));
+      card.appendChild(el("h2", null, item.title));
+      if (item.why) card.appendChild(el("p", { "class": "why" }, item.why));
+      if (item.kind === "choice") renderChoice(item, card); else renderContent(item, card);
+      if (item.sources && item.sources.length) {
+        var ul = el("ul", { "class": "sources" });
+        item.sources.forEach(function (s) {
+          var li = el("li");
+          if (s.url && /^https:\/\//.test(s.url)) { var a = el("a", { href: s.url, target: "_blank", rel: "noopener" }, s.label || s.url); li.appendChild(a); }
+          else li.textContent = s.label || "";
+          ul.appendChild(li);
+        });
+        card.appendChild(ul);
+      }
+      var cid = "comment-" + item.id;
+      card.appendChild(el("label", { "class": "lbl", "for": cid }, "Comments for Claude (optional)"));
+      var c = el("textarea", { id: cid, rows: "2" });
+      c.value = item.comment || "";
+      if (submitted) c.readOnly = true;
+      c.addEventListener("input", function () { item.comment = c.value; });
+      card.appendChild(c);
+      list.appendChild(card);
+    });
+    update();
+  }
+
+  function update() {
+    var done = state.items.filter(decided).length;
+    $("progress").textContent = done + " of " + state.items.length + " reviewed";
+    state.items.forEach(function (item) {
+      var card = $("item-" + item.id); if (card) card.dataset.state = decided(item) ? "done" : "open";
+    });
+    var ready = done === state.items.length;
+    $("send").disabled = submitted || !ready;
+    if (submitted) $("status").textContent = "Sent to Claude. Go back to the chat; Claude picks up your review from here.";
+    else $("status").textContent = ready ? "All items reviewed. Send your review back to Claude." : "Review each item to send it back.";
+  }
+
+  function summary() {
+    var lines = ["Review for " + (state.study || "study") + " — " + (state.round || "")];
+    state.items.forEach(function (item) {
+      var d = Array.isArray(item.decision) ? item.decision.join(", ") : (item.decision || "not reviewed");
+      lines.push("", (item.step ? item.step + ": " : "") + item.title + " — " + d);
+      if (item.edited != null) lines.push("Edited text:", item.edited);
+      if (item.comment) lines.push("Comment: " + item.comment);
+    });
+    return lines.join("\n");
+  }
+
+  function pageHtml() {
+    var json = JSON.stringify(state).replace(/</g, "\\u003c");
+    var body = SOURCE.replace(/(<script type="application\/json" id="review-state">)[\s\S]*?(<\/script>)/, function (_, a, b) { return a + json + b; });
+    return "<!doctype html><html><head>" + HEAD + "</head><body>" + body + "</body></html>";
+  }
+
+  function showFallback() {
+    $("copybox").value = summary();
+    $("fallback").hidden = false;
+  }
+
+  $("copy").addEventListener("click", function () {
+    var text = summary();
+    try {
+      navigator.clipboard.writeText(text).then(function () { $("status").textContent = "Review copied. Paste it into your chat with Claude."; }, showFallback);
+    } catch (e) { showFallback(); }
+  });
+
+  $("send").addEventListener("click", function () {
+    var btn = $("send");
+    btn.disabled = true;
+    $("status").textContent = "Sending…";
+    var use = window.claude && window.claude.use ? window.claude.use("artifact") : Promise.resolve(null);
+    Promise.resolve(use).then(function (artifact) {
+      if (!artifact) { showFallback(); $("status").textContent = "This view can't save. Copy your review below instead."; update(); return; }
+      state.status = "submitted";
+      state.submitted_at = new Date().toISOString();
+      return artifact.publish(pageHtml()).catch(function (err) {
+        state.status = "awaiting_review"; state.submitted_at = null;
+        var code = err && err.code;
+        if (code === "conflict") $("status").textContent = "Someone else saved this page first. It has reloaded; review again and resend.";
+        else { showFallback(); $("status").textContent = "Couldn't save the page. Copy your review below instead."; }
+        update();
+      });
+    });
+  });
+
+  render();
+})();
+</script>
